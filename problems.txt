@@ -1,0 +1,53 @@
+Problem 1 (Direct Modulator):
+Create a optical direct modulator using single-drive Mach-Zehnder Modulators (MZMs) with:
+  • One Mach-Zehnder Modulator (id: mzm)
+  • One straight waveguide (id: straight)
+
+Problem 2 (8-QAM Modulator):
+Create a optical 8-QAM transmitter using:
+• Three Mach-Zehnder Modulator (id: mzm_bit1, mzm_bit2, mzm_bit3),
+• Two MMI1x2 Splitters (id: splitter1, splitter2),
+• Two MMI1x2 (flipped) Combiners (id: combiner1, combiner2).
+The three MZMs should be vertically parrallel.
+
+Problem 3 (Mach-Zehnder interferometer):
+Create a Mach-Zehnder interferometer (MZI) with a single input and output, featuring a path 
+length difference of ΔL. A phase shifters with a length of L should be applied to the top 
+arm to modulate the phase of the optical signal. Use the built-in multimode interferometer (MMI) 
+component for splitting and combining the optical signals, and the built-in phase shifters 
+to achieve the desired phase modulation. 
+
+Parameters:
+ΔL=10 microns 
+L=10 microns
+
+Devices to use:
+• Two MMI1x2 (id: mmi1, mmi2)
+• One straight waveguide (id: waveguide)
+• One Straight Heat Metal (id: phase_shifter)
+
+Problem 4 (Mach-Zehnder Modulator):
+Create a Mach-Zehnder Modulator (MZM) which have a single optical input and a single optical output. 
+The phase shifters with a length of L should be applied to the two arms to modulate the phase of the 
+optical signal. Use the built-in multimode interferometer (MMI) component for splitting and combining 
+the optical signals, and the built-in phase shifters to achieve the desired phase modulation.
+
+Parameters:
+L=10 microns
+
+Devices to use:
+• One MMI1x2 Splitter (id: splitter)
+• One MMI1x2 (mirrored) Combiner (id: combiner)
+• Two Straight Heat Metals (id: phase_shifter1, phase_shifter2)
+
+Problem 5 (Non-Linear Sign Gate):
+Design a Non-Linear Sign (NLS) gate with a single signal channel and two additional ancilla channels, 
+featuring three inputs and three outputs. The gate should employ built-in couplers to create a 
+quantum logic operation and a phase shift of ϕ is applied to the signal channel to ensure a 
+non-deterministic nonlinear sign change on a specific mode.
+
+Parameters: ϕ: 180°
+
+Devices to use:
+• Three Couplers (id: coupler1, coupler2, coupler3)
+• One Straight Heat Metal (id: phase_shifter)
