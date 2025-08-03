@@ -1,5 +1,5 @@
 ENGINE           = "hf"     # or 'openai'
-OPENAI_API_KEY   = "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"
+OPENAI_API_KEY = "ENTER API KEY HERE"
 HF_MODEL_NAME    = "prithivMLmods/Qwen2.5-14B-DeepSeek-R1-1M"
 
 FILE_ID          = "file-4zemm4ei5rhvSuWtDxe2Xg" # openai only
