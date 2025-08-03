@@ -84,11 +84,3 @@ class HFAgent:
     def start_new_conversation(self):
         self.hist = []
 
-
-# ---------------------------------------------------------------------- #
-# Simple demo                                                            #
-# ---------------------------------------------------------------------- #
-if __name__ == "__main__":
-    agent = HFAgent()
-    reply = agent.ASK_LLM("You are a helpful assistant.", "Hello there! How are you?")
-    print(reply)
