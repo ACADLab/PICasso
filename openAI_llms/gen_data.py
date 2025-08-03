@@ -2,7 +2,7 @@ import re, textwrap
 from pathlib import Path
 import pandas as pd
 from tqdm import tqdm
-from agent import LLMAgent  
+from openAI_llms.agent import LLMAgent  
 
 MY_API_KEY      = "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"
 SAMPLES_PER_PR  = 3
