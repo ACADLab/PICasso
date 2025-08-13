@@ -1,6 +1,6 @@
 ENGINE           = "hf"     # or 'openai'
 OPENAI_API_KEY = "ENTER API KEY HERE"
-HF_MODEL_NAME    = "prithivMLmods/Qwen2.5-14B-DeepSeek-R1-1M"
+HF_MODEL_NAME    = "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B"
 
 FILE_ID          = "file-4zemm4ei5rhvSuWtDxe2Xg" # openai only
 SAMPLES_PER_PR   = 3
@@ -102,15 +102,14 @@ def load_problems(path: str):
     return problems
 
 def make_agent():
-    if ENGINE.lower() == "openai":
-        from openAI_llms.agent import LLMAgent as OpenAIAgent
-        return OpenAIAgent(api_key=OPENAI_API_KEY, file_id=FILE_ID)
-    elif ENGINE.lower() == "hf":
+    # if ENGINE.lower() == "openai":
+    #     return HFAgent(api_key=OPENAI_API_KEY, file_id=FILE_ID)
+    if ENGINE.lower() == "hf":
         from hf_agent import HFAgent    
         return HFAgent(model_name=HF_MODEL_NAME)
     else:
         raise ValueError("ENGINE must be 'openai' or 'hf'")
-    
+
 def run_prompt(prompt_text: str, csv_name: str, agent, problems):
     total_calls = len(problems) * SAMPLES_PER_PR * (1 + REFINE_ROUNDS)
     rows = []
@@ -140,7 +139,7 @@ def run_prompt(prompt_text: str, csv_name: str, agent, problems):
 
 
 def main():
-    problems = load_problems("problems.txt")
+    problems = load_problems("../problems.txt")
     agent_py   = make_agent() 
 
     run_prompt(PYTHON_PROMPT, "llm_responses_python.csv", agent_py, problems)
