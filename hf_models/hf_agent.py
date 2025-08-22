@@ -6,7 +6,7 @@ from transformers import AutoTokenizer, AutoModelForCausalLM
 class HFAgent:
     def __init__(
         self,
-        model_name: str = "mistralai/Mistral-7B-Instruct-v0.2",
+        model_name: str = "deepseek-ai/DeepSeek-R1-Distill-Qwen-14B",
         *,
         device: str | None = None,
         max_new_tokens: int = 2048,

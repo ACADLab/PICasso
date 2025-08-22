@@ -29,6 +29,11 @@ on_error – what to do on error. If error, raises an error. If None ignores the
 
 Must specify 'component', 'port1', 'port2', 'cross_section'. All other parameters are optional.
 
+<<< MIRRORING COMPONENTS >>>
+gdsfactory.components.component.mirror()
+
+The mirror() function simply rotates the component 180 degrees. Port names do not change (ie; port o1 remains o1, o2 remains o2, and so on).
+
 <<< COMPONENTS >>>
 <<< Component 1 >>>
 mmi1x2()
