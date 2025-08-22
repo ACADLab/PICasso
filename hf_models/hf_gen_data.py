@@ -1,6 +1,6 @@
 ENGINE            = 'hf'     # or 'openai'
 OPENAI_API_KEY    = 'ENTER API KEY HERE'
-HF_MODEL_NAME     = 'deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B'
+HF_MODEL_NAME     = 'deepseek-ai/DeepSeek-R1-Distill-Qwen-14B'
 
 FILE_ID           = 'file-4zemm4ei5rhvSuWtDxe2Xg'  # openai only
 SAMPLES_PER_PR    = 3
@@ -39,36 +39,39 @@ Restrictions (immutable across problems):\n
 Use the following example for your reference:\n
 import gdsfactory as gf\n
 
-r = gf.Component()\n
+def mzm_cell():\n
+    r = gf.Component()\n
 
-mmi_splitter = r.add_ref(gf.components.mmi(inputs=1, outputs=2))\n
-mmi_splitter.move((0,0))\n
+    mmi_splitter = r.add_ref(gf.components.mmi(inputs=1, outputs=2))\n
+    mmi_splitter.move((0,0))\n
 
-mmi_combiner = r.add_ref(gf.components.mmi(inputs=2, outputs=1))\n
-mmi_combiner.move((200, 0))\n
+    mmi_combiner = r.add_ref(gf.components.mmi(inputs=2, outputs=1))\n
+    mmi_combiner.move((200, 0))\n
 
-ps1 = r.add_ref(gf.components.straight_heater_metal(length=10))\n
-ps1.move((100, 20))\n
+    ps1 = r.add_ref(gf.components.straight_heater_metal(length=10))\n
+    ps1.move((100, 20))\n
 
-ps2 = r.add_ref(gf.components.straight_heater_metal(length=10))\n
-ps2.move((100, -20))\n
-                 
-routings = [
-    (mmi_splitter.ports['o2'], ps1.ports['o1']),
-    (mmi_splitter.ports['o3'], ps2.ports['o1']),
-    (mmi_combiner.ports['o2'], ps1.ports['o2']),
-    (mmi_combiner.ports['o1'], ps2.ports['o2']),
-]
+    ps2 = r.add_ref(gf.components.straight_heater_metal(length=10))\n
+    ps2.move((100, -20))\n
+                    
+    routings = [
+        (mmi_splitter.ports['o2'], ps1.ports['o1']),
+        (mmi_splitter.ports['o3'], ps2.ports['o1']),
+        (mmi_combiner.ports['o2'], ps1.ports['o2']),
+        (mmi_combiner.ports['o1'], ps2.ports['o2']),
+    ]
 
-for p1, p2 in routings:
-    gf.routing.route_single(r, port1=p1, port2=p2, cross_section='strip', radius=5)
+    for p1, p2 in routings:
+        gf.routing.route_single(r, port1=p1, port2=p2, cross_section='strip', radius=5)
 
 
-r.add_port("o1", port=mmi_splitter.ports["o1"])\n
-r.add_port("o2", port=mmi_combiner.ports["o3"])\n
+    r.add_port("o1", port=mmi_splitter.ports["o1"])\n
+    r.add_port("o2", port=mmi_combiner.ports["o3"])\n
 
-r.draw_ports()\n
-r.plot()\n
+    r.draw_ports()\n
+    r.plot()\n   
+                
+    return r
 """)
 
 def load_problems(path: str):
