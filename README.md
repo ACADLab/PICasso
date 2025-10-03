@@ -1,7 +1,7 @@
 # PICasso
 
 What’s inside
-
+```bash
 schemas.py → JSON netlist schema (Pydantic)
 
 placer.py → ensures instances get safe placements (diagonal fallback)
@@ -17,15 +17,20 @@ README.md → usage instructions and explanation
 sample_problem.txt → demo problem description
 
 sample_llm_netlist.json → demo LLM-like JSON netlist
+```
 
-How to use
+## How to use
+```bash
 pip install gdsfactory pydantic
+```
 
 # Run pipeline with the sample problem + netlist
+``` bash
 python -m picasso_flow.cli \
   --problem sample_problem.txt \
   --llm-json sample_llm_netlist.json \
   --out-gds design.gds
+```
 
 
 Replace --llm-json with actual LLM outputs (JSON).
