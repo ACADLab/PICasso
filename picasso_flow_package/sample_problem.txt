@@ -1,0 +1,1 @@
+Design a simple 1x2 MZI splitter with input GC and two output GCs.
