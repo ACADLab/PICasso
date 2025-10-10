@@ -1,0 +1,51 @@
+{
+  "instances": {
+    "mzi": {
+      "component": "mzi",
+      "settings": {
+        "length_x": 50
+      }
+    },
+    "gc_in": {
+      "component": "grating_coupler_te",
+      "x": 0,
+      "y": 0
+    },
+    "gc_o0": {
+      "component": "grating_coupler_te",
+      "x": 150,
+      "y": -20
+    },
+    "gc_o1": {
+      "component": "grating_coupler_te",
+      "x": 150,
+      "y": 20
+    }
+  },
+  "connections": [
+    [
+      "gc_in",
+      "o0",
+      "mzi",
+      "o1"
+    ],
+    [
+      "mzi",
+      "o2",
+      "gc_o0",
+      "o0"
+    ],
+    [
+      "mzi",
+      "o3",
+      "gc_o1",
+      "o0"
+    ]
+  ],
+  "ports": {
+    "in": "gc_in,o0",
+    "o0": "gc_o0,o0",
+    "o1": "gc_o1,o0"
+  },
+  "models": {}
+}
