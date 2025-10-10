@@ -1,0 +1,29 @@
+Problem 1 (Mach-Zehnder Modulator):
+Design a Mach-Zehnder Modulator with the following specifications:
+- Use a 1x2 MMI splitter at the input
+- Two arms with straight_heater_metal phase shifters (length=50µm)
+- Use a 2x1 MMI combiner at the output
+- Ensure minimum 20µm spacing between all components
+- Position components to avoid overlap
+- Use route_bundle for all optical connections with bend radius 10µm and separation 10µm
+- Expose input port as 'o1' and output port as 'o2'
+
+Problem 2 (8-QAM Modulator):
+Design an 8-QAM modulator with hierarchical structure:
+- First-level splitter: 1x2 MMI
+- Second-level splitter: 1x2 MMI
+- Three MZM modulators (use gf.components.mzm)
+- Two combiners: 2x1 MMI each
+- Hierarchical combination of signals
+- Ensure all components have minimum 25µm spacing
+- Use route_bundle for clean routing with radius=12µm
+- Final output should combine all three MZM outputs
+
+Problem 3 (Ring Resonator Add-Drop Filter):
+Design a ring resonator add-drop filter:
+- Input/output couplers using directional couplers (coupler component)
+- Ring waveguide using bend_circular
+- Through port and drop port
+- Proper coupling gaps and ring radius
+- Ensure no waveguide overlaps
+- Use route_bundle with careful spacing
