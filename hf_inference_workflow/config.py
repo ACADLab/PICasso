@@ -8,14 +8,29 @@ from pathlib import Path
 # ============================================================================
 
 # HuggingFace API Token - Set via environment variable or replace with your token
-HF_API_TOKEN = os.getenv("HF_API_TOKEN", "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")
+# IMPORTANT: Current token returns 404 - needs to be replaced!
+#
+# To fix:
+# 1. Go to https://huggingface.co/settings/tokens/new
+# 2. Create "Fine-grained" token
+# 3. Enable permission: "Make calls to Inference Providers"
+# 4. Replace token below or set HF_API_TOKEN environment variable
+#
+HF_API_TOKEN = os.getenv("HF_API_TOKEN", "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")
 
-# Model selection - Using DeepSeek-Coder for code generation
-DEFAULT_MODEL = "deepseek-ai/deepseek-coder-6.7b-instruct"
+# Model selection - Recommended models for code generation
+# NOTE: Most models require proper token permissions (see above)
+DEFAULT_MODEL = "Qwen/Qwen2.5-Coder-32B-Instruct"
 
-# Alternative models (uncomment to use):
-# DEFAULT_MODEL = "Qwen/Qwen2.5-Coder-7B-Instruct"
-# DEFAULT_MODEL = "bigcode/starcoder2-15b-instruct-v0.1"
+# Alternative models (try these if one doesn't work):
+# DEFAULT_MODEL = "meta-llama/Llama-3.2-3B-Instruct"  # Smaller, faster
+# DEFAULT_MODEL = "mistralai/Mistral-7B-Instruct-v0.3"  # General purpose
+# DEFAULT_MODEL = "microsoft/Phi-3-mini-4k-instruct"  # Compact model
+
+# Models confirmed NOT available on serverless API:
+# DEFAULT_MODEL = "deepseek-ai/deepseek-coder-6.7b-instruct"
+# DEFAULT_MODEL = "bigcode/starcoder2-7b"
+# DEFAULT_MODEL = "bigcode/starcoder2-15b"
 
 # ============================================================================
 # Generation Parameters
