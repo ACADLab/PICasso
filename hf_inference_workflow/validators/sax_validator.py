@@ -164,7 +164,12 @@ class SAXValidator:
             True if routing is correct
         """
         try:
-            refs = list(component.references)
+            # Handle different GDSFactory versions
+            try:
+                refs = list(component.references)
+            except AttributeError:
+                refs = list(getattr(component, 'insts', []))
+
             if len(refs) == 0:
                 report["errors"].append("No component references found")
                 return False
@@ -185,7 +190,13 @@ class SAXValidator:
             # GDSFactory stores routes as polygon/path references
             has_routes = False
             for ref in refs:
-                cell_name = ref.ref_cell.name if hasattr(ref.ref_cell, 'name') else str(ref.ref_cell)
+                # Handle different GDSFactory versions for getting cell name
+                if hasattr(ref, 'ref_cell'):
+                    cell_name = ref.ref_cell.name if hasattr(ref.ref_cell, 'name') else str(ref.ref_cell)
+                elif hasattr(ref, 'cell'):
+                    cell_name = ref.cell.name if hasattr(ref.cell, 'name') else str(ref.cell)
+                else:
+                    cell_name = str(ref)
                 # Routes typically have names containing 'route', 'waveguide', or 'bend'
                 if any(keyword in cell_name.lower() for keyword in ['route', 'waveguide', 'bend', 'straight']):
                     has_routes = True
@@ -231,7 +242,11 @@ class SAXValidator:
         issues = 0
 
         try:
-            refs = list(component.references)
+            # Handle different GDSFactory versions
+            try:
+                refs = list(component.references)
+            except AttributeError:
+                refs = list(getattr(component, 'insts', []))
 
             # Check if component ports are at reasonable orientations
             for ref in refs:
