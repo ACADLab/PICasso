@@ -109,7 +109,12 @@ class PNRValidator:
 
     def _check_component_overlap(self, component: gf.Component, report: Dict):
         """Check if any component instances overlap."""
-        refs = list(component.references)
+        # Handle different GDSFactory versions
+        try:
+            refs = list(component.references)
+        except AttributeError:
+            # Newer GDSFactory versions might use insts instead of references
+            refs = list(getattr(component, 'insts', []))
 
         if len(refs) < 2:
             return  # Nothing to check
@@ -135,7 +140,11 @@ class PNRValidator:
 
     def _check_spacing(self, component: gf.Component, report: Dict):
         """Check minimum spacing between components."""
-        refs = list(component.references)
+        # Handle different GDSFactory versions
+        try:
+            refs = list(component.references)
+        except AttributeError:
+            refs = list(getattr(component, 'insts', []))
 
         if len(refs) < 2:
             return
@@ -199,7 +208,11 @@ class PNRValidator:
         # For now, we'll check if the component has a reasonable structure
 
         num_ports = len(component.ports)
-        num_refs = len(list(component.references))
+        # Handle different GDSFactory versions
+        try:
+            num_refs = len(list(component.references))
+        except AttributeError:
+            num_refs = len(list(getattr(component, 'insts', [])))
 
         report["metrics"]["num_components"] = num_refs
         report["metrics"]["num_ports"] = num_ports

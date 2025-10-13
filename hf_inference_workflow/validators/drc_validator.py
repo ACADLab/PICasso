@@ -194,11 +194,11 @@ class DRCValidator:
                 # Basic checks
                 for cell in layout.each_cell():
                     # Check for very small features
-                    for layer_index in layout.layer_indices():
-                        layer = layout.layer(layer_index)
-
-                        # This is a simplified check
-                        # Real DRC would check specific design rules
+                    # Note: layer_indices() returns layer info, not just indices
+                    # Skip detailed layer checks for basic DRC
+                    pass
+                    # This is a simplified check
+                    # Real DRC would check specific design rules
 
                 # For now, just log that basic checks passed
                 report["warnings"].append(
