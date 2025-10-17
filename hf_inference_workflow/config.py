@@ -7,16 +7,17 @@ from pathlib import Path
 # API Configuration
 # ============================================================================
 
-# HuggingFace API Token - Set via environment variable or replace with your token
-# IMPORTANT: Current token returns 404 - needs to be replaced!
-#
-# To fix:
-# 1. Go to https://huggingface.co/settings/tokens/new
-# 2. Create "Fine-grained" token
-# 3. Enable permission: "Make calls to Inference Providers"
-# 4. Replace token below or set HF_API_TOKEN environment variable
-#
-HF_API_TOKEN = os.getenv("HF_API_TOKEN", "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")
+# OpenAI API Key - RECOMMENDED for best results
+# Get your key from: https://platform.openai.com/api-keys
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "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")
+
+# OpenAI Model Selection
+OPENAI_MODEL = "gpt-4o-mini"  # Cost-optimized model for code generation
+# Alternative: "gpt-3.5-turbo" (even cheaper), "gpt-4o" (more capable but pricier)
+
+# HuggingFace API Token - Cloud inference option
+# Token loaded from hf_token.txt file
+HF_API_TOKEN = os.getenv("HF_API_TOKEN", "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")
 
 # Model selection - Recommended models for code generation
 # NOTE: Most models require proper token permissions (see above)
@@ -39,6 +40,10 @@ DEFAULT_MODEL = "Qwen/Qwen2.5-Coder-32B-Instruct"
 SAMPLES_PER_PROBLEM = 2      # Number of design samples to generate per problem (reduced for 15min runtime)
 MAX_RETRY_ATTEMPTS = 3       # Maximum retry attempts for failed validations
 REFINE_ROUNDS = 0            # Additional refinement rounds (set to 0 for efficiency)
+
+# Rate Limiting (for OpenAI API)
+REQUEST_DELAY = 12.0          # Delay between API requests in seconds (for 5 RPM limit: 60s/5 = 12s)
+                              # Adjust based on your tier: Tier 1=12s, Tier 2=6s, Tier 3=1s
 
 # Model generation parameters
 MODEL_PARAMS = {
@@ -75,13 +80,23 @@ COMPONENTS_FILE = PROJECT_ROOT / "components.txt"
 
 # Output directories
 OUTPUT_DIR = PROJECT_ROOT / "hf_inference_workflow" / "output"
-GDS_OUTPUT_DIR = OUTPUT_DIR / "gds_files"
+GDS_OUTPUT_DIR = OUTPUT_DIR / "gds_files"  # Legacy directory
 CSV_OUTPUT_DIR = OUTPUT_DIR / "results"
+
+# New directory structure for OpenAI workflow
+GDS_FIRST_ATTEMPT_DIR = OUTPUT_DIR / "gds_first_attempt"  # All first attempts
+PIC_SET_DIR = OUTPUT_DIR / "PIC_set"                      # Final clean dataset
+GDS_CLEAN_DIR = PIC_SET_DIR / "gds_clean"                 # Validated clean GDS
+CODE_CLEAN_DIR = PIC_SET_DIR / "code_clean"               # Python code for clean GDS
 
 # Create output directories
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 GDS_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 CSV_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+GDS_FIRST_ATTEMPT_DIR.mkdir(parents=True, exist_ok=True)
+PIC_SET_DIR.mkdir(parents=True, exist_ok=True)
+GDS_CLEAN_DIR.mkdir(parents=True, exist_ok=True)
+CODE_CLEAN_DIR.mkdir(parents=True, exist_ok=True)
 
 # ============================================================================
 # Logging Configuration
