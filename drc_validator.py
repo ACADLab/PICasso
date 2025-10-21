@@ -16,7 +16,7 @@ from typing import Dict, Tuple
 import logging
 import gdsfactory as gf
 
-from ..config import ENABLE_DRC_CHECK, DRC_SCRIPT_PATH
+from config import ENABLE_DRC_CHECK, DRC_SCRIPT_PATH
 
 logger = logging.getLogger(__name__)
 

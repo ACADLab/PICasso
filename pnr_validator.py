@@ -11,7 +11,7 @@ Checks for physical layout quality issues:
 import gdsfactory as gf
 from typing import Dict, List, Tuple, Optional
 import logging
-from ..config import MIN_COMPONENT_SPACING, MAX_LAYOUT_AREA, MAX_ROUTE_LENGTH
+from config import MIN_COMPONENT_SPACING, MAX_LAYOUT_AREA, MAX_ROUTE_LENGTH
 
 logger = logging.getLogger(__name__)
 

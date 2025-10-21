@@ -1,8 +1,10 @@
 """Centralized configuration and environment access."""
 import os
+from .utils.env import load_env
 from dataclasses import dataclass
 from .errors import ConfigError
 
+load_env()
 
 @dataclass(frozen=True)
 class OpenAIConfig:

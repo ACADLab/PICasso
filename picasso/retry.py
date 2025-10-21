@@ -11,6 +11,7 @@ from typing import Dict, List, Optional, Callable
 from .validators.base import ValidationReport, Validator
 from .clients.base import Conversation
 
+import os
 
 class ValidationStage(Enum):
     PNR = "PNR"

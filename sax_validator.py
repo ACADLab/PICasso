@@ -12,7 +12,7 @@ This addresses the issue where SAX passes despite poor physical routing.
 import logging
 from typing import Dict, Tuple
 import gdsfactory as gf
-from ..config import ENABLE_SAX_CHECK, SAX_TIMEOUT
+from config import ENABLE_SAX_CHECK, SAX_TIMEOUT
 
 logger = logging.getLogger(__name__)
 
