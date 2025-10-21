@@ -1,0 +1,8 @@
+gdsfactory>=9.9.4
+huggingface-hub>=0.20.0
+openai>=1.40.0
+pandas>=2.0.0
+tqdm>=4.65.0
+sax>=0.15.0
+jax>=0.4.0
+jaxlib>=0.4.0
