@@ -24,6 +24,8 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 import gdsfactory as gf
 from hf_inference_workflow.hf_api_client import HFInferenceAgent
 from hf_inference_workflow.validators import PNRValidator, DRCValidator, SAXValidator
+from hf_inference_workflow.validators.loss_target_validator import LossTargetValidator
+from hf_inference_workflow.optimization_integration import OptimizationStage
 from hf_inference_workflow.retry_handler import RetryHandler, ValidationStage, AdaptiveRetryHandler
 from hf_inference_workflow.config import (
     PYTHON_PROMPT_TEMPLATE,
@@ -32,7 +34,11 @@ from hf_inference_workflow.config import (
     MAX_RETRY_ATTEMPTS,
     CSV_OUTPUT_DIR,
     GDS_OUTPUT_DIR,
-    PROBLEMS_FILE
+    PROBLEMS_FILE,
+    ENABLE_OPTIMIZATION,
+    ENABLE_LOSS_TARGET_CHECK,
+    OPTIMIZATION_MAX_ITER,
+    OPTIMIZATION_RESTARTS
 )
 
 # Setup logging
@@ -122,10 +128,14 @@ def validate_design(
     pnr_validator: PNRValidator,
     drc_validator: DRCValidator,
     sax_validator: SAXValidator,
-    gds_path: str = None
+    gds_path: str = None,
+    circuit_type: str = None,
+    circuit_description: str = None,
+    optimizer: OptimizationStage = None,
+    loss_validator: LossTargetValidator = None
 ) -> Tuple[bool, Dict[str, Dict], Optional[ValidationStage]]:
     """
-    Run all validators on a design.
+    Run all validators and optimization on a design.
 
     Args:
         component: GDSFactory component to validate
@@ -133,6 +143,10 @@ def validate_design(
         drc_validator: DRC validator instance
         sax_validator: SAX validator instance
         gds_path: Optional GDS file path for DRC
+        circuit_type: Circuit type for loss target lookup
+        circuit_description: Circuit description for type detection
+        optimizer: Optimization stage instance
+        loss_validator: Loss target validator instance
 
     Returns:
         (all_passed, reports_dict, failed_stage)
@@ -166,6 +180,44 @@ def validate_design(
         logger.warning("SAX validation failed")
         return False, reports, ValidationStage.SAX
 
+    # Stage 4: Optimization (NEW)
+    if ENABLE_OPTIMIZATION and optimizer:
+        logger.info("Running phase optimization...")
+        opt_result = optimizer.optimize_design(component, circuit_type)
+        reports['optimization'] = opt_result
+
+        if opt_result['success']:
+            logger.info(
+                f"✅ Optimization successful: IL {opt_result.get('il_before_db', 'N/A')} → "
+                f"{opt_result.get('il_after_db', 'N/A')} dB "
+                f"(Δ {opt_result.get('improvement_db', 0.0):+.2f} dB)"
+            )
+        else:
+            logger.warning(f"⚠️  Optimization failed: {opt_result.get('error', 'Unknown error')}")
+            # Don't fail validation if optimization fails (it's optional)
+    else:
+        reports['optimization'] = {'success': False, 'error': 'Optimization disabled'}
+
+    # Stage 5: Loss Target Validation (NEW)
+    if ENABLE_LOSS_TARGET_CHECK and loss_validator:
+        logger.info("Checking loss target compliance...")
+        loss_passed, loss_report = loss_validator.validate(
+            component=component,
+            circuit_type=circuit_type,
+            circuit_description=circuit_description,
+            measured_loss_db=None,  # Will be extracted from optimization or SAX
+            optimization_result=reports.get('optimization')
+        )
+        reports['loss_target'] = loss_report
+
+        if loss_passed:
+            logger.info(f"✅ Loss target met: {loss_report.get('achieved_db', 'N/A')} dB")
+        else:
+            logger.warning(f"⚠️  Loss target not met (but design still valid)")
+            # Don't fail validation if loss target not met (it's a soft check)
+    else:
+        reports['loss_target'] = {'passed': True, 'feedback': 'Loss target check disabled'}
+
     logger.info("✅ All validations passed!")
     return True, reports, None
 
@@ -179,7 +231,10 @@ def generate_with_validation(
     sax_validator: SAXValidator,
     retry_handler: RetryHandler,
     problem_idx: int,
-    sample_idx: int
+    sample_idx: int,
+    optimizer: OptimizationStage = None,
+    loss_validator: LossTargetValidator = None,
+    circuit_type: str = None
 ) -> Dict:
     """
     Generate design with validation and retry logic.
@@ -246,15 +301,37 @@ def generate_with_validation(
             result["failed_stage"] = ValidationStage.PARSING
             continue
 
-        # Run validations
+        # Run validations + optimization + loss check
         all_passed, reports, failed_stage = validate_design(
-            component, pnr_validator, drc_validator, sax_validator, gds_path
+            component=component,
+            pnr_validator=pnr_validator,
+            drc_validator=drc_validator,
+            sax_validator=sax_validator,
+            gds_path=gds_path,
+            circuit_type=circuit_type,
+            circuit_description=problem_desc,
+            optimizer=optimizer,
+            loss_validator=loss_validator
         )
 
         result["validation_reports"] = reports
         result["pnr_passed"] = reports.get('pnr', {}).get('passed', False)
         result["drc_passed"] = reports.get('drc', {}).get('passed', False)
         result["sax_passed"] = reports.get('sax', {}).get('passed', False)
+
+        # Add optimization metrics (NEW)
+        opt_report = reports.get('optimization', {})
+        result["optimization_success"] = opt_report.get('success', False)
+        result["il_before_db"] = opt_report.get('il_before_db')
+        result["il_after_db"] = opt_report.get('il_after_db')
+        result["il_improvement_db"] = opt_report.get('improvement_db', 0.0)
+
+        # Add loss target metrics (NEW)
+        loss_report = reports.get('loss_target', {})
+        result["loss_target_db"] = loss_report.get('target_db')
+        result["loss_achieved_db"] = loss_report.get('achieved_db')
+        result["loss_margin_db"] = loss_report.get('margin_db')
+        result["meets_loss_target"] = loss_report.get('meets_target', False)
 
         if all_passed:
             result["success"] = True
@@ -294,6 +371,14 @@ def run_validated_generation(
     sax_validator = SAXValidator()
     retry_handler = AdaptiveRetryHandler(max_retries=MAX_RETRY_ATTEMPTS)
 
+    # Initialize optimizer and loss validator (NEW)
+    optimizer = OptimizationStage(
+        enable_optimization=ENABLE_OPTIMIZATION,
+        max_iter=OPTIMIZATION_MAX_ITER,
+        n_restarts=OPTIMIZATION_RESTARTS
+    )
+    loss_validator = LossTargetValidator()
+
     results = []
     total_designs = len(problems) * SAMPLES_PER_PROBLEM
 
@@ -313,7 +398,10 @@ def run_validated_generation(
                     sax_validator=sax_validator,
                     retry_handler=retry_handler,
                     problem_idx=idx,
-                    sample_idx=sample
+                    sample_idx=sample,
+                    optimizer=optimizer,
+                    loss_validator=loss_validator,
+                    circuit_type=title.lower()  # Use title as circuit type hint
                 )
 
                 # Format result for CSV

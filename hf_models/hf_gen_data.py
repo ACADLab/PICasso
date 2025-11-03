@@ -1,6 +1,12 @@
-ENGINE            = 'hf'     # or 'openai'
+# ============================================================================
+# Inference Configuration
+# ============================================================================
+# ENGINE: 'hf' for local GPU models (RECOMMENDED), 'openai' for API
+# Local GPU benefits: No rate limits, faster, no API costs, better for batch jobs
+ENGINE            = 'hf'     # 'hf' = Local GPU models (recommended for GPU cluster)
+                            # 'openai' = OpenAI API (for quick tests without GPU)
 OPENAI_API_KEY    = 'ENTER API KEY HERE'
-HF_MODEL_NAME     = 'deepseek-ai/DeepSeek-R1-Distill-Qwen-14B'
+HF_MODEL_NAME     = 'deepseek-ai/DeepSeek-R1-Distill-Qwen-14B'  # Local model for GPU cluster
 
 FILE_ID           = 'file-4zemm4ei5rhvSuWtDxe2Xg'  # openai only
 SAMPLES_PER_PR    = 3
