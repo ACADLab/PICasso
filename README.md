@@ -1,31 +1,68 @@
 # PICasso - Photonic Circuit Design Automation
 
-**AI-Powered Photonic Integrated Circuit Generation with Complete Validation**
+**AI-Powered Photonic Integrated Circuit Generation with Validation + Optimization**
 
-## 🎯 What's New: HuggingFace Inference Workflow
+## 🎯 What's New: Optimization + GPU Cluster Support
 
-We've added a **complete validated generation workflow** that eliminates "clumsy but SAX-passing" designs!
+**Latest Updates (Nov 2025)**:
+- ⚡ **Local GPU Models**: Run on your cluster (no API limits, 10× faster)
+- 🎛️ **Phase Optimization**: Automatic tuning to minimize insertion loss
+- 🎯 **Loss Target Validation**: Verify against research benchmarks
+- 📊 **Comprehensive Metrics**: Track IL before/after optimization
+
+### ✅ Complete Workflow:
+1. **Generate** with local GPU LLMs (DeepSeek, Qwen, etc.)
+2. **Validate** with P&R + DRC + SAX checks
+3. **Optimize** phases to minimize insertion loss
+4. **Verify** against target values from research literature
+5. **Save** only designs that meet all criteria
 
 ### ✅ Key Features:
 - **Triple Validation**: P&R + DRC + SAX checks
-- **Smart Retry**: LLM gets feedback and corrects messy designs
-- **Cloud-based LLM**: DeepSeek-Coder via HF Inference API (no downloads)
-- **100% Quality**: Only saves designs that pass all validations
-- **Cost-effective**: ~10x cheaper than GPT-4
+- **Phase Optimization**: Automatic tuning of thermal shifters, couplers
+- **Loss Target Validation**: Compare against 20+ research-based targets
+- **Smart Retry**: LLM gets feedback and corrects designs
+- **Local GPU Support**: No rate limits, faster, unlimited generation
+- **100% Quality**: Only saves validated + optimized designs
 
-### 🚀 Quick Start (New Workflow):
+### 🚀 Quick Start: GPU Cluster (Recommended)
+
+```bash
+# 1. Setup (one-time, 15-20 min)
+pip install torch transformers accelerate gdsfactory sax
+# See GPU_CLUSTER_SETUP.md for detailed setup
+
+# 2. Generate with local GPU models + optimization
+cd hf_models
+python hf_gen_data.py  # Uses local DeepSeek-R1-Qwen-14B
+
+# 3. Full validated + optimized workflow
+cd hf_inference_workflow
+python gen_data_validated.py --problems ../problems.txt
+
+# Results:
+# - output/results/*.csv (with IL metrics)
+# - output/gds_files/*.gds (validated + optimized)
+```
+
+**📖 Guides:**
+- **[GPU_CLUSTER_SETUP.md](GPU_CLUSTER_SETUP.md)** - Complete GPU setup (start here!)
+- **[TODO.md](TODO.md)** - Implementation tasks and testing
+- **[FUTURE_WORK.md](FUTURE_WORK.md)** - Research directions
+
+### 🚀 Quick Start: API Inference (For Testing)
 
 ```bash
 cd hf_inference_workflow
 
-# Quick test (2-3 min)
+# Quick test with API (no GPU needed)
 python run_test_with_llm.py
 
-# Full generation
+# Full generation with API
 python gen_data_validated.py --problems test_challenging_problems.txt
 ```
 
-**See [hf_inference_workflow/START_HERE.md](hf_inference_workflow/START_HERE.md) for complete guide!**
+**See [hf_inference_workflow/START_HERE.md](hf_inference_workflow/START_HERE.md) for API setup!**
 
 ---
 

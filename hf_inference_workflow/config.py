@@ -204,3 +204,50 @@ r.add_port('o2', port=mmi_combiner.ports['o3'])
 r.draw_ports()
 r.plot()
 """
+
+# ============================================================================
+# Optimization Configuration (NEW)
+# ============================================================================
+
+# Enable phase optimization after validation
+ENABLE_OPTIMIZATION = True
+
+# Optimization parameters
+OPTIMIZATION_MAX_ITER = 400      # Maximum iterations for optimizer (Nelder-Mead)
+OPTIMIZATION_RESTARTS = 8        # Number of random restarts for global optimization
+OPTIMIZATION_TIMEOUT = 120       # Timeout for optimization (seconds)
+
+# Loss Target Validation
+ENABLE_LOSS_TARGET_CHECK = True  # Enable checking against target loss values
+LOSS_TOLERANCE_DB = 1.0          # Allowed tolerance above target (dB)
+
+# Optimization retry policy
+RETRY_ON_LOSS_TARGET_FAIL = True  # Retry with LLM feedback if loss target not met
+MAX_LOSS_OPTIMIZATION_ATTEMPTS = 2  # Max attempts to meet loss target via LLM retry
+
+# ============================================================================
+# Local GPU Model Configuration (NEW)
+# ============================================================================
+
+# Inference Mode Selection
+USE_LOCAL_GPU_MODELS = True       # True = local GPU models, False = API inference
+                                  # Local GPU is RECOMMENDED for:
+                                  #   - Faster iteration (no network latency)
+                                  #   - No rate limits
+                                  #   - No API costs
+                                  #   - Better for batch generation (100+ designs)
+
+# Local Model Selection (for USE_LOCAL_GPU_MODELS=True)
+LOCAL_MODEL_NAME = "deepseek-ai/DeepSeek-R1-Distill-Qwen-14B"
+# Alternative local models:
+# LOCAL_MODEL_NAME = "Qwen/Qwen2.5-Coder-32B-Instruct"  # Excellent code quality, needs 2×A100
+# LOCAL_MODEL_NAME = "deepseek-ai/DeepSeek-Coder-V2-Lite-Instruct"  # Memory-efficient
+
+# GPU Configuration
+AUTO_DEVICE_MAP = True            # Automatic GPU device mapping (multi-GPU support)
+TORCH_DTYPE = "float16"           # "float16" (faster) or "float32" (more accurate)
+MAX_GPU_MEMORY_GB = None          # Max GPU memory per device (None = auto)
+
+# Model Caching
+CACHE_DIR = PROJECT_ROOT / ".model_cache"  # Directory for model weights
+CACHE_DIR.mkdir(parents=True, exist_ok=True)

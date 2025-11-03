@@ -1,9 +1,22 @@
-from typing import List
+from typing import List, Optional
 import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class HFAgent:
+    """
+    Local GPU agent for photonic circuit code generation.
+
+    Features:
+    - Multi-GPU support via device_map="auto"
+    - Model caching for faster loading
+    - Memory-efficient FP16 inference on GPU
+    - Automatic fallback to CPU if GPU unavailable
+    """
+
     def __init__(
         self,
         model_name: str = "deepseek-ai/DeepSeek-R1-Distill-Qwen-14B",
@@ -12,16 +25,48 @@ class HFAgent:
         max_new_tokens: int = 2048,
         temperature: float = 0.3,
         top_p: float = 0.95,
+        cache_dir: Optional[str] = None,
     ):
+        # GPU detection and logging
         self.device = device or ("cuda" if torch.cuda.is_available() else "cpu")
 
-        self.tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)
+        if self.device == "cuda":
+            gpu_count = torch.cuda.device_count()
+            logger.info(f"🚀 Using {gpu_count} GPU(s) for model inference")
+            for i in range(gpu_count):
+                gpu_name = torch.cuda.get_device_name(i)
+                gpu_mem = torch.cuda.get_device_properties(i).total_memory / 1e9
+                logger.info(f"  GPU {i}: {gpu_name} ({gpu_mem:.1f} GB)")
+        else:
+            logger.warning("⚠️  No GPU detected - using CPU (will be slower)")
+
+        # Load tokenizer with caching
+        logger.info(f"Loading tokenizer: {model_name}")
+        self.tokenizer = AutoTokenizer.from_pretrained(
+            model_name,
+            trust_remote_code=True,
+            cache_dir=cache_dir
+        )
+
+        # Load model with multi-GPU support and caching
+        logger.info(f"Loading model: {model_name}")
         self.model = AutoModelForCausalLM.from_pretrained(
             model_name,
-            device_map="auto" if self.device == "cuda" else None,
+            device_map="auto" if self.device == "cuda" else None,  # Multi-GPU automatic
             torch_dtype=torch.float16 if self.device == "cuda" else torch.float32,
             trust_remote_code=True,
+            cache_dir=cache_dir,
+            low_cpu_mem_usage=True,  # Reduce CPU memory during loading
         )
+
+        logger.info(f"✅ Model loaded successfully on {self.device}")
+
+        # Log memory usage if on GPU
+        if self.device == "cuda":
+            for i in range(torch.cuda.device_count()):
+                allocated = torch.cuda.memory_allocated(i) / 1e9
+                reserved = torch.cuda.memory_reserved(i) / 1e9
+                logger.info(f"  GPU {i} Memory: {allocated:.2f} GB allocated, {reserved:.2f} GB reserved")
 
         self.max_new_tokens = max_new_tokens
         self.temperature = temperature
