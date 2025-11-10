@@ -1,0 +1,3 @@
+problem_idx,circuit_type,sample_idx,success,error_type,error_details,code_length
+12,crossbar 8x8 switch,2,False,EXECUTION_ERROR,"EXECUTION_ERROR: ""key='sw1' is not a valid port name or index. Available ports: []""",1160
+18,spanke–benes 8x8,1,True,,,4458

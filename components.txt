@@ -30,9 +30,18 @@ on_error – what to do on error. If error, raises an error. If None ignores the
 Must specify 'component', 'port1', 'port2', 'cross_section'. All other parameters are optional.
 
 <<< MIRRORING COMPONENTS >>>
-gdsfactory.components.component.mirror()
+IMPORTANT: Call mirror() on ComponentReference (after add_ref), NOT on raw Component!
 
-The mirror() function simply rotates the component 180 degrees. Port names do not change (ie; port o1 remains o1, o2 remains o2, and so on).
+CORRECT pattern:
+  component_ref = container.add_ref(gf.components.mmi1x2())
+  component_ref.mirror()  # ✓ Works! ComponentReference has mirror()
+
+WRONG pattern (will cause error):
+  component = gf.components.mmi1x2()  # This is a Cell/Component
+  component.mirror()  # ✗ Error! Cell has no attribute 'mirror'
+  container.add_ref(component)
+
+The mirror() function rotates the component reference 180 degrees. Port names do not change (ie; port o1 remains o1, o2 remains o2, and so on).
 
 <<< COMPONENTS >>>
 <<< Component 1 >>>

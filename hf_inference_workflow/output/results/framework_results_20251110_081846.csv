@@ -1,0 +1,11 @@
+problem_idx,circuit_type,sample_idx,success,retries_used,validation_passed
+1,mzi – mach-zehnder interferometer,0,False,2,False
+1,mzi – mach-zehnder interferometer,1,False,2,False
+1,mzi – mach-zehnder interferometer,2,False,2,False
+2,mzm – mach-zehnder modulator,0,False,2,False
+2,mzm – mach-zehnder modulator,1,False,2,False
+2,mzm – mach-zehnder modulator,2,False,2,False
+3,direct modulator,0,False,2,False
+3,direct modulator,1,False,2,False
+3,direct modulator,2,False,2,False
+4,qpsk modulator,0,False,2,False

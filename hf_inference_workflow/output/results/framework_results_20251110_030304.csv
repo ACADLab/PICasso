@@ -1,0 +1,4 @@
+problem_idx,circuit_type,sample_idx,success,retries_used,validation_passed
+4,mach-zehnder modulator,0,False,2,False
+4,mach-zehnder modulator,1,False,2,False
+4,mach-zehnder modulator,2,False,2,False

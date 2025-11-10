@@ -39,12 +39,16 @@ class HFInferenceAgent:
                 "Get your token from https://huggingface.co/settings/tokens"
             )
 
+        # Use new HuggingFace inference endpoint (router-based)
+        # Old endpoint: https://api-inference.huggingface.co (deprecated)
+        # New endpoint: https://router.huggingface.co/hf-inference
         self.client = InferenceClient(token=api_token)
         self.model = model
         self.gen_params = {**MODEL_PARAMS, **gen_params}
         self.hist: List[dict] = []
 
         logger.info(f"Initialized HFInferenceAgent with model: {model}")
+        logger.info(f"Using HuggingFace Inference API (new router endpoint)")
         logger.info(f"Generation params: {self.gen_params}")
 
     def _format_prompt(self, system_prompt: str, user_query: str) -> str:
@@ -59,19 +63,47 @@ class HFInferenceAgent:
         return prompt
 
     def _call(self, prompt: str) -> str:
-        """Make API call to HuggingFace Inference endpoint."""
+        """Make API call to HuggingFace Inference endpoint (backward compatible)."""
         try:
-            response = self.client.text_generation(
-                prompt=prompt,
-                model=self.model,
-                **self.gen_params
-            )
+            # Try chat_completion first (newer API)
+            if hasattr(self.client, 'chat_completion'):
+                response = self.client.chat_completion(
+                    model=self.model,
+                    messages=[{"role": "user", "content": prompt}],
+                    max_tokens=self.gen_params.get('max_new_tokens', 2048),
+                    temperature=self.gen_params.get('temperature', 0.3),
+                    top_p=self.gen_params.get('top_p', 0.95)
+                )
+                if hasattr(response, 'choices') and len(response.choices) > 0:
+                    return response.choices[0].message.content
+                return str(response)
 
-            if isinstance(response, str):
-                return response
+            # Fallback to direct HTTP request (works with any version)
             else:
-                # Handle different response formats
-                return response.get('generated_text', str(response))
+                import requests
+
+                url = f"https://api-inference.huggingface.co/models/{self.model}"
+                headers = {"Authorization": f"Bearer {self.client.token}"}
+                payload = {
+                    "inputs": prompt,
+                    "parameters": {
+                        "max_new_tokens": self.gen_params.get('max_new_tokens', 2048),
+                        "temperature": self.gen_params.get('temperature', 0.3),
+                        "top_p": self.gen_params.get('top_p', 0.95),
+                        "do_sample": self.gen_params.get('do_sample', True),
+                        "return_full_text": False
+                    }
+                }
+
+                response = requests.post(url, headers=headers, json=payload)
+                response.raise_for_status()
+                result = response.json()
+
+                if isinstance(result, list) and len(result) > 0:
+                    return result[0].get('generated_text', str(result))
+                elif isinstance(result, dict):
+                    return result.get('generated_text', str(result))
+                return str(result)
 
         except Exception as e:
             logger.error(f"API call failed: {e}")
