@@ -1,0 +1,21 @@
+problem_idx,circuit_type,sample_idx,success,retries_used,validation_passed,spec_passed,functional_test_name,functional_metric_value,opt_efficiency,robustness_score
+1,mzi – mach-zehnder interferometer,0,False,2,False,False,,,0.0,0.0
+1,mzi – mach-zehnder interferometer,1,False,2,False,False,,,0.0,0.0
+1,mzi – mach-zehnder interferometer,2,False,2,False,False,,,0.0,0.0
+2,mzm – mach-zehnder modulator,0,False,2,False,False,,,0.0,0.0
+2,mzm – mach-zehnder modulator,1,False,2,False,False,,,0.0,0.0
+2,mzm – mach-zehnder modulator,2,False,2,False,False,,,0.0,0.0
+3,direct modulator,0,False,2,False,False,,,0.0,0.0
+3,direct modulator,1,False,2,False,False,,,0.0,0.0
+3,direct modulator,2,False,2,False,False,,,0.0,0.0
+4,qpsk modulator,0,False,2,False,False,,,0.0,0.0
+4,qpsk modulator,1,False,2,False,False,,,0.0,0.0
+4,qpsk modulator,2,False,2,False,False,,,0.0,0.0
+5,8-qam modulator,0,False,2,False,False,,,0.0,0.0
+5,8-qam modulator,1,False,2,False,False,,,0.0,0.0
+5,8-qam modulator,2,False,2,False,False,,,0.0,0.0
+6,64-qam modulator,0,False,2,False,False,,,0.0,0.0
+6,64-qam modulator,1,False,2,False,False,,,0.0,0.0
+6,64-qam modulator,2,False,2,False,False,,,0.0,0.0
+7,wdm multiplexer,0,False,2,False,False,,,0.0,0.0
+7,wdm multiplexer,1,False,2,False,False,,,0.0,0.0

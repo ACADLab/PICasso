@@ -19,8 +19,11 @@ import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from s_optimize import DeviceOptimizer, ScatteringNetwork
+from s_optimize import DeviceOptimizer as OriginalDeviceOptimizer, ScatteringNetwork
 from netlist_optimize import optimize_netlist, Tunable
+
+# Import new device-level optimizer
+from hf_inference_workflow.optimizers.device_optimizer import DeviceOptimizer
 
 logger = logging.getLogger(__name__)
 
@@ -32,18 +35,24 @@ class OptimizationStage:
     This class wraps the optimization framework to work with validated GDSFactory components.
     """
 
-    def __init__(self, enable_optimization: bool = True, max_iter: int = 400, n_restarts: int = 8):
+    def __init__(self, enable_optimization: bool = True, enable_device_optimization: bool = True,
+                 max_iter: int = 400, n_restarts: int = 8):
         """
         Initialize optimization stage.
 
         Args:
-            enable_optimization: Whether to run optimization
+            enable_optimization: Whether to run circuit-level optimization
+            enable_device_optimization: Whether to run device-level optimization
             max_iter: Maximum iterations for optimizer
             n_restarts: Number of random restarts
         """
         self.enable_optimization = enable_optimization
+        self.enable_device_optimization = enable_device_optimization
         self.max_iter = max_iter
         self.n_restarts = n_restarts
+
+        # Initialize device-level optimizer
+        self.device_optimizer = DeviceOptimizer(enable=enable_device_optimization, use_sax=True)
 
     def optimize_design(
         self,
@@ -51,7 +60,10 @@ class OptimizationStage:
         circuit_type: Optional[str] = None
     ) -> Dict:
         """
-        Optimize phase shifters in the validated design.
+        Two-level optimization of the validated design.
+
+        LEVEL 1 (Device): Optimize component geometries to match target losses
+        LEVEL 2 (Circuit): Optimize phase shifters and couplings for minimum insertion loss
 
         Args:
             component: Validated GDSFactory component
@@ -60,24 +72,53 @@ class OptimizationStage:
         Returns:
             Dictionary with optimization results:
                 - success: bool
-                - il_before_db: float (insertion loss before optimization)
-                - il_after_db: float (insertion loss after optimization)
-                - improvement_db: float (reduction in insertion loss)
-                - optimized_params: dict (optimized parameter values)
+                - device_loss_db: float (Level 1: component geometries)
+                - circuit_loss_before_db: float (Level 2: before phase opt)
+                - circuit_loss_after_db: float (Level 2: after phase opt)
+                - total_loss_db: float (device + circuit)
+                - improvement_db: float (circuit-level improvement)
+                - device_breakdown: list (component-by-component losses)
+                - optimized_params: dict (optimized phase/coupling parameters)
                 - error: str (if failed)
         """
         result = {
             "success": False,
-            "il_before_db": None,
-            "il_after_db": None,
+            "device_loss_db": None,
+            "circuit_loss_before_db": None,
+            "circuit_loss_after_db": None,
+            "total_loss_db": None,
             "improvement_db": 0.0,
+            "device_breakdown": [],
             "optimized_params": {},
             "error": None
         }
 
+        # ======================================================================
+        # LEVEL 1: DEVICE-LEVEL OPTIMIZATION (Component Geometries)
+        # ======================================================================
+        logger.info("\n" + "=" * 70)
+        logger.info("TWO-LEVEL OPTIMIZATION")
+        logger.info("=" * 70)
+
+        device_result = self.device_optimizer.optimize_all_components(component)
+        result["device_loss_db"] = device_result.get('total_device_loss_db', 0.0)
+        result["device_breakdown"] = device_result.get('breakdown', [])
+
+        logger.info(f"\n✅ Level 1 Complete: Device Loss = {result['device_loss_db']:.2f} dB")
+
+        # ======================================================================
+        # LEVEL 2: CIRCUIT-LEVEL OPTIMIZATION (Phase Shifters & Couplings)
+        # ======================================================================
+        logger.info("\n" + "=" * 70)
+        logger.info("CIRCUIT-LEVEL OPTIMIZATION (Phase & Coupling Parameters)")
+        logger.info("=" * 70)
+
         if not self.enable_optimization:
-            result["error"] = "Optimization disabled"
-            logger.info("Optimization disabled - skipping")
+            result["error"] = "Circuit-level optimization disabled"
+            logger.info("Circuit-level optimization disabled - skipping Level 2")
+            result["circuit_loss_after_db"] = 0.0
+            result["total_loss_db"] = result["device_loss_db"]
+            result["success"] = True  # Still successful if device opt worked
             return result
 
         try:
@@ -86,7 +127,11 @@ class OptimizationStage:
 
             if not netlist or 'instances' not in netlist:
                 result["error"] = "Failed to extract netlist"
-                logger.warning("Cannot optimize: netlist extraction failed")
+                result["circuit_loss_after_db"] = 0.0
+                result["total_loss_db"] = result["device_loss_db"]
+                result["success"] = True  # Still successful if device opt worked
+                logger.warning("Cannot optimize circuit: netlist extraction failed")
+                logger.info(f"Total loss (device only): {result['total_loss_db']:.2f} dB")
                 return result
 
             # Find tunable parameters (phase shifters, heaters, etc.)
@@ -94,7 +139,11 @@ class OptimizationStage:
 
             if not tunables:
                 result["error"] = "No tunable parameters found"
-                logger.info("No tunable parameters found in design - skipping optimization")
+                result["circuit_loss_after_db"] = 0.0
+                result["total_loss_db"] = result["device_loss_db"]
+                result["success"] = True  # Still successful if device opt worked
+                logger.info("No tunable parameters found in design - skipping circuit optimization")
+                logger.info(f"Total loss (device only): {result['total_loss_db']:.2f} dB")
                 return result
 
             # Run SAX-based optimization
@@ -103,22 +152,41 @@ class OptimizationStage:
 
             if opt_result["success"]:
                 result["success"] = True
-                result["il_before_db"] = opt_result.get("il_before_db", None)
-                result["il_after_db"] = opt_result.get("il_after_db", None)
-                result["improvement_db"] = result["il_before_db"] - result["il_after_db"] if result["il_before_db"] and result["il_after_db"] else 0.0
+                result["circuit_loss_before_db"] = opt_result.get("il_before_db", None)
+                result["circuit_loss_after_db"] = opt_result.get("il_after_db", None)
+                result["improvement_db"] = result["circuit_loss_before_db"] - result["circuit_loss_after_db"] if result["circuit_loss_before_db"] and result["circuit_loss_after_db"] else 0.0
                 result["optimized_params"] = opt_result.get("params", {})
 
-                logger.info(
-                    f"Optimization successful: IL improved from {result['il_before_db']:.2f} dB "
-                    f"to {result['il_after_db']:.2f} dB ({result['improvement_db']:+.2f} dB)"
-                )
+                # Calculate total loss (device + circuit)
+                if result["circuit_loss_after_db"] is not None:
+                    result["total_loss_db"] = result["device_loss_db"] + result["circuit_loss_after_db"]
+                else:
+                    result["total_loss_db"] = result["device_loss_db"]
+
+                logger.info(f"\n✅ Level 2 Complete:")
+                if result["circuit_loss_before_db"] and result["circuit_loss_after_db"]:
+                    logger.info(f"  Circuit Loss: {result['circuit_loss_before_db']:.2f} dB → {result['circuit_loss_after_db']:.2f} dB ({result['improvement_db']:+.2f} dB)")
+                elif result["circuit_loss_after_db"]:
+                    logger.info(f"  Circuit Loss: {result['circuit_loss_after_db']:.2f} dB")
+
+                logger.info("\n" + "=" * 70)
+                logger.info(f"TOTAL LOSS: {result['total_loss_db']:.2f} dB")
+                logger.info(f"  Device Level:  {result['device_loss_db']:.2f} dB")
+                logger.info(f"  Circuit Level: {result['circuit_loss_after_db']:.2f} dB")
+                logger.info("=" * 70)
             else:
-                result["error"] = opt_result.get("error", "Optimization failed")
-                logger.warning(f"Optimization failed: {result['error']}")
+                result["error"] = opt_result.get("error", "Circuit optimization failed")
+                result["total_loss_db"] = result["device_loss_db"]
+                logger.warning(f"Circuit optimization failed: {result['error']}")
+                logger.info(f"Total loss (device only): {result['total_loss_db']:.2f} dB")
 
         except Exception as e:
             result["error"] = f"Optimization exception: {str(e)}"
+            result["circuit_loss_after_db"] = 0.0
+            result["total_loss_db"] = result["device_loss_db"] if result["device_loss_db"] else 0.0
             logger.error(f"Optimization error: {e}", exc_info=True)
+            if result["total_loss_db"]:
+                logger.info(f"Total loss (device only): {result['total_loss_db']:.2f} dB")
 
         return result
 
@@ -273,17 +341,34 @@ class OptimizationStage:
             return f"OPTIMIZATION FAILED: {result.get('error', 'Unknown error')}"
 
         feedback_parts = []
-        feedback_parts.append("OPTIMIZATION COMPLETED")
+        feedback_parts.append("TWO-LEVEL OPTIMIZATION COMPLETED")
+        feedback_parts.append("")
 
-        if result["il_before_db"] and result["il_after_db"]:
+        # Device-level breakdown
+        if result.get("device_loss_db") is not None:
+            feedback_parts.append(f"Level 1 (Device Geometries): {result['device_loss_db']:.2f} dB")
+            if result.get("device_breakdown"):
+                feedback_parts.append("  Component breakdown:")
+                for comp_type, count, loss_per_unit, total_loss in result["device_breakdown"]:
+                    feedback_parts.append(f"    {count}× {comp_type}: {loss_per_unit:.3f} dB each = {total_loss:.3f} dB")
+
+        # Circuit-level optimization
+        if result.get("circuit_loss_before_db") and result.get("circuit_loss_after_db"):
+            feedback_parts.append("")
             feedback_parts.append(
-                f"Insertion Loss: {result['il_before_db']:.2f} dB → {result['il_after_db']:.2f} dB "
+                f"Level 2 (Circuit Parameters): {result['circuit_loss_before_db']:.2f} dB → {result['circuit_loss_after_db']:.2f} dB "
                 f"(improvement: {result['improvement_db']:+.2f} dB)"
             )
-        elif result["il_after_db"]:
-            feedback_parts.append(f"Final Insertion Loss: {result['il_after_db']:.2f} dB")
+        elif result.get("circuit_loss_after_db") is not None:
+            feedback_parts.append("")
+            feedback_parts.append(f"Level 2 (Circuit Parameters): {result['circuit_loss_after_db']:.2f} dB")
 
-        if result["optimized_params"]:
-            feedback_parts.append(f"Optimized {len(result['optimized_params'])} parameters")
+        # Total loss
+        if result.get("total_loss_db") is not None:
+            feedback_parts.append("")
+            feedback_parts.append(f"TOTAL INSERTION LOSS: {result['total_loss_db']:.2f} dB")
+
+        if result.get("optimized_params"):
+            feedback_parts.append(f"Optimized {len(result['optimized_params'])} circuit parameters")
 
         return "\n".join(feedback_parts)

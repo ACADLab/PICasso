@@ -1,0 +1,23 @@
+{
+  "mach-zehnder modulator": {
+    "raw_llm": {
+      "pass_at_k": 0.3333333333333333,
+      "passed": 1,
+      "total": 3,
+      "error_breakdown": {
+        "ATTRIBUTE_ERROR": 1,
+        "EXECUTION_ERROR": 1
+      }
+    },
+    "framework": {
+      "pass_at_k": 1.0,
+      "passed": 3,
+      "total": 3,
+      "avg_retries": 0.6666666666666666
+    },
+    "improvement": {
+      "absolute": 0.6666666666666667,
+      "relative_pct": 200.00000000000006
+    }
+  }
+}

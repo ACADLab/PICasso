@@ -1,0 +1,4 @@
+problem_idx,circuit_type,sample_idx,success,error_type,error_details,code_length
+4,mach-zehnder modulator,0,True,,,956
+4,mach-zehnder modulator,1,True,,,956
+4,mach-zehnder modulator,2,True,,,956

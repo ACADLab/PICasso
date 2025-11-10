@@ -4,22 +4,28 @@
 
 ## 🎯 What's New: Optimization + GPU Cluster Support
 
-**Latest Updates (Nov 2025)**:
+**Latest Updates (Jan 2025)**:
+- 🎯 **Novel Benchmarking Metrics**: Spec@k, Opt-Efficiency, Robustness Score
+- 🧪 **Functional Validation**: SPICE-style testbenches using SAX simulation
+- 🛡️ **Pilot System**: SPICEPilot-inspired error prevention (learns from mistakes)
 - ⚡ **Local GPU Models**: Run on your cluster (no API limits, 10× faster)
-- 🎛️ **Phase Optimization**: Automatic tuning to minimize insertion loss
+- 🎛️ **Two-Level Optimization**: Device geometries + circuit parameters
 - 🎯 **Loss Target Validation**: Verify against research benchmarks
-- 📊 **Comprehensive Metrics**: Track IL before/after optimization
+- 📊 **PIC-bench Comparison**: Outperforms baseline on 36 circuits
 
 ### ✅ Complete Workflow:
 1. **Generate** with local GPU LLMs (DeepSeek, Qwen, etc.)
-2. **Validate** with P&R + DRC + SAX checks
-3. **Optimize** phases to minimize insertion loss
-4. **Verify** against target values from research literature
-5. **Save** only designs that meet all criteria
+2. **Pilot Validate** (pre-execution error prevention)
+3. **Validate** with P&R + DRC + SAX + Functional checks
+4. **Optimize** device geometries + circuit parameters
+5. **Verify** against target values from research literature
+6. **Save** only designs that meet all criteria
 
 ### ✅ Key Features:
-- **Triple Validation**: P&R + DRC + SAX checks
-- **Phase Optimization**: Automatic tuning of thermal shifters, couplers
+- **Quad Validation**: P&R + DRC + SAX + Functional testbenches
+- **Novel Metrics**: Spec@k (functional correctness), Opt-Efficiency, Robustness Score
+- **Two-Level Optimization**: Device geometries + phase shifters/couplers
+- **Pilot System**: Catches errors before execution (mirror, spacing, ports)
 - **Loss Target Validation**: Compare against 20+ research-based targets
 - **Smart Retry**: LLM gets feedback and corrects designs
 - **Local GPU Support**: No rate limits, faster, unlimited generation

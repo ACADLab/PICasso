@@ -94,13 +94,45 @@ class RetryHandler:
 
         # Add stage-specific feedback
         if failed_stage == ValidationStage.PARSING:
-            feedback_parts.append("PARSING ERROR:")
-            feedback_parts.append("The generated code could not be parsed or executed.")
-            feedback_parts.append("Please ensure:")
-            feedback_parts.append("  - Code is valid Python syntax")
-            feedback_parts.append("  - All imports are correct")
-            feedback_parts.append("  - No undefined variables")
-            feedback_parts.append("  - Proper indentation")
+            parsing_report = validation_reports.get('parsing', {})
+            error_type = parsing_report.get('error_type', 'UNKNOWN')
+            error_details = parsing_report.get('error_details', '')
+            specific_feedback = parsing_report.get('feedback', '')
+
+            feedback_parts.append("CODE EXECUTION ERROR:")
+            feedback_parts.append(f"Error Type: {error_type}")
+
+            if error_type == "ROUTING_COLLISION":
+                feedback_parts.append("\n⚠️  ROUTING COLLISION DETECTED ⚠️")
+                feedback_parts.append("This is a CRITICAL SPACING ISSUE!")
+                feedback_parts.append("\nYour components are TOO CLOSE causing waveguide overlap.")
+                feedback_parts.append(specific_feedback or "")
+                feedback_parts.append("\n🔧 MANDATORY FIXES:")
+                feedback_parts.append("  1. DOUBLE all component spacing (at least 50µm minimum)")
+                feedback_parts.append("  2. For vertical stacking: use ±50µm vertical offset")
+                feedback_parts.append("  3. For horizontal placement: minimum 150µm apart")
+                feedback_parts.append("  4. Increase bend radius to 15µm (was 10µm)")
+                feedback_parts.append("  5. Increase route separation to 15µm")
+                feedback_parts.append("\n⚡ CRITICAL: Generous spacing prevents collisions!")
+
+            elif error_type == "MIRROR_ERROR":
+                feedback_parts.append("\n⚠️  MIRROR METHOD ERROR ⚠️")
+                feedback_parts.append(specific_feedback or "")
+                feedback_parts.append("\n🔧 FIX: Always call mirror() AFTER add_ref(), never before!")
+
+            elif error_type == "PORT_ERROR":
+                feedback_parts.append("\n⚠️  PORT ERROR ⚠️")
+                feedback_parts.append(specific_feedback or "")
+
+            else:
+                feedback_parts.append("\nThe generated code could not be executed.")
+                feedback_parts.append("Please ensure:")
+                feedback_parts.append("  - Code is valid Python syntax")
+                feedback_parts.append("  - All imports are correct")
+                feedback_parts.append("  - No undefined variables")
+                feedback_parts.append("  - Proper indentation")
+                if error_details:
+                    feedback_parts.append(f"\nError details: {error_details}")
 
         elif failed_stage == ValidationStage.PNR:
             pnr_report = validation_reports.get('pnr', {})

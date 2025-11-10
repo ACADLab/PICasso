@@ -1,0 +1,20 @@
+{
+  "mirror_error_count": 2,
+  "spacing_error_count": 18,
+  "port_error_count": 0,
+  "routing_error_count": 95,
+  "custom_patterns": [
+    {
+      "type": "routing_error",
+      "occurrences": 3,
+      "action": "block",
+      "created_at": "1762779195.1200886"
+    },
+    {
+      "type": "spacing_error",
+      "occurrences": 3,
+      "action": "block",
+      "created_at": "1762781450.968959"
+    }
+  ]
+}

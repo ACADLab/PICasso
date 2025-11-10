@@ -1,0 +1,58 @@
+2025-11-10 08:06:15,470 - hf_inference_workflow.gen_data_validated - INFO - Loaded 0 problems from /home/asus/Desktop/gits/PICasso/Pic_set.txt
+2025-11-10 08:06:15,470 - hf_inference_workflow.hf_api_client - INFO - Initialized HFInferenceAgent with model: Qwen/Qwen2.5-Coder-32B-Instruct
+2025-11-10 08:06:15,470 - hf_inference_workflow.hf_api_client - INFO - Using HuggingFace Inference API (new router endpoint)
+2025-11-10 08:06:15,470 - hf_inference_workflow.hf_api_client - INFO - Generation params: {'max_new_tokens': 2048, 'temperature': 0.3, 'top_p': 0.95, 'do_sample': True}
+2025-11-10 08:06:15,470 - hf_inference_workflow.optimizers.device_optimizer - WARNING - SAX not available - will use analytical approximations
+
+Overall Progress: 0it [00:00, ?it/s]
+Overall Progress: 0it [00:00, ?it/s]
+Traceback (most recent call last):
+  File "/home/asus/Desktop/gits/PICasso/run_full_benchmark_36.py", line 262, in <module>
+    main()
+  File "/home/asus/Desktop/gits/PICasso/run_full_benchmark_36.py", line 231, in main
+    print(f"  ✅ Success: {stats['success']} ({stats['success']/stats['total']*100:.1f}%)")
+ZeroDivisionError: division by zero
+
+ERROR conda.cli.main_run:execute(125): `conda run python run_full_benchmark_36.py` failed. (See above for error)
+
+======================================================================
+PICASSO FULL BENCHMARK - 36 PROBLEMS
+======================================================================
+
+Configuration:
+  Problem Set: Pic_set.txt (36 problems)
+  Samples per Problem: 3
+  Total Samples: 108
+  Device Optimization (Level 1): True
+  Circuit Optimization (Level 2): True
+  Max Iterations: 400
+  Random Restarts: 8
+  Max Retries: 3
+
+✅ Loaded 0 problems from Pic_set.txt
+
+Complexity breakdown:
+
+Problems to benchmark:
+
+Initializing validators...
+✅ All validators initialized (including pilot validator)
+
+======================================================================
+STARTING BENCHMARK
+======================================================================
+
+
+======================================================================
+SAVING FINAL RESULTS
+======================================================================
+
+======================================================================
+BENCHMARK COMPLETE
+======================================================================
+
+Total Samples: 0
+
+
+❌ Benchmarking failed: division by zero
+
