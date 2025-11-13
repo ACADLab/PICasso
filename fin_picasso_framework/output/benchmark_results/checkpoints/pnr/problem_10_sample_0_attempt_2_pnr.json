@@ -1,0 +1,31 @@
+{
+  "timestamp": "2025-11-12T17:05:51.343024",
+  "stage": "pnr",
+  "problem_idx": 10,
+  "sample_idx": 0,
+  "attempt": 2,
+  "status": "pass",
+  "error": null,
+  "metadata": {
+    "validation_type": "pnr"
+  },
+  "code": "import gdsfactory as gf\n\nr = gf.Component()\n\n# Add MZI component\nmzi_switch = r.add_ref(gf.components.mzi())\nmzi_switch.move((0, 0))\n\n# Add phase control component\nphase_control = r.add_ref(gf.components.straight_heater_metal())\nphase_control.move((200, 0))\n\n# Route connections\ngf.routing.route_single(\n    r,\n    mzi_switch.ports['o1'],\n    phase_control.ports['o1'],\n    cross_section='strip',\n    radius=20\n)\n\ngf.routing.route_single(\n    r,\n    mzi_switch.ports['o2'],\n    phase_control.ports['o2'],\n    cross_section='strip',\n    radius=20\n)\n\n# Expose external ports\nr.add_port('o1', port=mzi_switch.ports['o1'])\nr.add_port('o2', port=mzi_switch.ports['o2'])\nr.add_port('ctrl1', port=phase_control.ports['o1'])\nr.add_port('ctrl2', port=phase_control.ports['o2'])\n\nr.draw_ports()\nr.plot()",
+  "validation_report": {
+    "passed": true,
+    "errors": [],
+    "warnings": [
+      "Layout area 45925250000\u00b5m\u00b2 exceeds maximum 500000\u00b5m\u00b2"
+    ],
+    "metrics": {
+      "layout_area": 45925250000.0,
+      "layout_width": 570500.0,
+      "layout_height": 80500.0,
+      "aspect_ratio": 7.086956521739131,
+      "num_components": 12,
+      "num_ports": 4,
+      "compactness": 0.1411042944785276,
+      "quality_score": 0.4564417177914111
+    }
+  },
+  "gds_file": "checkpoints/pnr/problem_10_sample_0_attempt_2_pnr.gds"
+}

@@ -31,6 +31,7 @@ from hf_inference_workflow.validators.loss_target_validator import LossTargetVal
 from hf_inference_workflow.validators.functional_validator import FunctionalValidator
 from hf_inference_workflow.validators.pilot_validator import PilotValidator
 from hf_inference_workflow.optimization_integration import OptimizationStage
+from hf_inference_workflow.auto_corrector import AutoCorrector
 from hf_inference_workflow.retry_handler import RetryHandler, ValidationStage, AdaptiveRetryHandler
 from hf_inference_workflow.metrics import (
     compute_opt_efficiency,
@@ -51,7 +52,8 @@ from hf_inference_workflow.config import (
     ENABLE_LOSS_TARGET_CHECK,
     ENABLE_FUNCTIONAL_VALIDATION,
     OPTIMIZATION_MAX_ITER,
-    OPTIMIZATION_RESTARTS
+    OPTIMIZATION_RESTARTS,
+    ENABLE_AUTO_CORRECTION
 )
 
 # Setup logging
@@ -353,6 +355,54 @@ Common Issues:
         return f"Execution error: {error_msg}\nPlease review the generated code for errors."
 
 
+def _clean_generated_code(code: str) -> str:
+    """
+    Clean generated code to fix common LLM errors before validation.
+    
+    Fixes:
+    - Invalid decimal literals (10.0.5 -> 10.0, 10µm -> 10.0, 10.0.5.2 -> 10.0)
+    - Unicode characters in numbers
+    - Malformed number patterns
+    
+    IMPORTANT: Only fixes numeric literals, not method calls or other code.
+    """
+    import re
+    
+    # Step 1: Fix numbers with units attached (must match as complete numeric literals)
+    # Pattern: number followed by unit, but not part of identifier
+    # Match: 10µm, 100um, but not variable10µm (which would be invalid anyway)
+    code = re.sub(r'(\d+)(µm|um)(?=\s|,|\)|]|$)', r'\1.0', code)
+    code = re.sub(r'(\d+\.\d+)(µm|um)(?=\s|,|\)|]|$)', r'\1', code)  # 10.5µm -> 10.5
+    
+    # Step 2: Remove Unicode from numbers (×, etc.) - only after numbers
+    code = re.sub(r'(\d+\.?\d*)\s*×(?=\s|,|\)|]|$)', r'\1', code)
+    
+    # Step 3: Fix invalid decimal literals with multiple dots (10.0.5 -> 10.0, 10.0.5.2 -> 10.0)
+    # Must be a complete numeric literal, not part of method call
+    def fix_multiple_dots(match):
+        num_str = match.group(0)
+        parts = num_str.split('.')
+        if len(parts) > 2:
+            # Multiple dots - keep only first two parts (integer and first decimal)
+            return f"{parts[0]}.{parts[1]}"
+        return num_str
+    
+    # Match numbers with 3+ dots (e.g., 10.0.5, 10.0.5.2) - word boundary ensures it's a number
+    # Use non-greedy to match shortest first, then apply recursively
+    while re.search(r'\b\d+\.\d+\.\d+', code):
+        code = re.sub(r'\b\d+\.\d+\.\d+(?=\s|,|\)|]|$)', fix_multiple_dots, code)
+    
+    # Step 4: Fix decimal followed by non-digit unit (10.µm -> 10.0)
+    # Only match if followed by unit characters, not method names
+    code = re.sub(r'(\d+)\.(µm|um|×)(?=\s|,|\)|]|$)', r'\1.0', code)
+    
+    # Step 5: Fix cases where decimal point is followed by non-numeric (10.µm -> 10.0)
+    # This catches cases like "10.µm" where µm comes right after the dot
+    code = re.sub(r'(\d+)\.([^\d\s,\)\]\[]+)(?=\s|,|\)|]|$)', r'\1.0', code)
+    
+    return code
+
+
 def parse_and_execute_code(code: str) -> Tuple[Optional[gf.Component], Optional[str]]:
     """
     Parse and execute generated Python code to create GDSFactory component.
@@ -376,11 +426,16 @@ def parse_and_execute_code(code: str) -> Tuple[Optional[gf.Component], Optional[
                 code = result_match.group(1).strip()
                 logger.info("Extracted code from <result> section")
 
-        # Remove markdown fences if present
-        if code.startswith("```"):
-            code = code.strip("`")
-            if code.startswith("python"):
-                code = code[6:]
+        # Remove markdown code fences more robustly
+        import re
+        # Remove ```python or ``` at start
+        code = re.sub(r'^```(?:python)?\s*\n?', '', code, flags=re.MULTILINE)
+        # Remove ``` at end
+        code = re.sub(r'\n?```\s*$', '', code, flags=re.MULTILINE)
+        code = code.strip()
+
+        # Clean common LLM errors (decimal literals, Unicode, etc.)
+        code = _clean_generated_code(code)
 
         # Create execution namespace
         ns = {"gf": gf}
@@ -583,7 +638,9 @@ def generate_with_validation(
         "drc_passed": False,
         "sax_passed": False,
         "gds_path": None,
-        "validation_reports": {}
+        "validation_reports": {},
+        "auto_corrected": False,
+        "correction_type": None
     }
 
     retry_handler.reset()
@@ -615,17 +672,62 @@ def generate_with_validation(
             retry_prompt = retry_handler.create_retry_prompt(prompt, feedback, attempt)
             code = agent.ASK_LLM(prompt, retry_prompt)
 
-        result["code"] = code
+        # Extract code from markdown/structured format BEFORE validation
+        # This must happen before pilot validation since pilot uses ast.parse() which fails on syntax errors
+        import re
+        
+        # Extract from <result> tag if present
+        if "<result>" in code and "</result>" in code:
+            result_match = re.search(r'<result>(.*?)</result>', code, re.DOTALL)
+            if result_match:
+                code = result_match.group(1).strip()
+                logger.debug("Extracted code from <result> section")
+        
+        # Remove markdown code fences (```python ... ```)
+        code = re.sub(r'^```(?:python)?\s*\n?', '', code, flags=re.MULTILINE)
+        code = re.sub(r'\n?```\s*$', '', code, flags=re.MULTILINE)
+        code = code.strip()
+        
+        # Clean code (fix common LLM errors like invalid decimal literals)
+        from hf_inference_workflow.gen_data_validated import _clean_generated_code
+        
+        # Log raw code for debugging (first 500 chars)
+        if attempt == 0 or attempt == 1:  # Log first two attempts
+            code_preview = code[:500].replace('\n', '\\n')
+            logger.debug(f"Raw generated code (first 500 chars): {code_preview}")
+        
+        cleaned_code = _clean_generated_code(code)
+        
+        # Log if cleaning made changes
+        if cleaned_code != code:
+            logger.info(f"Code cleaning applied (removed Unicode/fixed decimals)")
+            cleaned_preview = cleaned_code[:500].replace('\n', '\\n')
+            logger.debug(f"Cleaned code (first 500 chars): {cleaned_preview}")
+        
+        result["code"] = cleaned_code
         result["retry_attempts"] = attempt
 
-        # PILOT VALIDATION: Pre-execution code validation
+        # PILOT VALIDATION: Pre-execution code validation (uses cleaned code)
         logger.info("Running pilot validation (pre-execution checks)...")
-        pilot_valid, pilot_error = pilot_validator.validate(code)
+        pilot_valid, pilot_error = pilot_validator.validate(cleaned_code)
 
         if not pilot_valid:
             logger.warning(f"❌ Pilot validation failed: {pilot_error}")
             result["failed_stage"] = ValidationStage.PARSING
             result["parsing_error"] = f"PILOT_ERROR: {pilot_error}"
+
+            # Save failed code for analysis (first attempt only)
+            if attempt == 0:
+                from pathlib import Path
+                failed_code_dir = Path(__file__).parent.parent / "output" / "failed_code_samples"
+                failed_code_dir.mkdir(parents=True, exist_ok=True)
+                failed_code_file = failed_code_dir / f"problem_{problem_idx}_sample_{sample_idx}_attempt_{attempt}.py"
+                with open(failed_code_file, 'w', encoding='utf-8') as f:
+                    f.write(f"# Problem {problem_idx}, Sample {sample_idx}, Attempt {attempt}\n")
+                    f.write(f"# Error: {pilot_error}\n")
+                    f.write(f"# Raw code:\n{code}\n")
+                    f.write(f"\n# Cleaned code:\n{cleaned_code}\n")
+                logger.debug(f"Saved failed code sample to: {failed_code_file}")
 
             # Track pilot violation
             if "pilot_violations" not in result:
@@ -643,9 +745,79 @@ def generate_with_validation(
             retry_handler.record_attempt(attempt, ValidationStage.PARSING, pilot_feedback, code)
 
             if not retry_handler.should_retry(attempt + 1):
-                logger.warning("Max retries reached")
-                break
-            continue  # Skip to next retry iteration
+                logger.warning("Max retries reached for pilot validation")
+                
+                # AUTO-CORRECTION: Try auto-correct pilot errors as last resort
+                if ENABLE_AUTO_CORRECTION and not result.get("auto_corrected", False):
+                    logger.info("Attempting auto-correction for pilot validation failure...")
+                    auto_corrector = AutoCorrector()
+                    
+                    # Extract error type from pilot error message
+                    error_type = "parsing"  # Default
+                    if "SYNTAX" in pilot_error.upper() or "invalid character" in pilot_error.lower():
+                        error_type = "parsing"
+                    elif "ROUTING" in pilot_error.upper():
+                        error_type = "routing_error"
+                    elif "MIRROR" in pilot_error.upper():
+                        error_type = "mirror_error"
+                    elif "SPACING" in pilot_error.upper():
+                        error_type = "spacing_error"
+                    elif "PORT" in pilot_error.upper():
+                        error_type = "port_error"
+                    
+                    # Try auto-correction with iterative refinement (up to 3 passes)
+                    corrected_code = code
+                    max_correction_passes = 3
+                    correction_applied = False
+                    
+                    for correction_pass in range(max_correction_passes):
+                        corrected_code = auto_corrector.attempt_correction(
+                            code=corrected_code,
+                            error_type=error_type,
+                            validation_reports={"pilot_error": pilot_error}
+                        )
+                        
+                        if corrected_code and corrected_code != code:
+                            correction_applied = True
+                            logger.info(f"Auto-correction pass {correction_pass + 1} applied for {error_type}")
+                            
+                            # Re-validate corrected code with pilot
+                            pilot_valid_corrected, pilot_error_corrected = pilot_validator.validate(corrected_code)
+                            
+                            if pilot_valid_corrected:
+                                logger.info(f"✅ Auto-correction fixed pilot validation after {correction_pass + 1} pass(es)! Continuing...")
+                                result["auto_corrected"] = True
+                                result["correction_type"] = error_type
+                                result["code"] = corrected_code
+                                code = corrected_code  # Use corrected code for execution
+                                # Continue to code execution below (don't break)
+                                break
+                            else:
+                                # Update error for next pass
+                                pilot_error = pilot_error_corrected
+                                # Update error_type based on new error
+                                if "SYNTAX" in pilot_error.upper() or "invalid" in pilot_error.lower():
+                                    error_type = "parsing"
+                                elif "ROUTING" in pilot_error.upper():
+                                    error_type = "routing_error"
+                                error_preview = pilot_error_corrected[:50] if pilot_error_corrected and len(pilot_error_corrected) > 50 else (pilot_error_corrected or "unknown")
+                                logger.info(f"Auto-correction pass {correction_pass + 1} fixed some issues, but new error: {error_preview}...")
+                        else:
+                            break  # No more corrections possible
+                    
+                    # Final check: if correction was applied, validate it; otherwise we failed
+                    if correction_applied and corrected_code:
+                        final_valid, final_error = pilot_validator.validate(corrected_code)
+                        if not final_valid:
+                            logger.warning(f"Auto-correction could not fix pilot error after {max_correction_passes} passes. Final error: {final_error[:100] if final_error else 'unknown'}")
+                        break
+                    else:
+                        logger.warning(f"Auto-correction could not fix pilot error - no corrections applied")
+                        break
+                else:
+                    break
+            else:
+                continue  # Skip to next retry iteration
 
         logger.info("✅ Pilot validation passed")
 
@@ -749,6 +921,95 @@ def generate_with_validation(
 
             if not retry_handler.should_retry(attempt + 1):
                 logger.warning(f"Max retries reached")
+                
+                # AUTO-CORRECTION: Try auto-correct as last resort
+                if ENABLE_AUTO_CORRECTION and not result.get("auto_corrected", False):
+                    logger.info("Attempting auto-correction as fallback...")
+                    auto_corrector = AutoCorrector()
+                    
+                    # Determine error type from failed stage
+                    error_type = result.get("failed_stage").value if result.get("failed_stage") else "unknown"
+                    if result.get("parsing_error"):
+                        error_type = result["parsing_error"].split(":")[0].lower()
+                    
+                    corrected_code = auto_corrector.attempt_correction(
+                        code=result.get("code", code),
+                        error_type=error_type,
+                        validation_reports=result.get("validation_reports")
+                    )
+                    
+                    if corrected_code and corrected_code != result.get("code", code):
+                        logger.info(f"Auto-correction applied for {error_type}")
+                        
+                        # Try parsing and executing corrected code
+                        component_corrected, error_msg_corrected = parse_and_execute_code(corrected_code)
+                        
+                        if component_corrected is not None:
+                            logger.info("✅ Auto-correction succeeded! Re-running validation...")
+                            result["auto_corrected"] = True
+                            result["correction_type"] = error_type
+                            result["code"] = corrected_code
+                            
+                            # Create GDS file for corrected design
+                            gds_filename_corrected = f"problem_{problem_idx}_sample_{sample_idx}_autocorrect.gds"
+                            gds_path_corrected = str(GDS_OUTPUT_DIR / gds_filename_corrected)
+                            
+                            try:
+                                component_corrected.write_gds(gds_path_corrected)
+                                result["gds_path"] = gds_path_corrected
+                                
+                                # Re-run validation pipeline on corrected design
+                                all_passed_corrected, reports_corrected, failed_stage_corrected = validate_design(
+                                    component=component_corrected,
+                                    pnr_validator=pnr_validator,
+                                    drc_validator=drc_validator,
+                                    sax_validator=sax_validator,
+                                    gds_path=gds_path_corrected,
+                                    circuit_type=circuit_type,
+                                    circuit_description=problem_desc,
+                                    optimizer=optimizer,
+                                    loss_validator=loss_validator
+                                )
+                                
+                                result["validation_reports"] = reports_corrected
+                                result["pnr_passed"] = reports_corrected.get('pnr', {}).get('passed', False)
+                                result["drc_passed"] = reports_corrected.get('drc', {}).get('passed', False)
+                                result["sax_passed"] = reports_corrected.get('sax', {}).get('passed', False)
+                                
+                                # Update optimization metrics
+                                opt_report_corrected = reports_corrected.get('optimization', {})
+                                result["optimization_success"] = opt_report_corrected.get('success', False)
+                                result["device_loss_db"] = opt_report_corrected.get('device_loss_db')
+                                result["circuit_loss_before_db"] = opt_report_corrected.get('circuit_loss_before_db')
+                                result["circuit_loss_after_db"] = opt_report_corrected.get('circuit_loss_after_db')
+                                result["total_loss_db"] = opt_report_corrected.get('total_loss_db')
+                                result["circuit_improvement_db"] = opt_report_corrected.get('improvement_db', 0.0)
+                                result["il_before_db"] = opt_report_corrected.get('circuit_loss_before_db') or opt_report_corrected.get('il_before_db')
+                                result["il_after_db"] = opt_report_corrected.get('total_loss_db') or opt_report_corrected.get('il_after_db')
+                                result["il_improvement_db"] = opt_report_corrected.get('improvement_db', 0.0)
+                                
+                                # Update loss target metrics
+                                loss_report_corrected = reports_corrected.get('loss_target', {})
+                                result["loss_target_db"] = loss_report_corrected.get('target_db')
+                                result["loss_achieved_db"] = loss_report_corrected.get('achieved_db')
+                                result["loss_margin_db"] = loss_report_corrected.get('margin_db')
+                                result["meets_loss_target"] = loss_report_corrected.get('meets_target', False)
+                                
+                                if all_passed_corrected:
+                                    result["success"] = True
+                                    result["failed_stage"] = None
+                                    logger.info("✅ Auto-corrected design passed all validations!")
+                                else:
+                                    result["failed_stage"] = failed_stage_corrected
+                                    logger.warning(f"Auto-corrected design failed at: {failed_stage_corrected.value}")
+                                    
+                            except Exception as e:
+                                logger.error(f"Auto-corrected design GDS write failed: {e}")
+                        else:
+                            logger.warning(f"Auto-correction did not fix parsing error: {error_msg_corrected}")
+                    else:
+                        logger.warning("No auto-correction available for this error type")
+                
                 break
 
     # PHASE 2: Track framework result (after retries + validation)
@@ -766,6 +1027,8 @@ def generate_with_validation(
             result.get("drc_passed", False),
             result.get("sax_passed", False)
         ]) if framework_success else False,
+        "auto_corrected": result.get("auto_corrected", False),
+        "correction_type": result.get("correction_type", None),
     }
 
     # Add validation metrics if available

@@ -1,0 +1,2204 @@
+problem_idx,problem_title,sample,success,retry_attempts,failed_stage,pnr_passed,drc_passed,sax_passed,gds_path,code
+1,MZI - Mach-Zehnder Interferometer,0,False,2,parsing,False,False,False,,"<analysis>
+We need to create a Mach-Zehnder interferometer with a single optical input and output. We will use:
+  1. Two MMI1x2 (id: mmi1, mmi2)
+  2. One phase shifter (id: phase_shifter)
+
+Component arrangement:
+  - MMI1x2 at (0, 0)
+  - Phase shifter at (100, 50) - vertical separation 100.0 prevents collision
+  - MMI2x1 at (250, 0) - horizontal separation 250.0 provides safe routing space
+
+Port connections:
+  - MMI1x2 o2, o3 -> Phase shifter inputs
+  - Phase shifter outputs -> MMI2x1 o2, o1 (note reversed order)
+
+Critical: MMI2x1 needs mirror() called AFTER add_ref() to match port orientation.
+</analysis>
+
+<result>
+import gdsfactory as gf
+
+r = gf.Component()
+
+mmi1 = r.add_ref(gf.components.mmi1x2(delta_length=10.0, length_y=2.0))
+mmi1.00,0))
+
+ps = r.add_ref(gf.components.straight_heater_metal(length=10))
+ps.move((100, 50))
+
+mmi2 = r.add_ref(gf.components.mmi2x1())
+mmi2.0)
+mmi2.0250, 0))
+
+gf.routing.route_bundle(
+    r,
+    [mmi1.02'], mmi1.03']],
+    [ps.ports['o1'], ps.ports['o1']],
+    cross_section='strip',
+    radius=15,
+    separation=15
+)
+
+gf.routing.route_bundle(
+    r,
+    [ps.ports['o2'], ps.ports['o2']],
+    [mmi2.02'], mmi2.01']],
+    cross_section='strip',
+    radius=15,
+    separation=15
+)
+
+r.add_port('o1', port=mmi1.01'])
+r.add_port('o2', port=mmi2.03'])
+
+r.draw_ports()
+r.plot()
+</result>"
+1,MZI - Mach-Zehnder Interferometer,1,False,2,parsing,False,False,False,,"<analysis>
+We need to create a Mach-Zehnder interferometer with a single optical input and output. We will use:
+  1. Two MMI1x2 (id: mmi1, mmi2)
+  2. One phase shifter (id: phase_shifter)
+
+Component arrangement:
+  - MMI1x2 at (0, 0)
+  - MMI1x2 at (100, 0) - 100.0 spacing prevents collision
+  - Phase shifter at (200, 0) - horizontal separation 200.0 provides safe routing space
+
+Port connections:
+  - MMI1x2 o2, o3 -> Phase shifter inputs
+  - Phase shifter outputs -> MMI1x2 o2, o3 (note reversed order)
+
+Critical: Phase shifter needs mirroring for correct orientation.
+</analysis>
+
+<result>
+import gdsfactory as gf
+
+r = gf.Component()
+
+mmi1 = r.add_ref(gf.components.mmi1x2())
+mmi1.00,0))
+
+mmi2 = r.add_ref(gf.components.mmi1x2())
+mmi2.0100, 0))
+
+ps = r.add_ref(gf.components.straight_heater_metal(length=10))
+ps.move((200, 0))
+
+gf.routing.route_bundle(
+    r,
+    [mmi1.02'], mmi1.03']],
+    [ps.ports['o1'], ps.ports['o1']],
+    cross_section='strip',
+    radius=15,
+    separation=20
+)
+
+gf.routing.route_bundle(
+    r,
+    [ps.ports['o2'], ps.ports['o2']],
+    [mmi2.02'], mmi2.03']],
+    cross_section='strip',
+    radius=15,
+    separation=20
+)
+
+r.add_port('o1', port=mmi1.01'])
+r.add_port('o2', port=mmi2.02'])
+
+r.draw_ports()
+r.plot()
+</result>"
+1,MZI - Mach-Zehnder Interferometer,2,False,2,parsing,False,False,False,,"<analysis>
+We need to create a Mach-Zehnder interferometer with a single optical input and output. We will use:
+  1. Two MMI1x2 (id: mmi1, mmi2)
+  2. One phase shifter (id: phase_shifter)
+
+Component arrangement:
+  - MMI1x2 at (0, 0)
+  - MMI1x2 at (100, 0) - 100.0 separation to prevent collision
+  - Phase shifter at (200, 0) - 100.0 separation to prevent collision
+
+Port connections:
+  - MMI1x2 o2, o3 -> Phase shifter inputs
+  - Phase shifter outputs -> MMI1x2 o2, o3 (note reversed order)
+
+Critical: Phase shifter needs mirroring for correct orientation.
+</analysis>
+
+<result>
+import gdsfactory as gf
+
+r = gf.Component()
+
+mmi1 = r.add_ref(gf.components.mmi1x2())
+mmi1.00,0))
+
+mmi2 = r.add_ref(gf.components.mmi1x2())
+mmi2.0100, 0))
+
+ps = r.add_ref(gf.components.straight_heater_metal(length=10))
+ps.move((200, 0))
+
+gf.routing.route_bundle(
+    r,
+    [mmi1.02'], mmi1.03']],
+    [ps.ports['o1'], ps.ports['o1']],
+    cross_section='strip',
+    radius=15,
+    separation=20
+)
+
+gf.routing.route_bundle(
+    r,
+    [ps.ports['o2'], ps.ports['o2']],
+    [mmi2.02'], mmi2.03']],
+    cross_section='strip',
+    radius=15,
+    separation=20
+)
+
+r.add_port('o1', port=mmi1.01'])
+r.add_port('o2', port=mmi2.02'])
+
+r.draw_ports()
+r.plot()
+</result>"
+2,MZM - Mach-Zehnder Modulator,0,False,2,parsing,False,False,False,,"<analysis>
+We need to create a Mach-Zehnder Modulator with:
+  1. One splitter (MMI 1x2)
+  2. Two phase shifters (straight_heater_metal)
+  3. One combiner (MMI 2x1, needs mirroring for correct orientation)
+
+Component arrangement:
+  - Splitter at (0, 0)
+  - Phase shifters at (100, 50) and (100, -50) - vertical separation 100.0 prevents collision
+  - Combiner at (250, 0) - horizontal separation 250.0 provides safe routing space
+
+Port connections:
+  - Splitter o2, o3 -> Phase shifter inputs
+  - Phase shifter outputs -> Combiner o2, o1 (note reversed order after mirroring)
+
+Critical: Combiner needs mirror() called AFTER add_ref() to match port orientation.
+</analysis>
+
+<result>
+import gdsfactory as gf
+
+r = gf.Component()
+
+mmi_splitter = r.add_ref(gf.components.mmi1x2())
+mmi_splitter.move((0,0))
+
+mmi_combiner = r.add_ref(gf.components.mmi2x1())
+mmi_combiner.mirror()
+mmi_combiner.move((250, 0))
+
+ps1 = r.add_ref(gf.components.straight_heater_metal(length=10))
+ps1.0100, 50))
+
+ps2 = r.add_ref(gf.components.straight_heater_metal(length=10))
+ps2.0100, -50))
+
+gf.routing.route_bundle(
+    r,
+    [mmi_splitter.ports['o2'], mmi_splitter.ports['o3']],
+    [ps1.01'], ps2.01']],
+    cross_section='strip',
+    radius=15,
+    separation=20
+)
+
+gf.routing.route_bundle(
+    r,
+    [ps1.02'], ps2.02']],
+    [mmi_combiner.ports['o2'], mmi_combiner.ports['o1']],
+    cross_section='strip',
+    radius=15,
+    separation=20
+)
+
+r.add_port('o1', port=mmi_splitter.ports['o1'])
+r.add_port('o2', port=mmi_combiner.ports['o3'])
+
+r.draw_ports()
+r.plot()
+</result>"
+2,MZM - Mach-Zehnder Modulator,1,False,2,parsing,False,False,False,,"<analysis>
+We need to create a Mach-Zehnder Modulator with:
+  1. One splitter (MMI 1x2)
+  2. Two phase shifters (straight_heater_metal)
+  3. One combiner (MMI 2x1, needs mirroring for correct orientation)
+
+Component arrangement:
+  - Splitter at (0, 0)
+  - Phase shifters at (100, 50) and (100, -50) - vertical separation 100.0 prevents collision
+  - Combiner at (250, 0) - horizontal separation 250.0 provides safe routing space
+
+Port connections:
+  - Splitter o2, o3 -> Phase shifter inputs
+  - Phase shifter outputs -> Combiner o2, o1 (note reversed order after mirroring)
+
+Critical: Combiner needs mirror() called AFTER add_ref() to match port orientation.
+</analysis>
+
+<result>
+import gdsfactory as gf
+import math
+
+r = gf.Component()
+
+mmi_splitter = r.add_ref(gf.components.mmi1x2())
+mmi_splitter.move((0,0))
+
+mmi_combiner = r.add_ref(gf.components.mmi2x1())
+mmi_combiner.mirror()
+mmi_combiner.move((250, 0))
+
+ps1 = r.add_ref(gf.components.straight_heater_metal(length=10))
+ps1.0100, 50))
+
+ps2 = r.add_ref(gf.components.straight_heater_metal(length=10))
+ps2.0100, -50))
+
+gf.routing.route_bundle(
+    r,
+    [mmi_splitter.ports['o2'], mmi_splitter.ports['o3']],
+    [ps1.01'], ps2.01']],
+    cross_section='strip',
+    radius=15,
+    separation=20
+)
+
+gf.routing.route_bundle(
+    r,
+    [ps1.02'], ps2.02']],
+    [mmi_combiner.ports['o2'], mmi_combiner.ports['o1']],
+    cross_section='strip',
+    radius=15,
+    separation=20
+)
+
+r.add_port('o1', port=mmi_splitter.ports['o1'])
+r.add_port('o2', port=mmi_combiner.ports['o3'])
+
+r.draw_ports()
+r.plot()
+</result>"
+2,MZM - Mach-Zehnder Modulator,2,False,2,parsing,False,False,False,,"<analysis>
+We need to create a Mach-Zehnder Modulator with:
+  1. One splitter (MMI 1x2)
+  2. Two phase shifters (straight_heater_metal)
+  3. One combiner (MMI 2x1, needs mirroring for correct orientation)
+
+Component arrangement:
+  - Splitter at (0, 0)
+  - Phase shifters at (100, 50) and (100, -50) - vertical separation 100.0 prevents collision
+  - Combiner at (250, 0) - horizontal separation 250.0 provides safe routing space
+
+Port connections:
+  - Splitter o2, o3 -> Phase shifter inputs
+  - Phase shifter outputs -> Combiner o2, o1 (note reversed order after mirroring)
+
+Critical: Combiner needs mirror() called AFTER add_ref() to match port orientation.
+</analysis>
+
+<result>
+import gdsfactory as gf
+import math
+
+r = gf.Component()
+
+mmi_splitter = r.add_ref(gf.components.mmi1x2())
+mmi_splitter.move((0,0))
+
+mmi_combiner = r.add_ref(gf.components.mmi2x1())
+mmi_combiner.mirror()
+mmi_combiner.move((250, 0))
+
+ps1 = r.add_ref(gf.components.straight_heater_metal(length=10))
+ps1.0100, 50))
+
+ps2 = r.add_ref(gf.components.straight_heater_metal(length=10))
+ps2.0100, -50))
+
+gf.routing.route_bundle(
+    r,
+    [mmi_splitter.ports['o2'], mmi_splitter.ports['o3']],
+    [ps1.01'], ps2.01']],
+    cross_section='strip',
+    radius=15,
+    separation=20
+)
+
+gf.routing.route_bundle(
+    r,
+    [ps1.02'], ps2.02']],
+    [mmi_combiner.ports['o2'], mmi_combiner.ports['o1']],
+    cross_section='strip',
+    radius=15,
+    separation=20
+)
+
+r.add_port('o1', port=mmi_splitter.ports['o1'])
+r.add_port('o2', port=mmi_combiner.ports['o3'])
+
+r.draw_ports()
+r.plot()
+</result>"
+10,2x2 Optical Switch,0,False,2,parsing,False,False,False,,"<analysis>
+We need to create a fundamental 2x2 optical switch using an MZI-based switch cell. We will use:
+  1. One MZI cell (id: sw1)
+  2. One phase control (id: ctrl1)
+
+Component arrangement:
+  - MZI cell at (0, 0)
+  - Phase control at (100, 50) - vertical separation 100.0 prevents collision
+  - Another MZI cell at (250, 0) - horizontal separation 250.0 provides safe routing space
+
+Port connections:
+  - MZI cell o2, o3 -> Phase control inputs
+  - Phase control outputs -> MZI cell o2, o3 (note reversed order after mirroring)
+  - Another MZI cell o2, o3 -> Phase control outputs (note reversed order after mirroring)
+
+Critical: Phase control needs mirror() called AFTER add_ref() to match port orientation.
+</analysis>
+
+<result>
+import gdsfactory as gf
+
+r = gf.Component()
+
+sw1 = r.add_ref(gf.components.mzm(delta_length=10.0, length_y=2.0, length_x=200, bend='bend_euler', straight='straight', straight_y='straight', straight_x_top='straight_pin', straight_x_bot='straight_pin', splitter='mmi1x2', combiner='mmi2x1', with_splitter=True, port_e1_splitter='o2', port_e0_splitter='o3', port_e1_combiner='o2', port_e0_combiner='o1', port1='o1', port2='o2', nbends=2, cross_section='strip', cross_section_x_top='strip', cross_section_x_bot='strip', mirror_bot=False, add_optical_ports_arms=False, min_length=0.01, auto_rename_ports=True))
+sw1.00,0))
+
+ctrl1 = r.add_ref(gf.components.straight_heater_metal(length=10))
+ctrl1.0100, 50))
+
+sw2 = r.add_ref(gf.components.mzm(delta_length=10.0, length_y=2.0, length_x=200, bend='bend_euler', straight='straight', straight_y='straight', straight_x_top='straight_pin', straight_x_bot='straight_pin', splitter='mmi1x2', combiner='mmi2x1', with_splitter=True, port_e1_splitter='o2', port_e0_splitter='o3', port_e1_combiner='o2', port_e0_combiner='o1', port1='o1', port2='o2', nbends=2, cross_section='strip', cross_section_x_top='strip', cross_section_x_bot='strip', mirror_bot=False, add_optical_ports_arms=False, min_length=0.01, auto_rename_ports=True))
+sw2.0250, 0))
+
+gf.routing.route_bundle(
+    r,
+    [sw1.02'], sw1.03']],
+    [ctrl1.01'], ctrl1.02']],
+    cross_section='strip',
+    radius=15,
+    separation=20
+)
+
+gf.routing.route_bundle(
+    r,
+    [sw2.02'], sw2.03']],
+    [ctrl1.02'], ctrl1.01']],
+    cross_section='strip',
+    radius=15,
+    separation=20
+)
+
+r.add_port('o1', port=sw1.01'])
+r.add_port('o2', port=sw2.02'])
+r.add_port('o3', port=ctrl1.03'])
+
+r.draw_ports()
+r.plot()
+</result>"
+10,2x2 Optical Switch,1,False,2,parsing,False,False,False,,"<analysis>
+We need to create a fundamental 2x2 optical switch using an MZI-based switch cell. We will use:
+  1. One MZI cell (id: sw1)
+  2. One phase control (id: ctrl1)
+
+Component arrangement:
+  - MZI cell at (0, 0)
+  - Phase control at (100, 0) - horizontal separation 100.0 provides safe routing space
+
+Port connections:
+  - MZI cell o1, o2 -> Phase control o1, o2
+  - Phase control o2, o1 -> MZI cell o2, o1 (note reversed order)
+
+Critical: Phase control needs mirror() called AFTER add_ref() to match port orientation.
+</analysis>
+
+<result>
+import gdsfactory as gf
+
+r = gf.Component()
+
+sw1 = r.add_ref(gf.components.mzm(delta_length=10.0, length_y=2.0, length_x=200, bend='bend_euler', straight='straight', straight_y='straight', straight_x_top='straight_pin', straight_x_bot='straight_pin', splitter='mmi1x2', combiner='mmi2x1', with_splitter=True, port_e1_splitter='o2', port_e0_splitter='o3', port_e1_combiner='o2', port_e0_combiner='o1', port1='o1', port2='o2', nbends=2, cross_section='strip',cross_section_x_top='strip', cross_section_x_bot='strip', mirror_bot=False, add_optical_ports_arms=False, min_length=0.01, auto_rename_ports=True))
+sw1.00,0))
+
+ctrl1 = r.add_ref(gf.components.straight_heater_metal(length=10))
+ctrl1.0100, 0))
+
+gf.routing.route_bundle(
+    r,
+    [sw1.01'], sw1.02']],
+    [ctrl1.01'], ctrl1.02']],
+    cross_section='strip',
+    radius=15,
+    separation=20
+)
+
+r.add_port('o1', port=sw1.01'])
+r.add_port('o2', port=ctrl1.02'])
+
+r.draw_ports()
+r.plot()
+</result>"
+10,2x2 Optical Switch,2,False,2,parsing,False,False,False,,"<analysis>
+We need to create a fundamental 2x2 optical switch using an MZI-based switch cell. We will use:
+  1. One MZI cell (id: sw1)
+  2. One phase control (id: ctrl1)
+
+Component arrangement:
+  - MZI cell at (0, 0)
+  - Phase control at (100, 50) - vertical separation 100.0 prevents collision
+  - No other components needed
+
+Port connections:
+  - MZI cell o1, o2 -> Phase control inputs
+  - Phase control outputs -> MZI cell o2, o3 (note reversed order)
+
+Critical: MZI cell needs mirror() called AFTER add_ref() to match port orientation.
+
+</analysis>
+
+<result>
+import gdsfactory as gf
+
+r = gf.Component()
+
+sw1 = r.add_ref(gf.components.mzm(delta_length=10.0, length_y=2.0, length_x=200, bend='bend_euler', straight='straight', straight_y='straight', straight_x_top='straight_pin', straight_x_bot='straight_pin', splitter='mmi1x2', combiner='mmi2x1', with_splitter=True, port_e1_splitter='o2', port_e0_splitter='o3', port_e1_combiner='o2', port_e0_combiner='o1', port1='o1', port2='o2', nbends=2, cross_section='strip', cross_section_x_top='strip', cross_section_x_bot='strip', mirror_bot=False, add_optical_ports_arms=True, min_length=0.01, auto_rename_ports=True))
+sw1.00,0))
+
+ctrl1 = r.add_ref(gf.components.straight_heater_metal(length=10))
+ctrl1.0100, 50))
+
+gf.routing.route_bundle(
+    r,
+    [sw1.01'], sw1.02']],
+    [ctrl1.01'], ctrl1.02']],
+    cross_section='strip',
+    radius=15,
+    separation=20
+)
+
+r.add_port('o1', port=sw1.01'])
+r.add_port('o2', port=sw1.02'])
+r.add_port('o3', port=ctrl1.02'])
+
+r.draw_ports()
+r.plot()
+</result>"
+4,QPSK Modulator,0,False,2,parsing,False,False,False,,"<analysis>
+We need to create an optical QPSK transmitter with:
+  1. Two Mach-Zehnder Modulators (ids: mzm_i, mzm_q)
+  2. One MMI1x2 Splitter (id: splitter)
+  3. One MMI2x1 Combiner (id: combiner)
+  4. Two phase biasers (ids: pb_i, pb_q)
+
+Component arrangement:
+  - Splitter at (0, 0)
+  - Phase biasers at (100, 50) and (100, -50) - vertical separation 100.0 prevents collision
+  - Mach-Zehnder Modulators at (200, 50) and (200, -50) - horizontal separation 200.0 provides safe routing space
+  - Combiner at (350, 0) - horizontal separation 300.0 provides safe routing space
+
+Port connections:
+  - Splitter o2, o3 -> Phase biaser inputs
+  - Phase biaser outputs -> Mach-Zehnder Modulator inputs
+  - Mach-Zehnder Modulator outputs -> Combiner inputs
+  - Combiner outputs -> Phase biaser outputs (note reversed order)
+
+Critical: Combiner needs mirror() called AFTER add_ref() to match port orientation.
+</analysis>
+
+<result>
+import gdsfactory as gf
+
+r = gf.Component()
+
+splitter = r.add_ref(gf.components.mmi1x2())
+splitter.move((0,0))
+
+pb_i = r.add_ref(gf.components.straight_heater_metal(length=10))
+pb_i.move((100, 50))
+
+pb_q = r.add_ref(gf.components.straight_heater_metal(length=10))
+pb_q.move((100, -50))
+
+mzm_i = r.add_ref(gf.components.mzm(delta_length=10.0, length_y=2.0, length_x=200, bend='bend_euler', straight='straight', straight_y='straight', straight_x_top='straight_pin', straight_x_bot='straight_pin', splitter='mmi1x2', combiner='mmi2x1', with_splitter=True, port_e1_splitter='o2', port_e0_splitter='o3', port_e1_combiner='o2', port_e0_combiner='o1', port1='o1', port2='o2', nbends=2, cross_section='strip', cross_section_x_top='strip', cross_section_x_bot='strip', mirror_bot=False, add_optical_ports_arms=False, min_length=0.01, auto_rename_ports=True))
+mzm_i.move((200, 50))
+
+mzm_q = r.add_ref(gf.components.mzm(delta_length=10.0, length_y=2.0, length_x=200, bend='bend_euler', straight='straight', straight_y='straight', straight_x_top='straight_pin', straight_x_bot='straight_pin', splitter='mmi1x2', combiner='mmi2x1', with_splitter=True, port_e1_splitter='o2', port_e0_splitter='o3', port_e1_combiner='o2', port_e0_combiner='o1', port1='o1', port2='o2', nbends=2, cross_section='strip', cross_section_x_top='strip', cross_section_x_bot='strip', mirror_bot=False, add_optical_ports_arms=False, min_length=0.01, auto_rename_ports=True))
+mzm_q.move((200, -50))
+
+combiner = r.add_ref(gf.components.mmi2x1())
+combiner.mirror()
+combiner.move((350, 0))
+
+gf.routing.route_bundle(
+    r,
+    [splitter.ports['o2'], splitter.ports['o3']],
+    [pb_i.ports['o1'], pb_q.ports['o1']],
+    cross_section='strip',
+    radius=15,
+    separation=15
+)
+
+gf.routing.route_bundle(
+    r,
+    [pb_i.ports['o2'], pb_q.ports['o2']],
+    [mzm_i.ports['o2'], mzm_q.ports['o2']],
+    cross_section='strip',
+    radius=15,
+    separation=15
+)
+
+gf.routing.route_bundle(
+    r,
+    [mzm_i.ports['o2'], mzm_q.ports['o2']],
+    [combiner.ports['o2'], combiner.ports['o1']],
+    cross_section='strip',
+    radius=15,
+    separation=15
+)
+
+r.add_port('o1', port=splitter.ports['o1'])
+r.add_port('o2', port=combiner.ports['o2'])
+r.add_port('o3', port=splitter.ports['o3'])
+r.add_port('o4', port=pb_i.ports['o2'])
+r.add_port('o5', port=pb_q.ports['o2'])
+r.add_port('o6', port=mzm_i.ports['o2'])
+r.add_port('o7', port=mzm_q.ports['o2'])
+r.add_port('o8', port=combiner.ports['o1'])
+
+r.draw_ports()
+r.plot()
+</result>"
+4,QPSK Modulator,1,False,2,parsing,False,False,False,,"<analysis>
+We need to create an optical QPSK transmitter using:
+  1. One splitter (MMI 1x2)
+  2. Two phase biasers (ids: pb_i, pb_q)
+  3. Two Mach-Zehnder Modulators (ids: mzm_i, mzm_q)
+  4. One MMI2x1 Combiner (id: combiner)
+
+Component arrangement:
+  - Splitter at (0, 0)
+  - Phase biasers at (100, 50) and (100, -50) - vertical separation 100.0 prevents collision
+  - Mach-Zehnder Modulators at (250, 0) - horizontal separation 250.0 provides safe routing space
+
+Port connections:
+  - Splitter o2, o3 -> Phase shifter inputs
+  - Phase shifter outputs -> Combiner o2, o1 (note reversed order after mirroring)
+  - Combiner o2, o1 -> Mach-Zehnder Modulator inputs
+  - Mach-Zehnder Modulator outputs -> Phase shifter outputs
+  - Phase shifter outputs -> MMI2x1 Combiner inputs
+
+Critical: Combiner needs mirror() called AFTER add_ref() to match port orientation.
+</analysis>
+
+<result>
+import gdsfactory as gf
+
+r = gf.Component()
+
+splitter = r.add_ref(gf.components.mmi1x2())
+splitter.move((0,0))
+
+pb_i = r.add_ref(gf.components.straight_heater_metal(length=10))
+pb_i.move((100, 50))
+
+pb_q = r.add_ref(gf.components.straight_heater_metal(length=10))
+pb_q.move((100, -50))
+
+mzm_i = r.add_ref(gf.components.mzm(delta_length=10, length_y=2, length_x=200))
+mzm_i.move((250, 0))
+
+mzm_q = r.add_ref(gf.components.mzm(delta_length=10, length_y=2, length_x=200))
+mzm_q.move((250, 0))
+
+combiner = r.add_ref(gf.components.mmi2x1())
+combiner.mirror()
+combiner.move((250, 0))
+
+gf.routing.route_bundle(
+    r,
+    [splitter.ports['o2'], splitter.ports['o3']],
+    [pb_i.ports['o1'], pb_q.ports['o1']],
+    cross_section='strip',
+    radius=15,
+    separation=15
+)
+
+gf.routing.route_bundle(
+    r,
+    [pb_i.ports['o2'], pb_q.ports['o2']],
+    [mzm_i.ports['o2'], mzm_q.ports['o2']],
+    cross_section='strip',
+    radius=15,
+    separation=15
+)
+
+gf.routing.route_bundle(
+    r,
+    [mzm_i.ports['o2'], mzm_q.ports['o2']],
+    [combiner.ports['o2'], combiner.ports['o1']],
+    cross_section='strip',
+    radius=15,
+    separation=15
+)
+
+r.add_port('o1', port=splitter.ports['o1'])
+r.add_port('o2', port=combiner.ports['o3'])
+
+r.draw_ports()
+r.plot()
+</result>"
+4,QPSK Modulator,2,False,2,parsing,False,False,False,,"<analysis>
+We need to create an optical QPSK transmitter using:
+  1. Two Mach-Zehnder Modulators (ids: mzm_i, mzm_q)
+  2. One MMI1x2 Splitter (id: splitter)
+  3. One MMI2x1 Combiner (id: combiner)
+  4. Two phase biasers (ids: pb_i, pb_q)
+
+Component arrangement:
+  - Splitter at (0, 0)
+  - Phase shifters at (100, 50) and (100, -50) - vertical separation 100.0 prevents collision
+  - Combiner at (250, 0) - horizontal separation 250.0 provides safe routing space
+  - Phase biasers at (0, -50) and (0, 50) - horizontal separation 100.0 prevents collision
+
+Port connections:
+  - Splitter o2, o3 -> Phase shifter inputs
+  - Phase shifter outputs -> Combiner o2, o1 (note reversed order after mirroring)
+  - Combiner o2, o1 -> Phase biaser inputs
+  - Phase biaser outputs -> QPSK transmitter outputs (o1, o2, o3, o4)
+
+Critical: Combiner needs mirror() called AFTER add_ref() to match port orientation.
+</analysis>
+
+<result>
+import gdsfactory as gf
+
+r = gf.Component()
+
+mmi_splitter = r.add_ref(gf.components.mmi1x2())
+mmi_splitter.move((0,0))
+
+mmi_combiner = r.add_ref(gf.components.mmi2x1())
+mmi_combiner.mirror()
+mmi_combiner.move((250, 0))
+
+ps1 = r.add_ref(gf.components.straight_heater_metal(length=10))
+ps1.0100, 50))
+
+ps2 = r.add_ref(gf.components.straight_heater_metal(length=10))
+ps2.0100, -50))
+
+pb_i = r.add_ref(gf.components.straight_heater_metal(length=10))
+pb_i.move((0, -50))
+
+pb_q = r.add_ref(gf.components.straight_heater_metal(length=10))
+pb_q.move((0, 50))
+
+gf.routing.route_bundle(
+    r,
+    [mmi_splitter.ports['o2'], mmi_splitter.ports['o3']],
+    [ps1.01'], ps2.01']],
+    cross_section='strip',
+    radius=15,
+    separation=20
+)
+
+gf.routing.route_bundle(
+    r,
+    [ps1.02'], ps2.02']],
+    [mmi_combiner.ports['o2'], mmi_combiner.ports['o1']],
+    cross_section='strip',
+    radius=15,
+    separation=20
+)
+
+gf.routing.route_bundle(
+    r,
+    [ps1.02'], ps2.02']],
+    [pb_i.ports['o1'], pb_q.ports['o1']],
+    cross_section='strip',
+    radius=15,
+    separation=20
+)
+
+gf.routing.route_bundle(
+    r,
+    [pb_i.ports['o2'], pb_q.ports['o2']],
+    [mmi_combiner.ports['o2'], mmi_combiner.ports['o1']],
+    cross_section='strip',
+    radius=15,
+    separation=20
+)
+
+r.add_port('o1', port=ps1.01'])
+r.add_port('o2', port=ps2.01'])
+r.add_port('o3', port=pb_i.ports['o1'])
+r.add_port('o4', port=pb_q.ports['o1'])
+
+r.draw_ports()
+r.plot()
+</result>"
+7,WDM Multiplexer,0,False,2,parsing,False,False,False,,"<analysis>
+We need to create a WDM multiplexer circuit combining multiple wavelengths into one output. We'll use a splitter network to combine the inputs. The splitter network will consist of multiple MMI 1x2 splitters and couplers.
+
+Component arrangement:
+  - Splitter at (0, 0)
+  - Phase shifters at (100, 50) and (100, -50) - vertical separation 100.0 prevents collision
+  - Combiner at (250, 0) - horizontal separation 250.0 provides safe routing space
+
+Port connections:
+  - Splitter o2, o3 -> Phase shifter inputs
+  - Phase shifter outputs -> Combiner o2, o1 (note reversed order after mirroring)
+
+Critical: Combiner needs mirror() called AFTER add_ref() to match port orientation.
+
+To achieve this, we will use the following components:
+  - MMI 1x2 splitters (ids: splitter1…splitterK)
+  - Phase shifters (ids: ps1…psN)
+  - Couplers (ids: coupler1…couplerK)
+  - Combiner (id: combiner)
+
+We will also use the following settings:
+  - Minimum spacing between components: 20.0
+  - Route separation in route_bundle: 15.0
+  - Bend radius: 15.0
+</analysis>
+
+<result>
+import gdsfactory as gf
+
+r = gf.Component()
+
+# 1. Instantiate components with settings
+splitter1 = r.add_ref(gf.components.mmi1x2())
+splitter1.00,0))
+
+splitter2 = r.add_ref(gf.components.mmi1x2())
+splitter2.0100,0))
+
+coupler1 = r.add_ref(gf.components.coupler())
+coupler1.0100,50))
+
+coupler2 = r.add_ref(gf.components.coupler())
+coupler2.0100,-50))
+
+ps1 = r.add_ref(gf.components.straight_heater_metal(length=10))
+ps1.0100,50))
+
+ps2 = r.add_ref(gf.components.straight_heater_metal(length=10))
+ps2.0100,-50))
+
+combiner = r.add_ref(gf.components.mmi2x1())
+combiner.mirror()
+combiner.move((250, 0))
+
+gf.routing.route_bundle(
+    r,
+    [splitter1.02'], splitter1.03']],
+    [ps1.01'], ps2.01']],
+    cross_section='strip',
+    radius=15,
+    separation=15
+)
+
+gf.routing.route_bundle(
+    r,
+    [ps1.02'], ps2.02']],
+    [coupler1.02'], coupler2.02']],
+    cross_section='strip',
+    radius=15,
+    separation=15
+)
+
+gf.routing.route_bundle(
+    r,
+    [coupler1.02'], coupler2.02']],
+    [combiner.ports['o2'], combiner.ports['o1']],
+    cross_section='strip',
+    radius=15,
+    separation=15
+)
+
+r.add_port('o1', port=splitter1.01'])
+r.add_port('o2', port=combiner.ports['o3'])
+
+r.draw_ports()
+r.plot()
+</result>"
+7,WDM Multiplexer,1,False,2,parsing,False,False,False,,"<analysis>
+We need to create a WDM multiplexer circuit combining multiple wavelengths into one output. We'll use:
+  1. Multiple inputs (MMI 1xN)
+  2. Splitter network (MMI or couplers) (MMI 2x1)
+  3. Single output (MMI 2x1, needs mirroring for correct orientation)
+
+Component arrangement:
+  - Splitter at (0, 0)
+  - MMI coupler at (150, 0) - horizontal separation 150.0 provides safe routing space
+  - Combiner at (300, 0) - horizontal separation 150.0 provides safe routing space
+
+Port connections:
+  - Splitter o2, o3 -> MMI coupler inputs
+  - MMI coupler outputs -> Combiner o2, o1 (note reversed order after mirroring)
+
+Critical: Combiner needs mirror() called AFTER add_ref() to match port orientation.
+</analysis>
+
+<result>
+import gdsfactory as gf
+
+r = gf.Component()
+
+mmi_splitter = r.add_ref(gf.components.mmi1x2())
+mmi_splitter.move((0,0))
+
+mmi_coupler = r.add_ref(gf.components.mmi2x1())
+mmi_coupler.mirror()
+mmi_coupler.move((150, 0))
+
+mmi_combiner = r.add_ref(gf.components.mmi2x1())
+mmi_combiner.mirror()
+mmi_combiner.move((300, 0))
+
+gf.routing.route_bundle(
+    r,
+    [mmi_splitter.ports['o2'], mmi_splitter.ports['o3']],
+    [mmi_coupler.ports['o2'], mmi_coupler.ports['o3']],
+    cross_section='strip',
+    radius=15,
+    separation=15
+)
+
+gf.routing.route_bundle(
+    r,
+    [mmi_coupler.ports['o2'], mmi_coupler.ports['o2']],
+    [mmi_combiner.ports['o2'], mmi_combiner.ports['o1']],
+    cross_section='strip',
+    radius=15,
+    separation=15
+)
+
+r.add_port('o1', port=mmi_combiner.ports['o3'])
+
+r.draw_ports()
+r.plot()
+</result>"
+7,WDM Multiplexer,2,False,2,parsing,False,False,False,,"<analysis>
+We need to create a WDM multiplexer circuit combining multiple wavelengths into one output. We will use:
+  1. Multiple inputs (MMI 1xN)
+  2. Splitter network (MMI or couplers) (MMI 2x1)
+  3. Single output (MMI 2x1)
+
+Component arrangement:
+  - Splitter at (0, 0)
+  - MMI combiner at (250, 0) - horizontal separation 250.0 provides safe routing space
+
+Port connections:
+  - Splitter o2, o3 -> MMI combiner inputs
+  - MMI combiner outputs -> Single output (note reversed order)
+
+Critical: MMI combiner needs mirror() called AFTER add_ref() to match port orientation.
+</analysis>
+
+<result>
+import gdsfactory as gf
+
+r = gf.Component()
+
+mmi_splitter = r.add_ref(gf.components.mmi1x2())
+mmi_splitter.move((0,0))
+
+mmi_combiner = r.add_ref(gf.components.mmi2x1())
+mmi_combiner.mirror()
+mmi_combiner.move((250, 0))
+
+gf.routing.route_bundle(
+    r,
+    [mmi_splitter.ports['o2'], mmi_splitter.ports['o3']],
+    [mmi_combiner.ports['o2'], mmi_combiner.ports['o1']],
+    cross_section='strip',
+    radius=15,
+    separation=20
+)
+
+r.add_port('o1', port=mmi_combiner.ports['o3'])
+
+r.draw_ports()
+r.plot()
+</result>"
+23,Ring Resonator Add-Drop Filter,0,False,2,parsing,False,False,False,,"<analysis>
+We need to create a single add-drop microring resonator filter. We will use:
+  1. One ring resonator (if available use gf.components.ring1(), otherwise use curved waveguides)
+  2. Two directional couplers (ids: in_cpl, out_cpl)
+  3. One splitter (MMI 1x2) and one combiner (MMI 2x1) to connect the couplers
+
+Component arrangement:
+  - Splitter at (0, 0)
+  - Ring resonator at (100, 50) - vertical separation 100.0 prevents collision
+  - Combiner at (250, 0) - horizontal separation 250.0 provides safe routing space
+  - Couplers at (150, 0) and (150, -100) - horizontal separation 100.0 prevents collision
+
+Port connections:
+  - Splitter o2, o3 -> Ring resonator inputs
+  - Ring resonator outputs -> Combiner o2, o1 (note reversed order after mirroring)
+  - Combiner o2, o1 -> Couplers inputs
+  - Couplers outputs -> Combiner o2, o1 (note reversed order after mirroring)
+
+Critical: Combiner needs mirror() called AFTER add_ref() to match port orientation.
+</analysis>
+
+<result>
+import gdsfactory as gf
+
+r = gf.Component()
+
+mmi_splitter = r.add_ref(gf.components.mmi1x2())
+mmi_splitter.move((0,0))
+
+ring_resonator = r.add_ref(gf.components.ring1())
+ring_resonator.move((100, 50))
+
+mmi_combiner = r.add_ref(gf.components.mmi2x1())
+mmi_combiner.mirror()
+mmi_combiner.move((250, 0))
+
+in_cpl = r.add_ref(gf.components.coupler())
+in_cpl.move((150, 0))
+
+out_cpl = r.add_ref(gf.components.coupler())
+out_cpl.move((150, -100))
+
+gf.routing.route_bundle(
+    r,
+    [mmi_splitter.ports['o2'], mmi_splitter.ports['o3']],
+    [ring_resonator.ports['o1'], ring_resonator.ports['o2']],
+    cross_section='strip',
+    radius=15,
+    separation=15
+)
+
+gf.routing.route_bundle(
+    r,
+    [ring_resonator.ports['o2'], ring_resonator.ports['o2']],
+    [in_cpl.ports['o1'], out_cpl.ports['o1']],
+    cross_section='strip',
+    radius=15,
+    separation=15
+)
+
+gf.routing.route_bundle(
+    r,
+    [in_cpl.ports['o2'], out_cpl.ports['o2']],
+    [mmi_combiner.ports['o2'], mmi_combiner.ports['o1']],
+    cross_section='strip',
+    radius=15,
+    separation=15
+)
+
+r.add_port('o1', port=ring_resonator.ports['o1'])
+r.add_port('o2', port=mmi_combiner.ports['o3'])
+
+r.draw_ports()
+r.plot()
+</result>"
+23,Ring Resonator Add-Drop Filter,1,False,2,parsing,False,False,False,,"<analysis>
+We need to create a single add-drop microring resonator filter. Use:
+  1. One ring resonator (if available use gf.components.ring_single(), otherwise use curved waveguides)
+  2. Two directional couplers (ids: in_cpl, out_cpl)
+  3. Tune coupling gap and ring radius to minimise insertion loss.
+
+Component arrangement:
+  - Ring resonator at (0, 0)
+  - Couplers at (100, 50) and (100, -50) - vertical separation 100.0 prevents collision
+  - All ports must be connected
+
+Port connections:
+  - Ring resonator ports -> Coupler inputs
+  - Coupler outputs -> Ring resonator ports (note reversed order)
+
+Critical: All ports MUST be connected (no dangling ports) and component spacing must be at least 20.0.
+</analysis>
+
+<result>
+import gdsfactory as gf
+
+r = gf.Component()
+
+# 1. Instantiate ring resonator with settings
+ring1 = r.add_ref(gf.components.ring_single(radius=5.0))
+ring1.00,0))
+
+# 2. Instantiate couplers with settings
+in_cpl = r.add_ref(gf.components.coupler(gap=0.236, length=20.0, dy=4.0, dx=10.0, cross_section='strip', allow_min_radius_violation=False, bend='bend_s'))
+in_cpl.move((100, 50))
+
+out_cpl = r.add_ref(gf.components.coupler(gap=0.236, length=20.0, dy=4.0, dx=10.0, cross_section='strip', allow_min_radius_violation=False, bend='bend_s'))
+out_cpl.move((100, -50))
+
+# 3. Route connections
+gf.routing.route_bundle(
+    r,
+    [ring1.01'], in_cpl.ports['o2'], out_cpl.ports['o1']],
+    [in_cpl.ports['o1'], out_cpl.ports['o2']],
+    cross_section='strip',
+    radius=15,
+    separation=20
+)
+
+# 4. Expose external ports
+r.add_port('o1', port=ring1.01'])
+r.add_port('o2', port=in_cpl.ports['o2'])
+r.add_port('o3', port=out_cpl.ports['o2'])
+
+# 5. Finalize
+r.draw_ports()
+r.plot()
+</result>"
+23,Ring Resonator Add-Drop Filter,2,False,2,parsing,False,False,False,,"<analysis>
+We need to create a single add-drop microring resonator filter. We will use:
+  1. One ring resonator (if available use gf.components.ring_single(), otherwise use curved waveguides)
+  2. Two directional couplers (ids: in_cpl, out_cpl)
+  3. One splitter (MMI 1x2) and one combiner (MMI 2x1) for port connections
+
+Component arrangement:
+  - Ring resonator at (0, 0)
+  - Splitter at (0, -100) - horizontal separation 100.0 provides safe routing space
+  - Combiner at (100, 0) - horizontal separation 100.0 provides safe routing space
+  - Couplers at (0, -150) and (100, 0) - vertical separation 150.0 prevents collision
+
+Port connections:
+  - Ring resonator inputs -> Splitter o2, o3
+  - Splitter outputs -> Coupler inputs
+  - Coupler outputs -> Combiner inputs
+  - Combiner outputs -> Ring resonator outputs
+  - Combiner outputs -> Splitter o1 (note reversed order after mirroring)
+
+Critical: Combiner needs mirror() called AFTER add_ref() to match port orientation.
+</analysis>
+
+<result>
+import gdsfactory as gf
+
+r = gf.Component()
+
+# 1. Instantiate components with settings
+ring_resonator = r.add_ref(gf.components.ring_single())
+ring_resonator.move((0,0))
+
+mmi_splitter = r.add_ref(gf.components.mmi1x2())
+mmi_splitter.move((0,-100))
+
+mmi_combiner = r.add_ref(gf.components.mmi2x1())
+mmi_combiner.mirror()
+mmi_combiner.move((100,0))
+
+in_cpl = r.add_ref(gf.components.coupler())
+in_cpl.move((0,-150))
+
+out_cpl = r.add_ref(gf.components.coupler())
+out_cpl.move((100,0))
+
+gf.routing.route_bundle(
+    r,
+    [ring_resonator.ports['o1'], ring_resonator.ports['o2']],
+    [mmi_splitter.ports['o2'], in_cpl.ports['o1']],
+    cross_section='strip',
+    radius=15,
+    separation=15
+)
+
+gf.routing.route_bundle(
+    r,
+    [in_cpl.ports['o2'], out_cpl.ports['o2']],
+    [mmi_combiner.ports['o2'], mmi_combiner.ports['o1']],
+    cross_section='strip',
+    radius=15,
+    separation=15
+)
+
+gf.routing.route_bundle(
+    r,
+    [out_cpl.ports['o2'], ring_resonator.ports['o2']],
+    [mmi_combiner.ports['o3'], mmi_splitter.ports['o1']],
+    cross_section='strip',
+    radius=15,
+    separation=15
+)
+
+r.add_port('o1', port=mmi_splitter.ports['o1'])
+r.add_port('o2', port=mmi_combiner.ports['o3'])
+
+r.draw_ports()
+r.plot()
+</result>"
+5,8-QAM Modulator,0,False,2,parsing,False,False,False,,"<analysis>
+We need to create an optical 8-QAM transmitter using:
+  1. Three Mach-Zehnder Modulators (ids: mzm_bit1, mzm_bit2, mzm_bit3)
+  2. Two MMI1x2 Splitters (ids: splitter1, splitter2)
+  3. Two MMI2x1 Combiners (ids: combiner1, combiner2)
+
+Component arrangement:
+  - Three MZMs vertically parallel with 100.0 spacing (use as float: 100.0)
+  - Two MMI1x2 Splitters at (0, 0) and (200, 0) - horizontal separation 200.0 prevents collision
+  - Two MMI2x1 Combiners at (300, 0) and (400, 0) - horizontal separation 100.0 provides safe routing space
+
+Port connections:
+  - MZM outputs -> Splitter inputs
+  - Splitter outputs -> Combiner inputs
+  - Combiner outputs -> MZM inputs (note reversed order after mirroring)
+
+Critical: All ports MUST be connected (no dangling ports), and MZMs need mirroring for correct orientation.
+</analysis>
+
+<result>
+import gdsfactory as gf
+
+r = gf.Component()
+
+mzm_bit1 = r.add_ref(gf.components.mzm(delta_length=10.0, length_y=2.0, length_x=100.0))
+mzm_bit1.0)
+mzm_bit1.00, 0))
+
+mzm_bit2 = r.add_ref(gf.components.mzm(delta_length=10.0, length_y=2.0, length_x=100.0))
+mzm_bit2.0)
+mzm_bit2.0200, 0))
+
+mzm_bit3 = r.add_ref(gf.components.mzm(delta_length=10.0, length_y=2.0, length_x=100.0))
+mzm_bit3.0)
+mzm_bit3.0300, 0))
+
+mmi_splitter1 = r.add_ref(gf.components.mmi1x2())
+mmi_splitter1.00, 0))
+
+mmi_splitter2 = r.add_ref(gf.components.mmi1x2())
+mmi_splitter2.0200, 0))
+
+mmi_combiner1 = r.add_ref(gf.components.mmi2x1())
+mmi_combiner1.0)
+mmi_combiner1.0300, 0))
+
+mmi_combiner2 = r.add_ref(gf.components.mmi2x1())
+mmi_combiner2.0)
+mmi_combiner2.0400, 0))
+
+ps1 = r.add_ref(gf.components.straight_heater_metal(length=10))
+ps1.0100, 50))
+
+ps2 = r.add_ref(gf.components.straight_heater_metal(length=10))
+ps2.0100, -50))
+
+ps3 = r.add_ref(gf.components.straight_heater_metal(length=10))
+ps3.0100, 0))
+
+gf.routing.route_bundle(
+    r,
+    [mzm_bit1.02'], mzm_bit2.02'], mzm_bit3.02']],
+    [mmi_splitter1.02'], mmi_splitter2.02']],
+    cross_section='strip',
+    radius=15,
+    separation=15
+)
+
+gf.routing.route_bundle(
+    r,
+    [mmi_splitter1.03'], mmi_splitter2.03']],
+    [ps1.01'], ps2.01'], ps3.01']],
+    cross_section='strip',
+    radius=15,
+    separation=15
+)
+
+gf.routing.route_bundle(
+    r,
+    [ps1.02'], ps2.02'], ps3.02']],
+    [mmi_combiner1.02'], mmi_combiner2.02']],
+    cross_section='strip',
+    radius=15,
+    separation=15
+)
+
+gf.routing.route_bundle(
+    r,
+    [mmi_combiner1.01'], mmi_combiner2.01']],
+    [ps1.02'], ps2.02'], ps3.02']],
+    cross_section='strip',
+    radius=15,
+    separation=15
+)
+
+r.add_port('o1', port=mmi_splitter1.01'])
+r.add_port('o2', port=mmi_combiner1.03'])
+r.add_port('o3', port=mmi_combiner2.01'])
+
+r.draw_ports()
+r.plot()
+</result>"
+5,8-QAM Modulator,1,False,2,parsing,False,False,False,,"<analysis>
+We need to create an optical 8-QAM transmitter using:
+  1. Three Mach-Zehnder Modulators (ids: mzm_bit1, mzm_bit2, mzm_bit3)
+  2. Two MMI1x2 Splitters (ids: splitter1, splitter2)
+  3. Two MMI2x1 Combiners (ids: combiner1, combiner2)
+
+Component arrangement:
+  - Three MZMs vertically parallel with 100.0 spacing (use as float: 100.0)
+  - Two MMI1x2 Splitters at (0, 0) and (200, 0) - horizontal separation 200.0
+  - Two MMI2x1 Combiners at (300, 0) and (400, 0) - horizontal separation 100.0
+
+Port connections:
+  - MZM inputs -> MMI1x2 outputs
+  - MMI1x2 outputs -> MZM inputs
+  - MMI2x1 outputs -> MZM inputs
+  - MZM outputs -> MMI2x1 inputs
+
+Critical: MZMs need mirroring for correct orientation.
+</analysis>
+
+<result>
+import gdsfactory as gf
+
+r = gf.Component()
+
+mzm_bit1 = r.add_ref(gf.components.mzm(delta_length=10.0, length_y=2.0, length_x=100.0))
+mzm_bit1.0)
+mzm_bit1.00, 0))
+
+mzm_bit2 = r.add_ref(gf.components.mzm(delta_length=10.0, length_y=2.0, length_x=100.0))
+mzm_bit2.0)
+mzm_bit2.0200, 0))
+
+mzm_bit3 = r.add_ref(gf.components.mzm(delta_length=10.0, length_y=2.0, length_x=100.0))
+mzm_bit3.0)
+mzm_bit3.0300, 0))
+
+mmi_splitter1 = r.add_ref(gf.components.mmi1x2())
+mmi_splitter1.00, 0))
+
+mmi_splitter2 = r.add_ref(gf.components.mmi1x2())
+mmi_splitter2.0200, 0))
+
+mmi_combiner1 = r.add_ref(gf.components.mmi2x1())
+mmi_combiner1.0)
+mmi_combiner1.0300, 0))
+
+mmi_combiner2 = r.add_ref(gf.components.mmi2x1())
+mmi_combiner2.0)
+mmi_combiner2.0400, 0))
+
+ps1 = r.add_ref(gf.components.straight_heater_metal(length=10))
+ps1.050, 0))
+
+ps2 = r.add_ref(gf.components.straight_heater_metal(length=10))
+ps2.050, 0))
+
+ps3 = r.add_ref(gf.components.straight_heater_metal(length=10))
+ps3.0150, 0))
+
+ps4 = r.add_ref(gf.components.straight_heater_metal(length=10))
+ps4.0150, 0))
+
+gf.routing.route_bundle(
+    r,
+    [mmi_splitter1.02'], mmi_splitter1.03']],
+    [ps1.01'], ps2.01']],
+    cross_section='strip',
+    radius=15,
+    separation=15
+)
+
+gf.routing.route_bundle(
+    r,
+    [ps1.02'], ps2.02']],
+    [mmi_combiner1.02'], mmi_combiner1.01']],
+    cross_section='strip',
+    radius=15,
+    separation=15
+)
+
+gf.routing.route_bundle(
+    r,
+    [ps2.02'], ps3.02']],
+    [mmi_combiner2.02'], mmi_combiner2.01']],
+    cross_section='strip',
+    radius=15,
+    separation=15
+)
+
+gf.routing.route_bundle(
+    r,
+    [ps3.02'], ps4.02']],
+    [mmi_combiner1.02'], mmi_combiner1.01']],
+    cross_section='strip',
+    radius=15,
+    separation=15
+)
+
+gf.routing.route_bundle(
+    r,
+    [ps4.02'], ps1.02']],
+    [mmi_splitter2.02'], mmi_splitter2.03']],
+    cross_section='strip',
+    radius=15,
+    separation=15
+)
+
+gf.routing.route_bundle(
+    r,
+    [ps1.02'], ps2.02']],
+    [mmi_combiner2.02'], mmi_combiner2.01']],
+    cross_section='strip',
+    radius=15,
+    separation=15
+)
+
+r.add_port('o1', port=mmi_splitter1.01'])
+r.add_port('o2', port=mmi_combiner1.02'])
+r.add_port('o3', port=mmi_combiner2.02'])
+r.add_port('o4', port=mmi_splitter2.03'])
+
+r.draw_ports()
+r.plot()
+</result>"
+5,8-QAM Modulator,2,False,2,parsing,False,False,False,,"<analysis>
+We need to create an optical 8-QAM transmitter using:
+  1. Three Mach-Zehnder Modulators (ids: mzm_bit1, mzm_bit2, mzm_bit3)
+  2. Two MMI1x2 Splitters (ids: splitter1, splitter2)
+  3. Two MMI2x1 Combiners (ids: combiner1, combiner2)
+
+Component arrangement:
+  - Three MZMs vertically parallel with 100.0 spacing (use as float: 100.0)
+  - Two MMI1x2 Splitters at (0, 0) and (200, 0)
+  - Two MMI2x1 Combiners at (300, 0) and (400, 0)
+
+Port connections:
+  - MZM inputs -> MMI1x2 outputs
+  - MMI1x2 outputs -> MZM outputs
+  - MZM outputs -> MMI2x1 inputs
+  - MMI2x1 outputs -> MMI1x2 inputs (note reversed order after mirroring)
+
+Critical: All ports MUST be connected (no dangling ports)
+</analysis>
+
+<result>
+import gdsfactory as gf
+
+r = gf.Component()
+
+mmi_splitter1 = r.add_ref(gf.components.mmi1x2())
+mmi_splitter1.00,0))
+
+mmi_splitter2 = r.add_ref(gf.components.mmi1x2())
+mmi_splitter2.0200,0))
+
+mzm_bit1 = r.add_ref(gf.components.mzm(delta_length=100.0))
+mzm_bit1.0100,0))
+
+mzm_bit2 = r.add_ref(gf.components.mzm(delta_length=100.0))
+mzm_bit2.0100,-100))
+
+mzm_bit3 = r.add_ref(gf.components.mzm(delta_length=100.0))
+mzm_bit3.0100,-200))
+
+mmi_combiner1 = r.add_ref(gf.components.mmi2x1())
+mmi_combiner1.0)
+mmi_combiner1.0300,0))
+
+mmi_combiner2 = r.add_ref(gf.components.mmi2x1())
+mmi_combiner2.0)
+mmi_combiner2.0400,0))
+
+gf.routing.route_bundle(
+    r,
+    [mmi_splitter1.02'], mmi_splitter1.03']],
+    [mzm_bit1.01'], mzm_bit2.01']],
+    cross_section='strip',
+    radius=15,
+    separation=15
+)
+
+gf.routing.route_bundle(
+    r,
+    [mzm_bit1.02'], mzm_bit2.02']],
+    [mmi_combiner1.02'], mmi_combiner1.01']],
+    cross_section='strip',
+    radius=15,
+    separation=15
+)
+
+gf.routing.route_bundle(
+    r,
+    [mzm_bit2.02'], mzm_bit3.02']],
+    [mmi_combiner2.02'], mmi_combiner2.01']],
+    cross_section='strip',
+    radius=15,
+    separation=15
+)
+
+r.add_port('o1', port=mmi_splitter1.01'])
+r.add_port('o2', port=mmi_splitter2.02'])
+r.add_port('o3', port=mmi_combiner1.01'])
+r.add_port('o4', port=mmi_combiner2.02'])
+
+r.draw_ports()
+r.plot()
+</result>"
+11,Crossbar 4x4 Switch,0,False,2,parsing,False,False,False,,"<analysis>
+We need to create a 4x4 photonic crossbar switching network using 2x2 MZI-based switch nodes. We will use:
+  1. Four switch nodes (MMI 1x2)
+  2. Eight coupler/phase elements (coupler/coupler)
+  3. Four straight phase shifters (straight_heater_metal)
+
+Component arrangement:
+  - Switch nodes at (0, 0), (100, 0), (100, 100), (0, 100) - 100.0 spacing prevents collision
+  - Coupler/phase elements at (50, 50), (150, 50), (150, 150), (50, 150), (50, 250), (150, 250), (250, 250), (250, 150) - 100.0 spacing prevents collision
+  - Straight phase shifters at (200, 50), (200, -50), (300, 50), (300, -50) - 100.0 spacing prevents collision
+
+Port connections:
+  - Switch nodes o2, o3 -> Coupler/phase elements inputs
+  - Coupler/phase elements outputs -> Straight phase shifters inputs
+  - Straight phase shifters outputs -> Switch nodes o2, o3 (note reversed order after mirroring)
+
+Critical: All ports MUST be connected (no dangling ports). Critical: Switch nodes need mirroring for correct orientation.
+</analysis>
+
+<result>
+import gdsfactory as gf
+
+r = gf.Component()
+
+sw1 = r.add_ref(gf.components.mmi1x2())
+sw1.00,0))
+
+sw2 = r.add_ref(gf.components.mmi1x2())
+sw2.0100,0))
+
+sw3 = r.add_ref(gf.components.mmi1x2())
+sw3.0100,100))
+
+sw4 = r.add_ref(gf.components.mmi1x2())
+sw4.00,100))
+
+cou1 = r.add_ref(gf.components.coupler())
+cou1.050,50))
+
+cou2 = r.add_ref(gf.components.coupler())
+cou2.0150,50))
+
+cou3 = r.add_ref(gf.components.coupler())
+cou3.0150,150))
+
+cou4 = r.add_ref(gf.components.coupler())
+cou4.050,150))
+
+cou5 = r.add_ref(gf.components.coupler())
+cou5.050,250))
+
+cou6 = r.add_ref(gf.components.coupler())
+cou6.0150,250))
+
+cou7 = r.add_ref(gf.components.coupler())
+cou7.0250,250))
+
+cou8 = r.add_ref(gf.components.coupler())
+cou8.0250,150))
+
+ps1 = r.add_ref(gf.components.straight_heater_metal(length=10))
+ps1.0200,50))
+
+ps2 = r.add_ref(gf.components.straight_heater_metal(length=10))
+ps2.0200,-50))
+
+ps3 = r.add_ref(gf.components.straight_heater_metal(length=10))
+ps3.0300,50))
+
+ps4 = r.add_ref(gf.components.straight_heater_metal(length=10))
+ps4.0300,-50))
+
+gf.routing.route_bundle(
+    r,
+    [sw1.02'], sw1.03']],
+    [cou1.01'], cou1.02']],
+    cross_section='strip',
+    radius=15,
+    separation=15
+)
+
+gf.routing.route_bundle(
+    r,
+    [cou1.02'], cou1.03']],
+    [cou2.01'], cou2.02']],
+    cross_section='strip',
+    radius=15,
+    separation=15
+)
+
+gf.routing.route_bundle(
+    r,
+    [cou2.02'], cou2.03']],
+    [cou3.01'], cou3.02']],
+    cross_section='strip',
+    radius=15,
+    separation=15
+)
+
+gf.routing.route_bundle(
+    r,
+    [cou3.02'], cou3.03']],
+    [cou4.01'], cou4.02']],
+    cross_section='strip',
+    radius=15,
+    separation=15
+)
+
+gf.routing.route_bundle(
+    r,
+    [cou4.02'], cou4.03']],
+    [cou5.01'], cou5.02']],
+    cross_section='strip',
+    radius=15,
+    separation=15
+)
+
+gf.routing.route_bundle(
+    r,
+    [cou5.02'], cou5.03']],
+    [cou6.01'], cou6.02']],
+    cross_section='strip',
+    radius=15,
+    separation=15
+)
+
+gf.routing.route_bundle(
+    r,
+    [cou6.02'], cou6.03']],
+    [cou7.01'], cou7.02']],
+    cross_section='strip',
+    radius=15,
+    separation=15
+)
+
+gf.routing.route_bundle(
+    r,
+    [cou7.02'], cou7.03']],
+    [cou8.01'], cou8.02']],
+    cross_section='strip',
+    radius=15,
+    separation=15
+)
+
+gf.routing.route_bundle(
+    r,
+    [cou8.02'], cou8.03']],
+    [ps1.01'], ps1.02']],
+    cross_section='strip',
+    radius=15,
+    separation=15
+)
+
+gf.routing.route_bundle(
+    r,
+    [ps1.02'], ps1.02']],
+    [ps2.01'], ps2.01']],
+    cross_section='strip',
+    radius=15,
+    separation=15
+)
+
+gf.routing.route_bundle(
+    r,
+    [ps2.02'], ps2.02']],
+    [ps3.01'], ps3.01']],
+    cross_section='strip',
+    radius=15,
+    separation=15
+)
+
+gf.routing.route_bundle(
+    r,
+    [ps3.02'], ps3.02']],
+    [ps4.01'], ps4.01']],
+    cross_section='strip',
+    radius=15,
+    separation=15
+)
+
+r.add_port('o1', port=sw1.01'])
+r.add_port('o2', port=sw2.02'])
+r.add_port('o3', port=sw3.03'])
+r.add_port('o4', port=sw4.04'])
+
+r.add_port('o5', port=cou1.02'])
+r.add_port('o6', port=cou2.02'])
+r.add_port('o7', port=cou3.02'])
+r.add_port('o8', port=cou4.02'])
+r.add_port('o9', port=cou5.02'])
+r.add_port('o10', port=cou6.02'])
+r.add_port('o11', port=cou7.02'])
+r.add_port('o12', port=cou8.02'])
+r.add_port('o13', port=ps1.01'])
+r.add_port('o14', port=ps2.01'])
+r.add_port('o15', port=ps3.01'])
+r.add_port('o16', port=ps4.01'])
+
+r.draw_ports()
+r.plot()
+</result>"
+11,Crossbar 4x4 Switch,1,False,2,parsing,False,False,False,,"<analysis>
+To create a 4x4 photonic crossbar switching network using 2x2 MZI-based switch nodes, we need to follow these steps:
+
+1. We need to create 8 switch nodes (sw1 to sw16) using MZI components.
+2. We need to create 32 coupler/phase elements (cou1 to cou32) using coupler components.
+3. We need to tune all coupler ratios and phase shifters to minimize insertion loss on the busiest path.
+
+Component arrangement:
+- Switch nodes will be arranged in a 4x4 grid, with each node having two input and two output ports.
+- Coupler/phase elements will be placed between the switch nodes to connect the input and output ports.
+
+Port connections:
+- The input ports of the switch nodes will be connected to the input ports of the coupler/phase elements.
+- The output ports of the coupler/phase elements will be connected to the output ports of the switch nodes.
+
+Critical: We need to ensure that all ports are properly connected and that the coupler/phase elements are placed at a safe distance from each other to prevent routing collisions.
+
+</analysis>
+
+<result>
+import gdsfactory as gf
+
+r = gf.Component()
+
+# Instantiate switch nodes
+for i in range(16):
+    sw = r.add_ref(gf.components.mzm(delta_length=10, length_y=2, length_x=200))
+    sw.move((i*50, i*50))
+
+# Instantiate coupler/phase elements
+for i in range(32):
+    cou = r.add_ref(gf.components.coupler(gap=0.2, length=20, dy=4, dx=10))
+    cou.move((i*30, i*30))
+
+# Route connections
+gf.routing.route_bundle(
+    r,
+    [sw.ports['o1'], cou.ports['o1']],
+    [cou.ports['o2'], sw.ports['o2']],
+    cross_section='strip',
+    radius=15,
+    separation=20
+)
+
+# Expose external ports
+for i in range(16):
+    r.add_port(f'o{i*2+1}', port=sw.ports[f'o{i*2+1}'])
+    r.add_port(f'o{i*2+2}', port=sw.ports[f'o{i*2+2}'])
+
+r.draw_ports()
+r.plot()
+</result>"
+11,Crossbar 4x4 Switch,2,False,2,parsing,False,False,False,,"<analysis>
+We need to create a 4x4 photonic crossbar switching network using 2x2 MZI-based switch nodes. We will use 8 coupler/phase elements to minimize insertion loss on the busiest path.
+
+Component arrangement:
+  - Switch nodes at (0, 0), (100, 0), (100, 100), and (0, 100)
+  - Coupler/phase elements at (50, 50), (150, 50), (150, 150), and (50, 150) - vertical separation 100.0 prevents collision
+  - Additional coupler/phase elements at (200, 50), (200, 150), (50, 200), and (150, 200) - horizontal separation 150.0 provides safe routing space
+
+Port connections:
+  - Switch nodes o1, o2 -> Coupler/phase elements o1, o2 (note reversed order after mirroring)
+  - Coupler/phase elements o1, o2 -> Switch nodes o3, o4 (note reversed order after mirroring)
+  - Additional coupler/phase elements o1, o2 -> Switch nodes o5, o6
+  - Additional coupler/phase elements o3, o4 -> Switch nodes o7, o8
+
+Critical: All coupler/phase elements need mirror() called AFTER add_ref() to match port orientation.
+</analysis>
+
+<result>
+import gdsfactory as gf
+
+r = gf.Component()
+
+sw1 = r.add_ref(gf.components.mzi(delta_length=10, length_y=2, length_x=200))
+sw1.0)
+sw1.00, 0))
+
+sw2 = r.add_ref(gf.components.mzi(delta_length=10, length_y=2, length_x=200))
+sw2.0)
+sw2.0100, 0))
+
+sw3 = r.add_ref(gf.components.mzi(delta_length=10, length_y=2, length_x=200))
+sw3.0)
+sw3.0100, 100))
+
+sw4 = r.add_ref(gf.components.mzi(delta_length=10, length_y=2, length_x=200))
+sw4.0)
+sw4.00, 100))
+
+cou1 = r.add_ref(gf.components.coupler(gap=0.236, length=20, dy=4.0, dx=10.0, cross_section='strip'))
+cou1.050, 50))
+
+cou2 = r.add_ref(gf.components.coupler(gap=0.236, length=20, dy=4.0, dx=10.0, cross_section='strip'))
+cou2.0150, 50))
+
+cou3 = r.add_ref(gf.components.coupler(gap=0.236, length=20, dy=4.0, dx=10.0, cross_section='strip'))
+cou3.0150, 150))
+
+cou4 = r.add_ref(gf.components.coupler(gap=0.236, length=20, dy=4.0, dx=10.0, cross_section='strip'))
+cou4.050, 150))
+
+cou5 = r.add_ref(gf.components.coupler(gap=0.236, length=20, dy=4.0, dx=10.0, cross_section='strip'))
+cou5.0200, 50))
+
+cou6 = r.add_ref(gf.components.coupler(gap=0.236, length=20, dy=4.0, dx=10.0, cross_section='strip'))
+cou6.0200, 150))
+
+cou7 = r.add_ref(gf.components.coupler(gap=0.236, length=20, dy=4.0, dx=10.0, cross_section='strip'))
+cou7.050, 200))
+
+cou8 = r.add_ref(gf.components.coupler(gap=0.236, length=20, dy=4.0, dx=10.0, cross_section='strip'))
+cou8.0150, 200))
+
+gf.routing.route_bundle(
+    r,
+    [sw1.02'], sw1.03']],
+    [cou1.01'], cou2.01']],
+    cross_section='strip',
+    radius=15,
+    separation=15
+)
+
+gf.routing.route_bundle(
+    r,
+    [cou1.02'], cou2.02']],
+    [sw2.02'], sw2.03']],
+    cross_section='strip',
+    radius=15,
+    separation=15
+)
+
+gf.routing.route_bundle(
+    r,
+    [sw3.02'], sw3.03']],
+    [cou3.01'], cou4.01']],
+    cross_section='strip',
+    radius=15,
+    separation=15
+)
+
+gf.routing.route_bundle(
+    r,
+    [cou3.02'], cou4.02']],
+    [sw4.02'], sw4.03']],
+    cross_section='strip',
+    radius=15,
+    separation=15
+)
+
+gf.routing.route_bundle(
+    r,
+    [cou5.01'], cou6.01']],
+    [sw1.03'], sw1.04']],
+    cross_section='strip',
+    radius=15,
+    separation=15
+)
+
+gf.routing.route_bundle(
+    r,
+    [cou6.01'], cou7.01']],
+    [sw2.03'], sw2.04']],
+    cross_section='strip',
+    radius=15,
+    separation=15
+)
+
+gf.routing.route_bundle(
+    r,
+    [cou7.01'], cou8.01']],
+    [sw3.03'], sw3.04']],
+    cross_section='strip',
+    radius=15,
+    separation=15
+)
+
+gf.routing.route_bundle(
+    r,
+    [cou8.01'], cou1.01']],
+    [sw4.03'], sw4.04']],
+    cross_section='strip',
+    radius=15,
+    separation=15
+)
+
+r.add_port('o1', port=sw1.01'])
+r.add_port('o2', port=sw2.02'])
+r.add_port('o3', port=sw3.03'])
+r.add_port('o4', port=sw4.04'])
+
+r.draw_ports()
+r.plot()
+</result>"
+20,Clements 4x4 Interferometer,0,False,2,parsing,False,False,False,,"<analysis>
+We need to create a 4x4 unitary interferometer using the Clements mesh architecture. We will use MZI mesh elements (ids: mesh_mzi1…mesh_mzi12) and phase shifters (ids: phase1…phase12) to achieve this. To minimize insertion loss on the worst input-to-output path, we will tune the design accordingly.
+
+Component arrangement:
+  - MZI mesh elements at (0, 0), (100, 0), (100, 100), and (0, 100) - horizontal and vertical separation 100.0 prevents collision
+  - Phase shifters at (50, 50), (150, 50), (150, -50), and (50, -50) - vertical separation 100.0 prevents collision
+
+Port connections:
+  - MZI mesh elements o1, o2 -> Phase shifter inputs
+  - Phase shifter outputs -> MZI mesh elements o3, o4 (note reversed order after mirroring)
+
+Critical: MZI mesh elements need to be mirrored after adding to the reference to match port orientation.
+</analysis>
+
+<result>
+import gdsfactory as gf
+
+r = gf.Component()
+
+mesh_mzi1 = r.add_ref(gf.components.mesh_mzi1())
+mesh_mzi1.0)
+mesh_mzi1.00,0))
+
+mesh_mzi2 = r.add_ref(gf.components.mesh_mzi2())
+mesh_mzi2.0)
+mesh_mzi2.0100,0))
+
+mesh_mzi3 = r.add_ref(gf.components.mesh_mzi3())
+mesh_mzi3.0)
+mesh_mzi3.0100,100))
+
+mesh_mzi4 = r.add_ref(gf.components.mesh_mzi4())
+mesh_mzi4.0)
+mesh_mzi4.00,100))
+
+phase1 = r.add_ref(gf.components.phase1())
+phase1.050,50))
+
+phase2 = r.add_ref(gf.components.phase2())
+phase2.0150,50))
+
+phase3 = r.add_ref(gf.components.phase3())
+phase3.0150,-50))
+
+phase4 = r.add_ref(gf.components.phase4())
+phase4.050,-50))
+
+gf.routing.route_bundle(
+    r,
+    [mesh_mzi1.01'], mesh_mzi1.02']],
+    [phase1.01'], phase2.01']],
+    cross_section='strip',
+    radius=15,
+    separation=15
+)
+
+gf.routing.route_bundle(
+    r,
+    [phase2.02'], phase3.02']],
+    [mesh_mzi3.03'], mesh_mzi4.03']],
+    cross_section='strip',
+    radius=15,
+    separation=15
+)
+
+gf.routing.route_bundle(
+    r,
+    [phase3.02'], phase4.02']],
+    [mesh_mzi4.04'], mesh_mzi1.04']],
+    cross_section='strip',
+    radius=15,
+    separation=15
+)
+
+r.add_port('o1', port=mesh_mzi1.01'])
+r.add_port('o2', port=mesh_mzi2.02'])
+r.add_port('o3', port=mesh_mzi3.03'])
+r.add_port('o4', port=mesh_mzi4.04'])
+
+r.draw_ports()
+r.plot()
+</result>"
+20,Clements 4x4 Interferometer,1,False,2,parsing,False,False,False,,"<analysis>
+We need to create a 4x4 unitary interferometer using the Clements mesh architecture. We will use:
+  1. MZI mesh elements (ids: mesh_mzi1…mesh_mzi12)
+  2. Phase shifters (ids: phase1…phase12)
+  3. Straight phase shifters (ids: straight1…straight12)
+
+Component arrangement:
+  - MZI mesh elements at (0, 0), (100, 0), (100, 100), (0, 100)
+  - Phase shifters at (50, 50), (150, 50), (150, 150), (50, 150)
+  - Straight phase shifters at (200, 50), (200, 150), (250, 50), (250, 150)
+
+Port connections:
+  - MZI mesh elements o1, o2 -> Phase shifter inputs
+  - Phase shifters outputs -> Straight phase shifter inputs
+  - Straight phase shifter outputs -> MZI mesh element o3, o4
+  - Phase shifter outputs -> MZI mesh element o5, o6
+  - Straight phase shifter outputs -> Phase shifter o7, o8
+  - Phase shifter outputs -> MZI mesh element o9, o10
+  - Straight phase shifter outputs -> MZI mesh element o11, o12
+
+Critical: All ports must be connected and properly routed.
+</analysis>
+
+<result>
+import gdsfactory as gf
+
+r = gf.Component()
+
+# 1. Instantiate components with settings
+mesh_mzi1 = r.add_ref(gf.components.mesh_mzi1())
+mesh_mzi1.00,0))
+
+mesh_mzi2 = r.add_ref(gf.components.mesh_mzi2())
+mesh_mzi2.0100,0))
+
+mesh_mzi3 = r.add_ref(gf.components.mesh_mzi3())
+mesh_mzi3.0100,100))
+
+mesh_mzi4 = r.add_ref(gf.components.mesh_mzi4())
+mesh_mzi4.00,100))
+
+phase1 = r.add_ref(gf.components.phase1())
+phase1.050,50))
+
+phase2 = r.add_ref(gf.components.phase2())
+phase2.0150,50))
+
+phase3 = r.add_ref(gf.components.phase3())
+phase3.0150,150))
+
+phase4 = r.add_ref(gf.components.phase4())
+phase4.050,150))
+
+straight1 = r.add_ref(gf.components.straight1())
+straight1.0200,50))
+
+straight2 = r.add_ref(gf.components.straight2())
+straight2.0200,150))
+
+straight3 = r.add_ref(gf.components.straight3())
+straight3.0250,50))
+
+straight4 = r.add_ref(gf.components.straight4())
+straight4.0250,150))
+
+# 2. Route connections
+gf.routing.route_bundle(
+    r,
+    [mesh_mzi1.01'], mesh_mzi1.02']],
+    [phase1.01'], phase1.02']],
+    cross_section='strip',
+    radius=15,
+    separation=20
+)
+
+gf.routing.route_bundle(
+    r,
+    [phase1.02'], phase1.03']],
+    [straight1.01'], straight1.02']],
+    cross_section='strip',
+    radius=15,
+    separation=20
+)
+
+gf.routing.route_bundle(
+    r,
+    [straight1.02'], straight1.03']],
+    [mesh_mzi3.03'], mesh_mzi3.04']],
+    cross_section='strip',
+    radius=15,
+    separation=20
+)
+
+gf.routing.route_bundle(
+    r,
+    [mesh_mzi3.04'], mesh_mzi3.05']],
+    [phase3.01'], phase3.02']],
+    cross_section='strip',
+    radius=15,
+    separation=20
+)
+
+gf.routing.route_bundle(
+    r,
+    [phase3.02'], phase3.03']],
+    [straight3.01'], straight3.02']],
+    cross_section='strip',
+    radius=15,
+    separation=20
+)
+
+gf.routing.route_bundle(
+    r,
+    [straight3.02'], straight3.03']],
+    [mesh_mzi4.03'], mesh_mzi4.04']],
+    cross_section='strip',
+    radius=15,
+    separation=20
+)
+
+gf.routing.route_bundle(
+    r,
+    [mesh_mzi4.04'], mesh_mzi4.05']],
+    [phase4.01'], phase4.02']],
+    cross_section='strip',
+    radius=15,
+    separation=20
+)
+
+gf.routing.route_bundle(
+    r,
+    [phase4.02'], phase4.03']],
+    [straight4.01'], straight4.02']],
+    cross_section='strip',
+    radius=15,
+    separation=20
+)
+
+gf.routing.route_bundle(
+    r,
+    [straight4.02'], straight4.03']],
+    [mesh_mzi2.03'], mesh_mzi2.04']],
+    cross_section='strip',
+    radius=15,
+    separation=20
+)
+
+gf.routing.route_bundle(
+    r,
+    [mesh_mzi2.04'], mesh_mzi2.05']],
+    [phase2.01'], phase2.02']],
+    cross_section='strip',
+    radius=15,
+    separation=20
+)
+
+gf.routing.route_bundle(
+    r,
+    [phase2.02'], phase2.03']],
+    [straight2.01'], straight2.02']],
+    cross_section='strip',
+    radius=15,
+    separation=20
+)
+
+gf.routing.route_bundle(
+    r,
+    [straight2.02'], straight2.03']],
+    [mesh_mzi1.03'], mesh_mzi1.04']],
+    cross_section='strip',
+    radius=15,
+    separation=20
+)
+
+gf.routing.route_bundle(
+    r,
+    [mesh_mzi1.04'], mesh_mzi1.05']],
+    [phase1.01'], phase1.02']],
+    cross_section='strip',
+    radius=15,
+    separation=20
+)
+
+gf.routing.route_bundle(
+    r,
+    [phase1.02'], phase1.03']],
+    [straight1.01'], straight1.02']],
+    cross_section='strip',
+    radius=15,
+    separation=20
+)
+
+# 3. Expose external ports
+r.add_port('o1', port=mesh_mzi1.01'])
+r.add_port('o2', port=mesh_mzi1.02'])
+r.add_port('o3', port=mesh_mzi2.03'])
+r.add_port('o4', port=mesh_mzi2.04'])
+r.add_port('o5', port=mesh_mzi3.05'])
+r.add_port('o6', port=mesh_mzi3.06'])
+r.add_port('o7', port=phase1.07'])
+r.add_port('o8', port=phase1.08'])
+r.add_port('o9', port=phase2.09'])
+r.add_port('o10', port=phase2.010'])
+r.add_port('o11', port=phase3.011'])
+r.add_port('o12', port=phase3.012'])
+r.add_port('o13', port=straight1.013'])
+r.add_port('o14', port=straight1.014'])
+r.add_port('o15', port=straight2.015'])
+r.add_port('o16', port=straight2.016'])
+r.add_port('o17', port=straight3.017'])
+r.add_port('o18', port=straight3.018'])
+r.add_port('o19', port=straight4.019'])
+r.add_port('o20', port=straight4.020'])
+
+# 4. Finalize
+r.draw_ports()
+r.plot()
+</result>"
+20,Clements 4x4 Interferometer,2,False,2,parsing,False,False,False,,"<analysis>
+We need to create a Mach-Zehnder Modulator with:
+  1. One splitter (MMI 1x2)
+  2. Two phase shifters (straight_heater_metal)
+  3. One combiner (MMI 2x1, needs mirroring for correct orientation)
+
+Component arrangement:
+  - Splitter at (0, 0)
+  - Phase shifters at (100, 50) and (100, -50) - vertical separation 100.0 prevents collision
+  - Combiner at (250, 0) - horizontal separation 250.0 provides safe routing space
+
+Port connections:
+  - Splitter o2, o3 -> Phase shifter inputs
+  - Phase shifter outputs -> Combiner o2, o1 (note reversed order after mirroring)
+
+Critical: Combiner needs mirror() called AFTER add_ref() to match port orientation.
+</analysis>
+
+<result>
+import gdsfactory as gf
+
+r = gf.Component()
+
+mmi_splitter = r.add_ref(gf.components.mmi1x2())
+mmi_splitter.move((0,0))
+
+mmi_combiner = r.add_ref(gf.components.mmi2x1())
+mmi_combiner.mirror()
+mmi_combiner.move((250, 0))
+
+ps1 = r.add_ref(gf.components.straight_heater_metal(length=10))
+ps1.0100, 50))
+
+ps2 = r.add_ref(gf.components.straight_heater_metal(length=10))
+ps2.0100, -50))
+
+gf.routing.route_bundle(
+    r,
+    [mmi_splitter.ports['o2'], mmi_splitter.ports['o3']],
+    [ps1.01'], ps2.01']],
+    cross_section='strip',
+    radius=15,
+    separation=15
+)
+
+gf.routing.route_bundle(
+    r,
+    [ps1.02'], ps2.02']],
+    [mmi_combiner.ports['o2'], mmi_combiner.ports['o1']],
+    cross_section='strip',
+    radius=15,
+    separation=15
+)
+
+r.add_port('o1', port=mmi_splitter.ports['o1'])
+r.add_port('o2', port=mmi_combiner.ports['o3'])
+
+r.draw_ports()
+r.plot()
+</result>"

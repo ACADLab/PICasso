@@ -1,0 +1,4 @@
+problem_idx,circuit_type,sample_idx,success,error_type,error_details,code_length
+1,mzi – mach-zehnder interferometer,0,False,ATTRIBUTE_ERROR,ATTRIBUTE_ERROR: module 'gdsfactory.components' has no attribute 'phase_shifter',921
+1,mzi – mach-zehnder interferometer,1,False,ATTRIBUTE_ERROR,ATTRIBUTE_ERROR: module 'gdsfactory.components' has no attribute 'phase_shifter',876
+1,mzi – mach-zehnder interferometer,2,False,ROUTING_COLLISION,ROUTING_COLLISION: Routing collision in Unnamed_22,825

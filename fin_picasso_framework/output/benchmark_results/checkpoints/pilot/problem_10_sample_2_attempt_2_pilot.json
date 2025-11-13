@@ -1,0 +1,13 @@
+{
+  "timestamp": "2025-11-12T17:08:43.950291",
+  "stage": "pilot",
+  "problem_idx": 10,
+  "sample_idx": 2,
+  "attempt": 2,
+  "status": "pass",
+  "error": null,
+  "metadata": {
+    "validation_type": "pilot"
+  },
+  "code": "import gdsfactory as gf\n\nr = gf.Component()\n\n# 1. Instantiate components with settings\nsw1 = r.add_ref(gf.components.mzi())\nsw1.move((0, 0))\n\nctrl1 = r.add_ref(gf.components.straight_heater_metal())\nctrl1.move((200, 0))\n\n# 2. Route connections\ngf.routing.route_single(r, sw1.ports['o1'], ctrl1.ports['o2'], cross_section='strip', radius=20)\ngf.routing.route_single(r, ctrl1.ports['o1'], sw1.ports['o2'], cross_section='strip', radius=20)\n\n# 3. Expose external ports\nr.add_port('o1', port=sw1.ports['o1'])\nr.add_port('o2', port=sw1.ports['o2'])\n\n# 4. Finalize\nr.draw_ports()\nr.plot()"
+}

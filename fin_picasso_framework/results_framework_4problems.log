@@ -1,0 +1,49 @@
+2025-11-12 15:57:45,798 - __main__ - INFO - Available models:
+2025-11-12 15:57:45,798 - __main__ - INFO -   deepseek_r1: DeepSeek-R1 via HuggingFace API
+2025-11-12 15:57:45,798 - __main__ - INFO -   deepseek_r1_local: DeepSeek-R1 via Local GPU
+2025-11-12 15:57:45,798 - __main__ - INFO -   kimi2: Kimi2 Thinking via HuggingFace API
+2025-11-12 15:57:45,798 - __main__ - INFO -   deepseek_r1_api: DeepSeek-R1 via DeepSeek API
+2025-11-12 15:57:45,798 - __main__ - INFO -   gpt4o_mini: GPT-4o-mini via OpenAI API
+2025-11-12 15:57:45,798 - __main__ - INFO - 
+2025-11-12 15:57:45,798 - __main__ - INFO - ======================================================================
+2025-11-12 15:57:45,798 - __main__ - INFO - PICASSO FRAMEWORK TEST WITH MODEL
+2025-11-12 15:57:45,798 - __main__ - INFO - ======================================================================
+2025-11-12 15:57:45,798 - __main__ - INFO - Model: deepseek_r1
+2025-11-12 15:57:45,798 - __main__ - INFO - Problems: test_problems.txt
+2025-11-12 15:57:45,798 - __main__ - INFO - Samples per problem: 3
+2025-11-12 15:57:45,798 - __main__ - INFO - ======================================================================
+2025-11-12 15:57:45,798 - __main__ - INFO - 
+Step 1: Creating inference agent...
+2025-11-12 15:57:45,798 - __main__ - INFO - Creating agent for: DeepSeek-R1 via HuggingFace API
+2025-11-12 15:57:45,798 - hf_inference_workflow.hf_api_client - INFO - Initialized HFInferenceAgent with model: deepseek-ai/DeepSeek-R1-Distill-Qwen-14B
+2025-11-12 15:57:45,798 - hf_inference_workflow.hf_api_client - INFO - Using HuggingFace Inference API (new router endpoint)
+2025-11-12 15:57:45,798 - hf_inference_workflow.hf_api_client - INFO - Generation params: {'max_new_tokens': 2048, 'temperature': 0.3, 'top_p': 0.95, 'do_sample': True}
+2025-11-12 15:57:45,798 - __main__ - INFO - ✅ Created HF API agent with model: deepseek-ai/DeepSeek-R1-Distill-Qwen-14B
+2025-11-12 15:57:45,798 - __main__ - INFO - 
+Step 2: Loading problems...
+2025-11-12 15:57:45,798 - __main__ - INFO - Loading problems from specified file: test_problems.txt
+2025-11-12 15:57:45,798 - fin_picasso_framework.gen_data_validated - INFO - Loaded 9 problems from test_problems.txt
+2025-11-12 15:57:45,798 - __main__ - INFO - Loaded 9 problems
+2025-11-12 15:57:45,798 - __main__ - INFO - 🧪 DEBUG MODE: Testing with 4 problems (limited to 4 for debugging)
+2025-11-12 15:57:45,798 - __main__ - INFO - 
+Step 3: Loading prompt template...
+2025-11-12 15:57:45,798 - __main__ - INFO - ✅ Loaded prompt template
+2025-11-12 15:57:45,798 - __main__ - INFO - 
+Step 4: Running framework generation...
+2025-11-12 15:57:45,798 - __main__ - INFO - ======================================================================
+2025-11-12 15:57:45,799 - fin_picasso_framework.port_matching.port_matcher - INFO - Detected gdsfactory version: 8.32.2
+2025-11-12 15:57:45,800 - fin_picasso_framework.pilot.pilot_prompt_updater - INFO - ✅ Loaded 4 existing pilot rules from /Users/deepakvungarala/Desktop/shigoto/PICasso/fin_picasso_framework/pilot_rules.json
+2025-11-12 15:57:46,337 - fin_picasso_framework.optimizers.device_optimizer - INFO - SAX is available - will use for device optimization
+2025-11-12 15:57:46,338 - fin_picasso_framework.port_matching.component_spec_loader - INFO - Using pydoc-based component loader for comprehensive specs
+2025-11-12 15:57:46,338 - fin_picasso_framework.sax_models.sax_model_manager - INFO - Detected gdsfactory version: 8.32.2
+2025-11-12 15:57:46,541 - fin_picasso_framework.gen_data_validated - INFO - ✅ Loaded component injection for 4 components
+2025-11-12 15:57:46,541 - fin_picasso_framework.gen_data_validated - INFO - Component injection length: 8031 chars
+2025-11-12 15:57:46,541 - fin_picasso_framework.gen_data_validated - INFO - ✅ Loaded permanent pilot rules (2563 chars)
+Generating validated designs:   0%|          | 0/12 [00:00<?, ?it/s]2025-11-12 15:57:46,542 - fin_picasso_framework.gen_data_validated - INFO - 
+============================================================
+2025-11-12 15:57:46,542 - fin_picasso_framework.gen_data_validated - INFO - Problem 1: MZI - Mach-Zehnder Interferometer - Sample 1/3
+2025-11-12 15:57:46,542 - fin_picasso_framework.gen_data_validated - INFO - ============================================================
+2025-11-12 15:57:46,542 - fin_picasso_framework.gen_data_validated - INFO - Problem 1, Sample 0, Attempt 1/4
+2025-11-12 15:58:01,290 - fin_picasso_framework.gen_data_validated - INFO - 📊 Using Vanilla LLM prompt (Phase 1 baseline - no component specs)
+/opt/homebrew/anaconda3/envs/picasso/lib/python3.10/multiprocessing/resource_tracker.py:224: UserWarning: resource_tracker: There appear to be 9 leaked semaphore objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '

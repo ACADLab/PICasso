@@ -1,0 +1,23 @@
+{
+  "timestamp": "2025-11-12T17:08:44.013034",
+  "stage": "sax",
+  "problem_idx": 10,
+  "sample_idx": 2,
+  "attempt": 2,
+  "status": "fail",
+  "error": "SAX compilation check error: More than two connected optical ports: ['mzi_DL10_LY2_LX0p1_Bben_4daac747_0_0,o1', 'straight_L530_N2_CSstrip_WNone_m10000_0,o1', 'o1']",
+  "metadata": {
+    "validation_type": "sax"
+  },
+  "code": "import gdsfactory as gf\n\nr = gf.Component()\n\n# 1. Instantiate components with settings\nsw1 = r.add_ref(gf.components.mzi())\nsw1.move((0, 0))\n\nctrl1 = r.add_ref(gf.components.straight_heater_metal())\nctrl1.move((200, 0))\n\n# 2. Route connections\ngf.routing.route_single(r, sw1.ports['o1'], ctrl1.ports['o2'], cross_section='strip', radius=20)\ngf.routing.route_single(r, ctrl1.ports['o1'], sw1.ports['o2'], cross_section='strip', radius=20)\n\n# 3. Expose external ports\nr.add_port('o1', port=sw1.ports['o1'])\nr.add_port('o2', port=sw1.ports['o2'])\n\n# 4. Finalize\nr.draw_ports()\nr.plot()",
+  "validation_report": {
+    "passed": false,
+    "errors": [
+      "SAX compilation check error: More than two connected optical ports: ['mzi_DL10_LY2_LX0p1_Bben_4daac747_0_0,o1', 'straight_L530_N2_CSstrip_WNone_m10000_0,o1', 'o1']"
+    ],
+    "warnings": [],
+    "sax_compiled": false,
+    "routing_validated": true
+  },
+  "gds_file": "checkpoints/sax/problem_10_sample_2_attempt_2_sax.gds"
+}

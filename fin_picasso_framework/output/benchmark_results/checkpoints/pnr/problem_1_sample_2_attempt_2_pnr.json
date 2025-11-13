@@ -1,0 +1,31 @@
+{
+  "timestamp": "2025-11-12T00:32:07.172805",
+  "stage": "pnr",
+  "problem_idx": 1,
+  "sample_idx": 2,
+  "attempt": 2,
+  "status": "pass",
+  "error": null,
+  "metadata": {
+    "validation_type": "pnr"
+  },
+  "code": "import gdsfactory as gf\n\nr = gf.Component()\n\n# Create MZI with specified parameters\nmzi_component = gf.components.mzi(delta_length=10.0, length_y=10.0)\n\n# Add MZI to circuit and position at origin\nmzi_ref = r.add_ref(mzi_component)\nmzi_ref.move((0, 0))\n\n# Expose input and output ports\nr.add_port('o1', port=mzi_ref.ports['o1'])\nr.add_port('o2', port=mzi_ref.ports['o2'])\n\n# Draw ports and plot\nr.draw_ports()\nr.plot()",
+  "validation_report": {
+    "passed": true,
+    "errors": [],
+    "warnings": [
+      "Layout area 6114300000\u00b5m\u00b2 exceeds maximum 500000\u00b5m\u00b2"
+    ],
+    "metrics": {
+      "layout_area": 6114300000.0,
+      "layout_width": 91600.0,
+      "layout_height": 66750.0,
+      "aspect_ratio": 1.3722846441947565,
+      "num_components": 1,
+      "num_ports": 2,
+      "compactness": 0.7287117903930131,
+      "quality_score": 0.6914847161572053
+    }
+  },
+  "gds_file": "checkpoints/pnr/problem_1_sample_2_attempt_2_pnr.gds"
+}

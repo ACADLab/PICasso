@@ -1,0 +1,105 @@
+problem_idx,problem_title,sample,success,retry_attempts,failed_stage,pnr_passed,drc_passed,sax_passed,gds_path,code
+1,MZI – Mach-Zehnder Interferometer,0,False,3,sax,True,True,False,/Users/deepakvungarala/Desktop/shigoto/PICasso/fin_picasso_framework/output/gds_files/problem_1_sample_0_attempt_3.gds,"import gdsfactory as gf
+
+r = gf.Component()
+
+# 1. Instantiate components with settings
+mmi_splitter = r.add_ref(gf.components.mmi1x2())
+mmi_splitter.move((0, 0))
+
+phase_shifter1 = r.add_ref(gf.components.straight_heater_metal(length=10))
+phase_shifter1.move((100, 50))
+
+phase_shifter2 = r.add_ref(gf.components.straight_heater_metal(length=10))
+phase_shifter2.move((100, -50))
+
+mmi_combiner = r.add_ref(gf.components.mmi1x2())
+mmi_combiner.mirror()
+mmi_combiner.move((250, 0))
+
+# 2. Route connections
+gf.routing.route_single(
+    r,
+    mmi_splitter.ports['o2'],
+    phase_shifter1.ports['o1'],
+    cross_section='strip',
+    radius=15
+)
+
+gf.routing.route_single(
+    r,
+    mmi_splitter.ports['o3'],
+    phase_shifter2.ports['o1'],
+    cross_section='strip',
+    radius=15
+)
+
+gf.routing.route_single(
+    r,
+    phase_shifter1.ports['o2'],
+    mmi_combiner.ports['o2'],
+    cross_section='strip',
+    radius=15
+)
+
+gf.routing.route_single(
+    r,
+    phase_shifter2.ports['o2'],
+    mmi_combiner.ports['o1'],
+    cross_section='strip',
+    radius=15
+)
+
+# 3. Expose external ports
+r.add_port('o1', port=mmi_splitter.ports['o1'])
+r.add_port('o2', port=mmi_combiner.ports['o3'])
+
+# 4. Finalize
+r.draw_ports()
+r.plot()"
+1,MZI – Mach-Zehnder Interferometer,1,False,3,sax,True,True,False,/Users/deepakvungarala/Desktop/shigoto/PICasso/fin_picasso_framework/output/gds_files/problem_1_sample_1_attempt_3.gds,"import gdsfactory as gf
+
+r = gf.Component()
+
+# 1. Instantiate components with settings
+splitter = r.add_ref(gf.components.mmi1x2())
+splitter.move((0, 0))
+
+phase_shifter = r.add_ref(gf.components.straight_heater_metal())
+phase_shifter.move((200, 0))
+
+combiner = r.add_ref(gf.components.mmi1x2())
+combiner.mirror()
+combiner.move((400, 0))
+
+# 2. Route connections
+gf.routing.route_single(r, splitter.ports['o2'], phase_shifter.ports['o1'], cross_section='strip', radius=15)
+gf.routing.route_single(r, splitter.ports['o3'], phase_shifter.ports['o2'], cross_section='strip', radius=15)
+gf.routing.route_single(r, phase_shifter.ports['o2'], combiner.ports['o1'], cross_section='strip', radius=15)
+gf.routing.route_single(r, phase_shifter.ports['o1'], combiner.ports['o2'], cross_section='strip', radius=15)
+
+# 3. Expose external ports
+r.add_port('o1', port=splitter.ports['o1'])
+r.add_port('o2', port=combiner.ports['o3'])
+
+# 4. Finalize
+r.draw_ports()
+r.plot()"
+1,MZI – Mach-Zehnder Interferometer,2,False,2,sax,True,True,False,/Users/deepakvungarala/Desktop/shigoto/PICasso/fin_picasso_framework/output/gds_files/problem_1_sample_2_attempt_2.gds,"import gdsfactory as gf
+
+r = gf.Component()
+
+# Create MZI with specified parameters
+mzi_component = gf.components.mzi(delta_length=10.0, length_y=10.0)
+
+# Add MZI to circuit and position at origin
+mzi_ref = r.add_ref(mzi_component)
+mzi_ref.move((0, 0))
+
+# Expose input and output ports
+r.add_port('o1', port=mzi_ref.ports['o1'])
+r.add_port('o2', port=mzi_ref.ports['o2'])
+
+# Draw ports and plot
+r.draw_ports()
+r.plot()"

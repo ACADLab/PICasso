@@ -1,0 +1,4 @@
+problem_idx,circuit_type,sample_idx,success,retries_used,validation_passed,auto_corrected,correction_type,spec_passed,functional_test_name,functional_metric_value,opt_efficiency,robustness_score
+1,mzi – mach-zehnder interferometer,0,False,3,False,False,,False,,,0.0,0.0
+1,mzi – mach-zehnder interferometer,1,False,3,False,False,,False,,,0.0,0.0
+1,mzi – mach-zehnder interferometer,2,False,2,False,False,,False,,,0.0,0.0

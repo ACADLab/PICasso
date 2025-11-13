@@ -1,0 +1,28 @@
+name: picasso
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.10
+  - pip
+  - numpy
+  - matplotlib
+  - pandas
+  - jupyter
+  - notebook
+  - ipykernel
+  - scipy
+  - tqdm
+  - pip:
+      - gdsfactory>=7.0.0
+      - sax>=0.11.0
+      - jax>=0.4.0
+      - jaxlib>=0.4.0
+      - klayout>=0.28.0
+      - huggingface-hub
+      - openai
+      - pydantic
+      - requests
+      - xmltodict
+
+

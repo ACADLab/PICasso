@@ -1,0 +1,4 @@
+problem_idx,circuit_type,sample_idx,success,error_type,error_details,code_length
+1,mzi – mach-zehnder interferometer,0,False,ROUTING_COLLISION,ROUTING_COLLISION: Routing collision in Unnamed_0,949
+1,mzi – mach-zehnder interferometer,1,False,ROUTING_COLLISION,ROUTING_COLLISION: Routing collision in Unnamed_21,886
+1,mzi – mach-zehnder interferometer,2,False,ROUTING_COLLISION,ROUTING_COLLISION: Routing collision in Unnamed_30,889

@@ -1,0 +1,32 @@
+{
+  "mzi \u2013 mach-zehnder interferometer": {
+    "raw_llm": {
+      "pass_at_k": 1.0,
+      "spec_at_k": 0.0,
+      "avg_opt_efficiency": 0.0,
+      "avg_robustness": 0.0,
+      "passed": 1,
+      "total": 3,
+      "error_breakdown": {
+        "ROUTING_COLLISION": 2
+      }
+    },
+    "framework": {
+      "pass_at_k": 0.0,
+      "spec_at_k": 0.0,
+      "avg_opt_efficiency": 0.0,
+      "avg_robustness": 0.0,
+      "passed": 0,
+      "spec_passed": 0,
+      "total": 3,
+      "avg_retries": 2.0
+    },
+    "improvement": {
+      "pass_at_k": -1.0,
+      "spec_at_k": 0.0,
+      "opt_efficiency": 0.0,
+      "robustness": 0.0,
+      "pass_at_k_relative_pct": -100.0
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "timestamp": "2025-11-12T14:55:00.616015",
+  "stage": "sax",
+  "problem_idx": 2,
+  "sample_idx": 2,
+  "attempt": 2,
+  "status": "fail",
+  "error": "SAX compilation check error: More than two connected optical ports: ['mmi1x2_WNone_WT1_LT10_L_4e0f7121_200000_0,o2', 'straight_L44p5_N2_CSstrip_WNone_140000_625,o2', 'o2']",
+  "metadata": {
+    "validation_type": "sax"
+  },
+  "code": "import gdsfactory as gf\n\nr = gf.Component()\n\n# 1. Instantiate components with settings\nsplitter = r.add_ref(gf.components.mmi1x2())\nsplitter.move((0, 0))\n\ncombiner = r.add_ref(gf.components.mmi1x2())\ncombiner.mirror()\ncombiner.move((200, 0))\n\nphase_shifter1 = r.add_ref(gf.components.straight_heater_metal(length=10.0))\nphase_shifter1.move((100, 50))\n\nphase_shifter2 = r.add_ref(gf.components.straight_heater_metal(length=10.0))\nphase_shifter2.move((100, -50))\n\n# 2. Route connections\ngf.routing.route_single(\n    r,\n    splitter.ports['o2'],\n    phase_shifter1.ports['o1'],\n    cross_section='strip',\n    radius=15\n)\n\ngf.routing.route_single(\n    r,\n    splitter.ports['o3'],\n    phase_shifter2.ports['o1'],\n    cross_section='strip',\n    radius=15\n)\n\ngf.routing.route_single(\n    r,\n    phase_shifter1.ports['o2'],\n    combiner.ports['o2'],\n    cross_section='strip',\n    radius=15\n)\n\ngf.routing.route_single(\n    r,\n    phase_shifter2.ports['o2'],\n    combiner.ports['o1'],\n    cross_section='strip',\n    radius=15\n)\n\n# 3. Expose external ports\nr.add_port('o1', port=combiner.ports['o3'])\nr.add_port('o2', port=combiner.ports['o2'])\n\nr.draw_ports()\nr.plot()",
+  "validation_report": {
+    "passed": false,
+    "errors": [
+      "SAX compilation check error: More than two connected optical ports: ['mmi1x2_WNone_WT1_LT10_L_4e0f7121_200000_0,o2', 'straight_L44p5_N2_CSstrip_WNone_140000_625,o2', 'o2']"
+    ],
+    "warnings": [],
+    "sax_compiled": false,
+    "routing_validated": true
+  },
+  "gds_file": "checkpoints/sax/problem_2_sample_2_attempt_2_sax.gds"
+}

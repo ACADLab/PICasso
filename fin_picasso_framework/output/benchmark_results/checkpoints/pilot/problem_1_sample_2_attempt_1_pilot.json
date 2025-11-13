@@ -1,0 +1,13 @@
+{
+  "timestamp": "2025-11-12T17:01:55.702976",
+  "stage": "pilot",
+  "problem_idx": 1,
+  "sample_idx": 2,
+  "attempt": 1,
+  "status": "fail",
+  "error": "Syntax error: unmatched ')' (<unknown>, line 12)",
+  "metadata": {
+    "validation_type": "pilot"
+  },
+  "code": "import gdsfactory as gf\n\nc = gf.Component()\n\n# Add components\nmmi1 = c.add_ref(gf.components.mmi1x2())\nmmi2 = c.add_ref(gf.components.mmi1x2())\nphase_shifter = c.add_ref(gf.components.straight())\n\n# Position components\nmmi1.move((0, 0))\nmmi2.0)\nmmi2.move((10.0, 0))  # DeltaL = 10.0\n\nphase_shifter.move((5.0, 5.0))  # L = 10.0, centered between splitters\n\n# Route connections\ngf.routing.route_single(\n    c,\n    mmi1.ports['o2'],\n    phase_shifter.ports['o1'],\n    cross_section='strip'\n)\n\ngf.routing.route_single(\n    c,\n    mmi1.ports['o3'],\n    phase_shifter.ports['o1'],\n    cross_section='strip'\n)\n\ngf.routing.route_single(\n    c,\n    phase_shifter.ports['o2'],\n    mmi2.ports['o1'],\n    cross_section='strip'\n)\n\ngf.routing.route_single(\n    c,\n    phase_shifter.ports['o2'],\n    mmi2.ports['o3'],\n    cross_section='strip'\n)\n\n# Add external ports\nc.add_port('o1', port=mmi1.ports['o1'])\nc.add_port('o2', port=mmi2.ports['o2'])\n\nc.draw_ports()\nc.plot()"
+}

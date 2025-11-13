@@ -64,50 +64,114 @@ class HFInferenceAgent:
 
     def _call(self, prompt: str) -> str:
         """Make API call to HuggingFace Inference endpoint (backward compatible)."""
-        try:
-            # Try chat_completion first (newer API)
-            if hasattr(self.client, 'chat_completion'):
-                response = self.client.chat_completion(
-                    model=self.model,
-                    messages=[{"role": "user", "content": prompt}],
-                    max_tokens=self.gen_params.get('max_new_tokens', 2048),
-                    temperature=self.gen_params.get('temperature', 0.3),
-                    top_p=self.gen_params.get('top_p', 0.95)
-                )
-                if hasattr(response, 'choices') and len(response.choices) > 0:
-                    return response.choices[0].message.content
-                return str(response)
+        import time
+        
+        max_retries = 5  # Increased retries for rate limits
+        base_delay = 5.0  # Start with 5 seconds
+        
+        for attempt in range(max_retries):
+            try:
+                # Try chat.completions.create (for models like Kimi2 that use this format)
+                if hasattr(self.client, 'chat') and hasattr(self.client.chat, 'completions'):
+                    try:
+                        # Build model name with provider if specified (e.g., "moonshotai/Kimi-K2-Thinking:novita")
+                        model_name = self.model
+                        if self.provider:
+                            model_name = f"{self.model}:{self.provider}"
+                        
+                        # Note: For models with provider tags (e.g., :novita), HuggingFace routes
+                        # through the provider's API. The URL will show the provider (e.g., /novita/v3/openai/...)
+                        # This is expected behavior - HuggingFace acts as a router/proxy.
+                        response = self.client.chat.completions.create(
+                            model=model_name,
+                            messages=[{"role": "user", "content": prompt}],
+                            max_tokens=self.gen_params.get('max_new_tokens', 2048),
+                            temperature=self.gen_params.get('temperature', 0.3),
+                            top_p=self.gen_params.get('top_p', 0.95)
+                        )
+                        if hasattr(response, 'choices') and len(response.choices) > 0:
+                            return response.choices[0].message.content
+                        return str(response)
+                    except Exception as e:
+                        error_str = str(e)
+                        # Check if it's a timeout/rate limit that we should retry
+                        is_rate_limit = "429" in error_str or "rate_limit" in error_str.lower() or "too many requests" in error_str.lower()
+                        is_timeout = "504" in error_str or "timeout" in error_str.lower() or "503" in error_str or "502" in error_str
+                        
+                        if (is_rate_limit or is_timeout) and attempt < max_retries - 1:
+                            # Longer delay for rate limits
+                            if is_rate_limit:
+                                delay = base_delay * (3 ** attempt)  # Exponential: 5s, 15s, 45s, 135s
+                                logger.warning(f"API rate limit (attempt {attempt + 1}/{max_retries}): {error_str[:100]}. Waiting {delay}s...")
+                            else:
+                                delay = base_delay * (2 ** attempt)  # Exponential: 5s, 10s, 20s, 40s
+                                logger.warning(f"API timeout/error (attempt {attempt + 1}/{max_retries}): {error_str[:100]}. Retrying in {delay}s...")
+                            time.sleep(delay)
+                            continue
+                        logger.debug(f"chat.completions.create failed: {e}, trying chat_completion...")
+                
+                # Try chat_completion (newer API)
+                if hasattr(self.client, 'chat_completion'):
+                    response = self.client.chat_completion(
+                        model=self.model,
+                        messages=[{"role": "user", "content": prompt}],
+                        max_tokens=self.gen_params.get('max_new_tokens', 2048),
+                        temperature=self.gen_params.get('temperature', 0.3),
+                        top_p=self.gen_params.get('top_p', 0.95)
+                    )
+                    if hasattr(response, 'choices') and len(response.choices) > 0:
+                        return response.choices[0].message.content
+                    return str(response)
 
-            # Fallback to direct HTTP request (works with any version)
-            else:
-                import requests
+                # Fallback to direct HTTP request (works with any version)
+                else:
+                    import requests
 
-                url = f"https://api-inference.huggingface.co/models/{self.model}"
-                headers = {"Authorization": f"Bearer {self.client.token}"}
-                payload = {
-                    "inputs": prompt,
-                    "parameters": {
-                        "max_new_tokens": self.gen_params.get('max_new_tokens', 2048),
-                        "temperature": self.gen_params.get('temperature', 0.3),
-                        "top_p": self.gen_params.get('top_p', 0.95),
-                        "do_sample": self.gen_params.get('do_sample', True),
-                        "return_full_text": False
+                    url = f"https://api-inference.huggingface.co/models/{self.model}"
+                    headers = {"Authorization": f"Bearer {self.client.token}"}
+                    payload = {
+                        "inputs": prompt,
+                        "parameters": {
+                            "max_new_tokens": self.gen_params.get('max_new_tokens', 2048),
+                            "temperature": self.gen_params.get('temperature', 0.3),
+                            "top_p": self.gen_params.get('top_p', 0.95),
+                            "do_sample": self.gen_params.get('do_sample', True),
+                            "return_full_text": False
+                        }
                     }
-                }
 
-                response = requests.post(url, headers=headers, json=payload)
-                response.raise_for_status()
-                result = response.json()
+                    response = requests.post(url, headers=headers, json=payload, timeout=120)
+                    response.raise_for_status()
+                    result = response.json()
 
-                if isinstance(result, list) and len(result) > 0:
-                    return result[0].get('generated_text', str(result))
-                elif isinstance(result, dict):
-                    return result.get('generated_text', str(result))
-                return str(result)
-
-        except Exception as e:
-            logger.error(f"API call failed: {e}")
-            raise RuntimeError(f"HuggingFace Inference API error: {e}")
+                    if isinstance(result, list) and len(result) > 0:
+                        return result[0].get('generated_text', str(result))
+                    elif isinstance(result, dict):
+                        return result.get('generated_text', str(result))
+                    return str(result)
+                    
+            except Exception as e:
+                error_str = str(e)
+                # Retry on timeout/rate limit errors
+                is_rate_limit = "429" in error_str or "rate_limit" in error_str.lower() or "too many requests" in error_str.lower()
+                is_timeout = "504" in error_str or "timeout" in error_str.lower() or "503" in error_str or "502" in error_str
+                
+                if (is_rate_limit or is_timeout) and attempt < max_retries - 1:
+                    # Longer delay for rate limits
+                    if is_rate_limit:
+                        delay = base_delay * (3 ** attempt)  # Exponential: 5s, 15s, 45s, 135s
+                        logger.warning(f"API rate limit (attempt {attempt + 1}/{max_retries}): {error_str[:100]}. Waiting {delay}s...")
+                    else:
+                        delay = base_delay * (2 ** attempt)  # Exponential: 5s, 10s, 20s, 40s
+                        logger.warning(f"API error (attempt {attempt + 1}/{max_retries}): {error_str[:100]}. Retrying in {delay}s...")
+                    time.sleep(delay)
+                    continue
+                else:
+                    logger.error(f"API call failed after {attempt + 1} attempts: {e}")
+                    raise RuntimeError(f"HuggingFace Inference API error: {e}")
+        
+        # If we get here, all retries failed
+        raise RuntimeError(f"HuggingFace Inference API error: All {max_retries} retry attempts failed")
 
     def ASK_LLM(self, system_prompt: str, user_q: str) -> str:
         """

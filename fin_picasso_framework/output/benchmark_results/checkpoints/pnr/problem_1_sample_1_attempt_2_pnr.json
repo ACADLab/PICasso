@@ -1,0 +1,31 @@
+{
+  "timestamp": "2025-11-12T14:49:32.843347",
+  "stage": "pnr",
+  "problem_idx": 1,
+  "sample_idx": 1,
+  "attempt": 2,
+  "status": "pass",
+  "error": null,
+  "metadata": {
+    "validation_type": "pnr"
+  },
+  "code": "import gdsfactory as gf\n\nr = gf.Component()\n\n# 1. Instantiate components with settings\nsplitter = r.add_ref(gf.components.mmi1x2())\nsplitter.move((0, 0))\n\ncombiner = r.add_ref(gf.components.mmi1x2())\ncombiner.mirror()\ncombiner.move((200, 0))\n\nphase_shifter = r.add_ref(gf.components.straight_heater_metal(length=10.0))\nphase_shifter.move((100, 0))\n\n# 2. Route connections\ngf.routing.route_single(\n    component=r,\n    port1=splitter.ports['o2'],\n    port2=phase_shifter.ports['o1'],\n    cross_section='strip',\n    radius=15\n)\n\ngf.routing.route_single(\n    component=r,\n    port1=phase_shifter.ports['o2'],\n    port2=combiner.ports['o2'],\n    cross_section='strip',\n    radius=15\n)\n\n# 3. Expose external ports\nr.add_port('o1', port=splitter.ports['o1'])\nr.add_port('o2', port=combiner.ports['o3'])\n\n# 4. Finalize\nr.draw_ports()\nr.plot()",
+  "validation_report": {
+    "passed": true,
+    "errors": [],
+    "warnings": [
+      "Layout area 13462781250\u00b5m\u00b2 exceeds maximum 500000\u00b5m\u00b2"
+    ],
+    "metrics": {
+      "layout_area": 13462781250.0,
+      "layout_width": 220250.0,
+      "layout_height": 61125.0,
+      "aspect_ratio": 3.6032719836400817,
+      "num_components": 15,
+      "num_ports": 2,
+      "compactness": 0.2775255391600454,
+      "quality_score": 0.5110102156640182
+    }
+  },
+  "gds_file": "checkpoints/pnr/problem_1_sample_1_attempt_2_pnr.gds"
+}

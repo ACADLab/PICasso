@@ -1,0 +1,31 @@
+{
+  "timestamp": "2025-11-12T17:06:19.624130",
+  "stage": "pnr",
+  "problem_idx": 10,
+  "sample_idx": 1,
+  "attempt": 1,
+  "status": "pass",
+  "error": null,
+  "metadata": {
+    "validation_type": "pnr"
+  },
+  "code": "import gdsfactory as gf\n\nr = gf.Component()\n\n# Add MZI cell at origin\nsw1 = r.add_ref(gf.components.mzi())\nsw1.move((0, 0))\n\n# Add phase control component with proper spacing\nctrl1 = r.add_ref(gf.components.mzi())\nctrl1.move((200, 0))\n\n# Route connections using proper routing functions\ngf.routing.route_single(\n    r,\n    sw1.ports['o1'],\n    ctrl1.ports['o1'],\n    cross_section='strip',\n    radius=20\n)\n\ngf.routing.route_single(\n    r,\n    ctrl1.ports['o2'],\n    sw1.ports['o2'],\n    cross_section='strip',\n    radius=20\n)\n\n# Expose external ports\nr.add_port('o1', port=sw1.ports['o1'])\nr.add_port('o2', port=sw1.ports['o2'])\n\nr.draw_ports()\nr.plot()",
+  "validation_report": {
+    "passed": true,
+    "errors": [],
+    "warnings": [
+      "Layout area 26693800000\u00b5m\u00b2 exceeds maximum 500000\u00b5m\u00b2"
+    ],
+    "metrics": {
+      "layout_area": 26693800000.0,
+      "layout_width": 331600.0,
+      "layout_height": 80500.0,
+      "aspect_ratio": 4.119254658385093,
+      "num_components": 12,
+      "num_ports": 2,
+      "compactness": 0.2427623642943305,
+      "quality_score": 0.4971049457177323
+    }
+  },
+  "gds_file": "checkpoints/pnr/problem_10_sample_1_attempt_1_pnr.gds"
+}

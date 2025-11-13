@@ -1,0 +1,12 @@
+{
+  "custom_patterns": [
+    "CRITICAL: Fix unmatched brackets/parentheses. Error: PILOT_ERROR: Syntax error: unmatched ')' (<unknown>, line 12). Always ensure every opening bracket/parenthesis has a matching closing one.",
+    "Add pilot check: Syntax Error: PILOT_RULE: Use only ASCII characters. No Unicode (\u00b5m, \u00d7, \u0394). Use valid Python float literals.",
+    "CRITICAL: Always close all parentheses. Check function calls like r.area() not r.area(. Example fix: r.area( \u2192 r.area()\n   Fix example: If you see 'r.area(' add closing ')' to make 'r.area()'",
+    "CRITICAL: Use valid Python float literals. Use 10.0 not 10.0.5 or 10 microns. Never attach units to numbers.",
+    "CRITICAL: Component not found. Check component reference. Error: ATTRIBUTE_ERROR: module 'gdsfactory.components' has no attribute 'ctrl1'. Use only components listed in the component reference."
+  ],
+  "error_patterns": {},
+  "prevention_rules": [],
+  "template_suggestions": []
+}

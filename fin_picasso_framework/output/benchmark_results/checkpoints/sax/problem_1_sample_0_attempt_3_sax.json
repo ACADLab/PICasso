@@ -1,0 +1,25 @@
+{
+  "timestamp": "2025-11-12T00:29:49.308005",
+  "stage": "sax",
+  "problem_idx": 1,
+  "sample_idx": 0,
+  "attempt": 3,
+  "status": "fail",
+  "error": "SAX circuit compilation failed: Missing models. The following models are still missing to build the circuit:\n{\n    \"Missing Models\": [\"straight_heater_metal_undercut\"],\n    \"Given Models\": [\"straight\", \"bend_euler\", \"mmi1x2\", \"mmi\"],\n    \"Required Models\": [\n        \"bend_euler\",\n        \"mmi1x2\",\n        \"straight\",\n        \"straight_heater_metal_undercut\",\n    ],\n}\n\nNote: SAX models not found. Consider using SAXModelManager to create models.",
+  "metadata": {
+    "validation_type": "sax"
+  },
+  "code": "import gdsfactory as gf\n\nr = gf.Component()\n\n# 1. Instantiate components with settings\nmmi_splitter = r.add_ref(gf.components.mmi1x2())\nmmi_splitter.move((0, 0))\n\nphase_shifter1 = r.add_ref(gf.components.straight_heater_metal(length=10))\nphase_shifter1.move((100, 50))\n\nphase_shifter2 = r.add_ref(gf.components.straight_heater_metal(length=10))\nphase_shifter2.move((100, -50))\n\nmmi_combiner = r.add_ref(gf.components.mmi1x2())\nmmi_combiner.mirror()\nmmi_combiner.move((250, 0))\n\n# 2. Route connections\ngf.routing.route_single(\n    r,\n    mmi_splitter.ports['o2'],\n    phase_shifter1.ports['o1'],\n    cross_section='strip',\n    radius=15\n)\n\ngf.routing.route_single(\n    r,\n    mmi_splitter.ports['o3'],\n    phase_shifter2.ports['o1'],\n    cross_section='strip',\n    radius=15\n)\n\ngf.routing.route_single(\n    r,\n    phase_shifter1.ports['o2'],\n    mmi_combiner.ports['o2'],\n    cross_section='strip',\n    radius=15\n)\n\ngf.routing.route_single(\n    r,\n    phase_shifter2.ports['o2'],\n    mmi_combiner.ports['o1'],\n    cross_section='strip',\n    radius=15\n)\n\n# 3. Expose external ports\nr.add_port('o1', port=mmi_splitter.ports['o1'])\nr.add_port('o2', port=mmi_combiner.ports['o3'])\n\n# 4. Finalize\nr.draw_ports()\nr.plot()",
+  "validation_report": {
+    "passed": false,
+    "errors": [
+      "SAX circuit compilation failed: Missing models. The following models are still missing to build the circuit:\n{\n    \"Missing Models\": [\"straight_heater_metal_undercut\"],\n    \"Given Models\": [\"straight\", \"bend_euler\", \"mmi1x2\", \"mmi\"],\n    \"Required Models\": [\n        \"bend_euler\",\n        \"mmi1x2\",\n        \"straight\",\n        \"straight_heater_metal_undercut\",\n    ],\n}\n\nNote: SAX models not found. Consider using SAXModelManager to create models."
+    ],
+    "warnings": [
+      "Netlist has no connections (might be single component)"
+    ],
+    "sax_compiled": false,
+    "routing_validated": true
+  },
+  "gds_file": "checkpoints/sax/problem_1_sample_0_attempt_3_sax.gds"
+}

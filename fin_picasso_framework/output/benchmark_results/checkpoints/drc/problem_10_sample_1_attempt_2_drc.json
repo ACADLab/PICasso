@@ -1,0 +1,24 @@
+{
+  "timestamp": "2025-11-12T14:56:47.434009",
+  "stage": "drc",
+  "problem_idx": 10,
+  "sample_idx": 1,
+  "attempt": 2,
+  "status": "pass",
+  "error": null,
+  "metadata": {
+    "validation_type": "drc",
+    "violations": 0
+  },
+  "code": "import gdsfactory as gf\n\nr = gf.Component()\n\n# 1. Instantiate components with settings\nmzi_switch = r.add_ref(gf.components.mzi())\nmzi_switch.move((0, 0))\n\nphase_control = r.add_ref(gf.components.straight_heater_metal(length=10))\nphase_control.move((150, 0))\n\n# 2. Route connections\ngf.routing.route_single(\n    r,\n    mzi_switch.ports['o1'],\n    phase_control.ports['o1'],\n    cross_section='strip',\n    radius=15\n)\n\ngf.routing.route_single(\n    r,\n    phase_control.ports['o2'],\n    mzi_switch.ports['o2'],\n    cross_section='strip',\n    radius=15\n)\n\n# 3. Expose external ports\nr.add_port('o1', port=mzi_switch.ports['o1'])\nr.add_port('o2', port=mzi_switch.ports['o2'])\n\n# 4. Finalize\nr.draw_ports()\nr.plot()",
+  "validation_report": {
+    "passed": true,
+    "errors": [],
+    "warnings": [
+      "KLayout not found - DRC check skipped"
+    ],
+    "violations": 0,
+    "drc_report_path": null
+  },
+  "gds_file": "checkpoints/drc/problem_10_sample_1_attempt_2_drc.gds"
+}

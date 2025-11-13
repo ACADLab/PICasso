@@ -1,0 +1,42 @@
+[
+  {
+    "problem_id": "1",
+    "problem_name": "",
+    "complexity": null,
+    "samples": [
+      {
+        "sample_idx": 1,
+        "passed": true,
+        "errors": [],
+        "warnings": [],
+        "yaml_valid": true,
+        "component_built": true,
+        "drc_passed": true,
+        "lvs_passed": true,
+        "optimization_done": true
+      }
+    ],
+    "pass_count": 1,
+    "fail_count": 0
+  },
+  {
+    "problem_id": "2",
+    "problem_name": "",
+    "complexity": null,
+    "samples": [
+      {
+        "sample_idx": 1,
+        "passed": true,
+        "errors": [],
+        "warnings": [],
+        "yaml_valid": true,
+        "component_built": true,
+        "drc_passed": true,
+        "lvs_passed": true,
+        "optimization_done": true
+      }
+    ],
+    "pass_count": 1,
+    "fail_count": 0
+  }
+]

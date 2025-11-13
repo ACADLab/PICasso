@@ -1,0 +1,13 @@
+{
+  "timestamp": "2025-11-12T17:02:41.477816",
+  "stage": "pilot",
+  "problem_idx": 2,
+  "sample_idx": 0,
+  "attempt": 1,
+  "status": "pass",
+  "error": null,
+  "metadata": {
+    "validation_type": "pilot"
+  },
+  "code": "import gdsfactory as gf\n\nr = gf.Component()\n\n# Instantiate components\nsplitter = r.add_ref(gf.components.mmi1x2())\nsplitter.move((0, 0))\n\ncombiner = r.add_ref(gf.components.mmi1x2())\ncombiner.mirror()\ncombiner.move((400, 0))\n\nphase_shifter1 = r.add_ref(gf.components.straight_heater_metal(length=10.0))\nphase_shifter2 = r.add_ref(gf.components.straight_heater_metal(length=10.0))\n\nphase_shifter1.move((200, 100))\nphase_shifter2.move((200, -100))\n\n# Route connections\ngf.routing.route_bundle(\n    r,\n    [splitter.ports['o2'], splitter.ports['o3']],\n    [phase_shifter1.ports['o1'], phase_shifter2.ports['o1']],\n    cross_section='strip',\n    radius=20,\n    separation=20\n)\n\ngf.routing.route_bundle(\n    r,\n    [phase_shifter1.ports['o2'], phase_shifter2.ports['o2']],\n    [combiner.ports['o2'], combiner.ports['o1']],\n    cross_section='strip',\n    radius=20,\n    separation=20\n)\n\n# Add external ports\nr.add_port('o1', splitter.ports['o1'])\nr.add_port('o2', combiner.ports['o3'])\n\nr.draw_ports()\nr.plot()"
+}
