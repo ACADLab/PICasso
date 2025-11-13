@@ -1,0 +1,13 @@
+{
+  "timestamp": "2025-11-12T17:10:15.200802",
+  "stage": "pilot",
+  "problem_idx": 4,
+  "sample_idx": 1,
+  "attempt": 1,
+  "status": "pass",
+  "error": null,
+  "metadata": {
+    "validation_type": "pilot"
+  },
+  "code": "import gdsfactory as gf\n\nr = gf.Component()\n\n# Instantiate components\nsplitter = r.add_ref(gf.components.mmi1x2())\nsplitter.move((0, 0))\n\ncombiner = r.add_ref(gf.components.mmi1x2())\ncombiner.mirror()\ncombiner.move((250, 0))\n\nmzm_i = r.add_ref(gf.components.mzm())\nmzm_i.move((100, 100))\n\nmzm_q = r.add_ref(gf.components.mzm())\nmzm_q.move((100, -100))\n\npb_i = r.add_ref(gf.components.coupler())\npb_i.move((200, 100))\n\npb_q = r.add_ref(gf.components.coupler())\npb_q.move((200, -100))\n\n# Route connections\ngf.routing.route_single(r, splitter.ports['o2'], mzm_i.ports['o1'], cross_section='strip', radius=20)\ngf.routing.route_single(r, splitter.ports['o3'], mzm_q.ports['o1'], cross_section='strip', radius=20)\n\ngf.routing.route_single(r, mzm_i.ports['o2'], combiner.ports['o2'], cross_section='strip', radius=20)\ngf.routing.route_single(r, mzm_q.ports['o2'], combiner.ports['o1'], cross_section='strip', radius=20)\n\ngf.routing.route_single(r, mzm_i.ports['o3'], pb_i.ports['o1'], cross_section='strip', radius=20)\ngf.routing.route_single(r, mzm_q.ports['o3'], pb_q.ports['o1'], cross_section='strip', radius=20)\n\n# Add external ports\nr.add_port('o1', port=splitter.ports['o1'])\nr.add_port('o2', port=combiner.ports['o3'])\n\nr.draw_ports()\nr.plot()"
+}

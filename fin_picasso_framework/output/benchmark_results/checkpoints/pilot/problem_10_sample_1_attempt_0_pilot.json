@@ -1,0 +1,13 @@
+{
+  "timestamp": "2025-11-12T17:06:01.333394",
+  "stage": "pilot",
+  "problem_idx": 10,
+  "sample_idx": 1,
+  "attempt": 0,
+  "status": "fail",
+  "error": "Syntax error: invalid decimal literal (<unknown>, line 2)",
+  "metadata": {
+    "validation_type": "pilot"
+  },
+  "code": "<think>\nOkay, so I need to write Python code to create a 2x2 optical switch using GDSFactory. The problem says to use an MZI cell and a phase control. Let me think about how to structure this.\n\nFirst, I remember that in GDSFactory, components are added using the Component class. So I'll start by creating a new component called 'r'. Then, I need to add the MZI cell and the phase control to this component.\n\nThe MZI cell is typically an mzi component. I'll add it with an id of 'sw1' and move it to the origin. Next, the phase control is probably a straight waveguide, maybe 10 microns long, so I'll add that with an id of 'ctrl1' and move it somewhere else, like (200, 0) to avoid overlapping.\n\nNow, I need to connect the ports. The MZI has four ports: o1, o2, o3, o4. The phase control has two ports, o1 and o2. I think the phase control connects to the MZI's top and bottom arms. So I'll use route_bundle to connect the MZI's o3 and o4 to the control's o1 and o2. I'll set the cross_section to 'strip', radius to 20, and separation to 20 for safety.\n\nAfter connecting, I need to expose the external ports. The MZI's o1 and o2 should be the external ports. So I'll add 'o1' and 'o2' from the MZI's ports. Then, I'll draw all ports and plot the component.\n\nI should make sure all connections are made with route_bundle, not route_single, and that all ports are correctly labeled. Also, I need to avoid any comments or extra text and stick strictly to the required structure.</think>\n\nimport gdsfactory as gf\n\nr = gf.Component()\n\nsw1 = r.add_ref(gf.components.mzi())\nsw1.move((0, 0))\n\nctrl1 = r.add_ref(gf.components.straight_heater_metal(length=10))\nctrl1.move((200, 0))\n\ngf.routing.route_bundle(\n    r,\n    [sw1.ports['o3'], sw1.ports['o4']],\n    [ctrl1.ports['o1'], ctrl1.ports['o2']],\n    cross_section='strip',\n    radius=20,\n    separation=20\n)\n\nr.add_port('o1', port=sw1.ports['o1'])\nr.add_port('o2', port=sw1.ports['o2'])\n\nr.draw_ports()\nr.plot()"
+}

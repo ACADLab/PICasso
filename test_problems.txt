@@ -1,0 +1,61 @@
+Problem 1 (MZI - Mach-Zehnder Interferometer) [Complexity 1]:
+Create a Mach-Zehnder interferometer with a single optical input and output. Use:
+- Two MMI1x2 (id: mmi1, mmi2)
+- One phase shifter (id: phase_shifter)
+Parameters:
+- DeltaL = 10.0 (length difference in microns, use as float: 10.0)
+- L = 10.0 (length in microns, use as float: 10.0)
+
+Problem 2 (MZM - Mach-Zehnder Modulator) [Complexity 1]:
+Create a single-input / single-output Mach-Zehnder Modulator (MZM). Use:
+- One MMI1x2 Splitter (id: splitter)
+- One MMI2x1 Combiner (id: combiner)
+- Two Straight Heat Metals / phase shifters (id: phase_shifter1, phase_shifter2)
+Parameters:
+- L = 10.0 (length in microns, use as float: 10.0)
+
+Problem 10 (2x2 Optical Switch) [Complexity 1]:
+Create a fundamental 2x2 optical switch using an MZI-based switch cell. Use:
+• One MZI cell (id: sw1)
+• One phase control (id: ctrl1)
+
+Problem 4 (QPSK Modulator) [Complexity 2]:
+Create an optical QPSK transmitter using:
+• Two Mach-Zehnder Modulators (ids: mzm_i, mzm_q)
+• One MMI1x2 Splitter (id: splitter)
+• One MMI2x1 Combiner (id: combiner)
+• Two phase biasers (ids: pb_i, pb_q)
+
+Problem 7 (WDM Multiplexer) [Complexity 2]:
+Create a WDM multiplexer circuit combining multiple wavelengths into one output. Use:
+• Multiple inputs (ids: in1…inN)
+• Splitter network (MMI or couplers) (ids: splitter1…splitterK)
+• Single output (id: out)
+Tune path-lengths and splitting ratios.
+
+Problem 23 (Ring Resonator Add-Drop Filter) [Complexity 2]:
+Create a single add-drop microring resonator filter. Use:
+• One ring resonator (id: ring1) - if available use gf.components.ring_single(), otherwise use curved waveguides
+• Two directional couplers (ids: in_cpl, out_cpl)
+Tune coupling gap and ring radius to minimise insertion loss.
+
+Problem 5 (8-QAM Modulator) [Complexity 3]:
+Create an optical 8-QAM transmitter using:
+- Three Mach-Zehnder Modulators (ids: mzm_bit1, mzm_bit2, mzm_bit3)
+- Two MMI1x2 Splitters (ids: splitter1, splitter2)
+- Two MMI2x1 Combiners (ids: combiner1, combiner2)
+The three MZMs should be vertically parallel with 100.0 spacing (use as float: 100.0).
+IMPORTANT: Use r.add_ref() then call mirror() on ComponentReference, NOT on Cell directly.
+
+Problem 11 (Crossbar 4x4 Switch) [Complexity 3]:
+Create a 4x4 photonic crossbar switching network using 2x2 MZI-based switch nodes. Use:
+• Switch nodes (ids: sw1…sw16)
+• Coupler/phase elements (ids: cou1…cou32)
+Tune all coupler ratios and phase shifters to minimise insertion loss on the busiest path.
+
+Problem 20 (Clements 4x4 Interferometer) [Complexity 3]:
+Create a 4x4 unitary interferometer using the Clements mesh architecture. Use:
+• MZI mesh elements (ids: mesh_mzi1…mesh_mzi12)
+• Phase shifters (ids: phase1…phase12)
+Tune for minimal insertion loss on the worst input-to-output path.
+

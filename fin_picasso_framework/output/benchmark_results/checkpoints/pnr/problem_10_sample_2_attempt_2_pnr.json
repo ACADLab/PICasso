@@ -1,0 +1,32 @@
+{
+  "timestamp": "2025-11-12T17:08:44.009457",
+  "stage": "pnr",
+  "problem_idx": 10,
+  "sample_idx": 2,
+  "attempt": 2,
+  "status": "pass",
+  "error": null,
+  "metadata": {
+    "validation_type": "pnr"
+  },
+  "code": "import gdsfactory as gf\n\nr = gf.Component()\n\n# 1. Instantiate components with settings\nsw1 = r.add_ref(gf.components.mzi())\nsw1.move((0, 0))\n\nctrl1 = r.add_ref(gf.components.straight_heater_metal())\nctrl1.move((200, 0))\n\n# 2. Route connections\ngf.routing.route_single(r, sw1.ports['o1'], ctrl1.ports['o2'], cross_section='strip', radius=20)\ngf.routing.route_single(r, ctrl1.ports['o1'], sw1.ports['o2'], cross_section='strip', radius=20)\n\n# 3. Expose external ports\nr.add_port('o1', port=sw1.ports['o1'])\nr.add_port('o2', port=sw1.ports['o2'])\n\n# 4. Finalize\nr.draw_ports()\nr.plot()",
+  "validation_report": {
+    "passed": true,
+    "errors": [],
+    "warnings": [
+      "Layout area 54601925000\u00b5m\u00b2 exceeds maximum 500000\u00b5m\u00b2",
+      "Extreme aspect ratio 21.20 (very stretched layout)"
+    ],
+    "metrics": {
+      "layout_area": 54601925000.0,
+      "layout_width": 1075900.0,
+      "layout_height": 50750.0,
+      "aspect_ratio": 21.2,
+      "num_components": 4,
+      "num_ports": 2,
+      "compactness": 0.04716981132075472,
+      "quality_score": 0.3350943396226416
+    }
+  },
+  "gds_file": "checkpoints/pnr/problem_10_sample_2_attempt_2_pnr.gds"
+}

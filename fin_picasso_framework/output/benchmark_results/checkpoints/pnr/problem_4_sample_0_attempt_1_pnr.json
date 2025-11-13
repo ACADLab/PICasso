@@ -1,0 +1,31 @@
+{
+  "timestamp": "2025-11-12T17:09:32.551314",
+  "stage": "pnr",
+  "problem_idx": 4,
+  "sample_idx": 0,
+  "attempt": 1,
+  "status": "pass",
+  "error": null,
+  "metadata": {
+    "validation_type": "pnr"
+  },
+  "code": "import gdsfactory as gf\n\nr = gf.Component()\n\n# Instantiate components\nsplitter = r.add_ref(gf.components.mmi1x2())\nsplitter.move((0, 0))\n\nmzm_i = r.add_ref(gf.components.mzm())\nmzm_i.move((200, 0))\n\nmzm_q = r.add_ref(gf.components.mzm())\nmzm_q.move((200, 100))\n\npb_i = r.add_ref(gf.components.coupler())\npb_i.move((300, 0))\n\npb_q = r.add_ref(gf.components.coupler())\npb_q.move((300, 100))\n\ncombiner = r.add_ref(gf.components.mmi1x2())\ncombiner.mirror()\ncombiner.move((400, 50))\n\n# Route connections\ngf.routing.route_single(r, splitter.ports['o2'], mzm_i.ports['o1'], cross_section='strip', radius=20)\ngf.routing.route_single(r, splitter.ports['o3'], mzm_q.ports['o1'], cross_section='strip', radius=20)\n\ngf.routing.route_single(r, mzm_i.ports['o2'], pb_i.ports['o1'], cross_section='strip', radius=20)\ngf.routing.route_single(r, mzm_q.ports['o2'], pb_q.ports['o1'], cross_section='strip', radius=20)\n\ngf.routing.route_single(r, pb_i.ports['o2'], combiner.ports['o2'], cross_section='strip', radius=20)\ngf.routing.route_single(r, pb_q.ports['o2'], combiner.ports['o1'], cross_section='strip', radius=20)\n\n# Add external ports\nr.add_port('o1', port=splitter.ports['o1'])\nr.add_port('o2', port=combiner.ports['o3'])\n\nr.draw_ports()\nr.plot()",
+  "validation_report": {
+    "passed": true,
+    "errors": [],
+    "warnings": [
+      "Layout area 91449843750\u00b5m\u00b2 exceeds maximum 500000\u00b5m\u00b2"
+    ],
+    "metrics": {
+      "layout_area": 91449843750.0,
+      "layout_width": 511250.0,
+      "layout_height": 178875.0,
+      "aspect_ratio": 2.8581411600279525,
+      "num_components": 38,
+      "num_ports": 2,
+      "compactness": 0.34987775061124693,
+      "quality_score": 0.5399511002444988
+    }
+  },
+  "gds_file": "checkpoints/pnr/problem_4_sample_0_attempt_1_pnr.gds"
+}

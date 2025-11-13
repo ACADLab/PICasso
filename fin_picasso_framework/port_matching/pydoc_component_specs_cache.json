@@ -1,0 +1,1050 @@
+{
+  "gdsfactory_version": "8.32.2",
+  "components": {
+    "mmi1x2": {
+      "component_name": "mmi1x2",
+      "gdsfactory_version": "8.32.2",
+      "signature": {
+        "parameters": {
+          "width": {
+            "name": "width",
+            "default": null,
+            "annotation": "float | None",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "width_taper": {
+            "name": "width_taper",
+            "default": 1.0,
+            "annotation": "float",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "length_taper": {
+            "name": "length_taper",
+            "default": 10.0,
+            "annotation": "float",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "length_mmi": {
+            "name": "length_mmi",
+            "default": 5.5,
+            "annotation": "float",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "width_mmi": {
+            "name": "width_mmi",
+            "default": 2.5,
+            "annotation": "float",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "gap_mmi": {
+            "name": "gap_mmi",
+            "default": 0.25,
+            "annotation": "float",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "taper": {
+            "name": "taper",
+            "default": "<function taper at 0x1219e5a20>",
+            "annotation": "ComponentSpec",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "straight": {
+            "name": "straight",
+            "default": "<function straight at 0x121b06830>",
+            "annotation": "ComponentSpec",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "cross_section": {
+            "name": "cross_section",
+            "default": "strip",
+            "annotation": "CrossSectionSpec",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          }
+        },
+        "return_annotation": "Component"
+      },
+      "port_info": {
+        "ports": [
+          {
+            "name": "o1",
+            "orientation": 180.0,
+            "width": 500,
+            "port_type": "optical"
+          },
+          {
+            "name": "o2",
+            "orientation": 0.0,
+            "width": 500,
+            "port_type": "optical"
+          },
+          {
+            "name": "o3",
+            "orientation": 0.0,
+            "width": 500,
+            "port_type": "optical"
+          }
+        ],
+        "port_count": 3
+      },
+      "docstring": "1x2 MultiMode Interferometer (MMI).\n\nArgs:\n    width: input and output straight width. Defaults to cross_section width.\n    width_taper: interface between input straights and mmi region.\n    length_taper: into the mmi region.\n    length_mmi: in x direction.\n    width_mmi: in y direction.\n    gap_mmi:  gap between tapered wg.\n    taper: taper function.\n    straight: straight function.\n    cross_section: specification (CrossSection, string or dict).\n\n\n.. code::\n\n           length_mmi\n            <",
+      "pydoc_help": "No Python documentation found for 'gdsfactory.components.mmis.mmi1x2.mmi1x2'.\nUse help() to get the interactive help utility.\nUse help(str) for help on the str class.\n\n"
+    },
+    "straight": {
+      "component_name": "straight",
+      "gdsfactory_version": "8.32.2",
+      "signature": {
+        "parameters": {
+          "length": {
+            "name": "length",
+            "default": 10.0,
+            "annotation": "float",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "npoints": {
+            "name": "npoints",
+            "default": 2,
+            "annotation": "int",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "cross_section": {
+            "name": "cross_section",
+            "default": "strip",
+            "annotation": "CrossSectionSpec",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "width": {
+            "name": "width",
+            "default": null,
+            "annotation": "float | None",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          }
+        },
+        "return_annotation": "Component"
+      },
+      "port_info": {
+        "ports": [
+          {
+            "name": "o1",
+            "orientation": 180.0,
+            "width": 500,
+            "port_type": "optical"
+          },
+          {
+            "name": "o2",
+            "orientation": 0.0,
+            "width": 500,
+            "port_type": "optical"
+          }
+        ],
+        "port_count": 2
+      },
+      "docstring": "Returns a Straight waveguide.\n\nArgs:\n    length: straight length (um).\n    npoints: number of points.\n    cross_section: specification (CrossSection, string or dict).\n    width: width of the waveguide. If None, it will use the width of the cross_section.\n\n.. code::\n\n    o1 -------------- o2\n            length",
+      "pydoc_help": "No Python documentation found for 'gdsfactory.components.waveguides.straight.straight'.\nUse help() to get the interactive help utility.\nUse help(str) for help on the str class.\n\n"
+    },
+    "coupler": {
+      "component_name": "coupler",
+      "gdsfactory_version": "8.32.2",
+      "signature": {
+        "parameters": {
+          "gap": {
+            "name": "gap",
+            "default": 0.236,
+            "annotation": "float",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "length": {
+            "name": "length",
+            "default": 20.0,
+            "annotation": "float",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "dy": {
+            "name": "dy",
+            "default": 4.0,
+            "annotation": "Delta",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "dx": {
+            "name": "dx",
+            "default": 10.0,
+            "annotation": "Delta",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "cross_section": {
+            "name": "cross_section",
+            "default": "strip",
+            "annotation": "CrossSectionSpec",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "allow_min_radius_violation": {
+            "name": "allow_min_radius_violation",
+            "default": false,
+            "annotation": "bool",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "bend": {
+            "name": "bend",
+            "default": "bend_s",
+            "annotation": "ComponentSpec",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          }
+        },
+        "return_annotation": "Component"
+      },
+      "port_info": {
+        "ports": [
+          {
+            "name": "o1",
+            "orientation": 180.0,
+            "width": 500,
+            "port_type": "optical"
+          },
+          {
+            "name": "o2",
+            "orientation": 180.0,
+            "width": 500,
+            "port_type": "optical"
+          },
+          {
+            "name": "o3",
+            "orientation": 0.0,
+            "width": 500,
+            "port_type": "optical"
+          },
+          {
+            "name": "o4",
+            "orientation": 0.0,
+            "width": 500,
+            "port_type": "optical"
+          }
+        ],
+        "port_count": 4
+      },
+      "docstring": "Symmetric coupler.\n\nArgs:\n    gap: between straights in um.\n    length: of coupling region in um.\n    dy: port to port vertical spacing in um.\n    dx: length of bend in x direction in um.\n    cross_section: spec (CrossSection, string or dict).\n    allow_min_radius_violation: if True does not check for min bend radius.\n    bend: input and output sbend components.\n\n.. code::\n\n           dx                                 dx\n        |------|                           |------|\n     o2 ________      ",
+      "pydoc_help": "No Python documentation found for 'gdsfactory.components.couplers.coupler.coupler'.\nUse help() to get the interactive help utility.\nUse help(str) for help on the str class.\n\n"
+    },
+    "mzm": {
+      "component_name": "mzm",
+      "gdsfactory_version": "8.32.2",
+      "signature": {
+        "parameters": {
+          "delta_length": {
+            "name": "delta_length",
+            "default": 10.0,
+            "annotation": "float",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "length_y": {
+            "name": "length_y",
+            "default": 2.0,
+            "annotation": "float",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "length_x": {
+            "name": "length_x",
+            "default": 200,
+            "annotation": "float | None",
+            "kind": "KEYWORD_ONLY"
+          },
+          "bend": {
+            "name": "bend",
+            "default": "bend_euler",
+            "annotation": "ComponentSpec",
+            "kind": "KEYWORD_ONLY"
+          },
+          "straight": {
+            "name": "straight",
+            "default": "straight",
+            "annotation": "ComponentSpec",
+            "kind": "KEYWORD_ONLY"
+          },
+          "straight_y": {
+            "name": "straight_y",
+            "default": null,
+            "annotation": "ComponentSpec | None",
+            "kind": "KEYWORD_ONLY"
+          },
+          "straight_x_top": {
+            "name": "straight_x_top",
+            "default": "straight_pin",
+            "annotation": "ComponentSpec | None",
+            "kind": "KEYWORD_ONLY"
+          },
+          "straight_x_bot": {
+            "name": "straight_x_bot",
+            "default": "straight_pin",
+            "annotation": "ComponentSpec | None",
+            "kind": "KEYWORD_ONLY"
+          },
+          "splitter": {
+            "name": "splitter",
+            "default": "mmi1x2",
+            "annotation": "ComponentSpec",
+            "kind": "KEYWORD_ONLY"
+          },
+          "combiner": {
+            "name": "combiner",
+            "default": null,
+            "annotation": "ComponentSpec | None",
+            "kind": "KEYWORD_ONLY"
+          },
+          "with_splitter": {
+            "name": "with_splitter",
+            "default": true,
+            "annotation": "bool",
+            "kind": "KEYWORD_ONLY"
+          },
+          "port_e1_splitter": {
+            "name": "port_e1_splitter",
+            "default": "o2",
+            "annotation": "str",
+            "kind": "KEYWORD_ONLY"
+          },
+          "port_e0_splitter": {
+            "name": "port_e0_splitter",
+            "default": "o3",
+            "annotation": "str",
+            "kind": "KEYWORD_ONLY"
+          },
+          "port_e1_combiner": {
+            "name": "port_e1_combiner",
+            "default": "o2",
+            "annotation": "str",
+            "kind": "KEYWORD_ONLY"
+          },
+          "port_e0_combiner": {
+            "name": "port_e0_combiner",
+            "default": "o3",
+            "annotation": "str",
+            "kind": "KEYWORD_ONLY"
+          },
+          "port1": {
+            "name": "port1",
+            "default": "o1",
+            "annotation": "str",
+            "kind": "KEYWORD_ONLY"
+          },
+          "port2": {
+            "name": "port2",
+            "default": "o2",
+            "annotation": "str",
+            "kind": "KEYWORD_ONLY"
+          },
+          "nbends": {
+            "name": "nbends",
+            "default": 2,
+            "annotation": "int",
+            "kind": "KEYWORD_ONLY"
+          },
+          "cross_section": {
+            "name": "cross_section",
+            "default": "strip",
+            "annotation": "CrossSectionSpec",
+            "kind": "KEYWORD_ONLY"
+          },
+          "cross_section_x_top": {
+            "name": "cross_section_x_top",
+            "default": null,
+            "annotation": "CrossSectionSpec | None",
+            "kind": "KEYWORD_ONLY"
+          },
+          "cross_section_x_bot": {
+            "name": "cross_section_x_bot",
+            "default": null,
+            "annotation": "CrossSectionSpec | None",
+            "kind": "KEYWORD_ONLY"
+          },
+          "mirror_bot": {
+            "name": "mirror_bot",
+            "default": false,
+            "annotation": "bool",
+            "kind": "KEYWORD_ONLY"
+          },
+          "add_optical_ports_arms": {
+            "name": "add_optical_ports_arms",
+            "default": false,
+            "annotation": "bool",
+            "kind": "KEYWORD_ONLY"
+          },
+          "min_length": {
+            "name": "min_length",
+            "default": 0.01,
+            "annotation": "float",
+            "kind": "KEYWORD_ONLY"
+          },
+          "auto_rename_ports": {
+            "name": "auto_rename_ports",
+            "default": true,
+            "annotation": "bool",
+            "kind": "KEYWORD_ONLY"
+          }
+        },
+        "return_annotation": "Component"
+      },
+      "port_info": {
+        "ports": [
+          {
+            "name": "o1",
+            "orientation": 180.0,
+            "width": 500,
+            "port_type": "optical"
+          },
+          {
+            "name": "o2",
+            "orientation": 0.0,
+            "width": 500,
+            "port_type": "optical"
+          },
+          {
+            "name": "e3",
+            "orientation": 180.0,
+            "width": 10000,
+            "port_type": "electrical"
+          },
+          {
+            "name": "e6",
+            "orientation": 90.0,
+            "width": 180000,
+            "port_type": "electrical"
+          },
+          {
+            "name": "e10",
+            "orientation": 0.0,
+            "width": 10000,
+            "port_type": "electrical"
+          },
+          {
+            "name": "e15",
+            "orientation": 270.0,
+            "width": 180000,
+            "port_type": "electrical"
+          },
+          {
+            "name": "e4",
+            "orientation": 180.0,
+            "width": 10000,
+            "port_type": "electrical"
+          },
+          {
+            "name": "e5",
+            "orientation": 90.0,
+            "width": 180000,
+            "port_type": "electrical"
+          },
+          {
+            "name": "e9",
+            "orientation": 0.0,
+            "width": 10000,
+            "port_type": "electrical"
+          },
+          {
+            "name": "e16",
+            "orientation": 270.0,
+            "width": 180000,
+            "port_type": "electrical"
+          },
+          {
+            "name": "e1",
+            "orientation": 180.0,
+            "width": 10000,
+            "port_type": "electrical"
+          },
+          {
+            "name": "e8",
+            "orientation": 90.0,
+            "width": 180000,
+            "port_type": "electrical"
+          },
+          {
+            "name": "e12",
+            "orientation": 0.0,
+            "width": 10000,
+            "port_type": "electrical"
+          },
+          {
+            "name": "e13",
+            "orientation": 270.0,
+            "width": 180000,
+            "port_type": "electrical"
+          },
+          {
+            "name": "e2",
+            "orientation": 180.0,
+            "width": 10000,
+            "port_type": "electrical"
+          },
+          {
+            "name": "e7",
+            "orientation": 90.0,
+            "width": 180000,
+            "port_type": "electrical"
+          },
+          {
+            "name": "e11",
+            "orientation": 0.0,
+            "width": 10000,
+            "port_type": "electrical"
+          },
+          {
+            "name": "e14",
+            "orientation": 270.0,
+            "width": 180000,
+            "port_type": "electrical"
+          }
+        ],
+        "port_count": 18
+      },
+      "docstring": "partial(func, *args, **keywords) - new function with partial application\nof the given arguments and keywords.",
+      "pydoc_help": ""
+    },
+    "ring": {
+      "component_name": "ring",
+      "gdsfactory_version": "8.32.2",
+      "signature": {
+        "parameters": {
+          "radius": {
+            "name": "radius",
+            "default": 10.0,
+            "annotation": "float",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "width": {
+            "name": "width",
+            "default": 0.5,
+            "annotation": "float",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "angle_resolution": {
+            "name": "angle_resolution",
+            "default": 2.5,
+            "annotation": "float",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "layer": {
+            "name": "layer",
+            "default": "WG",
+            "annotation": "LayerSpec",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "angle": {
+            "name": "angle",
+            "default": 360,
+            "annotation": "float | None",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          }
+        },
+        "return_annotation": "Component"
+      },
+      "port_info": {
+        "ports": [],
+        "port_count": 0
+      },
+      "docstring": "Returns a ring.\n\nArgs:\n    radius: ring radius.\n    width: of the ring.\n    angle_resolution: number of points per degree.\n    layer: layer.\n    angle: angular coverage of the ring",
+      "pydoc_help": "No Python documentation found for 'gdsfactory.components.rings.ring.ring'.\nUse help() to get the interactive help utility.\nUse help(str) for help on the str class.\n\n"
+    },
+    "mzi": {
+      "component_name": "mzi",
+      "gdsfactory_version": "8.32.2",
+      "signature": {
+        "parameters": {
+          "delta_length": {
+            "name": "delta_length",
+            "default": 10.0,
+            "annotation": "float",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "length_y": {
+            "name": "length_y",
+            "default": 2.0,
+            "annotation": "float",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "length_x": {
+            "name": "length_x",
+            "default": 0.1,
+            "annotation": "float | None",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "bend": {
+            "name": "bend",
+            "default": "bend_euler",
+            "annotation": "ComponentSpec",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "straight": {
+            "name": "straight",
+            "default": "straight",
+            "annotation": "ComponentSpec",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "straight_y": {
+            "name": "straight_y",
+            "default": null,
+            "annotation": "ComponentSpec | None",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "straight_x_top": {
+            "name": "straight_x_top",
+            "default": null,
+            "annotation": "ComponentSpec | None",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "straight_x_bot": {
+            "name": "straight_x_bot",
+            "default": null,
+            "annotation": "ComponentSpec | None",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "splitter": {
+            "name": "splitter",
+            "default": "mmi1x2",
+            "annotation": "ComponentSpec",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "combiner": {
+            "name": "combiner",
+            "default": null,
+            "annotation": "ComponentSpec | None",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "with_splitter": {
+            "name": "with_splitter",
+            "default": true,
+            "annotation": "bool",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "port_e1_splitter": {
+            "name": "port_e1_splitter",
+            "default": "o2",
+            "annotation": "str",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "port_e0_splitter": {
+            "name": "port_e0_splitter",
+            "default": "o3",
+            "annotation": "str",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "port_e1_combiner": {
+            "name": "port_e1_combiner",
+            "default": "o2",
+            "annotation": "str",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "port_e0_combiner": {
+            "name": "port_e0_combiner",
+            "default": "o3",
+            "annotation": "str",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "port1": {
+            "name": "port1",
+            "default": "o1",
+            "annotation": "str",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "port2": {
+            "name": "port2",
+            "default": "o2",
+            "annotation": "str",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "nbends": {
+            "name": "nbends",
+            "default": 2,
+            "annotation": "int",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "cross_section": {
+            "name": "cross_section",
+            "default": "strip",
+            "annotation": "CrossSectionSpec",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "cross_section_x_top": {
+            "name": "cross_section_x_top",
+            "default": null,
+            "annotation": "CrossSectionSpec | None",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "cross_section_x_bot": {
+            "name": "cross_section_x_bot",
+            "default": null,
+            "annotation": "CrossSectionSpec | None",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "mirror_bot": {
+            "name": "mirror_bot",
+            "default": false,
+            "annotation": "bool",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "add_optical_ports_arms": {
+            "name": "add_optical_ports_arms",
+            "default": false,
+            "annotation": "bool",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "min_length": {
+            "name": "min_length",
+            "default": 0.01,
+            "annotation": "float",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "auto_rename_ports": {
+            "name": "auto_rename_ports",
+            "default": true,
+            "annotation": "bool",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          }
+        },
+        "return_annotation": "Component"
+      },
+      "port_info": {
+        "ports": [
+          {
+            "name": "o1",
+            "orientation": 180.0,
+            "width": 500,
+            "port_type": "optical"
+          },
+          {
+            "name": "o2",
+            "orientation": 0.0,
+            "width": 500,
+            "port_type": "optical"
+          }
+        ],
+        "port_count": 2
+      },
+      "docstring": "Mzi.\n\nArgs:\n    delta_length: bottom arm vertical extra length.\n    length_y: vertical length for both and top arms.\n    length_x: horizontal length. None uses to the straight_x_bot/top defaults.\n    bend: 90 degrees bend library.\n    straight: straight function.\n    straight_y: straight for length_y and delta_length.\n    straight_x_top: top straight for length_x.\n    straight_x_bot: bottom straight for length_x.\n    splitter: splitter function.\n    combiner: combiner function.\n    with_splitter",
+      "pydoc_help": "No Python documentation found for 'gdsfactory.components.mzis.mzi.mzi'.\nUse help() to get the interactive help utility.\nUse help(str) for help on the str class.\n\n"
+    }
+  },
+  "routing_functions": {
+    "route_single": {
+      "function_name": "route_single",
+      "gdsfactory_version": "8.32.2",
+      "signature": {
+        "parameters": {
+          "component": {
+            "name": "component",
+            "default": null,
+            "annotation": "Component",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "port1": {
+            "name": "port1",
+            "default": null,
+            "annotation": "Port",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "port2": {
+            "name": "port2",
+            "default": null,
+            "annotation": "Port",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "cross_section": {
+            "name": "cross_section",
+            "default": null,
+            "annotation": "CrossSectionSpec | None",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "layer": {
+            "name": "layer",
+            "default": null,
+            "annotation": "LayerSpec | None",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "bend": {
+            "name": "bend",
+            "default": "bend_euler",
+            "annotation": "ComponentSpec",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "straight": {
+            "name": "straight",
+            "default": "straight",
+            "annotation": "ComponentSpec",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "start_straight_length": {
+            "name": "start_straight_length",
+            "default": 0.0,
+            "annotation": "float",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "end_straight_length": {
+            "name": "end_straight_length",
+            "default": 0.0,
+            "annotation": "float",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "waypoints": {
+            "name": "waypoints",
+            "default": null,
+            "annotation": "WayPoints | None",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "steps": {
+            "name": "steps",
+            "default": null,
+            "annotation": "Sequence[Mapping[Literal['x', 'y', 'dx', 'dy'], int | float]] | None",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "port_type": {
+            "name": "port_type",
+            "default": null,
+            "annotation": "str | None",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "allow_width_mismatch": {
+            "name": "allow_width_mismatch",
+            "default": false,
+            "annotation": "bool",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "radius": {
+            "name": "radius",
+            "default": null,
+            "annotation": "float | None",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "route_width": {
+            "name": "route_width",
+            "default": null,
+            "annotation": "float | None",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "auto_taper": {
+            "name": "auto_taper",
+            "default": true,
+            "annotation": "bool",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          }
+        },
+        "return_annotation": "ManhattanRoute"
+      },
+      "docstring": "Returns a Manhattan Route between 2 ports.\n\nThe references are straights, bends and tapers.\n`route_single` is an automatic version of `route_single_from_steps`.\n\nArgs:\n    component: to place the route into.\n    port1: start port.\n    port2: end port.\n    cross_section: spec.\n    layer: layer spec.\n    bend: bend spec.\n    straight: straight spec.\n    start_straight_length: length of starting straight.\n    end_straight_length: length of end straight.\n    waypoints: optional list of points to pas"
+    },
+    "route_bundle": {
+      "function_name": "route_bundle",
+      "gdsfactory_version": "8.32.2",
+      "signature": {
+        "parameters": {
+          "component": {
+            "name": "component",
+            "default": null,
+            "annotation": "gf.Component",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "ports1": {
+            "name": "ports1",
+            "default": null,
+            "annotation": "Ports",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "ports2": {
+            "name": "ports2",
+            "default": null,
+            "annotation": "Ports",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "cross_section": {
+            "name": "cross_section",
+            "default": null,
+            "annotation": "CrossSectionSpec | None",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "layer": {
+            "name": "layer",
+            "default": null,
+            "annotation": "LayerSpec | None",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "separation": {
+            "name": "separation",
+            "default": 3.0,
+            "annotation": "float",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "bend": {
+            "name": "bend",
+            "default": "bend_euler",
+            "annotation": "ComponentSpec",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "sort_ports": {
+            "name": "sort_ports",
+            "default": false,
+            "annotation": "bool",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "start_straight_length": {
+            "name": "start_straight_length",
+            "default": 0,
+            "annotation": "float",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "end_straight_length": {
+            "name": "end_straight_length",
+            "default": 0,
+            "annotation": "float",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "min_straight_taper": {
+            "name": "min_straight_taper",
+            "default": 100,
+            "annotation": "float",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "taper": {
+            "name": "taper",
+            "default": null,
+            "annotation": "ComponentSpec | None",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "port_type": {
+            "name": "port_type",
+            "default": null,
+            "annotation": "str | None",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "collision_check_layers": {
+            "name": "collision_check_layers",
+            "default": null,
+            "annotation": "LayerSpecs | None",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "on_collision": {
+            "name": "on_collision",
+            "default": "show_error",
+            "annotation": "Literal['error', 'show_error'] | None",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "bboxes": {
+            "name": "bboxes",
+            "default": null,
+            "annotation": "list[kf.kdb.Box] | None",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "allow_width_mismatch": {
+            "name": "allow_width_mismatch",
+            "default": false,
+            "annotation": "bool",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "radius": {
+            "name": "radius",
+            "default": null,
+            "annotation": "float | None",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "route_width": {
+            "name": "route_width",
+            "default": null,
+            "annotation": "float | None",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "straight": {
+            "name": "straight",
+            "default": "straight",
+            "annotation": "ComponentSpec",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "auto_taper": {
+            "name": "auto_taper",
+            "default": true,
+            "annotation": "bool",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "waypoints": {
+            "name": "waypoints",
+            "default": null,
+            "annotation": "Coordinates | None",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "steps": {
+            "name": "steps",
+            "default": null,
+            "annotation": "Sequence[Mapping[str, int | float]] | None",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "start_angles": {
+            "name": "start_angles",
+            "default": null,
+            "annotation": "int | list[int] | None",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "end_angles": {
+            "name": "end_angles",
+            "default": null,
+            "annotation": "int | list[int] | None",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "router": {
+            "name": "router",
+            "default": null,
+            "annotation": "Literal['optical', 'electrical'] | None",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          }
+        },
+        "return_annotation": "list[ManhattanRoute]"
+      },
+      "docstring": "Places a bundle of routes to connect two groups of ports.\n\nRoutes connect a bundle of ports with a river router.\nChooses the correct routing function depending on port angles.\n\nArgs:\n    component: component to add the routes to.\n    ports1: list of starting ports.\n    ports2: list of end ports.\n    cross_section: CrossSection or function that returns a cross_section.\n    layer: layer to use for the route.\n    separation: bundle separation (center to center). Defaults to cross_section.width + cr"
+    },
+    "route_quad": {
+      "function_name": "route_quad",
+      "gdsfactory_version": "8.32.2",
+      "signature": {
+        "parameters": {
+          "component": {
+            "name": "component",
+            "default": null,
+            "annotation": "gf.Component",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "port1": {
+            "name": "port1",
+            "default": null,
+            "annotation": "Port",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "port2": {
+            "name": "port2",
+            "default": null,
+            "annotation": "Port",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "width1": {
+            "name": "width1",
+            "default": null,
+            "annotation": "float | None",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "width2": {
+            "name": "width2",
+            "default": null,
+            "annotation": "float | None",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "layer": {
+            "name": "layer",
+            "default": "M1",
+            "annotation": "gf.typings.LayerSpec",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          },
+          "manhattan_target_step": {
+            "name": "manhattan_target_step",
+            "default": null,
+            "annotation": "float | None",
+            "kind": "POSITIONAL_OR_KEYWORD"
+          }
+        },
+        "return_annotation": "None"
+      },
+      "docstring": "Routes a basic quadrilateral polygon directly between two ports.\n\nArgs:\n    component: Component to add the route to.\n    port1: Port to start route.\n    port2 : Port objects to end route.\n    width1: Width of quadrilateral at ports. If None, uses port widths.\n    width2: Width of quadrilateral at ports. If None, uses port widths.\n    layer: Layer to put the route on.\n    manhattan_target_step: if not none, min step to manhattanize the polygon\n\n.. plot::\n    :include-source:\n\n    import gdsfacto"
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "timestamp": "2025-11-12T17:06:55.929468",
+  "stage": "pilot",
+  "problem_idx": 10,
+  "sample_idx": 2,
+  "attempt": 1,
+  "status": "pass",
+  "error": null,
+  "metadata": {
+    "validation_type": "pilot"
+  },
+  "code": "import gdsfactory as gf\n\nr = gf.Component()\n\n# Add MZI cell\nmzi_cell = r.add_ref(gf.components.mzi())\nmzi_cell.move((0, 0))\n\n# Add phase controllers\nctrl1 = r.add_ref(gf.components.straight_heater_metal())\nctrl1.move((200, 50))\n\nctrl2 = r.add_ref(gf.components.straight_heater_metal())\nctrl2.move((200, -50))\n\n# Add phase control components\nctrl3 = r.add_ref(gf.components.straight_heater_metal())\nctrl3.move((400, 50))\n\nctrl4 = r.add_ref(gf.components.straight_heater_metal())\nctrl4.move((400, -50))\n\n# Route connections\ngf.routing.route_single(r, mzi_cell.ports['o1'], ctrl1.ports['o1'], cross_section='strip', radius=20)\ngf.routing.route_single(r, mzi_cell.ports['o2'], ctrl2.ports['o1'], cross_section='strip', radius=20)\ngf.routing.route_single(r, ctrl1.ports['o2'], mzi_cell.ports['o3'], cross_section='strip', radius=20)\ngf.routing.route_single(r, ctrl2.ports['o2'], mzi_cell.ports['o4'], cross_section='strip', radius=20)\ngf.routing.route_single(r, mzi_cell.ports['o5'], ctrl3.ports['o1'], cross_section='strip', radius=20)\ngf.routing.route_single(r, mzi_cell.ports['o6'], ctrl4.ports['o1'], cross_section='strip', radius=20)\n\n# Expose external ports\nr.add_port('o1', port=mzi_cell.ports['o1'])\nr.add_port('o2', port=mzi_cell.ports['o2'])\nr.add_port('o3', port=mzi_cell.ports['o3'])\nr.add_port('o4', port=mzi_cell.ports['o4'])\n\nr.draw_ports()\nr.plot()"
+}

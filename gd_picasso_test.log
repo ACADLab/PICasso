@@ -1,0 +1,218 @@
+2025-11-13 02:22:25,948 - __main__ - INFO - ======================================================================
+2025-11-13 02:22:25,948 - __main__ - INFO - gd_picasso Framework Test Suite
+2025-11-13 02:22:25,949 - __main__ - INFO - ======================================================================
+2025-11-13 02:22:25,949 - __main__ - INFO - Model: gpt-4o
+2025-11-13 02:22:25,949 - __main__ - INFO - Problems file: Pic_set.txt
+2025-11-13 02:22:25,949 - __main__ - INFO - Samples per problem: 1
+2025-11-13 02:22:25,949 - __main__ - INFO - Loaded 36 problems from Pic_set.txt
+2025-11-13 02:22:25,949 - __main__ - INFO - Testing first 1 problems
+2025-11-13 02:22:25,981 - hf_inference_workflow.openai_api_client - INFO - Initialized OpenAIInferenceAgent with model: gpt-4o
+2025-11-13 02:22:25,981 - hf_inference_workflow.openai_api_client - INFO - Generation params: {'temperature': 0.3, 'max_tokens': 2048, 'top_p': 0.95}
+2025-11-13 02:22:25,981 - __main__ - INFO - ✅ Created OpenAI agent with model: gpt-4o
+2025-11-13 02:22:25,981 - gd_picasso.validators.lvs_validator - WARNING - gdsfactory.utils.lvs not available - LVS checking disabled
+2025-11-13 02:22:26,457 - gd_picasso.optimizers.device_optimizer - INFO - SAX is available - will use for device optimization
+2025-11-13 02:22:26,547 - gd_picasso.injection.component_spec_loader - WARNING - Component 'y_branch' not found in gf.components
+2025-11-13 02:22:26,547 - gd_picasso.injection.component_spec_loader - WARNING - Component 'directional_coupler' not found in gf.components
+2025-11-13 02:22:43,748 - __main__ - INFO - ======================================================================
+2025-11-13 02:22:43,748 - __main__ - INFO - gd_picasso Framework Test Suite
+2025-11-13 02:22:43,748 - __main__ - INFO - ======================================================================
+2025-11-13 02:22:43,748 - __main__ - INFO - Model: gpt-4o
+2025-11-13 02:22:43,748 - __main__ - INFO - Problems file: Pic_set.txt
+2025-11-13 02:22:43,748 - __main__ - INFO - Samples per problem: 1
+2025-11-13 02:22:43,748 - __main__ - INFO - Loaded 36 problems from Pic_set.txt
+2025-11-13 02:22:43,748 - __main__ - INFO - Testing first 1 problems
+2025-11-13 02:22:43,770 - hf_inference_workflow.openai_api_client - INFO - Initialized OpenAIInferenceAgent with model: gpt-4o
+2025-11-13 02:22:43,770 - hf_inference_workflow.openai_api_client - INFO - Generation params: {'temperature': 0.3, 'max_tokens': 2048, 'top_p': 0.95}
+2025-11-13 02:22:43,770 - __main__ - INFO - ✅ Created OpenAI agent with model: gpt-4o
+2025-11-13 02:22:43,770 - gd_picasso.validators.lvs_validator - WARNING - gdsfactory.utils.lvs not available - LVS checking disabled
+2025-11-13 02:22:44,029 - gd_picasso.optimizers.device_optimizer - INFO - SAX is available - will use for device optimization
+2025-11-13 02:22:44,030 - gd_picasso.injection.component_spec_loader - WARNING - Component 'y_branch' not found in gf.components
+2025-11-13 02:22:44,030 - gd_picasso.injection.component_spec_loader - WARNING - Component 'directional_coupler' not found in gf.components
+2025-11-13 02:22:44,030 - __main__ - INFO - 
+======================================================================
+2025-11-13 02:22:44,030 - __main__ - INFO - Processing Problem 1: 
+2025-11-13 02:22:44,030 - __main__ - INFO - ======================================================================
+2025-11-13 02:22:44,030 - __main__ - INFO - 
+--- Sample 1/1 ---
+2025-11-13 02:22:44,030 - __main__ - INFO - Calling LLM to generate YAML DSL...
+2025-11-13 02:22:48,765 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-13 02:22:48,775 - __main__ - INFO - YAML DSL generated
+2025-11-13 02:22:48,777 - __main__ - INFO - ✅ YAML pilot validation passed
+2025-11-13 02:22:48,840 - __main__ - ERROR - Failed to build component: mmi1x2() got an unexpected keyword argument 'length'
+2025-11-13 02:22:48,840 - __main__ - INFO - 
+Problem 1 Summary: 0/1 passed
+2025-11-13 02:22:48,840 - __main__ - INFO - 
+Results saved to: /Users/deepakvungarala/Desktop/shigoto/PICasso/gd_picasso/output/test_results/results_gpt-4o_20251113_022248.json
+2025-11-13 02:22:48,840 - __main__ - INFO - 
+======================================================================
+2025-11-13 02:22:48,840 - __main__ - INFO - FINAL SUMMARY
+2025-11-13 02:22:48,840 - __main__ - INFO - ======================================================================
+2025-11-13 02:22:48,840 - __main__ - INFO - Total problems: 1
+2025-11-13 02:22:48,840 - __main__ - INFO - Total samples: 1
+2025-11-13 02:22:48,840 - __main__ - INFO - Total passed: 0
+2025-11-13 02:22:48,840 - __main__ - INFO - Pass rate: 0.0%
+2025-11-13 02:22:48,840 - __main__ - INFO - ======================================================================
+2025-11-13 02:27:47,364 - __main__ - INFO - ======================================================================
+2025-11-13 02:27:47,364 - __main__ - INFO - gd_picasso Framework Test Suite
+2025-11-13 02:27:47,364 - __main__ - INFO - ======================================================================
+2025-11-13 02:27:47,364 - __main__ - INFO - Model: gpt-4o
+2025-11-13 02:27:47,364 - __main__ - INFO - Problems file: Pic_set.txt
+2025-11-13 02:27:47,364 - __main__ - INFO - Samples per problem: 1
+2025-11-13 02:27:47,365 - __main__ - INFO - Loaded 36 problems from Pic_set.txt
+2025-11-13 02:27:47,365 - __main__ - INFO - Testing first 1 problems
+2025-11-13 02:27:47,404 - hf_inference_workflow.openai_api_client - INFO - Initialized OpenAIInferenceAgent with model: gpt-4o
+2025-11-13 02:27:47,405 - hf_inference_workflow.openai_api_client - INFO - Generation params: {'temperature': 0.3, 'max_tokens': 2048, 'top_p': 0.95}
+2025-11-13 02:27:47,405 - __main__ - INFO - ✅ Created OpenAI agent with model: gpt-4o
+2025-11-13 02:27:47,405 - gd_picasso.validators.lvs_validator - WARNING - gdsfactory.utils.lvs not available - LVS checking disabled
+2025-11-13 02:27:47,888 - gd_picasso.optimizers.device_optimizer - INFO - SAX is available - will use for device optimization
+2025-11-13 02:27:47,889 - gd_picasso.injection.component_spec_loader - WARNING - Component 'y_branch' not found in gf.components
+2025-11-13 02:27:47,889 - gd_picasso.injection.component_spec_loader - WARNING - Component 'directional_coupler' not found in gf.components
+2025-11-13 02:27:47,889 - __main__ - INFO - 
+======================================================================
+2025-11-13 02:27:47,889 - __main__ - INFO - Processing Problem 1: 
+2025-11-13 02:27:47,889 - __main__ - INFO - ======================================================================
+2025-11-13 02:27:47,889 - __main__ - INFO - 
+--- Sample 1/1 ---
+2025-11-13 02:27:47,889 - __main__ - INFO - Calling LLM to generate YAML DSL...
+2025-11-13 02:27:50,982 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-13 02:27:51,004 - __main__ - INFO - YAML DSL generated
+2025-11-13 02:27:51,008 - __main__ - WARNING - YAML pilot validation failed: Invalid parameters: mmi1.mmi1x2: invalid parameter 'length', mmi2.mmi1x2: invalid parameter 'length'. Valid parameters for mmi1x2: width, width_taper, length_taper, length_mmi, width_mmi, gap_mmi, taper, straight, cross_section
+2025-11-13 02:27:51,008 - __main__ - INFO - 
+Problem 1 Summary: 0/1 passed
+2025-11-13 02:27:51,009 - __main__ - INFO - 
+Results saved to: /Users/deepakvungarala/Desktop/shigoto/PICasso/gd_picasso/output/test_results/results_gpt-4o_20251113_022751.json
+2025-11-13 02:27:51,009 - __main__ - INFO - 
+======================================================================
+2025-11-13 02:27:51,009 - __main__ - INFO - FINAL SUMMARY
+2025-11-13 02:27:51,009 - __main__ - INFO - ======================================================================
+2025-11-13 02:27:51,009 - __main__ - INFO - Total problems: 1
+2025-11-13 02:27:51,009 - __main__ - INFO - Total samples: 1
+2025-11-13 02:27:51,009 - __main__ - INFO - Total passed: 0
+2025-11-13 02:27:51,009 - __main__ - INFO - Pass rate: 0.0%
+2025-11-13 02:27:51,009 - __main__ - INFO - ======================================================================
+2025-11-13 02:28:20,407 - __main__ - INFO - ======================================================================
+2025-11-13 02:28:20,407 - __main__ - INFO - gd_picasso Framework Test Suite
+2025-11-13 02:28:20,407 - __main__ - INFO - ======================================================================
+2025-11-13 02:28:20,407 - __main__ - INFO - Model: gpt-4o
+2025-11-13 02:28:20,408 - __main__ - INFO - Problems file: Pic_set.txt
+2025-11-13 02:28:20,408 - __main__ - INFO - Samples per problem: 1
+2025-11-13 02:28:20,408 - __main__ - INFO - Loaded 36 problems from Pic_set.txt
+2025-11-13 02:28:20,408 - __main__ - INFO - Testing first 1 problems
+2025-11-13 02:28:20,436 - hf_inference_workflow.openai_api_client - INFO - Initialized OpenAIInferenceAgent with model: gpt-4o
+2025-11-13 02:28:20,436 - hf_inference_workflow.openai_api_client - INFO - Generation params: {'temperature': 0.3, 'max_tokens': 2048, 'top_p': 0.95}
+2025-11-13 02:28:20,436 - __main__ - INFO - ✅ Created OpenAI agent with model: gpt-4o
+2025-11-13 02:28:20,436 - gd_picasso.validators.lvs_validator - WARNING - gdsfactory.utils.lvs not available - LVS checking disabled
+2025-11-13 02:28:20,881 - gd_picasso.optimizers.device_optimizer - INFO - SAX is available - will use for device optimization
+2025-11-13 02:28:20,881 - gd_picasso.injection.component_spec_loader - WARNING - Component 'y_branch' not found in gf.components
+2025-11-13 02:28:20,881 - gd_picasso.injection.component_spec_loader - WARNING - Component 'directional_coupler' not found in gf.components
+2025-11-13 02:28:20,881 - __main__ - INFO - 
+======================================================================
+2025-11-13 02:28:20,881 - __main__ - INFO - Processing Problem 1: 
+2025-11-13 02:28:20,881 - __main__ - INFO - ======================================================================
+2025-11-13 02:28:20,881 - __main__ - INFO - 
+--- Sample 1/1 ---
+2025-11-13 02:28:20,881 - __main__ - INFO - Calling LLM to generate YAML DSL...
+2025-11-13 02:28:24,208 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-13 02:28:24,230 - __main__ - INFO - YAML DSL generated
+2025-11-13 02:28:24,233 - __main__ - WARNING - YAML pilot validation failed: Invalid parameters: mmi1.mmi1x2: invalid parameter 'length', mmi2.mmi1x2: invalid parameter 'length'. Valid parameters for mmi1x2: width, width_taper, length_taper, length_mmi, width_mmi, gap_mmi, taper, straight, cross_section
+2025-11-13 02:28:24,234 - __main__ - INFO - Retrying LLM call (attempt 2/3)...
+2025-11-13 02:28:26,971 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-13 02:28:26,973 - __main__ - INFO - YAML DSL generated
+2025-11-13 02:28:26,977 - __main__ - INFO - ✅ YAML pilot validation passed
+2025-11-13 02:28:27,092 - __main__ - INFO - ✅ Component built from YAML
+2025-11-13 02:28:27,092 - __main__ - INFO - ✅ Component built from YAML
+2025-11-13 02:28:27,096 - gd_picasso.validators.drc_validator - WARNING - KLayout executable not found - skipping DRC check
+2025-11-13 02:28:27,096 - __main__ - INFO - ✅ DRC validation passed
+2025-11-13 02:28:27,096 - __main__ - INFO - ⏭️  LVS validation skipped (can be slow)
+2025-11-13 02:28:27,100 - gd_picasso.optimizers.device_optimizer - WARNING - No optimizer for straight_heater_metal_undercut - using target value
+2025-11-13 02:28:27,102 - __main__ - INFO - ✅ Optimization completed
+2025-11-13 02:28:27,102 - __main__ - INFO - ✅ Sample 1 PASSED
+2025-11-13 02:28:27,102 - __main__ - INFO - 
+Problem 1 Summary: 1/1 passed
+2025-11-13 02:28:27,102 - __main__ - INFO - 
+Results saved to: /Users/deepakvungarala/Desktop/shigoto/PICasso/gd_picasso/output/test_results/results_gpt-4o_20251113_022827.json
+2025-11-13 02:28:27,102 - __main__ - INFO - 
+======================================================================
+2025-11-13 02:28:27,102 - __main__ - INFO - FINAL SUMMARY
+2025-11-13 02:28:27,102 - __main__ - INFO - ======================================================================
+2025-11-13 02:28:27,102 - __main__ - INFO - Total problems: 1
+2025-11-13 02:28:27,102 - __main__ - INFO - Total samples: 1
+2025-11-13 02:28:27,102 - __main__ - INFO - Total passed: 1
+2025-11-13 02:28:27,102 - __main__ - INFO - Pass rate: 100.0%
+2025-11-13 02:28:27,102 - __main__ - INFO - ======================================================================
+2025-11-13 02:28:37,439 - __main__ - INFO - ======================================================================
+2025-11-13 02:28:37,439 - __main__ - INFO - gd_picasso Framework Test Suite
+2025-11-13 02:28:37,439 - __main__ - INFO - ======================================================================
+2025-11-13 02:28:37,439 - __main__ - INFO - Model: gpt-4o
+2025-11-13 02:28:37,439 - __main__ - INFO - Problems file: Pic_set.txt
+2025-11-13 02:28:37,439 - __main__ - INFO - Samples per problem: 1
+2025-11-13 02:28:37,440 - __main__ - INFO - Loaded 36 problems from Pic_set.txt
+2025-11-13 02:28:37,440 - __main__ - INFO - Testing first 2 problems
+2025-11-13 02:28:37,467 - hf_inference_workflow.openai_api_client - INFO - Initialized OpenAIInferenceAgent with model: gpt-4o
+2025-11-13 02:28:37,467 - hf_inference_workflow.openai_api_client - INFO - Generation params: {'temperature': 0.3, 'max_tokens': 2048, 'top_p': 0.95}
+2025-11-13 02:28:37,467 - __main__ - INFO - ✅ Created OpenAI agent with model: gpt-4o
+2025-11-13 02:28:37,467 - gd_picasso.validators.lvs_validator - WARNING - gdsfactory.utils.lvs not available - LVS checking disabled
+2025-11-13 02:28:37,952 - gd_picasso.optimizers.device_optimizer - INFO - SAX is available - will use for device optimization
+2025-11-13 02:28:37,952 - gd_picasso.injection.component_spec_loader - WARNING - Component 'y_branch' not found in gf.components
+2025-11-13 02:28:37,952 - gd_picasso.injection.component_spec_loader - WARNING - Component 'directional_coupler' not found in gf.components
+2025-11-13 02:28:37,952 - __main__ - INFO - 
+======================================================================
+2025-11-13 02:28:37,952 - __main__ - INFO - Processing Problem 1: 
+2025-11-13 02:28:37,952 - __main__ - INFO - ======================================================================
+2025-11-13 02:28:37,952 - __main__ - INFO - 
+--- Sample 1/1 ---
+2025-11-13 02:28:37,952 - __main__ - INFO - Calling LLM to generate YAML DSL...
+2025-11-13 02:28:41,412 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-13 02:28:41,434 - __main__ - INFO - YAML DSL generated
+2025-11-13 02:28:41,438 - __main__ - WARNING - YAML pilot validation failed: Invalid parameters: mmi1.mmi1x2: invalid parameter 'length', mmi2.mmi1x2: invalid parameter 'length'. Valid parameters for mmi1x2: width, width_taper, length_taper, length_mmi, width_mmi, gap_mmi, taper, straight, cross_section
+2025-11-13 02:28:41,438 - __main__ - INFO - Retrying LLM call (attempt 2/3)...
+2025-11-13 02:28:44,820 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-13 02:28:44,824 - __main__ - INFO - YAML DSL generated
+2025-11-13 02:28:44,829 - __main__ - INFO - ✅ YAML pilot validation passed
+2025-11-13 02:28:44,939 - __main__ - INFO - ✅ Component built from YAML
+2025-11-13 02:28:44,943 - gd_picasso.validators.drc_validator - WARNING - KLayout executable not found - skipping DRC check
+2025-11-13 02:28:44,943 - __main__ - INFO - ✅ DRC validation passed
+2025-11-13 02:28:44,943 - __main__ - INFO - ⏭️  LVS validation skipped (can be slow)
+2025-11-13 02:28:44,947 - gd_picasso.optimizers.device_optimizer - WARNING - No optimizer for straight - using target value
+2025-11-13 02:28:44,949 - __main__ - INFO - ✅ Optimization completed
+2025-11-13 02:28:44,949 - __main__ - INFO - ✅ Sample 1 PASSED
+2025-11-13 02:28:44,949 - __main__ - INFO - 
+Problem 1 Summary: 1/1 passed
+2025-11-13 02:28:44,949 - __main__ - INFO - 
+======================================================================
+2025-11-13 02:28:44,949 - __main__ - INFO - Processing Problem 2: 
+2025-11-13 02:28:44,949 - __main__ - INFO - ======================================================================
+2025-11-13 02:28:44,949 - __main__ - INFO - 
+--- Sample 1/1 ---
+2025-11-13 02:28:44,949 - __main__ - INFO - Calling LLM to generate YAML DSL...
+2025-11-13 02:28:49,977 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-13 02:28:49,987 - __main__ - INFO - YAML DSL generated
+2025-11-13 02:28:49,990 - __main__ - INFO - ✅ YAML pilot validation passed
+2025-11-13 02:28:50,012 - __main__ - ERROR - Failed to build component: All ports at the target (end) must have the same angle. r.start.t=r0 260000,-100000/r.end.t=r0 515500,-625
+2025-11-13 02:28:50,012 - __main__ - INFO - Retrying LLM call (attempt 2/3)...
+2025-11-13 02:28:55,542 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-13 02:28:55,544 - __main__ - INFO - YAML DSL generated
+2025-11-13 02:28:55,549 - __main__ - WARNING - YAML pilot validation failed: Invalid parameters: splitter.mmi1x2: invalid parameter 'length', combiner.mmi1x2: invalid parameter 'length'. Valid parameters for mmi1x2: width, width_taper, length_taper, length_mmi, width_mmi, gap_mmi, taper, straight, cross_section
+2025-11-13 02:28:55,549 - __main__ - INFO - Retrying LLM call (attempt 3/3)...
+2025-11-13 02:29:00,258 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-13 02:29:00,263 - __main__ - INFO - YAML DSL generated
+2025-11-13 02:29:00,269 - __main__ - INFO - ✅ YAML pilot validation passed
+2025-11-13 02:29:00,304 - __main__ - INFO - ✅ Component built from YAML
+2025-11-13 02:29:00,314 - gd_picasso.validators.drc_validator - WARNING - KLayout executable not found - skipping DRC check
+2025-11-13 02:29:00,315 - __main__ - INFO - ✅ DRC validation passed
+2025-11-13 02:29:00,315 - __main__ - INFO - ⏭️  LVS validation skipped (can be slow)
+2025-11-13 02:29:00,326 - __main__ - INFO - ✅ Optimization completed
+2025-11-13 02:29:00,326 - __main__ - INFO - ✅ Sample 1 PASSED
+2025-11-13 02:29:00,326 - __main__ - INFO - 
+Problem 2 Summary: 1/1 passed
+2025-11-13 02:29:00,327 - __main__ - INFO - 
+Results saved to: /Users/deepakvungarala/Desktop/shigoto/PICasso/gd_picasso/output/test_results/results_gpt-4o_20251113_022900.json
+2025-11-13 02:29:00,327 - __main__ - INFO - 
+======================================================================
+2025-11-13 02:29:00,327 - __main__ - INFO - FINAL SUMMARY
+2025-11-13 02:29:00,327 - __main__ - INFO - ======================================================================
+2025-11-13 02:29:00,327 - __main__ - INFO - Total problems: 2
+2025-11-13 02:29:00,327 - __main__ - INFO - Total samples: 2
+2025-11-13 02:29:00,327 - __main__ - INFO - Total passed: 2
+2025-11-13 02:29:00,327 - __main__ - INFO - Pass rate: 100.0%
+2025-11-13 02:29:00,327 - __main__ - INFO - ======================================================================

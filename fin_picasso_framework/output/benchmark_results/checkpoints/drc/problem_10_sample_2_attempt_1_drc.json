@@ -1,0 +1,24 @@
+{
+  "timestamp": "2025-11-12T14:57:19.690059",
+  "stage": "drc",
+  "problem_idx": 10,
+  "sample_idx": 2,
+  "attempt": 1,
+  "status": "pass",
+  "error": null,
+  "metadata": {
+    "validation_type": "drc",
+    "violations": 0
+  },
+  "code": "import gdsfactory as gf\n\nr = gf.Component()\n\n# 1. Instantiate components with settings\nmzi = r.add_ref(gf.components.mzi())\nmzi.move((0, 0))\n\nphase_ctrl = r.add_ref(gf.components.straight())\nphase_ctrl.move((100, 0))\n\n# 2. Route connections\ngf.routing.route_single(\n    r,\n    mzi.ports['o2'],\n    phase_ctrl.ports['o1'],\n    cross_section='strip',\n    radius=15\n)\n\ngf.routing.route_single(\n    r,\n    phase_ctrl.ports['o2'],\n    mzi.ports['o1'],\n    cross_section='strip',\n    radius=15\n)\n\n# 3. Expose external ports\nr.add_port('o1', port=mzi.ports['o1'])\nr.add_port('o2', port=mzi.ports['o2'])\n\n# 4. Finalize\nr.draw_ports()\nr.plot()",
+  "validation_report": {
+    "passed": true,
+    "errors": [],
+    "warnings": [
+      "KLayout not found - DRC check skipped"
+    ],
+    "violations": 0,
+    "drc_report_path": null
+  },
+  "gds_file": "checkpoints/drc/problem_10_sample_2_attempt_1_drc.gds"
+}

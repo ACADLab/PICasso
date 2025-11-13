@@ -1,0 +1,31 @@
+{
+  "timestamp": "2025-11-12T15:01:35.528540",
+  "stage": "pnr",
+  "problem_idx": 4,
+  "sample_idx": 2,
+  "attempt": 1,
+  "status": "pass",
+  "error": null,
+  "metadata": {
+    "validation_type": "pnr"
+  },
+  "code": "import gdsfactory as gf\n\nr = gf.Component()\n\n# Instantiate components\nsplitter = r.add_ref(gf.components.mmi1x2())\nsplitter.move((0,0))\n\n# Create 2x1 combiner by mirroring 1x2\ncombiner = r.add_ref(gf.components.mmi1x2())\ncombiner.mirror()\ncombiner.move((250, 0))\n\n# Add MZMs and phase biasers\nmzm_i = r.add_ref(gf.components.mzm())\nmzm_i.move((100, 0))\n\nmzm_q = r.add_ref(gf.components.mzm())\nmzm_q.move((100, 50))\n\npb_i = r.add_ref(gf.components.coupler())\npb_i.move((150, 0))\n\npb_q = r.add_ref(gf.components.coupler())\npb_q.move((150, 50))\n\n# Route connections\ngf.routing.route_bundle(\n    r,\n    [splitter.ports['o2'], splitter.ports['o3']],\n    [mzm_i.ports['o1'], mzm_q.ports['o1']],\n    cross_section='strip',\n    radius=15,\n    separation=15\n)\n\ngf.routing.route_single(\n    r,\n    mzm_i.ports['o2'],\n    combiner.ports['o2'],\n    cross_section='strip',\n    radius=15\n)\n\ngf.routing.route_single(\n    r,\n    mzm_q.ports['o2'],\n    combiner.ports['o1'],\n    cross_section='strip',\n    radius=15\n)\n\n# Add external ports\nr.add_port('o1', port=splitter.ports['o1'])\nr.add_port('o2', port=combiner.ports['o3'])\n\nr.draw_ports()\nr.plot()",
+  "validation_report": {
+    "passed": true,
+    "errors": [],
+    "warnings": [
+      "Layout area 18446529325944752128\u00b5m\u00b2 exceeds maximum 500000\u00b5m\u00b2"
+    ],
+    "metrics": {
+      "layout_area": 1.8446529325944752e+19,
+      "layout_width": 4294947296.0,
+      "layout_height": 4294937296.0,
+      "aspect_ratio": 1.0000023283226998,
+      "num_components": 28,
+      "num_ports": 2,
+      "compactness": 0.9999976716827214,
+      "quality_score": 0.7999990686730887
+    }
+  },
+  "gds_file": "checkpoints/pnr/problem_4_sample_2_attempt_1_pnr.gds"
+}

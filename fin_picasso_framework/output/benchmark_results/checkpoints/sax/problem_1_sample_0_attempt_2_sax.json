@@ -1,0 +1,25 @@
+{
+  "timestamp": "2025-11-12T17:00:30.871292",
+  "stage": "sax",
+  "problem_idx": 1,
+  "sample_idx": 0,
+  "attempt": 2,
+  "status": "fail",
+  "error": "SAX circuit compilation failed: Missing models. The following models are still missing to build the circuit:\n{\n    \"Missing Models\": [\"mzi\"],\n    \"Given Models\": [\"straight\", \"bend_euler\", \"mmi1x2\", \"mmi\"],\n    \"Required Models\": [\"mzi\"],\n}\n\nNote: SAX models not found. Consider using SAXModelManager to create models.",
+  "metadata": {
+    "validation_type": "sax"
+  },
+  "code": "import gdsfactory as gf\n\nr = gf.Component()\n\nmzi = r.add_ref(gf.components.mzi(\n    delta_length=10.0,\n    length_y=10.0,\n    length_x=10.0\n))\n\nr.add_port('o1', port=mzi.ports['o1'])\nr.add_port('o2', port=mzi.ports['o2'])\n\nr.draw_ports()\nr.plot()",
+  "validation_report": {
+    "passed": false,
+    "errors": [
+      "SAX circuit compilation failed: Missing models. The following models are still missing to build the circuit:\n{\n    \"Missing Models\": [\"mzi\"],\n    \"Given Models\": [\"straight\", \"bend_euler\", \"mmi1x2\", \"mmi\"],\n    \"Required Models\": [\"mzi\"],\n}\n\nNote: SAX models not found. Consider using SAXModelManager to create models."
+    ],
+    "warnings": [
+      "Netlist has no connections (might be single component)"
+    ],
+    "sax_compiled": false,
+    "routing_validated": true
+  },
+  "gds_file": "checkpoints/sax/problem_1_sample_0_attempt_2_sax.gds"
+}

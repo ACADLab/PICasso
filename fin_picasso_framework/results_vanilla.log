@@ -1,0 +1,4 @@
+usage: test_with_model.py [-h]
+                          [--model {deepseek_r1,deepseek_r1_local,kimi2,gpt4o_mini}]
+                          [--problems PROBLEMS] [--samples SAMPLES]
+test_with_model.py: error: unrecognized arguments: --vanilla

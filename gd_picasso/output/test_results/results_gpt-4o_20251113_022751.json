@@ -1,0 +1,24 @@
+[
+  {
+    "problem_id": "1",
+    "problem_name": "",
+    "complexity": null,
+    "samples": [
+      {
+        "sample_idx": 1,
+        "passed": false,
+        "errors": [
+          "YAML validation: Invalid parameters: mmi1.mmi1x2: invalid parameter 'length', mmi2.mmi1x2: invalid parameter 'length'. Valid parameters for mmi1x2: width, width_taper, length_taper, length_mmi, width_mmi, gap_mmi, taper, straight, cross_section"
+        ],
+        "warnings": [],
+        "yaml_valid": false,
+        "component_built": false,
+        "drc_passed": false,
+        "lvs_passed": false,
+        "optimization_done": false
+      }
+    ],
+    "pass_count": 0,
+    "fail_count": 1
+  }
+]

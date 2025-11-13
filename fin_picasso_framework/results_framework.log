@@ -1,0 +1,1264 @@
+2025-11-12 14:46:49,278 - __main__ - INFO - Available models:
+2025-11-12 14:46:49,278 - __main__ - INFO -   deepseek_r1: DeepSeek-R1 via HuggingFace API
+2025-11-12 14:46:49,278 - __main__ - INFO -   deepseek_r1_local: DeepSeek-R1 via Local GPU
+2025-11-12 14:46:49,278 - __main__ - INFO -   kimi2: Kimi2 Thinking via HuggingFace API
+2025-11-12 14:46:49,278 - __main__ - INFO -   deepseek_r1_api: DeepSeek-R1 via DeepSeek API
+2025-11-12 14:46:49,278 - __main__ - INFO -   gpt4o_mini: GPT-4o-mini via OpenAI API
+2025-11-12 14:46:49,278 - __main__ - INFO - 
+2025-11-12 14:46:49,278 - __main__ - INFO - ======================================================================
+2025-11-12 14:46:49,278 - __main__ - INFO - PICASSO FRAMEWORK TEST WITH MODEL
+2025-11-12 14:46:49,278 - __main__ - INFO - ======================================================================
+2025-11-12 14:46:49,278 - __main__ - INFO - Model: deepseek_r1
+2025-11-12 14:46:49,278 - __main__ - INFO - Problems: test_problems.txt
+2025-11-12 14:46:49,278 - __main__ - INFO - Samples per problem: 3
+2025-11-12 14:46:49,278 - __main__ - INFO - ======================================================================
+2025-11-12 14:46:49,278 - __main__ - INFO - 
+Step 1: Creating inference agent...
+2025-11-12 14:46:49,278 - __main__ - INFO - Creating agent for: DeepSeek-R1 via HuggingFace API
+2025-11-12 14:46:49,278 - hf_inference_workflow.hf_api_client - INFO - Initialized HFInferenceAgent with model: deepseek-ai/DeepSeek-R1-Distill-Qwen-14B
+2025-11-12 14:46:49,279 - hf_inference_workflow.hf_api_client - INFO - Using HuggingFace Inference API (new router endpoint)
+2025-11-12 14:46:49,279 - hf_inference_workflow.hf_api_client - INFO - Generation params: {'max_new_tokens': 2048, 'temperature': 0.3, 'top_p': 0.95, 'do_sample': True}
+2025-11-12 14:46:49,279 - __main__ - INFO - ✅ Created HF API agent with model: deepseek-ai/DeepSeek-R1-Distill-Qwen-14B
+2025-11-12 14:46:49,279 - __main__ - INFO - 
+Step 2: Loading problems...
+2025-11-12 14:46:49,279 - __main__ - INFO - Loading problems from specified file: test_problems.txt
+2025-11-12 14:46:49,279 - fin_picasso_framework.gen_data_validated - INFO - Loaded 9 problems from test_problems.txt
+2025-11-12 14:46:49,279 - __main__ - INFO - Loaded 9 problems
+2025-11-12 14:46:49,279 - __main__ - INFO - Testing with ALL 9 problems
+2025-11-12 14:46:49,279 - __main__ - INFO - 
+Step 3: Loading prompt template...
+2025-11-12 14:46:49,279 - __main__ - INFO - ✅ Loaded prompt template
+2025-11-12 14:46:49,279 - __main__ - INFO - 
+Step 4: Running framework generation...
+2025-11-12 14:46:49,279 - __main__ - INFO - ======================================================================
+2025-11-12 14:46:49,279 - fin_picasso_framework.port_matching.port_matcher - INFO - Detected gdsfactory version: 8.32.2
+2025-11-12 14:46:49,281 - fin_picasso_framework.pilot.pilot_prompt_updater - INFO - ✅ Loaded 3 existing pilot rules from /Users/deepakvungarala/Desktop/shigoto/PICasso/fin_picasso_framework/pilot_rules.json
+2025-11-12 14:46:49,764 - fin_picasso_framework.optimizers.device_optimizer - INFO - SAX is available - will use for device optimization
+2025-11-12 14:46:49,765 - fin_picasso_framework.port_matching.component_spec_loader - INFO - Using pydoc-based component loader for comprehensive specs
+2025-11-12 14:46:49,765 - fin_picasso_framework.sax_models.sax_model_manager - INFO - Detected gdsfactory version: 8.32.2
+2025-11-12 14:46:49,960 - fin_picasso_framework.gen_data_validated - INFO - ✅ Loaded component injection for 6 components
+2025-11-12 14:46:49,960 - fin_picasso_framework.gen_data_validated - INFO - Component injection length: 8905 chars
+2025-11-12 14:46:49,960 - fin_picasso_framework.gen_data_validated - INFO - ✅ Loaded permanent pilot rules (1043 chars)
+Generating validated designs:   0%|          | 0/27 [00:00<?, ?it/s]2025-11-12 14:46:49,960 - fin_picasso_framework.gen_data_validated - INFO - 
+============================================================
+2025-11-12 14:46:49,960 - fin_picasso_framework.gen_data_validated - INFO - Problem 1: MZI - Mach-Zehnder Interferometer - Sample 1/3
+2025-11-12 14:46:49,960 - fin_picasso_framework.gen_data_validated - INFO - ============================================================
+2025-11-12 14:46:49,960 - fin_picasso_framework.gen_data_validated - INFO - Problem 1, Sample 0, Attempt 1/4
+2025-11-12 14:47:09,643 - fin_picasso_framework.gen_data_validated - INFO - 📊 Using Vanilla LLM prompt (Phase 1 baseline - no component specs)
+2025-11-12 14:47:09,646 - fin_picasso_framework.gen_data_validated - INFO - Code cleaning applied (removed Unicode/fixed decimals)
+2025-11-12 14:47:09,646 - fin_picasso_framework.gen_data_validated - INFO - Running pilot validation (pre-execution checks)...
+2025-11-12 14:47:09,651 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: pilot - fail (problem 1, sample 0, attempt 0)
+2025-11-12 14:47:09,651 - fin_picasso_framework.gen_data_validated - WARNING - ❌ Pilot validation failed: Syntax error: unterminated string literal (detected at line 8) (<unknown>, line 8)
+2025-11-12 14:47:09,652 - fin_picasso_framework.gen_data_validated - INFO - Pilot feedback for LLM: Syntax error: unterminated string literal (detected at line 8) (<unknown>, line 8)
+
+Fix: Check for unterminated strings, missing quotes, or invalid characters.
+2025-11-12 14:47:09,652 - hf_inference_workflow.retry_handler - INFO - Recorded retry attempt 0 (failed at parsing)
+2025-11-12 14:47:09,652 - fin_picasso_framework.gen_data_validated - INFO - Problem 1, Sample 0, Attempt 2/4
+2025-11-12 14:47:09,652 - fin_picasso_framework.gen_data_validated - INFO - 📊 Using Framework prompt (Phase 2 - with component specs & validation feedback)
+2025-11-12 14:47:30,719 - fin_picasso_framework.gen_data_validated - INFO - Running pilot validation (pre-execution checks)...
+2025-11-12 14:47:30,721 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: pilot - pass (problem 1, sample 0, attempt 1)
+2025-11-12 14:47:30,721 - fin_picasso_framework.gen_data_validated - INFO - ✅ Pilot validation passed
+2025-11-12 14:47:30,721 - fin_picasso_framework.gen_data_validated - INFO - Parsing and executing generated code...
+2025-11-12 14:47:30,827 - fin_picasso_framework.gen_data_validated - ERROR - Execution error: ports1=2 and ports2=1 must be equal
+2025-11-12 14:47:30,827 - fin_picasso_framework.gen_data_validated - ERROR - Failed to parse/execute code: EXECUTION_ERROR: ports1=2 and ports2=1 must be equal
+2025-11-12 14:47:30,827 - hf_inference_workflow.retry_handler - INFO - Recorded retry attempt 1 (failed at parsing)
+2025-11-12 14:47:30,827 - fin_picasso_framework.gen_data_validated - INFO - Problem 1, Sample 0, Attempt 3/4
+2025-11-12 14:47:30,827 - fin_picasso_framework.gen_data_validated - INFO - 📊 Using Framework prompt (Phase 2 - with component specs & validation feedback)
+2025-11-12 14:48:15,879 - fin_picasso_framework.gen_data_validated - INFO - Running pilot validation (pre-execution checks)...
+2025-11-12 14:48:15,881 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: pilot - pass (problem 1, sample 0, attempt 2)
+2025-11-12 14:48:15,881 - fin_picasso_framework.gen_data_validated - INFO - ✅ Pilot validation passed
+2025-11-12 14:48:15,881 - fin_picasso_framework.gen_data_validated - INFO - Parsing and executing generated code...
+2025-11-12 14:48:16,088 - fin_picasso_framework.gen_data_validated - ERROR - Routing collision detected: Routing collision in Unnamed_5
+2025-11-12 14:48:16.086 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 14:48:16,088 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Attempting immediate auto-correction for routing collision (YAML netlist fix)...
+2025-11-12 14:48:16,106 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Falling back to code-based auto-correction...
+2025-11-12 14:48:16.106 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 14:48:16,106 - hf_inference_workflow.auto_corrector - INFO - Attempting auto-correction for error type: routing_error
+2025-11-12 14:48:16,110 - hf_inference_workflow.auto_corrector - INFO - Applied spacing increase (2.0x)
+2025-11-12 14:48:16,110 - hf_inference_workflow.auto_corrector - INFO - Auto-correction applied for routing_error (Unicode fixed: False)
+2025-11-12 14:48:16,110 - fin_picasso_framework.gen_data_validated - INFO - ✅ Auto-correction applied: Increased spacing by 2.0x (code-based fix)
+2025-11-12 14:48:16,123 - fin_picasso_framework.gen_data_validated - ERROR - Routing collision detected: Routing collision in Unnamed_25
+2025-11-12 14:48:16,123 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Attempting immediate auto-correction for routing collision (YAML netlist fix)...
+2025-11-12 14:48:16.123 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 14:48:16,133 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Falling back to code-based auto-correction...
+2025-11-12 14:48:16.133 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 14:48:16,133 - hf_inference_workflow.auto_corrector - INFO - Attempting auto-correction for error type: routing_error
+2025-11-12 14:48:16,133 - hf_inference_workflow.auto_corrector - INFO - Applied spacing increase (2.0x)
+2025-11-12 14:48:16,133 - hf_inference_workflow.auto_corrector - INFO - Auto-correction applied for routing_error (Unicode fixed: False)
+2025-11-12 14:48:16,133 - fin_picasso_framework.gen_data_validated - INFO - ✅ Auto-correction applied: Increased spacing by 2.0x (code-based fix)
+2025-11-12 14:48:16,145 - fin_picasso_framework.gen_data_validated - ERROR - Routing collision detected: Routing collision in Unnamed_30
+2025-11-12 14:48:16.145 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 14:48:16,145 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Attempting immediate auto-correction for routing collision (YAML netlist fix)...
+2025-11-12 14:48:16,155 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Falling back to code-based auto-correction...
+2025-11-12 14:48:16.155 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 14:48:16,155 - hf_inference_workflow.auto_corrector - INFO - Attempting auto-correction for error type: routing_error
+2025-11-12 14:48:16,155 - hf_inference_workflow.auto_corrector - INFO - Applied spacing increase (2.0x)
+2025-11-12 14:48:16,155 - hf_inference_workflow.auto_corrector - INFO - Auto-correction applied for routing_error (Unicode fixed: False)
+2025-11-12 14:48:16,155 - fin_picasso_framework.gen_data_validated - INFO - ✅ Auto-correction applied: Increased spacing by 2.0x (code-based fix)
+2025-11-12 14:48:16,168 - fin_picasso_framework.gen_data_validated - ERROR - Routing collision detected: Routing collision in Unnamed_35
+2025-11-12 14:48:16.168 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 14:48:16,168 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Attempting immediate auto-correction for routing collision (YAML netlist fix)...
+2025-11-12 14:48:16,177 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Falling back to code-based auto-correction...
+2025-11-12 14:48:16.177 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 14:48:16,177 - hf_inference_workflow.auto_corrector - INFO - Attempting auto-correction for error type: routing_error
+2025-11-12 14:48:16,178 - hf_inference_workflow.auto_corrector - INFO - Applied spacing increase (2.0x)
+2025-11-12 14:48:16,178 - hf_inference_workflow.auto_corrector - INFO - Auto-correction applied for routing_error (Unicode fixed: False)
+2025-11-12 14:48:16,178 - fin_picasso_framework.gen_data_validated - INFO - ✅ Auto-correction applied: Increased spacing by 2.0x (code-based fix)
+2025-11-12 14:48:16,190 - fin_picasso_framework.gen_data_validated - ERROR - Routing collision detected: Routing collision in Unnamed_40
+2025-11-12 14:48:16,190 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Attempting immediate auto-correction for routing collision (YAML netlist fix)...
+2025-11-12 14:48:16.190 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 14:48:16,200 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Falling back to code-based auto-correction...
+2025-11-12 14:48:16.200 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 14:48:16,200 - hf_inference_workflow.auto_corrector - INFO - Attempting auto-correction for error type: routing_error
+2025-11-12 14:48:16,200 - hf_inference_workflow.auto_corrector - INFO - Applied spacing increase (2.0x)
+2025-11-12 14:48:16,200 - hf_inference_workflow.auto_corrector - INFO - Auto-correction applied for routing_error (Unicode fixed: False)
+2025-11-12 14:48:16,200 - fin_picasso_framework.gen_data_validated - INFO - ✅ Auto-correction applied: Increased spacing by 2.0x (code-based fix)
+2025-11-12 14:48:16,212 - fin_picasso_framework.gen_data_validated - ERROR - Routing collision detected: Routing collision in Unnamed_45
+2025-11-12 14:48:16.212 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 14:48:16,212 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Attempting immediate auto-correction for routing collision (YAML netlist fix)...
+2025-11-12 14:48:16,222 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Falling back to code-based auto-correction...
+2025-11-12 14:48:16.222 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 14:48:16,222 - hf_inference_workflow.auto_corrector - INFO - Attempting auto-correction for error type: routing_error
+2025-11-12 14:48:16,222 - hf_inference_workflow.auto_corrector - INFO - Applied spacing increase (2.0x)
+2025-11-12 14:48:16,222 - hf_inference_workflow.auto_corrector - INFO - Auto-correction applied for routing_error (Unicode fixed: False)
+2025-11-12 14:48:16,222 - fin_picasso_framework.gen_data_validated - INFO - ✅ Auto-correction applied: Increased spacing by 2.0x (code-based fix)
+2025-11-12 14:48:16,234 - fin_picasso_framework.gen_data_validated - ERROR - Routing collision detected: Routing collision in Unnamed_50
+2025-11-12 14:48:16,234 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Attempting immediate auto-correction for routing collision (YAML netlist fix)...
+2025-11-12 14:48:16.234 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 14:48:16,245 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Falling back to code-based auto-correction...
+2025-11-12 14:48:16,246 - hf_inference_workflow.auto_corrector - INFO - Attempting auto-correction for error type: routing_error
+2025-11-12 14:48:16,246 - hf_inference_workflow.auto_corrector - INFO - Applied spacing increase (2.0x)
+2025-11-12 14:48:16,246 - hf_inference_workflow.auto_corrector - INFO - Auto-correction applied for routing_error (Unicode fixed: False)
+2025-11-12 14:48:16,246 - fin_picasso_framework.gen_data_validated - INFO - ✅ Auto-correction applied: Increased spacing by 2.0x (code-based fix)
+2025-11-12 14:48:16.245 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 14:48:16,259 - fin_picasso_framework.gen_data_validated - ERROR - Routing collision detected: Routing collision in Unnamed_55
+2025-11-12 14:48:16,259 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Attempting immediate auto-correction for routing collision (YAML netlist fix)...
+2025-11-12 14:48:16.259 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 14:48:16,273 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Falling back to code-based auto-correction...
+2025-11-12 14:48:16.272 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 14:48:16,273 - hf_inference_workflow.auto_corrector - INFO - Attempting auto-correction for error type: routing_error
+2025-11-12 14:48:16,273 - hf_inference_workflow.auto_corrector - INFO - Applied spacing increase (2.0x)
+2025-11-12 14:48:16,273 - hf_inference_workflow.auto_corrector - INFO - Auto-correction applied for routing_error (Unicode fixed: False)
+2025-11-12 14:48:16,273 - fin_picasso_framework.gen_data_validated - INFO - ✅ Auto-correction applied: Increased spacing by 2.0x (code-based fix)
+2025-11-12 14:48:16,286 - fin_picasso_framework.gen_data_validated - ERROR - Routing collision detected: Routing collision in Unnamed_60
+2025-11-12 14:48:16.285 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 14:48:16,286 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Attempting immediate auto-correction for routing collision (YAML netlist fix)...
+2025-11-12 14:48:16,296 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Falling back to code-based auto-correction...
+2025-11-12 14:48:16.296 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 14:48:16,296 - hf_inference_workflow.auto_corrector - INFO - Attempting auto-correction for error type: routing_error
+2025-11-12 14:48:16,296 - hf_inference_workflow.auto_corrector - INFO - Applied spacing increase (2.0x)
+2025-11-12 14:48:16,296 - hf_inference_workflow.auto_corrector - INFO - Auto-correction applied for routing_error (Unicode fixed: False)
+2025-11-12 14:48:16,296 - fin_picasso_framework.gen_data_validated - INFO - ✅ Auto-correction applied: Increased spacing by 2.0x (code-based fix)
+2025-11-12 14:48:16,310 - fin_picasso_framework.gen_data_validated - ERROR - Routing collision detected: Routing collision in Unnamed_65
+2025-11-12 14:48:16,310 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Attempting immediate auto-correction for routing collision (YAML netlist fix)...
+2025-11-12 14:48:16.309 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 14:48:16,322 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Falling back to code-based auto-correction...
+2025-11-12 14:48:16,322 - hf_inference_workflow.auto_corrector - INFO - Attempting auto-correction for error type: routing_error
+2025-11-12 14:48:16,322 - hf_inference_workflow.auto_corrector - INFO - Applied spacing increase (2.0x)
+2025-11-12 14:48:16,322 - hf_inference_workflow.auto_corrector - INFO - Auto-correction applied for routing_error (Unicode fixed: False)
+2025-11-12 14:48:16,322 - fin_picasso_framework.gen_data_validated - INFO - ✅ Auto-correction applied: Increased spacing by 2.0x (code-based fix)
+2025-11-12 14:48:16.322 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 14:48:16,344 - fin_picasso_framework.gen_data_validated - ERROR - Routing collision detected: Routing collision in Unnamed_70
+2025-11-12 14:48:16.344 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 14:48:16,344 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Attempting immediate auto-correction for routing collision (YAML netlist fix)...
+2025-11-12 14:48:16,359 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Falling back to code-based auto-correction...
+2025-11-12 14:48:16.359 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 14:48:16,359 - hf_inference_workflow.auto_corrector - INFO - Attempting auto-correction for error type: routing_error
+2025-11-12 14:48:16,359 - hf_inference_workflow.auto_corrector - INFO - Applied spacing increase (2.0x)
+2025-11-12 14:48:16,359 - hf_inference_workflow.auto_corrector - INFO - Auto-correction applied for routing_error (Unicode fixed: False)
+2025-11-12 14:48:16,359 - fin_picasso_framework.gen_data_validated - INFO - ✅ Auto-correction applied: Increased spacing by 2.0x (code-based fix)
+2025-11-12 14:48:16,376 - fin_picasso_framework.gen_data_validated - ERROR - Routing collision detected: Routing collision in Unnamed_75
+2025-11-12 14:48:16,376 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Attempting immediate auto-correction for routing collision (YAML netlist fix)...
+2025-11-12 14:48:16.376 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 14:48:16,390 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Falling back to code-based auto-correction...
+2025-11-12 14:48:16.390 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 14:48:16,390 - hf_inference_workflow.auto_corrector - INFO - Attempting auto-correction for error type: routing_error
+2025-11-12 14:48:16,390 - hf_inference_workflow.auto_corrector - INFO - Applied spacing increase (2.0x)
+2025-11-12 14:48:16,390 - hf_inference_workflow.auto_corrector - INFO - Auto-correction applied for routing_error (Unicode fixed: False)
+2025-11-12 14:48:16,390 - fin_picasso_framework.gen_data_validated - INFO - ✅ Auto-correction applied: Increased spacing by 2.0x (code-based fix)
+2025-11-12 14:48:16,407 - fin_picasso_framework.gen_data_validated - ERROR - Routing collision detected: Routing collision in Unnamed_80
+2025-11-12 14:48:16,407 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Attempting immediate auto-correction for routing collision (YAML netlist fix)...
+2025-11-12 14:48:16.407 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 14:48:16,436 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Falling back to code-based auto-correction...
+2025-11-12 14:48:16,437 - hf_inference_workflow.auto_corrector - INFO - Attempting auto-correction for error type: routing_error
+2025-11-12 14:48:16,437 - hf_inference_workflow.auto_corrector - INFO - Applied spacing increase (2.0x)
+2025-11-12 14:48:16,437 - hf_inference_workflow.auto_corrector - INFO - Auto-correction applied for routing_error (Unicode fixed: False)
+2025-11-12 14:48:16,437 - fin_picasso_framework.gen_data_validated - INFO - ✅ Auto-correction applied: Increased spacing by 2.0x (code-based fix)
+2025-11-12 14:48:16.436 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 14:48:16,510 - fin_picasso_framework.gen_data_validated - ERROR - Routing collision detected: Routing collision in Unnamed_85
+2025-11-12 14:48:16.510 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 14:48:16,511 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Attempting immediate auto-correction for routing collision (YAML netlist fix)...
+2025-11-12 14:48:16,530 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Falling back to code-based auto-correction...
+2025-11-12 14:48:16,530 - hf_inference_workflow.auto_corrector - INFO - Attempting auto-correction for error type: routing_error
+2025-11-12 14:48:16,530 - hf_inference_workflow.auto_corrector - INFO - Applied spacing increase (2.0x)
+2025-11-12 14:48:16,530 - hf_inference_workflow.auto_corrector - INFO - Auto-correction applied for routing_error (Unicode fixed: False)
+2025-11-12 14:48:16,530 - fin_picasso_framework.gen_data_validated - INFO - ✅ Auto-correction applied: Increased spacing by 2.0x (code-based fix)
+2025-11-12 14:48:16.530 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 14:48:16,553 - fin_picasso_framework.gen_data_validated - ERROR - Routing collision detected: Routing collision in Unnamed_90
+2025-11-12 14:48:16,553 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Attempting immediate auto-correction for routing collision (YAML netlist fix)...
+2025-11-12 14:48:16.552 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 14:48:16,575 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Falling back to code-based auto-correction...
+2025-11-12 14:48:16,575 - hf_inference_workflow.auto_corrector - INFO - Attempting auto-correction for error type: routing_error
+2025-11-12 14:48:16,575 - hf_inference_workflow.auto_corrector - INFO - Applied spacing increase (2.0x)
+2025-11-12 14:48:16,575 - hf_inference_workflow.auto_corrector - INFO - Auto-correction applied for routing_error (Unicode fixed: False)
+2025-11-12 14:48:16,575 - fin_picasso_framework.gen_data_validated - INFO - ✅ Auto-correction applied: Increased spacing by 2.0x (code-based fix)
+2025-11-12 14:48:16.575 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 14:48:16,587 - fin_picasso_framework.gen_data_validated - ERROR - Execution error: All ports at the target (end) must have the same angle. r.start.t=r0 -2147473649,0/r.end.t=r180 2147468147,625
+2025-11-12 14:48:16,587 - fin_picasso_framework.gen_data_validated - WARNING - Auto-correction applied but still failed: EXECUTION_ERROR: All ports at the target (end) must have the same angle. r.start.t=r0 -2147473649,0/
+2025-11-12 14:48:16,587 - fin_picasso_framework.gen_data_validated - WARNING - Auto-correction applied but still failed: ROUTING_COLLISION: Routing collision in Unnamed_90
+2025-11-12 14:48:16,587 - fin_picasso_framework.gen_data_validated - WARNING - Auto-correction applied but still failed: ROUTING_COLLISION: Routing collision in Unnamed_85
+2025-11-12 14:48:16,587 - fin_picasso_framework.gen_data_validated - WARNING - Auto-correction applied but still failed: ROUTING_COLLISION: Routing collision in Unnamed_80
+2025-11-12 14:48:16,587 - fin_picasso_framework.gen_data_validated - WARNING - Auto-correction applied but still failed: ROUTING_COLLISION: Routing collision in Unnamed_75
+2025-11-12 14:48:16,587 - fin_picasso_framework.gen_data_validated - WARNING - Auto-correction applied but still failed: ROUTING_COLLISION: Routing collision in Unnamed_70
+2025-11-12 14:48:16,587 - fin_picasso_framework.gen_data_validated - WARNING - Auto-correction applied but still failed: ROUTING_COLLISION: Routing collision in Unnamed_65
+2025-11-12 14:48:16,588 - fin_picasso_framework.gen_data_validated - WARNING - Auto-correction applied but still failed: ROUTING_COLLISION: Routing collision in Unnamed_60
+2025-11-12 14:48:16,588 - fin_picasso_framework.gen_data_validated - WARNING - Auto-correction applied but still failed: ROUTING_COLLISION: Routing collision in Unnamed_55
+2025-11-12 14:48:16,588 - fin_picasso_framework.gen_data_validated - WARNING - Auto-correction applied but still failed: ROUTING_COLLISION: Routing collision in Unnamed_50
+2025-11-12 14:48:16,588 - fin_picasso_framework.gen_data_validated - WARNING - Auto-correction applied but still failed: ROUTING_COLLISION: Routing collision in Unnamed_45
+2025-11-12 14:48:16,588 - fin_picasso_framework.gen_data_validated - WARNING - Auto-correction applied but still failed: ROUTING_COLLISION: Routing collision in Unnamed_40
+2025-11-12 14:48:16,588 - fin_picasso_framework.gen_data_validated - WARNING - Auto-correction applied but still failed: ROUTING_COLLISION: Routing collision in Unnamed_35
+2025-11-12 14:48:16,588 - fin_picasso_framework.gen_data_validated - WARNING - Auto-correction applied but still failed: ROUTING_COLLISION: Routing collision in Unnamed_30
+2025-11-12 14:48:16,588 - fin_picasso_framework.gen_data_validated - WARNING - Auto-correction applied but still failed: ROUTING_COLLISION: Routing collision in Unnamed_25
+2025-11-12 14:48:16,588 - fin_picasso_framework.gen_data_validated - ERROR - Failed to parse/execute code: ROUTING_COLLISION: Routing collision in Unnamed_5
+2025-11-12 14:48:16,588 - hf_inference_workflow.retry_handler - INFO - Recorded retry attempt 2 (failed at parsing)
+2025-11-12 14:48:16,588 - fin_picasso_framework.gen_data_validated - INFO - Problem 1, Sample 0, Attempt 4/4
+2025-11-12 14:48:16,588 - fin_picasso_framework.gen_data_validated - INFO - 📊 Using Framework prompt (Phase 2 - with component specs & validation feedback)
+2025-11-12 14:48:40,655 - fin_picasso_framework.gen_data_validated - INFO - Running pilot validation (pre-execution checks)...
+2025-11-12 14:48:40,658 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: pilot - pass (problem 1, sample 0, attempt 3)
+2025-11-12 14:48:40,658 - fin_picasso_framework.gen_data_validated - INFO - ✅ Pilot validation passed
+2025-11-12 14:48:40,658 - fin_picasso_framework.gen_data_validated - INFO - Parsing and executing generated code...
+2025-11-12 14:48:40,665 - fin_picasso_framework.gen_data_validated - ERROR - Execution error: unsupported operand type(s) for <<: 'ComponentReference' and 'Component'
+2025-11-12 14:48:40,665 - fin_picasso_framework.gen_data_validated - ERROR - Failed to parse/execute code: EXECUTION_ERROR: unsupported operand type(s) for <<: 'ComponentReference' and 'Component'
+2025-11-12 14:48:40,665 - hf_inference_workflow.retry_handler - INFO - Recorded retry attempt 3 (failed at parsing)
+2025-11-12 14:48:40,665 - fin_picasso_framework.gen_data_validated - INFO - 📊 Phase 2 (Framework): ❌ FAILED (retries: 3)
+2025-11-12 14:48:40,666 - fin_picasso_framework.gen_data_validated - INFO - 
+============================================================
+2025-11-12 14:48:40,666 - fin_picasso_framework.gen_data_validated - INFO - Pass@4 failure detected - Updating pilot prompt for next attempt...
+2025-11-12 14:48:40,666 - fin_picasso_framework.gen_data_validated - INFO - Error: EXECUTION_ERROR: unsupported operand type(s) for <<: 'ComponentReference' and 'Component'
+2025-11-12 14:48:40,666 - fin_picasso_framework.gen_data_validated - INFO - ============================================================
+2025-11-12 14:48:40,666 - fin_picasso_framework.pilot.pilot_prompt_updater - INFO - Analyzing 1 failed cases after pass@4
+2025-11-12 14:48:40,666 - fin_picasso_framework.gen_data_validated - INFO - ℹ️ No new pilot rules to apply after pass@4 (may need more context)
+Generating validated designs:   4%|▎         | 1/27 [01:50<47:58, 110.71s/it]2025-11-12 14:48:40,667 - fin_picasso_framework.gen_data_validated - INFO - 
+============================================================
+2025-11-12 14:48:40,667 - fin_picasso_framework.gen_data_validated - INFO - Problem 1: MZI - Mach-Zehnder Interferometer - Sample 2/3
+2025-11-12 14:48:40,667 - fin_picasso_framework.gen_data_validated - INFO - ============================================================
+2025-11-12 14:48:40,667 - fin_picasso_framework.gen_data_validated - INFO - Problem 1, Sample 1, Attempt 1/4
+2025-11-12 14:48:55,388 - fin_picasso_framework.gen_data_validated - INFO - 📊 Using Vanilla LLM prompt (Phase 1 baseline - no component specs)
+2025-11-12 14:48:55,390 - fin_picasso_framework.gen_data_validated - INFO - Running pilot validation (pre-execution checks)...
+2025-11-12 14:48:55,392 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: pilot - fail (problem 1, sample 1, attempt 0)
+2025-11-12 14:48:55,392 - fin_picasso_framework.gen_data_validated - WARNING - ❌ Pilot validation failed: Syntax error: unterminated string literal (detected at line 8) (<unknown>, line 8)
+2025-11-12 14:48:55,393 - fin_picasso_framework.gen_data_validated - INFO - Pilot feedback for LLM: Syntax error: unterminated string literal (detected at line 8) (<unknown>, line 8)
+
+Fix: Check for unterminated strings, missing quotes, or invalid characters.
+2025-11-12 14:48:55,393 - hf_inference_workflow.retry_handler - INFO - Recorded retry attempt 0 (failed at parsing)
+2025-11-12 14:48:55,393 - fin_picasso_framework.gen_data_validated - INFO - Problem 1, Sample 1, Attempt 2/4
+2025-11-12 14:48:55,393 - fin_picasso_framework.gen_data_validated - INFO - 📊 Using Framework prompt (Phase 2 - with component specs & validation feedback)
+2025-11-12 14:49:12,710 - fin_picasso_framework.gen_data_validated - INFO - Running pilot validation (pre-execution checks)...
+2025-11-12 14:49:12,711 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: pilot - pass (problem 1, sample 1, attempt 1)
+2025-11-12 14:49:12,711 - fin_picasso_framework.gen_data_validated - INFO - ✅ Pilot validation passed
+2025-11-12 14:49:12,711 - fin_picasso_framework.gen_data_validated - INFO - Parsing and executing generated code...
+2025-11-12 14:49:12,930 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Extracting netlist from Python-generated component for YAML validation...
+2025-11-12 14:49:12,940 - fin_picasso_framework.gen_data_validated - WARNING - ⚠️  YAML netlist validation found issues: Missing required key: 'connections'
+2025-11-12 14:49:12,962 - fin_picasso_framework.gen_data_validated - INFO - Running P&R validation...
+2025-11-12 14:49:12,963 - fin_picasso_framework.validators.pnr_validator - INFO - P&R Validation: PASS (0 errors, 1 warnings)
+2025-11-12 14:49:12,963 - fin_picasso_framework.gen_data_validated - INFO - Running DRC validation...
+2025-11-12 14:49:13,034 - fin_picasso_framework.validators.drc_validator - WARNING - KLayout executable not found - skipping DRC check
+2025-11-12 14:49:13,035 - fin_picasso_framework.gen_data_validated - INFO - Running SAX validation...
+2025-11-12 14:49:13,307 - fin_picasso_framework.validators.sax_validator - INFO - SAX Validation: FAIL (compilation: False, routing: True)
+2025-11-12 14:49:13,307 - fin_picasso_framework.gen_data_validated - WARNING - SAX validation failed
+2025-11-12 14:49:13,356 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: pnr - pass (problem 1, sample 1, attempt 1)
+2025-11-12 14:49:13,372 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: drc - pass (problem 1, sample 1, attempt 1)
+2025-11-12 14:49:13,379 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: sax - fail (problem 1, sample 1, attempt 1)
+2025-11-12 14:49:13,379 - hf_inference_workflow.retry_handler - INFO - Recorded retry attempt 1 (failed at sax)
+2025-11-12 14:49:13,380 - fin_picasso_framework.gen_data_validated - WARNING - Validation failed at stage: sax
+2025-11-12 14:49:13,380 - fin_picasso_framework.gen_data_validated - INFO - Problem 1, Sample 1, Attempt 3/4
+2025-11-12 14:49:13,381 - fin_picasso_framework.gen_data_validated - INFO - 📊 Using Framework prompt (Phase 2 - with component specs & validation feedback)
+2025-11-12 14:49:32,744 - fin_picasso_framework.gen_data_validated - INFO - Running pilot validation (pre-execution checks)...
+2025-11-12 14:49:32,748 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: pilot - pass (problem 1, sample 1, attempt 2)
+2025-11-12 14:49:32,748 - fin_picasso_framework.gen_data_validated - INFO - ✅ Pilot validation passed
+2025-11-12 14:49:32,748 - fin_picasso_framework.gen_data_validated - INFO - Parsing and executing generated code...
+2025-11-12 14:49:32,813 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Extracting netlist from Python-generated component for YAML validation...
+2025-11-12 14:49:32,824 - fin_picasso_framework.gen_data_validated - WARNING - ⚠️  YAML netlist validation found issues: Missing required key: 'connections'
+2025-11-12 14:49:32,826 - fin_picasso_framework.gen_data_validated - INFO - Running P&R validation...
+2025-11-12 14:49:32,826 - fin_picasso_framework.validators.pnr_validator - INFO - P&R Validation: PASS (0 errors, 1 warnings)
+2025-11-12 14:49:32,826 - fin_picasso_framework.gen_data_validated - INFO - Running DRC validation...
+2025-11-12 14:49:32,831 - fin_picasso_framework.validators.drc_validator - WARNING - KLayout executable not found - skipping DRC check
+2025-11-12 14:49:32,831 - fin_picasso_framework.gen_data_validated - INFO - Running SAX validation...
+2025-11-12 14:49:32,843 - fin_picasso_framework.validators.sax_validator - INFO - SAX Validation: FAIL (compilation: False, routing: True)
+2025-11-12 14:49:32,843 - fin_picasso_framework.gen_data_validated - WARNING - SAX validation failed
+2025-11-12 14:49:32,845 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: pnr - pass (problem 1, sample 1, attempt 2)
+2025-11-12 14:49:32,846 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: drc - pass (problem 1, sample 1, attempt 2)
+2025-11-12 14:49:32,848 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: sax - fail (problem 1, sample 1, attempt 2)
+2025-11-12 14:49:32,848 - hf_inference_workflow.retry_handler - INFO - Recorded retry attempt 2 (failed at sax)
+2025-11-12 14:49:32,848 - fin_picasso_framework.gen_data_validated - WARNING - Validation failed at stage: sax
+2025-11-12 14:49:32,848 - fin_picasso_framework.gen_data_validated - WARNING - Max retries reached
+2025-11-12 14:49:32,848 - fin_picasso_framework.gen_data_validated - INFO - Attempting auto-correction as fallback...
+2025-11-12 14:49:32,848 - hf_inference_workflow.auto_corrector - INFO - Attempting auto-correction for error type: pilot_error
+2025-11-12 14:49:32,848 - hf_inference_workflow.auto_corrector - WARNING - No auto-correction available for pilot_error
+2025-11-12 14:49:32,848 - fin_picasso_framework.gen_data_validated - WARNING - No auto-correction available for this error type
+2025-11-12 14:49:32,848 - fin_picasso_framework.gen_data_validated - INFO - 📊 Phase 2 (Framework): ❌ FAILED (retries: 2)
+2025-11-12 14:49:32,848 - fin_picasso_framework.gen_data_validated - INFO - 
+============================================================
+2025-11-12 14:49:32,848 - fin_picasso_framework.gen_data_validated - INFO - Pass@3 failure detected - Updating pilot prompt for next attempt...
+2025-11-12 14:49:32,848 - fin_picasso_framework.gen_data_validated - INFO - Error: PILOT_ERROR: Syntax error: unterminated string literal (detected at line 8) (<unknown>, line 8)
+2025-11-12 14:49:32,848 - fin_picasso_framework.gen_data_validated - INFO - ============================================================
+2025-11-12 14:49:32,848 - fin_picasso_framework.pilot.pilot_prompt_updater - INFO - Analyzing 1 failed cases after pass@3
+2025-11-12 14:49:32,849 - fin_picasso_framework.gen_data_validated - INFO - ℹ️ No new pilot rules to apply after pass@3 (may need more context)
+Generating validated designs:   7%|▋         | 2/27 [02:42<31:47, 76.28s/it] 2025-11-12 14:49:32,849 - fin_picasso_framework.gen_data_validated - INFO - 
+============================================================
+2025-11-12 14:49:32,849 - fin_picasso_framework.gen_data_validated - INFO - Problem 1: MZI - Mach-Zehnder Interferometer - Sample 3/3
+2025-11-12 14:49:32,849 - fin_picasso_framework.gen_data_validated - INFO - ============================================================
+2025-11-12 14:49:32,849 - fin_picasso_framework.gen_data_validated - INFO - Problem 1, Sample 2, Attempt 1/4
+2025-11-12 14:49:45,357 - fin_picasso_framework.gen_data_validated - INFO - 📊 Using Vanilla LLM prompt (Phase 1 baseline - no component specs)
+2025-11-12 14:49:45,360 - fin_picasso_framework.gen_data_validated - INFO - Code cleaning applied (removed Unicode/fixed decimals)
+2025-11-12 14:49:45,360 - fin_picasso_framework.gen_data_validated - INFO - Running pilot validation (pre-execution checks)...
+2025-11-12 14:49:45,363 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: pilot - fail (problem 1, sample 2, attempt 0)
+2025-11-12 14:49:45,363 - fin_picasso_framework.gen_data_validated - WARNING - ❌ Pilot validation failed: Syntax error: unterminated string literal (detected at line 4) (<unknown>, line 4)
+2025-11-12 14:49:45,364 - fin_picasso_framework.gen_data_validated - INFO - Pilot feedback for LLM: Syntax error: unterminated string literal (detected at line 4) (<unknown>, line 4)
+
+Fix: Check for unterminated strings, missing quotes, or invalid characters.
+2025-11-12 14:49:45,364 - hf_inference_workflow.retry_handler - INFO - Recorded retry attempt 0 (failed at parsing)
+2025-11-12 14:49:45,364 - fin_picasso_framework.gen_data_validated - INFO - Problem 1, Sample 2, Attempt 2/4
+2025-11-12 14:49:45,364 - fin_picasso_framework.gen_data_validated - INFO - 📊 Using Framework prompt (Phase 2 - with component specs & validation feedback)
+2025-11-12 14:50:16,069 - fin_picasso_framework.gen_data_validated - INFO - Running pilot validation (pre-execution checks)...
+2025-11-12 14:50:16,071 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: pilot - pass (problem 1, sample 2, attempt 1)
+2025-11-12 14:50:16,071 - fin_picasso_framework.gen_data_validated - INFO - ✅ Pilot validation passed
+2025-11-12 14:50:16,071 - fin_picasso_framework.gen_data_validated - INFO - Parsing and executing generated code...
+2025-11-12 14:50:16,085 - fin_picasso_framework.gen_data_validated - ERROR - Execution error: length is too short
+2025-11-12 14:50:16,085 - fin_picasso_framework.gen_data_validated - ERROR - Failed to parse/execute code: EXECUTION_ERROR: length is too short
+2025-11-12 14:50:16,085 - hf_inference_workflow.retry_handler - INFO - Recorded retry attempt 1 (failed at parsing)
+2025-11-12 14:50:16,085 - fin_picasso_framework.gen_data_validated - INFO - Problem 1, Sample 2, Attempt 3/4
+2025-11-12 14:50:16,085 - fin_picasso_framework.gen_data_validated - INFO - 📊 Using Framework prompt (Phase 2 - with component specs & validation feedback)
+2025-11-12 14:50:37,970 - fin_picasso_framework.gen_data_validated - INFO - Running pilot validation (pre-execution checks)...
+2025-11-12 14:50:37,975 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: pilot - pass (problem 1, sample 2, attempt 2)
+2025-11-12 14:50:37,975 - fin_picasso_framework.gen_data_validated - INFO - ✅ Pilot validation passed
+2025-11-12 14:50:37,975 - fin_picasso_framework.gen_data_validated - INFO - Parsing and executing generated code...
+2025-11-12 14:50:37,982 - fin_picasso_framework.gen_data_validated - ERROR - Execution error: ports1=2 and ports2=1 must be equal
+2025-11-12 14:50:37,982 - fin_picasso_framework.gen_data_validated - ERROR - Failed to parse/execute code: EXECUTION_ERROR: ports1=2 and ports2=1 must be equal
+2025-11-12 14:50:37,982 - hf_inference_workflow.retry_handler - INFO - Recorded retry attempt 2 (failed at parsing)
+2025-11-12 14:50:37,982 - fin_picasso_framework.gen_data_validated - INFO - Problem 1, Sample 2, Attempt 4/4
+2025-11-12 14:50:37,982 - fin_picasso_framework.gen_data_validated - INFO - 📊 Using Framework prompt (Phase 2 - with component specs & validation feedback)
+2025-11-12 14:51:01,111 - fin_picasso_framework.gen_data_validated - INFO - Running pilot validation (pre-execution checks)...
+2025-11-12 14:51:01,113 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: pilot - pass (problem 1, sample 2, attempt 3)
+2025-11-12 14:51:01,113 - fin_picasso_framework.gen_data_validated - INFO - ✅ Pilot validation passed
+2025-11-12 14:51:01,113 - fin_picasso_framework.gen_data_validated - INFO - Parsing and executing generated code...
+2025-11-12 14:51:01,165 - fin_picasso_framework.gen_data_validated - ERROR - Routing collision detected: Routing collision in straight_heater_metal_u_c30c4325
+2025-11-12 14:51:01.165 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 14:51:01,165 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Attempting immediate auto-correction for routing collision (YAML netlist fix)...
+2025-11-12 14:51:01,179 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Falling back to code-based auto-correction...
+2025-11-12 14:51:01,179 - hf_inference_workflow.auto_corrector - INFO - Attempting auto-correction for error type: routing_error
+2025-11-12 14:51:01,179 - hf_inference_workflow.auto_corrector - INFO - Applied spacing increase (2.0x)
+2025-11-12 14:51:01,179 - hf_inference_workflow.auto_corrector - INFO - Auto-correction applied for routing_error (Unicode fixed: False)
+2025-11-12 14:51:01,179 - fin_picasso_framework.gen_data_validated - INFO - ✅ Auto-correction applied: Increased spacing by 2.0x (code-based fix)
+2025-11-12 14:51:01.178 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 14:51:01,189 - fin_picasso_framework.gen_data_validated - ERROR - Routing collision detected: Routing collision in straight_heater_metal_u_c30c4325
+2025-11-12 14:51:01.189 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 14:51:01,189 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Attempting immediate auto-correction for routing collision (YAML netlist fix)...
+2025-11-12 14:51:01,200 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Falling back to code-based auto-correction...
+2025-11-12 14:51:01,200 - hf_inference_workflow.auto_corrector - INFO - Attempting auto-correction for error type: routing_error
+2025-11-12 14:51:01,200 - hf_inference_workflow.auto_corrector - INFO - Applied spacing increase (2.0x)
+2025-11-12 14:51:01,200 - hf_inference_workflow.auto_corrector - INFO - Auto-correction applied for routing_error (Unicode fixed: False)
+2025-11-12 14:51:01.200 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 14:51:01,200 - fin_picasso_framework.gen_data_validated - INFO - ✅ Auto-correction applied: Increased spacing by 2.0x (code-based fix)
+2025-11-12 14:51:01,211 - fin_picasso_framework.gen_data_validated - ERROR - Routing collision detected: Routing collision in straight_heater_metal_u_c30c4325
+2025-11-12 14:51:01.211 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 14:51:01,211 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Attempting immediate auto-correction for routing collision (YAML netlist fix)...
+2025-11-12 14:51:01,221 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Falling back to code-based auto-correction...
+2025-11-12 14:51:01.221 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 14:51:01,221 - hf_inference_workflow.auto_corrector - INFO - Attempting auto-correction for error type: routing_error
+2025-11-12 14:51:01,221 - hf_inference_workflow.auto_corrector - INFO - Applied spacing increase (2.0x)
+2025-11-12 14:51:01,221 - hf_inference_workflow.auto_corrector - INFO - Auto-correction applied for routing_error (Unicode fixed: False)
+2025-11-12 14:51:01,221 - fin_picasso_framework.gen_data_validated - INFO - ✅ Auto-correction applied: Increased spacing by 2.0x (code-based fix)
+2025-11-12 14:51:01,232 - fin_picasso_framework.gen_data_validated - ERROR - Routing collision detected: Routing collision in straight_heater_metal_u_c30c4325
+2025-11-12 14:51:01.231 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 14:51:01,232 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Attempting immediate auto-correction for routing collision (YAML netlist fix)...
+2025-11-12 14:51:01,242 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Falling back to code-based auto-correction...
+2025-11-12 14:51:01,242 - hf_inference_workflow.auto_corrector - INFO - Attempting auto-correction for error type: routing_error
+2025-11-12 14:51:01,242 - hf_inference_workflow.auto_corrector - INFO - Applied spacing increase (2.0x)
+2025-11-12 14:51:01,242 - hf_inference_workflow.auto_corrector - INFO - Auto-correction applied for routing_error (Unicode fixed: False)
+2025-11-12 14:51:01,242 - fin_picasso_framework.gen_data_validated - INFO - ✅ Auto-correction applied: Increased spacing by 2.0x (code-based fix)
+2025-11-12 14:51:01.242 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 14:51:01,252 - fin_picasso_framework.gen_data_validated - ERROR - Routing collision detected: Routing collision in straight_heater_metal_u_c30c4325
+2025-11-12 14:51:01,252 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Attempting immediate auto-correction for routing collision (YAML netlist fix)...
+2025-11-12 14:51:01.252 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 14:51:01,261 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Falling back to code-based auto-correction...
+2025-11-12 14:51:01.261 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 14:51:01,261 - hf_inference_workflow.auto_corrector - INFO - Attempting auto-correction for error type: routing_error
+2025-11-12 14:51:01,262 - hf_inference_workflow.auto_corrector - INFO - Applied spacing increase (2.0x)
+2025-11-12 14:51:01,262 - hf_inference_workflow.auto_corrector - INFO - Auto-correction applied for routing_error (Unicode fixed: False)
+2025-11-12 14:51:01,262 - fin_picasso_framework.gen_data_validated - INFO - ✅ Auto-correction applied: Increased spacing by 2.0x (code-based fix)
+2025-11-12 14:51:01,272 - fin_picasso_framework.gen_data_validated - ERROR - Routing collision detected: Routing collision in straight_heater_metal_u_c30c4325
+2025-11-12 14:51:01,272 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Attempting immediate auto-correction for routing collision (YAML netlist fix)...
+2025-11-12 14:51:01.272 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 14:51:01,282 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Falling back to code-based auto-correction...
+2025-11-12 14:51:01.282 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 14:51:01,282 - hf_inference_workflow.auto_corrector - INFO - Attempting auto-correction for error type: routing_error
+2025-11-12 14:51:01,282 - hf_inference_workflow.auto_corrector - INFO - Applied spacing increase (2.0x)
+2025-11-12 14:51:01,282 - hf_inference_workflow.auto_corrector - INFO - Auto-correction applied for routing_error (Unicode fixed: False)
+2025-11-12 14:51:01,282 - fin_picasso_framework.gen_data_validated - INFO - ✅ Auto-correction applied: Increased spacing by 2.0x (code-based fix)
+2025-11-12 14:51:01,292 - fin_picasso_framework.gen_data_validated - ERROR - Routing collision detected: Routing collision in straight_heater_metal_u_c30c4325
+2025-11-12 14:51:01.292 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 14:51:01,292 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Attempting immediate auto-correction for routing collision (YAML netlist fix)...
+2025-11-12 14:51:01,302 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Falling back to code-based auto-correction...
+2025-11-12 14:51:01.302 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 14:51:01,302 - hf_inference_workflow.auto_corrector - INFO - Attempting auto-correction for error type: routing_error
+2025-11-12 14:51:01,302 - hf_inference_workflow.auto_corrector - INFO - Applied spacing increase (2.0x)
+2025-11-12 14:51:01,302 - hf_inference_workflow.auto_corrector - INFO - Auto-correction applied for routing_error (Unicode fixed: False)
+2025-11-12 14:51:01,302 - fin_picasso_framework.gen_data_validated - INFO - ✅ Auto-correction applied: Increased spacing by 2.0x (code-based fix)
+2025-11-12 14:51:01,312 - fin_picasso_framework.gen_data_validated - ERROR - Routing collision detected: Routing collision in straight_heater_metal_u_c30c4325
+2025-11-12 14:51:01.312 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 14:51:01,312 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Attempting immediate auto-correction for routing collision (YAML netlist fix)...
+2025-11-12 14:51:01,323 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Falling back to code-based auto-correction...
+2025-11-12 14:51:01.322 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 14:51:01,323 - hf_inference_workflow.auto_corrector - INFO - Attempting auto-correction for error type: routing_error
+2025-11-12 14:51:01,323 - hf_inference_workflow.auto_corrector - INFO - Applied spacing increase (2.0x)
+2025-11-12 14:51:01,323 - hf_inference_workflow.auto_corrector - INFO - Auto-correction applied for routing_error (Unicode fixed: False)
+2025-11-12 14:51:01,323 - fin_picasso_framework.gen_data_validated - INFO - ✅ Auto-correction applied: Increased spacing by 2.0x (code-based fix)
+2025-11-12 14:51:01,333 - fin_picasso_framework.gen_data_validated - ERROR - Routing collision detected: Routing collision in straight_heater_metal_u_c30c4325
+2025-11-12 14:51:01.333 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 14:51:01,334 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Attempting immediate auto-correction for routing collision (YAML netlist fix)...
+2025-11-12 14:51:01,344 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Falling back to code-based auto-correction...
+2025-11-12 14:51:01.344 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 14:51:01,344 - hf_inference_workflow.auto_corrector - INFO - Attempting auto-correction for error type: routing_error
+2025-11-12 14:51:01,344 - hf_inference_workflow.auto_corrector - INFO - Applied spacing increase (2.0x)
+2025-11-12 14:51:01,344 - hf_inference_workflow.auto_corrector - INFO - Auto-correction applied for routing_error (Unicode fixed: False)
+2025-11-12 14:51:01,344 - fin_picasso_framework.gen_data_validated - INFO - ✅ Auto-correction applied: Increased spacing by 2.0x (code-based fix)
+2025-11-12 14:51:01,355 - fin_picasso_framework.gen_data_validated - ERROR - Routing collision detected: Routing collision in straight_heater_metal_u_c30c4325
+2025-11-12 14:51:01.355 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 14:51:01,355 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Attempting immediate auto-correction for routing collision (YAML netlist fix)...
+2025-11-12 14:51:01,365 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Falling back to code-based auto-correction...
+2025-11-12 14:51:01,365 - hf_inference_workflow.auto_corrector - INFO - Attempting auto-correction for error type: routing_error
+2025-11-12 14:51:01,365 - hf_inference_workflow.auto_corrector - INFO - Applied spacing increase (2.0x)
+2025-11-12 14:51:01,365 - hf_inference_workflow.auto_corrector - INFO - Auto-correction applied for routing_error (Unicode fixed: False)
+2025-11-12 14:51:01,365 - fin_picasso_framework.gen_data_validated - INFO - ✅ Auto-correction applied: Increased spacing by 2.0x (code-based fix)
+2025-11-12 14:51:01.365 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 14:51:01,375 - fin_picasso_framework.gen_data_validated - ERROR - Routing collision detected: Routing collision in straight_heater_metal_u_c30c4325
+2025-11-12 14:51:01.375 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 14:51:01,375 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Attempting immediate auto-correction for routing collision (YAML netlist fix)...
+2025-11-12 14:51:01,387 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Falling back to code-based auto-correction...
+2025-11-12 14:51:01,387 - hf_inference_workflow.auto_corrector - INFO - Attempting auto-correction for error type: routing_error
+2025-11-12 14:51:01,387 - hf_inference_workflow.auto_corrector - INFO - Applied spacing increase (2.0x)
+2025-11-12 14:51:01,387 - hf_inference_workflow.auto_corrector - INFO - Auto-correction applied for routing_error (Unicode fixed: False)
+2025-11-12 14:51:01,387 - fin_picasso_framework.gen_data_validated - INFO - ✅ Auto-correction applied: Increased spacing by 2.0x (code-based fix)
+2025-11-12 14:51:01.386 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 14:51:01,397 - fin_picasso_framework.gen_data_validated - ERROR - Routing collision detected: Routing collision in straight_heater_metal_u_c30c4325
+2025-11-12 14:51:01,397 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Attempting immediate auto-correction for routing collision (YAML netlist fix)...
+2025-11-12 14:51:01.397 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 14:51:01,407 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Falling back to code-based auto-correction...
+2025-11-12 14:51:01.407 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 14:51:01,407 - hf_inference_workflow.auto_corrector - INFO - Attempting auto-correction for error type: routing_error
+2025-11-12 14:51:01,407 - hf_inference_workflow.auto_corrector - INFO - Applied spacing increase (2.0x)
+2025-11-12 14:51:01,407 - hf_inference_workflow.auto_corrector - INFO - Auto-correction applied for routing_error (Unicode fixed: False)
+2025-11-12 14:51:01,407 - fin_picasso_framework.gen_data_validated - INFO - ✅ Auto-correction applied: Increased spacing by 2.0x (code-based fix)
+2025-11-12 14:51:01,417 - fin_picasso_framework.gen_data_validated - ERROR - Routing collision detected: Routing collision in straight_heater_metal_u_c30c4325
+2025-11-12 14:51:01.417 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 14:51:01,418 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Attempting immediate auto-correction for routing collision (YAML netlist fix)...
+2025-11-12 14:51:01,428 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Falling back to code-based auto-correction...
+2025-11-12 14:51:01.428 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 14:51:01,428 - hf_inference_workflow.auto_corrector - INFO - Attempting auto-correction for error type: routing_error
+2025-11-12 14:51:01,428 - hf_inference_workflow.auto_corrector - INFO - Applied spacing increase (2.0x)
+2025-11-12 14:51:01,428 - hf_inference_workflow.auto_corrector - INFO - Auto-correction applied for routing_error (Unicode fixed: False)
+2025-11-12 14:51:01,428 - fin_picasso_framework.gen_data_validated - INFO - ✅ Auto-correction applied: Increased spacing by 2.0x (code-based fix)
+2025-11-12 14:51:01,438 - fin_picasso_framework.gen_data_validated - ERROR - Routing collision detected: Routing collision in straight_heater_metal_u_c30c4325
+2025-11-12 14:51:01.438 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 14:51:01,438 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Attempting immediate auto-correction for routing collision (YAML netlist fix)...
+2025-11-12 14:51:01,447 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Falling back to code-based auto-correction...
+2025-11-12 14:51:01.447 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 14:51:01,447 - hf_inference_workflow.auto_corrector - INFO - Attempting auto-correction for error type: routing_error
+2025-11-12 14:51:01,447 - hf_inference_workflow.auto_corrector - INFO - Applied spacing increase (2.0x)
+2025-11-12 14:51:01,447 - hf_inference_workflow.auto_corrector - INFO - Auto-correction applied for routing_error (Unicode fixed: False)
+2025-11-12 14:51:01,448 - fin_picasso_framework.gen_data_validated - INFO - ✅ Auto-correction applied: Increased spacing by 2.0x (code-based fix)
+2025-11-12 14:51:01,457 - fin_picasso_framework.gen_data_validated - ERROR - Routing collision detected: Routing collision in straight_heater_metal_u_c30c4325
+2025-11-12 14:51:01.457 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 14:51:01,457 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Attempting immediate auto-correction for routing collision (YAML netlist fix)...
+2025-11-12 14:51:01,467 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Falling back to code-based auto-correction...
+2025-11-12 14:51:01,467 - hf_inference_workflow.auto_corrector - INFO - Attempting auto-correction for error type: routing_error
+2025-11-12 14:51:01,467 - hf_inference_workflow.auto_corrector - INFO - Applied spacing increase (2.0x)
+2025-11-12 14:51:01,467 - hf_inference_workflow.auto_corrector - INFO - Auto-correction applied for routing_error (Unicode fixed: False)
+2025-11-12 14:51:01,467 - fin_picasso_framework.gen_data_validated - INFO - ✅ Auto-correction applied: Increased spacing by 2.0x (code-based fix)
+2025-11-12 14:51:01.467 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 14:51:01,471 - fin_picasso_framework.gen_data_validated - ERROR - Execution error: ports1=1 and ports2=2 must be equal
+2025-11-12 14:51:01,471 - fin_picasso_framework.gen_data_validated - WARNING - Auto-correction applied but still failed: EXECUTION_ERROR: ports1=1 and ports2=2 must be equal
+2025-11-12 14:51:01,471 - fin_picasso_framework.gen_data_validated - WARNING - Auto-correction applied but still failed: ROUTING_COLLISION: Routing collision in straight_heater_metal_u_c30c4325
+2025-11-12 14:51:01,471 - fin_picasso_framework.gen_data_validated - WARNING - Auto-correction applied but still failed: ROUTING_COLLISION: Routing collision in straight_heater_metal_u_c30c4325
+2025-11-12 14:51:01,471 - fin_picasso_framework.gen_data_validated - WARNING - Auto-correction applied but still failed: ROUTING_COLLISION: Routing collision in straight_heater_metal_u_c30c4325
+2025-11-12 14:51:01,471 - fin_picasso_framework.gen_data_validated - WARNING - Auto-correction applied but still failed: ROUTING_COLLISION: Routing collision in straight_heater_metal_u_c30c4325
+2025-11-12 14:51:01,471 - fin_picasso_framework.gen_data_validated - WARNING - Auto-correction applied but still failed: ROUTING_COLLISION: Routing collision in straight_heater_metal_u_c30c4325
+2025-11-12 14:51:01,471 - fin_picasso_framework.gen_data_validated - WARNING - Auto-correction applied but still failed: ROUTING_COLLISION: Routing collision in straight_heater_metal_u_c30c4325
+2025-11-12 14:51:01,471 - fin_picasso_framework.gen_data_validated - WARNING - Auto-correction applied but still failed: ROUTING_COLLISION: Routing collision in straight_heater_metal_u_c30c4325
+2025-11-12 14:51:01,471 - fin_picasso_framework.gen_data_validated - WARNING - Auto-correction applied but still failed: ROUTING_COLLISION: Routing collision in straight_heater_metal_u_c30c4325
+2025-11-12 14:51:01,471 - fin_picasso_framework.gen_data_validated - WARNING - Auto-correction applied but still failed: ROUTING_COLLISION: Routing collision in straight_heater_metal_u_c30c4325
+2025-11-12 14:51:01,471 - fin_picasso_framework.gen_data_validated - WARNING - Auto-correction applied but still failed: ROUTING_COLLISION: Routing collision in straight_heater_metal_u_c30c4325
+2025-11-12 14:51:01,471 - fin_picasso_framework.gen_data_validated - WARNING - Auto-correction applied but still failed: ROUTING_COLLISION: Routing collision in straight_heater_metal_u_c30c4325
+2025-11-12 14:51:01,471 - fin_picasso_framework.gen_data_validated - WARNING - Auto-correction applied but still failed: ROUTING_COLLISION: Routing collision in straight_heater_metal_u_c30c4325
+2025-11-12 14:51:01,471 - fin_picasso_framework.gen_data_validated - WARNING - Auto-correction applied but still failed: ROUTING_COLLISION: Routing collision in straight_heater_metal_u_c30c4325
+2025-11-12 14:51:01,471 - fin_picasso_framework.gen_data_validated - WARNING - Auto-correction applied but still failed: ROUTING_COLLISION: Routing collision in straight_heater_metal_u_c30c4325
+2025-11-12 14:51:01,472 - fin_picasso_framework.gen_data_validated - ERROR - Failed to parse/execute code: ROUTING_COLLISION: Routing collision in straight_heater_metal_u_c30c4325
+2025-11-12 14:51:01,472 - hf_inference_workflow.retry_handler - INFO - Recorded retry attempt 3 (failed at parsing)
+2025-11-12 14:51:01,472 - fin_picasso_framework.gen_data_validated - INFO - 📊 Phase 2 (Framework): ❌ FAILED (retries: 3)
+2025-11-12 14:51:01,472 - fin_picasso_framework.gen_data_validated - INFO - 
+============================================================
+2025-11-12 14:51:01,472 - fin_picasso_framework.gen_data_validated - INFO - Pass@4 failure detected - Updating pilot prompt for next attempt...
+2025-11-12 14:51:01,472 - fin_picasso_framework.gen_data_validated - INFO - Error: ROUTING_COLLISION: Routing collision in straight_heater_metal_u_c30c4325
+2025-11-12 14:51:01,472 - fin_picasso_framework.gen_data_validated - INFO - ============================================================
+2025-11-12 14:51:01,472 - fin_picasso_framework.pilot.pilot_prompt_updater - INFO - Analyzing 1 failed cases after pass@4
+2025-11-12 14:51:01,472 - fin_picasso_framework.gen_data_validated - INFO - ℹ️ No new pilot rules to apply after pass@4 (may need more context)
+Generating validated designs:  11%|█         | 3/27 [04:11<32:45, 81.92s/it]2025-11-12 14:51:01,472 - fin_picasso_framework.gen_data_validated - INFO - 
+============================================================
+2025-11-12 14:51:01,472 - fin_picasso_framework.gen_data_validated - INFO - Problem 1 Summary: 3/3 samples failed
+2025-11-12 14:51:01,472 - fin_picasso_framework.gen_data_validated - INFO - ============================================================
+2025-11-12 14:51:01,472 - fin_picasso_framework.gen_data_validated - INFO - 
+============================================================
+2025-11-12 14:51:01,472 - fin_picasso_framework.gen_data_validated - INFO - Problem 2: MZM - Mach-Zehnder Modulator - Sample 1/3
+2025-11-12 14:51:01,472 - fin_picasso_framework.gen_data_validated - INFO - ============================================================
+2025-11-12 14:51:01,472 - fin_picasso_framework.gen_data_validated - INFO - Problem 2, Sample 0, Attempt 1/4
+2025-11-12 14:51:24,746 - fin_picasso_framework.gen_data_validated - INFO - 📊 Using Vanilla LLM prompt (Phase 1 baseline - no component specs)
+2025-11-12 14:51:24,748 - fin_picasso_framework.gen_data_validated - INFO - Code cleaning applied (removed Unicode/fixed decimals)
+2025-11-12 14:51:24,749 - fin_picasso_framework.gen_data_validated - INFO - Running pilot validation (pre-execution checks)...
+2025-11-12 14:51:24,754 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: pilot - fail (problem 2, sample 0, attempt 0)
+2025-11-12 14:51:24,754 - fin_picasso_framework.gen_data_validated - WARNING - ❌ Pilot validation failed: Syntax error: unterminated string literal (detected at line 2) (<unknown>, line 2)
+2025-11-12 14:51:24,755 - fin_picasso_framework.gen_data_validated - INFO - Pilot feedback for LLM: Syntax error: unterminated string literal (detected at line 2) (<unknown>, line 2)
+
+Fix: Check for unterminated strings, missing quotes, or invalid characters.
+2025-11-12 14:51:24,755 - hf_inference_workflow.retry_handler - INFO - Recorded retry attempt 0 (failed at parsing)
+2025-11-12 14:51:24,755 - fin_picasso_framework.gen_data_validated - INFO - Problem 2, Sample 0, Attempt 2/4
+2025-11-12 14:51:24,755 - fin_picasso_framework.gen_data_validated - INFO - 📊 Using Framework prompt (Phase 2 - with component specs & validation feedback)
+2025-11-12 14:51:47,380 - fin_picasso_framework.gen_data_validated - INFO - Running pilot validation (pre-execution checks)...
+2025-11-12 14:51:47,385 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: pilot - pass (problem 2, sample 0, attempt 1)
+2025-11-12 14:51:47,385 - fin_picasso_framework.gen_data_validated - INFO - ✅ Pilot validation passed
+2025-11-12 14:51:47,385 - fin_picasso_framework.gen_data_validated - INFO - Parsing and executing generated code...
+2025-11-12 14:51:47,398 - fin_picasso_framework.gen_data_validated - ERROR - Execution error: All ports at the target (end) must have the same angle. r.start.t=r0 420000,-50000/r.end.t=r0 260000,0
+2025-11-12 14:51:47,398 - fin_picasso_framework.gen_data_validated - ERROR - Failed to parse/execute code: EXECUTION_ERROR: All ports at the target (end) must have the same angle. r.start.t=r0 420000,-50000/r.end.t=r0 260000,0
+2025-11-12 14:51:47,398 - hf_inference_workflow.retry_handler - INFO - Recorded retry attempt 1 (failed at parsing)
+2025-11-12 14:51:47,398 - fin_picasso_framework.gen_data_validated - INFO - Problem 2, Sample 0, Attempt 3/4
+2025-11-12 14:51:47,398 - fin_picasso_framework.gen_data_validated - INFO - 📊 Using Framework prompt (Phase 2 - with component specs & validation feedback)
+2025-11-12 14:52:08,442 - fin_picasso_framework.gen_data_validated - INFO - Running pilot validation (pre-execution checks)...
+2025-11-12 14:52:08,444 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: pilot - pass (problem 2, sample 0, attempt 2)
+2025-11-12 14:52:08,445 - fin_picasso_framework.gen_data_validated - INFO - ✅ Pilot validation passed
+2025-11-12 14:52:08,445 - fin_picasso_framework.gen_data_validated - INFO - Parsing and executing generated code...
+2025-11-12 14:52:08,459 - fin_picasso_framework.gen_data_validated - ERROR - Execution error: All ports at the target (end) must have the same angle. r.start.t=r0 420000,-50000/r.end.t=r0 210000,0
+2025-11-12 14:52:08,459 - fin_picasso_framework.gen_data_validated - ERROR - Failed to parse/execute code: EXECUTION_ERROR: All ports at the target (end) must have the same angle. r.start.t=r0 420000,-50000/r.end.t=r0 210000,0
+2025-11-12 14:52:08,459 - hf_inference_workflow.retry_handler - INFO - Recorded retry attempt 2 (failed at parsing)
+2025-11-12 14:52:08,459 - fin_picasso_framework.gen_data_validated - INFO - Problem 2, Sample 0, Attempt 4/4
+2025-11-12 14:52:08,459 - fin_picasso_framework.gen_data_validated - INFO - 📊 Using Framework prompt (Phase 2 - with component specs & validation feedback)
+2025-11-12 14:52:32,377 - fin_picasso_framework.gen_data_validated - INFO - Running pilot validation (pre-execution checks)...
+2025-11-12 14:52:32,380 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: pilot - pass (problem 2, sample 0, attempt 3)
+2025-11-12 14:52:32,380 - fin_picasso_framework.gen_data_validated - INFO - ✅ Pilot validation passed
+2025-11-12 14:52:32,380 - fin_picasso_framework.gen_data_validated - INFO - Parsing and executing generated code...
+2025-11-12 14:52:32,394 - fin_picasso_framework.gen_data_validated - ERROR - Execution error: All ports at the target (end) must have the same angle. r.start.t=r0 420000,-50000/r.end.t=r0 260000,0
+2025-11-12 14:52:32,394 - fin_picasso_framework.gen_data_validated - ERROR - Failed to parse/execute code: EXECUTION_ERROR: All ports at the target (end) must have the same angle. r.start.t=r0 420000,-50000/r.end.t=r0 260000,0
+2025-11-12 14:52:32,395 - hf_inference_workflow.retry_handler - INFO - Recorded retry attempt 3 (failed at parsing)
+2025-11-12 14:52:32,395 - fin_picasso_framework.gen_data_validated - INFO - 📊 Phase 2 (Framework): ❌ FAILED (retries: 3)
+2025-11-12 14:52:32,395 - fin_picasso_framework.gen_data_validated - INFO - 
+============================================================
+2025-11-12 14:52:32,395 - fin_picasso_framework.gen_data_validated - INFO - Pass@4 failure detected - Updating pilot prompt for next attempt...
+2025-11-12 14:52:32,395 - fin_picasso_framework.gen_data_validated - INFO - Error: EXECUTION_ERROR: All ports at the target (end) must have the same angle. r.start.t=r0 420000,-50000/
+2025-11-12 14:52:32,395 - fin_picasso_framework.gen_data_validated - INFO - ============================================================
+2025-11-12 14:52:32,395 - fin_picasso_framework.pilot.pilot_prompt_updater - INFO - Analyzing 1 failed cases after pass@4
+2025-11-12 14:52:32,395 - fin_picasso_framework.gen_data_validated - INFO - ℹ️ No new pilot rules to apply after pass@4 (may need more context)
+Generating validated designs:  15%|█▍        | 4/27 [05:42<32:45, 85.47s/it]2025-11-12 14:52:32,396 - fin_picasso_framework.gen_data_validated - INFO - 
+============================================================
+2025-11-12 14:52:32,396 - fin_picasso_framework.gen_data_validated - INFO - Problem 2: MZM - Mach-Zehnder Modulator - Sample 2/3
+2025-11-12 14:52:32,396 - fin_picasso_framework.gen_data_validated - INFO - ============================================================
+2025-11-12 14:52:32,396 - fin_picasso_framework.gen_data_validated - INFO - Problem 2, Sample 1, Attempt 1/4
+2025-11-12 14:52:44,993 - fin_picasso_framework.gen_data_validated - INFO - 📊 Using Vanilla LLM prompt (Phase 1 baseline - no component specs)
+2025-11-12 14:52:44,996 - fin_picasso_framework.gen_data_validated - INFO - Code cleaning applied (removed Unicode/fixed decimals)
+2025-11-12 14:52:44,996 - fin_picasso_framework.gen_data_validated - INFO - Running pilot validation (pre-execution checks)...
+2025-11-12 14:52:44,997 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: pilot - fail (problem 2, sample 1, attempt 0)
+2025-11-12 14:52:44,997 - fin_picasso_framework.gen_data_validated - WARNING - ❌ Pilot validation failed: Syntax error: unterminated string literal (detected at line 4) (<unknown>, line 4)
+2025-11-12 14:52:44,998 - fin_picasso_framework.gen_data_validated - INFO - Pilot feedback for LLM: Syntax error: unterminated string literal (detected at line 4) (<unknown>, line 4)
+
+Fix: Check for unterminated strings, missing quotes, or invalid characters.
+2025-11-12 14:52:44,998 - hf_inference_workflow.retry_handler - INFO - Recorded retry attempt 0 (failed at parsing)
+2025-11-12 14:52:44,998 - fin_picasso_framework.gen_data_validated - INFO - Problem 2, Sample 1, Attempt 2/4
+2025-11-12 14:52:44,998 - fin_picasso_framework.gen_data_validated - INFO - 📊 Using Framework prompt (Phase 2 - with component specs & validation feedback)
+2025-11-12 14:53:05,259 - fin_picasso_framework.gen_data_validated - INFO - Running pilot validation (pre-execution checks)...
+2025-11-12 14:53:05,261 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: pilot - pass (problem 2, sample 1, attempt 1)
+2025-11-12 14:53:05,261 - fin_picasso_framework.gen_data_validated - INFO - ✅ Pilot validation passed
+2025-11-12 14:53:05,261 - fin_picasso_framework.gen_data_validated - INFO - Parsing and executing generated code...
+2025-11-12 14:53:05,273 - fin_picasso_framework.gen_data_validated - ERROR - Execution error: All ports at the target (end) must have the same angle. r.start.t=r0 110000,-50000/r.end.t=r0 260000,0
+2025-11-12 14:53:05,273 - fin_picasso_framework.gen_data_validated - ERROR - Failed to parse/execute code: EXECUTION_ERROR: All ports at the target (end) must have the same angle. r.start.t=r0 110000,-50000/r.end.t=r0 260000,0
+2025-11-12 14:53:05,273 - hf_inference_workflow.retry_handler - INFO - Recorded retry attempt 1 (failed at parsing)
+2025-11-12 14:53:05,273 - fin_picasso_framework.gen_data_validated - INFO - Problem 2, Sample 1, Attempt 3/4
+2025-11-12 14:53:05,273 - fin_picasso_framework.gen_data_validated - INFO - 📊 Using Framework prompt (Phase 2 - with component specs & validation feedback)
+2025-11-12 14:53:27,646 - fin_picasso_framework.gen_data_validated - INFO - Running pilot validation (pre-execution checks)...
+2025-11-12 14:53:27,648 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: pilot - pass (problem 2, sample 1, attempt 2)
+2025-11-12 14:53:27,648 - fin_picasso_framework.gen_data_validated - INFO - ✅ Pilot validation passed
+2025-11-12 14:53:27,648 - fin_picasso_framework.gen_data_validated - INFO - Parsing and executing generated code...
+2025-11-12 14:53:27,659 - fin_picasso_framework.gen_data_validated - ERROR - Execution error: All ports at the target (end) must have the same angle. r.start.t=r0 110000,-50000/r.end.t=r0 260000,0
+2025-11-12 14:53:27,659 - fin_picasso_framework.gen_data_validated - ERROR - Failed to parse/execute code: EXECUTION_ERROR: All ports at the target (end) must have the same angle. r.start.t=r0 110000,-50000/r.end.t=r0 260000,0
+2025-11-12 14:53:27,659 - hf_inference_workflow.retry_handler - INFO - Recorded retry attempt 2 (failed at parsing)
+2025-11-12 14:53:27,659 - fin_picasso_framework.gen_data_validated - INFO - Problem 2, Sample 1, Attempt 4/4
+2025-11-12 14:53:27,659 - fin_picasso_framework.gen_data_validated - INFO - 📊 Using Framework prompt (Phase 2 - with component specs & validation feedback)
+2025-11-12 14:53:52,826 - fin_picasso_framework.gen_data_validated - INFO - Running pilot validation (pre-execution checks)...
+2025-11-12 14:53:52,828 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: pilot - pass (problem 2, sample 1, attempt 3)
+2025-11-12 14:53:52,828 - fin_picasso_framework.gen_data_validated - INFO - ✅ Pilot validation passed
+2025-11-12 14:53:52,828 - fin_picasso_framework.gen_data_validated - INFO - Parsing and executing generated code...
+2025-11-12 14:53:52,832 - fin_picasso_framework.gen_data_validated - ERROR - Execution error: unsupported operand type(s) for <<: 'ComponentReference' and 'Component'
+2025-11-12 14:53:52,832 - fin_picasso_framework.gen_data_validated - ERROR - Failed to parse/execute code: EXECUTION_ERROR: unsupported operand type(s) for <<: 'ComponentReference' and 'Component'
+2025-11-12 14:53:52,832 - hf_inference_workflow.retry_handler - INFO - Recorded retry attempt 3 (failed at parsing)
+2025-11-12 14:53:52,832 - fin_picasso_framework.gen_data_validated - INFO - 📊 Phase 2 (Framework): ❌ FAILED (retries: 3)
+2025-11-12 14:53:52,832 - fin_picasso_framework.gen_data_validated - INFO - 
+============================================================
+2025-11-12 14:53:52,832 - fin_picasso_framework.gen_data_validated - INFO - Pass@4 failure detected - Updating pilot prompt for next attempt...
+2025-11-12 14:53:52,832 - fin_picasso_framework.gen_data_validated - INFO - Error: EXECUTION_ERROR: unsupported operand type(s) for <<: 'ComponentReference' and 'Component'
+2025-11-12 14:53:52,832 - fin_picasso_framework.gen_data_validated - INFO - ============================================================
+2025-11-12 14:53:52,832 - fin_picasso_framework.pilot.pilot_prompt_updater - INFO - Analyzing 1 failed cases after pass@4
+2025-11-12 14:53:52,832 - fin_picasso_framework.gen_data_validated - INFO - ℹ️ No new pilot rules to apply after pass@4 (may need more context)
+Generating validated designs:  19%|█▊        | 5/27 [07:02<30:40, 83.66s/it]2025-11-12 14:53:52,833 - fin_picasso_framework.gen_data_validated - INFO - 
+============================================================
+2025-11-12 14:53:52,833 - fin_picasso_framework.gen_data_validated - INFO - Problem 2: MZM - Mach-Zehnder Modulator - Sample 3/3
+2025-11-12 14:53:52,833 - fin_picasso_framework.gen_data_validated - INFO - ============================================================
+2025-11-12 14:53:52,833 - fin_picasso_framework.gen_data_validated - INFO - Problem 2, Sample 2, Attempt 1/4
+2025-11-12 14:54:14,745 - fin_picasso_framework.gen_data_validated - INFO - 📊 Using Vanilla LLM prompt (Phase 1 baseline - no component specs)
+2025-11-12 14:54:14,748 - fin_picasso_framework.gen_data_validated - INFO - Code cleaning applied (removed Unicode/fixed decimals)
+2025-11-12 14:54:14,748 - fin_picasso_framework.gen_data_validated - INFO - Running pilot validation (pre-execution checks)...
+2025-11-12 14:54:14,752 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: pilot - fail (problem 2, sample 2, attempt 0)
+2025-11-12 14:54:14,752 - fin_picasso_framework.gen_data_validated - WARNING - ❌ Pilot validation failed: Syntax error: unterminated string literal (detected at line 2) (<unknown>, line 2)
+2025-11-12 14:54:14,753 - fin_picasso_framework.gen_data_validated - INFO - Pilot feedback for LLM: Syntax error: unterminated string literal (detected at line 2) (<unknown>, line 2)
+
+Fix: Check for unterminated strings, missing quotes, or invalid characters.
+2025-11-12 14:54:14,753 - hf_inference_workflow.retry_handler - INFO - Recorded retry attempt 0 (failed at parsing)
+2025-11-12 14:54:14,753 - fin_picasso_framework.gen_data_validated - INFO - Problem 2, Sample 2, Attempt 2/4
+2025-11-12 14:54:14,753 - fin_picasso_framework.gen_data_validated - INFO - 📊 Using Framework prompt (Phase 2 - with component specs & validation feedback)
+2025-11-12 14:54:37,278 - fin_picasso_framework.gen_data_validated - INFO - Running pilot validation (pre-execution checks)...
+2025-11-12 14:54:37,281 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: pilot - pass (problem 2, sample 2, attempt 1)
+2025-11-12 14:54:37,281 - fin_picasso_framework.gen_data_validated - INFO - ✅ Pilot validation passed
+2025-11-12 14:54:37,281 - fin_picasso_framework.gen_data_validated - INFO - Parsing and executing generated code...
+2025-11-12 14:54:37,291 - fin_picasso_framework.gen_data_validated - ERROR - Execution error: All ports at the target (end) must have the same angle. r.start.t=r0 110000,-50000/r.end.t=r0 260000,0
+2025-11-12 14:54:37,291 - fin_picasso_framework.gen_data_validated - ERROR - Failed to parse/execute code: EXECUTION_ERROR: All ports at the target (end) must have the same angle. r.start.t=r0 110000,-50000/r.end.t=r0 260000,0
+2025-11-12 14:54:37,291 - hf_inference_workflow.retry_handler - INFO - Recorded retry attempt 1 (failed at parsing)
+2025-11-12 14:54:37,291 - fin_picasso_framework.gen_data_validated - INFO - Problem 2, Sample 2, Attempt 3/4
+2025-11-12 14:54:37,291 - fin_picasso_framework.gen_data_validated - INFO - 📊 Using Framework prompt (Phase 2 - with component specs & validation feedback)
+2025-11-12 14:55:00,439 - fin_picasso_framework.gen_data_validated - INFO - Running pilot validation (pre-execution checks)...
+2025-11-12 14:55:00,443 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: pilot - pass (problem 2, sample 2, attempt 2)
+2025-11-12 14:55:00,443 - fin_picasso_framework.gen_data_validated - INFO - ✅ Pilot validation passed
+2025-11-12 14:55:00,444 - fin_picasso_framework.gen_data_validated - INFO - Parsing and executing generated code...
+2025-11-12 14:55:00,594 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Extracting netlist from Python-generated component for YAML validation...
+2025-11-12 14:55:00,597 - fin_picasso_framework.utils.yaml_netlist_helper - WARNING - ⚠️  Netlist extraction failed: More than two connected optical ports: ['mmi1x2_WNone_WT1_LT10_L_4e0f7121_200000_0,o2', 'straight_L44p5_N2_CSstrip_WNone_140000_625,o2', 'o2']
+2025-11-12 14:55:00,597 - fin_picasso_framework.utils.yaml_netlist_helper - WARNING -    This is a GDSFactory limitation for complex port connections.
+2025-11-12 14:55:00,597 - fin_picasso_framework.utils.yaml_netlist_helper - WARNING -    Skipping YAML-based fixes for this component.
+2025-11-12 14:55:00,598 - fin_picasso_framework.gen_data_validated - INFO - Running P&R validation...
+2025-11-12 14:55:00,599 - fin_picasso_framework.validators.pnr_validator - INFO - P&R Validation: PASS (0 errors, 1 warnings)
+2025-11-12 14:55:00,599 - fin_picasso_framework.gen_data_validated - INFO - Running DRC validation...
+2025-11-12 14:55:00,605 - fin_picasso_framework.validators.drc_validator - WARNING - KLayout executable not found - skipping DRC check
+2025-11-12 14:55:00,605 - fin_picasso_framework.gen_data_validated - INFO - Running SAX validation...
+2025-11-12 14:55:00,612 - fin_picasso_framework.validators.sax_validator - INFO - SAX Validation: FAIL (compilation: False, routing: True)
+2025-11-12 14:55:00,612 - fin_picasso_framework.gen_data_validated - WARNING - SAX validation failed
+2025-11-12 14:55:00,614 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: pnr - pass (problem 2, sample 2, attempt 2)
+2025-11-12 14:55:00,615 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: drc - pass (problem 2, sample 2, attempt 2)
+2025-11-12 14:55:00,617 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: sax - fail (problem 2, sample 2, attempt 2)
+2025-11-12 14:55:00,617 - hf_inference_workflow.retry_handler - INFO - Recorded retry attempt 2 (failed at sax)
+2025-11-12 14:55:00,617 - fin_picasso_framework.gen_data_validated - WARNING - Validation failed at stage: sax
+2025-11-12 14:55:00,617 - fin_picasso_framework.gen_data_validated - WARNING - Max retries reached
+2025-11-12 14:55:00,617 - fin_picasso_framework.gen_data_validated - INFO - Attempting auto-correction as fallback...
+2025-11-12 14:55:00,617 - hf_inference_workflow.auto_corrector - INFO - Attempting auto-correction for error type: execution_error
+2025-11-12 14:55:00,617 - hf_inference_workflow.auto_corrector - WARNING - No auto-correction available for execution_error
+2025-11-12 14:55:00,617 - fin_picasso_framework.gen_data_validated - WARNING - No auto-correction available for this error type
+2025-11-12 14:55:00,617 - fin_picasso_framework.gen_data_validated - INFO - 📊 Phase 2 (Framework): ❌ FAILED (retries: 2)
+2025-11-12 14:55:00,617 - fin_picasso_framework.gen_data_validated - INFO - 
+============================================================
+2025-11-12 14:55:00,617 - fin_picasso_framework.gen_data_validated - INFO - Pass@3 failure detected - Updating pilot prompt for next attempt...
+2025-11-12 14:55:00,617 - fin_picasso_framework.gen_data_validated - INFO - Error: EXECUTION_ERROR: All ports at the target (end) must have the same angle. r.start.t=r0 110000,-50000/
+2025-11-12 14:55:00,617 - fin_picasso_framework.gen_data_validated - INFO - ============================================================
+2025-11-12 14:55:00,617 - fin_picasso_framework.pilot.pilot_prompt_updater - INFO - Analyzing 1 failed cases after pass@3
+2025-11-12 14:55:00,617 - fin_picasso_framework.gen_data_validated - INFO - ℹ️ No new pilot rules to apply after pass@3 (may need more context)
+Generating validated designs:  22%|██▏       | 6/27 [08:10<27:23, 78.26s/it]2025-11-12 14:55:00,617 - fin_picasso_framework.gen_data_validated - INFO - 
+============================================================
+2025-11-12 14:55:00,618 - fin_picasso_framework.gen_data_validated - INFO - Problem 2 Summary: 3/3 samples failed
+2025-11-12 14:55:00,618 - fin_picasso_framework.gen_data_validated - INFO - ============================================================
+2025-11-12 14:55:00,618 - fin_picasso_framework.gen_data_validated - INFO - 
+============================================================
+2025-11-12 14:55:00,618 - fin_picasso_framework.gen_data_validated - INFO - Problem 10: 2x2 Optical Switch - Sample 1/3
+2025-11-12 14:55:00,618 - fin_picasso_framework.gen_data_validated - INFO - ============================================================
+2025-11-12 14:55:00,618 - fin_picasso_framework.gen_data_validated - INFO - Problem 10, Sample 0, Attempt 1/4
+2025-11-12 14:55:11,788 - fin_picasso_framework.gen_data_validated - INFO - 📊 Using Vanilla LLM prompt (Phase 1 baseline - no component specs)
+2025-11-12 14:55:11,790 - fin_picasso_framework.gen_data_validated - INFO - Code cleaning applied (removed Unicode/fixed decimals)
+2025-11-12 14:55:11,790 - fin_picasso_framework.gen_data_validated - INFO - Running pilot validation (pre-execution checks)...
+2025-11-12 14:55:11,792 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: pilot - fail (problem 10, sample 0, attempt 0)
+2025-11-12 14:55:11,792 - fin_picasso_framework.gen_data_validated - WARNING - ❌ Pilot validation failed: Syntax error: invalid decimal literal (<unknown>, line 2)
+2025-11-12 14:55:11,793 - fin_picasso_framework.gen_data_validated - INFO - Pilot feedback for LLM: Syntax error: invalid decimal literal (<unknown>, line 2)
+
+Fix: Check for unterminated strings, missing quotes, or invalid characters.
+2025-11-12 14:55:11,793 - hf_inference_workflow.retry_handler - INFO - Recorded retry attempt 0 (failed at parsing)
+2025-11-12 14:55:11,793 - fin_picasso_framework.gen_data_validated - INFO - Problem 10, Sample 0, Attempt 2/4
+2025-11-12 14:55:11,793 - fin_picasso_framework.gen_data_validated - INFO - 📊 Using Framework prompt (Phase 2 - with component specs & validation feedback)
+2025-11-12 14:55:26,713 - fin_picasso_framework.gen_data_validated - INFO - Running pilot validation (pre-execution checks)...
+2025-11-12 14:55:26,715 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: pilot - pass (problem 10, sample 0, attempt 1)
+2025-11-12 14:55:26,715 - fin_picasso_framework.gen_data_validated - INFO - ✅ Pilot validation passed
+2025-11-12 14:55:26,715 - fin_picasso_framework.gen_data_validated - INFO - Parsing and executing generated code...
+2025-11-12 14:55:26,781 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Extracting netlist from Python-generated component for YAML validation...
+2025-11-12 14:55:26,783 - fin_picasso_framework.utils.yaml_netlist_helper - WARNING - ⚠️  Netlist extraction failed: More than two connected optical ports: ['mzi_DL10_LY2_LX0p1_Bben_4daac747_0_0,o1', 'bend_euler_R15_A90_P0p5_14998747_m25000_m15000,o2', 'o1']
+2025-11-12 14:55:26,783 - fin_picasso_framework.utils.yaml_netlist_helper - WARNING -    This is a GDSFactory limitation for complex port connections.
+2025-11-12 14:55:26,783 - fin_picasso_framework.utils.yaml_netlist_helper - WARNING -    Skipping YAML-based fixes for this component.
+2025-11-12 14:55:26,785 - fin_picasso_framework.gen_data_validated - INFO - Running P&R validation...
+2025-11-12 14:55:26,785 - fin_picasso_framework.validators.pnr_validator - INFO - P&R Validation: PASS (0 errors, 1 warnings)
+2025-11-12 14:55:26,785 - fin_picasso_framework.gen_data_validated - INFO - Running DRC validation...
+2025-11-12 14:55:26,791 - fin_picasso_framework.validators.drc_validator - WARNING - KLayout executable not found - skipping DRC check
+2025-11-12 14:55:26,792 - fin_picasso_framework.gen_data_validated - INFO - Running SAX validation...
+2025-11-12 14:55:26,796 - fin_picasso_framework.validators.sax_validator - INFO - SAX Validation: FAIL (compilation: False, routing: True)
+2025-11-12 14:55:26,796 - fin_picasso_framework.gen_data_validated - WARNING - SAX validation failed
+2025-11-12 14:55:26,798 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: pnr - pass (problem 10, sample 0, attempt 1)
+2025-11-12 14:55:26,800 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: drc - pass (problem 10, sample 0, attempt 1)
+2025-11-12 14:55:26,801 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: sax - fail (problem 10, sample 0, attempt 1)
+2025-11-12 14:55:26,801 - hf_inference_workflow.retry_handler - INFO - Recorded retry attempt 1 (failed at sax)
+2025-11-12 14:55:26,801 - fin_picasso_framework.gen_data_validated - WARNING - Validation failed at stage: sax
+2025-11-12 14:55:26,801 - fin_picasso_framework.gen_data_validated - INFO - Problem 10, Sample 0, Attempt 3/4
+2025-11-12 14:55:26,801 - fin_picasso_framework.gen_data_validated - INFO - 📊 Using Framework prompt (Phase 2 - with component specs & validation feedback)
+2025-11-12 14:55:45,733 - fin_picasso_framework.gen_data_validated - INFO - Running pilot validation (pre-execution checks)...
+2025-11-12 14:55:45,735 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: pilot - pass (problem 10, sample 0, attempt 2)
+2025-11-12 14:55:45,735 - fin_picasso_framework.gen_data_validated - INFO - ✅ Pilot validation passed
+2025-11-12 14:55:45,735 - fin_picasso_framework.gen_data_validated - INFO - Parsing and executing generated code...
+2025-11-12 14:55:45,809 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Extracting netlist from Python-generated component for YAML validation...
+2025-11-12 14:55:45,812 - fin_picasso_framework.utils.yaml_netlist_helper - WARNING - ⚠️  Netlist extraction failed: More than two connected optical ports: ['coupler_G0p236_L20_D4_D_b138340a_0_0,o1', 'bend_euler_R15_A90_P0p5_14998747_m25000_m16632,o2', 'o1']
+2025-11-12 14:55:45,812 - fin_picasso_framework.utils.yaml_netlist_helper - WARNING -    This is a GDSFactory limitation for complex port connections.
+2025-11-12 14:55:45,812 - fin_picasso_framework.utils.yaml_netlist_helper - WARNING -    Skipping YAML-based fixes for this component.
+2025-11-12 14:55:45,814 - fin_picasso_framework.gen_data_validated - INFO - Running P&R validation...
+2025-11-12 14:55:45,815 - fin_picasso_framework.validators.pnr_validator - INFO - P&R Validation: PASS (0 errors, 1 warnings)
+2025-11-12 14:55:45,815 - fin_picasso_framework.gen_data_validated - INFO - Running DRC validation...
+2025-11-12 14:55:45,822 - fin_picasso_framework.validators.drc_validator - WARNING - KLayout executable not found - skipping DRC check
+2025-11-12 14:55:45,822 - fin_picasso_framework.gen_data_validated - INFO - Running SAX validation...
+2025-11-12 14:55:45,829 - fin_picasso_framework.validators.sax_validator - INFO - SAX Validation: FAIL (compilation: False, routing: True)
+2025-11-12 14:55:45,829 - fin_picasso_framework.gen_data_validated - WARNING - SAX validation failed
+2025-11-12 14:55:45,831 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: pnr - pass (problem 10, sample 0, attempt 2)
+2025-11-12 14:55:45,832 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: drc - pass (problem 10, sample 0, attempt 2)
+2025-11-12 14:55:45,834 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: sax - fail (problem 10, sample 0, attempt 2)
+2025-11-12 14:55:45,834 - hf_inference_workflow.retry_handler - INFO - Recorded retry attempt 2 (failed at sax)
+2025-11-12 14:55:45,834 - fin_picasso_framework.gen_data_validated - WARNING - Validation failed at stage: sax
+2025-11-12 14:55:45,834 - fin_picasso_framework.gen_data_validated - WARNING - Max retries reached
+2025-11-12 14:55:45,834 - fin_picasso_framework.gen_data_validated - INFO - Attempting auto-correction as fallback...
+2025-11-12 14:55:45,834 - hf_inference_workflow.auto_corrector - INFO - Attempting auto-correction for error type: pilot_error
+2025-11-12 14:55:45,834 - hf_inference_workflow.auto_corrector - WARNING - No auto-correction available for pilot_error
+2025-11-12 14:55:45,834 - fin_picasso_framework.gen_data_validated - WARNING - No auto-correction available for this error type
+2025-11-12 14:55:45,834 - fin_picasso_framework.gen_data_validated - INFO - 📊 Phase 2 (Framework): ❌ FAILED (retries: 2)
+2025-11-12 14:55:45,834 - fin_picasso_framework.gen_data_validated - INFO - 
+============================================================
+2025-11-12 14:55:45,834 - fin_picasso_framework.gen_data_validated - INFO - Pass@3 failure detected - Updating pilot prompt for next attempt...
+2025-11-12 14:55:45,834 - fin_picasso_framework.gen_data_validated - INFO - Error: PILOT_ERROR: Syntax error: invalid decimal literal (<unknown>, line 2)
+2025-11-12 14:55:45,834 - fin_picasso_framework.gen_data_validated - INFO - ============================================================
+2025-11-12 14:55:45,834 - fin_picasso_framework.pilot.pilot_prompt_updater - INFO - Analyzing 1 failed cases after pass@3
+2025-11-12 14:55:45,834 - fin_picasso_framework.pilot.pilot_prompt_updater - INFO - ✅ Applied pilot rule: CRITICAL: Use valid Python float literals. Use 10.0 not 10.0.5 or 10 microns. Never attach units to ...
+2025-11-12 14:55:45,835 - fin_picasso_framework.pilot.pilot_prompt_updater - INFO - ✅ Saved 4 pilot rules to /Users/deepakvungarala/Desktop/shigoto/PICasso/fin_picasso_framework/pilot_rules.json (permanent - will persist across runs)
+2025-11-12 14:55:45,835 - fin_picasso_framework.gen_data_validated - INFO - ✅ Applied 1 pilot rule updates after pass@3
+2025-11-12 14:55:45,835 - fin_picasso_framework.gen_data_validated - INFO -   - CRITICAL: Use valid Python float literals. Use 10.0 not 10.0.5 or 10 microns. Never attach units to numbers.
+2025-11-12 14:55:45,835 - fin_picasso_framework.pilot.pilot_prompt_updater - INFO - ✅ Saved 4 pilot rules to /Users/deepakvungarala/Desktop/shigoto/PICasso/fin_picasso_framework/pilot_rules.json (permanent - will persist across runs)
+2025-11-12 14:55:45,835 - fin_picasso_framework.gen_data_validated - INFO - ✅ Updated pilot prompt will be used for attempt 4
+Generating validated designs:  26%|██▌       | 7/27 [08:55<22:29, 67.46s/it]2025-11-12 14:55:45,835 - fin_picasso_framework.gen_data_validated - INFO - 
+============================================================
+2025-11-12 14:55:45,835 - fin_picasso_framework.gen_data_validated - INFO - Problem 10: 2x2 Optical Switch - Sample 2/3
+2025-11-12 14:55:45,835 - fin_picasso_framework.gen_data_validated - INFO - ============================================================
+2025-11-12 14:55:45,835 - fin_picasso_framework.gen_data_validated - INFO - Problem 10, Sample 1, Attempt 1/4
+2025-11-12 14:56:09,999 - fin_picasso_framework.gen_data_validated - INFO - 📊 Using Vanilla LLM prompt (Phase 1 baseline - no component specs)
+2025-11-12 14:56:10,000 - fin_picasso_framework.gen_data_validated - INFO - Code cleaning applied (removed Unicode/fixed decimals)
+2025-11-12 14:56:10,000 - fin_picasso_framework.gen_data_validated - INFO - Running pilot validation (pre-execution checks)...
+2025-11-12 14:56:10,001 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: pilot - fail (problem 10, sample 1, attempt 0)
+2025-11-12 14:56:10,001 - fin_picasso_framework.gen_data_validated - WARNING - ❌ Pilot validation failed: Syntax error: invalid decimal literal (<unknown>, line 2)
+2025-11-12 14:56:10,001 - fin_picasso_framework.gen_data_validated - INFO - Pilot feedback for LLM: Syntax error: invalid decimal literal (<unknown>, line 2)
+
+Fix: Check for unterminated strings, missing quotes, or invalid characters.
+2025-11-12 14:56:10,001 - hf_inference_workflow.retry_handler - INFO - Recorded retry attempt 0 (failed at parsing)
+2025-11-12 14:56:10,001 - fin_picasso_framework.gen_data_validated - INFO - Problem 10, Sample 1, Attempt 2/4
+2025-11-12 14:56:10,001 - fin_picasso_framework.gen_data_validated - INFO - 📊 Using Framework prompt (Phase 2 - with component specs & validation feedback)
+2025-11-12 14:56:28,056 - fin_picasso_framework.gen_data_validated - INFO - Running pilot validation (pre-execution checks)...
+2025-11-12 14:56:28,059 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: pilot - pass (problem 10, sample 1, attempt 1)
+2025-11-12 14:56:28,059 - fin_picasso_framework.gen_data_validated - INFO - ✅ Pilot validation passed
+2025-11-12 14:56:28,059 - fin_picasso_framework.gen_data_validated - INFO - Parsing and executing generated code...
+2025-11-12 14:56:28,123 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Extracting netlist from Python-generated component for YAML validation...
+2025-11-12 14:56:28,125 - fin_picasso_framework.utils.yaml_netlist_helper - WARNING - ⚠️  Netlist extraction failed: More than two connected optical ports: ['mzi_DL10_LY2_LX0p1_Bben_4daac747_0_0,o1', 'bend_euler_R15_A90_P0p5_14998747_m25000_m15000,o2', 'o1']
+2025-11-12 14:56:28,125 - fin_picasso_framework.utils.yaml_netlist_helper - WARNING -    This is a GDSFactory limitation for complex port connections.
+2025-11-12 14:56:28,125 - fin_picasso_framework.utils.yaml_netlist_helper - WARNING -    Skipping YAML-based fixes for this component.
+2025-11-12 14:56:28,127 - fin_picasso_framework.gen_data_validated - INFO - Running P&R validation...
+2025-11-12 14:56:28,127 - fin_picasso_framework.validators.pnr_validator - INFO - P&R Validation: PASS (0 errors, 1 warnings)
+2025-11-12 14:56:28,127 - fin_picasso_framework.gen_data_validated - INFO - Running DRC validation...
+2025-11-12 14:56:28,132 - fin_picasso_framework.validators.drc_validator - WARNING - KLayout executable not found - skipping DRC check
+2025-11-12 14:56:28,133 - fin_picasso_framework.gen_data_validated - INFO - Running SAX validation...
+2025-11-12 14:56:28,137 - fin_picasso_framework.validators.sax_validator - INFO - SAX Validation: FAIL (compilation: False, routing: True)
+2025-11-12 14:56:28,137 - fin_picasso_framework.gen_data_validated - WARNING - SAX validation failed
+2025-11-12 14:56:28,139 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: pnr - pass (problem 10, sample 1, attempt 1)
+2025-11-12 14:56:28,141 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: drc - pass (problem 10, sample 1, attempt 1)
+2025-11-12 14:56:28,143 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: sax - fail (problem 10, sample 1, attempt 1)
+2025-11-12 14:56:28,143 - hf_inference_workflow.retry_handler - INFO - Recorded retry attempt 1 (failed at sax)
+2025-11-12 14:56:28,143 - fin_picasso_framework.gen_data_validated - WARNING - Validation failed at stage: sax
+2025-11-12 14:56:28,143 - fin_picasso_framework.gen_data_validated - INFO - Problem 10, Sample 1, Attempt 3/4
+2025-11-12 14:56:28,143 - fin_picasso_framework.gen_data_validated - INFO - 📊 Using Framework prompt (Phase 2 - with component specs & validation feedback)
+2025-11-12 14:56:47,344 - fin_picasso_framework.gen_data_validated - INFO - Running pilot validation (pre-execution checks)...
+2025-11-12 14:56:47,347 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: pilot - pass (problem 10, sample 1, attempt 2)
+2025-11-12 14:56:47,347 - fin_picasso_framework.gen_data_validated - INFO - ✅ Pilot validation passed
+2025-11-12 14:56:47,347 - fin_picasso_framework.gen_data_validated - INFO - Parsing and executing generated code...
+2025-11-12 14:56:47,417 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Extracting netlist from Python-generated component for YAML validation...
+2025-11-12 14:56:47,419 - fin_picasso_framework.utils.yaml_netlist_helper - WARNING - ⚠️  Netlist extraction failed: More than two connected optical ports: ['mzi_DL10_LY2_LX0p1_Bben_4daac747_0_0,o1', 'bend_euler_R15_A90_P0p5_14998747_m25000_m15000,o2', 'o1']
+2025-11-12 14:56:47,419 - fin_picasso_framework.utils.yaml_netlist_helper - WARNING -    This is a GDSFactory limitation for complex port connections.
+2025-11-12 14:56:47,419 - fin_picasso_framework.utils.yaml_netlist_helper - WARNING -    Skipping YAML-based fixes for this component.
+2025-11-12 14:56:47,421 - fin_picasso_framework.gen_data_validated - INFO - Running P&R validation...
+2025-11-12 14:56:47,422 - fin_picasso_framework.validators.pnr_validator - INFO - P&R Validation: PASS (0 errors, 1 warnings)
+2025-11-12 14:56:47,422 - fin_picasso_framework.gen_data_validated - INFO - Running DRC validation...
+2025-11-12 14:56:47,427 - fin_picasso_framework.validators.drc_validator - WARNING - KLayout executable not found - skipping DRC check
+2025-11-12 14:56:47,427 - fin_picasso_framework.gen_data_validated - INFO - Running SAX validation...
+2025-11-12 14:56:47,432 - fin_picasso_framework.validators.sax_validator - INFO - SAX Validation: FAIL (compilation: False, routing: True)
+2025-11-12 14:56:47,432 - fin_picasso_framework.gen_data_validated - WARNING - SAX validation failed
+2025-11-12 14:56:47,433 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: pnr - pass (problem 10, sample 1, attempt 2)
+2025-11-12 14:56:47,435 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: drc - pass (problem 10, sample 1, attempt 2)
+2025-11-12 14:56:47,436 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: sax - fail (problem 10, sample 1, attempt 2)
+2025-11-12 14:56:47,436 - hf_inference_workflow.retry_handler - INFO - Recorded retry attempt 2 (failed at sax)
+2025-11-12 14:56:47,436 - fin_picasso_framework.gen_data_validated - WARNING - Validation failed at stage: sax
+2025-11-12 14:56:47,436 - fin_picasso_framework.gen_data_validated - WARNING - Max retries reached
+2025-11-12 14:56:47,436 - fin_picasso_framework.gen_data_validated - INFO - Attempting auto-correction as fallback...
+2025-11-12 14:56:47,436 - hf_inference_workflow.auto_corrector - INFO - Attempting auto-correction for error type: pilot_error
+2025-11-12 14:56:47,437 - hf_inference_workflow.auto_corrector - WARNING - No auto-correction available for pilot_error
+2025-11-12 14:56:47,437 - fin_picasso_framework.gen_data_validated - WARNING - No auto-correction available for this error type
+2025-11-12 14:56:47,437 - fin_picasso_framework.gen_data_validated - INFO - 📊 Phase 2 (Framework): ❌ FAILED (retries: 2)
+2025-11-12 14:56:47,437 - fin_picasso_framework.gen_data_validated - INFO - 
+============================================================
+2025-11-12 14:56:47,437 - fin_picasso_framework.gen_data_validated - INFO - Pass@3 failure detected - Updating pilot prompt for next attempt...
+2025-11-12 14:56:47,437 - fin_picasso_framework.gen_data_validated - INFO - Error: PILOT_ERROR: Syntax error: invalid decimal literal (<unknown>, line 2)
+2025-11-12 14:56:47,437 - fin_picasso_framework.gen_data_validated - INFO - ============================================================
+2025-11-12 14:56:47,437 - fin_picasso_framework.pilot.pilot_prompt_updater - INFO - Analyzing 1 failed cases after pass@3
+2025-11-12 14:56:47,437 - fin_picasso_framework.gen_data_validated - INFO - ℹ️ No new pilot rules to apply after pass@3 (may need more context)
+Generating validated designs:  30%|██▉       | 8/27 [09:57<20:46, 65.59s/it]2025-11-12 14:56:47,437 - fin_picasso_framework.gen_data_validated - INFO - 
+============================================================
+2025-11-12 14:56:47,437 - fin_picasso_framework.gen_data_validated - INFO - Problem 10: 2x2 Optical Switch - Sample 3/3
+2025-11-12 14:56:47,437 - fin_picasso_framework.gen_data_validated - INFO - ============================================================
+2025-11-12 14:56:47,437 - fin_picasso_framework.gen_data_validated - INFO - Problem 10, Sample 2, Attempt 1/4
+2025-11-12 14:56:57,360 - fin_picasso_framework.gen_data_validated - INFO - 📊 Using Vanilla LLM prompt (Phase 1 baseline - no component specs)
+2025-11-12 14:56:57,362 - fin_picasso_framework.gen_data_validated - INFO - Running pilot validation (pre-execution checks)...
+2025-11-12 14:56:57,364 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: pilot - fail (problem 10, sample 2, attempt 0)
+2025-11-12 14:56:57,364 - fin_picasso_framework.gen_data_validated - WARNING - ❌ Pilot validation failed: Syntax error: invalid decimal literal (<unknown>, line 2)
+2025-11-12 14:56:57,365 - fin_picasso_framework.gen_data_validated - INFO - Pilot feedback for LLM: Syntax error: invalid decimal literal (<unknown>, line 2)
+
+Fix: Check for unterminated strings, missing quotes, or invalid characters.
+2025-11-12 14:56:57,365 - hf_inference_workflow.retry_handler - INFO - Recorded retry attempt 0 (failed at parsing)
+2025-11-12 14:56:57,365 - fin_picasso_framework.gen_data_validated - INFO - Problem 10, Sample 2, Attempt 2/4
+2025-11-12 14:56:57,365 - fin_picasso_framework.gen_data_validated - INFO - 📊 Using Framework prompt (Phase 2 - with component specs & validation feedback)
+2025-11-12 14:57:19,629 - fin_picasso_framework.gen_data_validated - INFO - Running pilot validation (pre-execution checks)...
+2025-11-12 14:57:19,630 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: pilot - pass (problem 10, sample 2, attempt 1)
+2025-11-12 14:57:19,630 - fin_picasso_framework.gen_data_validated - INFO - ✅ Pilot validation passed
+2025-11-12 14:57:19,630 - fin_picasso_framework.gen_data_validated - INFO - Parsing and executing generated code...
+2025-11-12 14:57:19,678 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Extracting netlist from Python-generated component for YAML validation...
+2025-11-12 14:57:19,679 - fin_picasso_framework.utils.yaml_netlist_helper - WARNING - ⚠️  Netlist extraction failed: More than two connected optical ports: ['mzi_DL10_LY2_LX0p1_Bben_4daac747_0_0,o2', 'straight_L18p9000000000_40dd2b17_81100_0,o1', 'o2']
+2025-11-12 14:57:19,679 - fin_picasso_framework.utils.yaml_netlist_helper - WARNING -    This is a GDSFactory limitation for complex port connections.
+2025-11-12 14:57:19,679 - fin_picasso_framework.utils.yaml_netlist_helper - WARNING -    Skipping YAML-based fixes for this component.
+2025-11-12 14:57:19,681 - fin_picasso_framework.gen_data_validated - INFO - Running P&R validation...
+2025-11-12 14:57:19,681 - fin_picasso_framework.validators.pnr_validator - INFO - P&R Validation: PASS (0 errors, 1 warnings)
+2025-11-12 14:57:19,681 - fin_picasso_framework.gen_data_validated - INFO - Running DRC validation...
+2025-11-12 14:57:19,686 - fin_picasso_framework.validators.drc_validator - WARNING - KLayout executable not found - skipping DRC check
+2025-11-12 14:57:19,686 - fin_picasso_framework.gen_data_validated - INFO - Running SAX validation...
+2025-11-12 14:57:19,688 - fin_picasso_framework.validators.sax_validator - INFO - SAX Validation: FAIL (compilation: False, routing: True)
+2025-11-12 14:57:19,688 - fin_picasso_framework.gen_data_validated - WARNING - SAX validation failed
+2025-11-12 14:57:19,690 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: pnr - pass (problem 10, sample 2, attempt 1)
+2025-11-12 14:57:19,691 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: drc - pass (problem 10, sample 2, attempt 1)
+2025-11-12 14:57:19,692 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: sax - fail (problem 10, sample 2, attempt 1)
+2025-11-12 14:57:19,692 - hf_inference_workflow.retry_handler - INFO - Recorded retry attempt 1 (failed at sax)
+2025-11-12 14:57:19,692 - fin_picasso_framework.gen_data_validated - WARNING - Validation failed at stage: sax
+2025-11-12 14:57:19,692 - fin_picasso_framework.gen_data_validated - INFO - Problem 10, Sample 2, Attempt 3/4
+2025-11-12 14:57:19,692 - fin_picasso_framework.gen_data_validated - INFO - 📊 Using Framework prompt (Phase 2 - with component specs & validation feedback)
+2025-11-12 14:57:36,526 - fin_picasso_framework.gen_data_validated - INFO - Running pilot validation (pre-execution checks)...
+2025-11-12 14:57:36,528 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: pilot - pass (problem 10, sample 2, attempt 2)
+2025-11-12 14:57:36,528 - fin_picasso_framework.gen_data_validated - INFO - ✅ Pilot validation passed
+2025-11-12 14:57:36,528 - fin_picasso_framework.gen_data_validated - INFO - Parsing and executing generated code...
+2025-11-12 14:57:36,581 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Extracting netlist from Python-generated component for YAML validation...
+2025-11-12 14:57:36,583 - fin_picasso_framework.utils.yaml_netlist_helper - WARNING - ⚠️  Netlist extraction failed: More than two connected optical ports: ['mzi_DL10_LY2_LX0p1_Bben_4daac747_0_0,o2', 'straight_L68p9_N2_CSstrip_WNone_81100_0,o1', 'straight_L358p900000000_b5eacfb1_440000_0,o2', 'o2']
+2025-11-12 14:57:36,583 - fin_picasso_framework.utils.yaml_netlist_helper - WARNING -    This is a GDSFactory limitation for complex port connections.
+2025-11-12 14:57:36,583 - fin_picasso_framework.utils.yaml_netlist_helper - WARNING -    Skipping YAML-based fixes for this component.
+2025-11-12 14:57:36,585 - fin_picasso_framework.gen_data_validated - INFO - Running P&R validation...
+2025-11-12 14:57:36,585 - fin_picasso_framework.validators.pnr_validator - INFO - P&R Validation: PASS (0 errors, 1 warnings)
+2025-11-12 14:57:36,585 - fin_picasso_framework.gen_data_validated - INFO - Running DRC validation...
+2025-11-12 14:57:36,591 - fin_picasso_framework.validators.drc_validator - WARNING - KLayout executable not found - skipping DRC check
+2025-11-12 14:57:36,592 - fin_picasso_framework.gen_data_validated - INFO - Running SAX validation...
+2025-11-12 14:57:36,595 - fin_picasso_framework.validators.sax_validator - INFO - SAX Validation: FAIL (compilation: False, routing: True)
+2025-11-12 14:57:36,595 - fin_picasso_framework.gen_data_validated - WARNING - SAX validation failed
+2025-11-12 14:57:36,597 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: pnr - pass (problem 10, sample 2, attempt 2)
+2025-11-12 14:57:36,599 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: drc - pass (problem 10, sample 2, attempt 2)
+2025-11-12 14:57:36,601 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: sax - fail (problem 10, sample 2, attempt 2)
+2025-11-12 14:57:36,601 - hf_inference_workflow.retry_handler - INFO - Recorded retry attempt 2 (failed at sax)
+2025-11-12 14:57:36,601 - fin_picasso_framework.gen_data_validated - WARNING - Validation failed at stage: sax
+2025-11-12 14:57:36,601 - fin_picasso_framework.gen_data_validated - WARNING - Max retries reached
+2025-11-12 14:57:36,601 - fin_picasso_framework.gen_data_validated - INFO - Attempting auto-correction as fallback...
+2025-11-12 14:57:36,601 - hf_inference_workflow.auto_corrector - INFO - Attempting auto-correction for error type: pilot_error
+2025-11-12 14:57:36,601 - hf_inference_workflow.auto_corrector - WARNING - No auto-correction available for pilot_error
+2025-11-12 14:57:36,601 - fin_picasso_framework.gen_data_validated - WARNING - No auto-correction available for this error type
+2025-11-12 14:57:36,601 - fin_picasso_framework.gen_data_validated - INFO - 📊 Phase 2 (Framework): ❌ FAILED (retries: 2)
+2025-11-12 14:57:36,601 - fin_picasso_framework.gen_data_validated - INFO - 
+============================================================
+2025-11-12 14:57:36,601 - fin_picasso_framework.gen_data_validated - INFO - Pass@3 failure detected - Updating pilot prompt for next attempt...
+2025-11-12 14:57:36,601 - fin_picasso_framework.gen_data_validated - INFO - Error: PILOT_ERROR: Syntax error: invalid decimal literal (<unknown>, line 2)
+2025-11-12 14:57:36,601 - fin_picasso_framework.gen_data_validated - INFO - ============================================================
+2025-11-12 14:57:36,601 - fin_picasso_framework.pilot.pilot_prompt_updater - INFO - Analyzing 1 failed cases after pass@3
+2025-11-12 14:57:36,602 - fin_picasso_framework.gen_data_validated - INFO - ℹ️ No new pilot rules to apply after pass@3 (may need more context)
+Generating validated designs:  33%|███▎      | 9/27 [10:46<18:08, 60.46s/it]2025-11-12 14:57:36,602 - fin_picasso_framework.gen_data_validated - INFO - 
+============================================================
+2025-11-12 14:57:36,602 - fin_picasso_framework.gen_data_validated - INFO - Problem 10 Summary: 3/3 samples failed
+2025-11-12 14:57:36,602 - fin_picasso_framework.gen_data_validated - INFO - ============================================================
+2025-11-12 14:57:36,602 - fin_picasso_framework.gen_data_validated - INFO - 
+============================================================
+2025-11-12 14:57:36,602 - fin_picasso_framework.gen_data_validated - INFO - Problem 4: QPSK Modulator - Sample 1/3
+2025-11-12 14:57:36,602 - fin_picasso_framework.gen_data_validated - INFO - ============================================================
+2025-11-12 14:57:36,602 - fin_picasso_framework.gen_data_validated - INFO - Problem 4, Sample 0, Attempt 1/4
+2025-11-12 14:57:50,669 - fin_picasso_framework.gen_data_validated - INFO - 📊 Using Vanilla LLM prompt (Phase 1 baseline - no component specs)
+2025-11-12 14:57:50,671 - fin_picasso_framework.gen_data_validated - INFO - Code cleaning applied (removed Unicode/fixed decimals)
+2025-11-12 14:57:50,671 - fin_picasso_framework.gen_data_validated - INFO - Running pilot validation (pre-execution checks)...
+2025-11-12 14:57:50,677 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: pilot - fail (problem 4, sample 0, attempt 0)
+2025-11-12 14:57:50,677 - fin_picasso_framework.gen_data_validated - WARNING - ❌ Pilot validation failed: Syntax error: unterminated string literal (detected at line 6) (<unknown>, line 6)
+2025-11-12 14:57:50,678 - fin_picasso_framework.gen_data_validated - INFO - Pilot feedback for LLM: Syntax error: unterminated string literal (detected at line 6) (<unknown>, line 6)
+
+Fix: Check for unterminated strings, missing quotes, or invalid characters.
+2025-11-12 14:57:50,678 - hf_inference_workflow.retry_handler - INFO - Recorded retry attempt 0 (failed at parsing)
+2025-11-12 14:57:50,678 - fin_picasso_framework.gen_data_validated - INFO - Problem 4, Sample 0, Attempt 2/4
+2025-11-12 14:57:50,678 - fin_picasso_framework.gen_data_validated - INFO - 📊 Using Framework prompt (Phase 2 - with component specs & validation feedback)
+2025-11-12 14:58:11,134 - fin_picasso_framework.gen_data_validated - INFO - Running pilot validation (pre-execution checks)...
+2025-11-12 14:58:11,137 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: pilot - pass (problem 4, sample 0, attempt 1)
+2025-11-12 14:58:11,137 - fin_picasso_framework.gen_data_validated - INFO - ✅ Pilot validation passed
+2025-11-12 14:58:11,137 - fin_picasso_framework.gen_data_validated - INFO - Parsing and executing generated code...
+2025-11-12 14:58:11,208 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Extracting netlist from Python-generated component for YAML validation...
+2025-11-12 14:58:11,212 - fin_picasso_framework.utils.yaml_netlist_helper - WARNING - ⚠️  Netlist extraction failed: More than two connected optical ports: ['mzi_DL10_LY2_LX200_Bben_ff43f7ce_100000_0,o2', 'bend_euler_R15_A90_P0p5_14998747_396000_m15000,o2', 'bend_euler_R15_A90_P0p5_14998747_381000_0,o1', 'straight_L121_N2_CSstrip_WNone_381000_0,o1']
+2025-11-12 14:58:11,212 - fin_picasso_framework.utils.yaml_netlist_helper - WARNING -    This is a GDSFactory limitation for complex port connections.
+2025-11-12 14:58:11,212 - fin_picasso_framework.utils.yaml_netlist_helper - WARNING -    Skipping YAML-based fixes for this component.
+2025-11-12 14:58:11,215 - fin_picasso_framework.gen_data_validated - INFO - Running P&R validation...
+2025-11-12 14:58:11,216 - fin_picasso_framework.validators.pnr_validator - INFO - P&R Validation: PASS (0 errors, 1 warnings)
+2025-11-12 14:58:11,216 - fin_picasso_framework.gen_data_validated - INFO - Running DRC validation...
+2025-11-12 14:58:11,223 - fin_picasso_framework.validators.drc_validator - WARNING - KLayout executable not found - skipping DRC check
+2025-11-12 14:58:11,223 - fin_picasso_framework.gen_data_validated - INFO - Running SAX validation...
+2025-11-12 14:58:11,232 - fin_picasso_framework.validators.sax_validator - INFO - SAX Validation: FAIL (compilation: False, routing: True)
+2025-11-12 14:58:11,232 - fin_picasso_framework.gen_data_validated - WARNING - SAX validation failed
+2025-11-12 14:58:11,236 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: pnr - pass (problem 4, sample 0, attempt 1)
+2025-11-12 14:58:11,238 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: drc - pass (problem 4, sample 0, attempt 1)
+2025-11-12 14:58:11,241 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: sax - fail (problem 4, sample 0, attempt 1)
+2025-11-12 14:58:11,241 - hf_inference_workflow.retry_handler - INFO - Recorded retry attempt 1 (failed at sax)
+2025-11-12 14:58:11,241 - fin_picasso_framework.gen_data_validated - WARNING - Validation failed at stage: sax
+2025-11-12 14:58:11,241 - fin_picasso_framework.gen_data_validated - INFO - Problem 4, Sample 0, Attempt 3/4
+2025-11-12 14:58:11,241 - fin_picasso_framework.gen_data_validated - INFO - 📊 Using Framework prompt (Phase 2 - with component specs & validation feedback)
+2025-11-12 14:58:36,611 - fin_picasso_framework.gen_data_validated - INFO - Running pilot validation (pre-execution checks)...
+2025-11-12 14:58:36,613 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: pilot - pass (problem 4, sample 0, attempt 2)
+2025-11-12 14:58:36,613 - fin_picasso_framework.gen_data_validated - INFO - ✅ Pilot validation passed
+2025-11-12 14:58:36,613 - fin_picasso_framework.gen_data_validated - INFO - Parsing and executing generated code...
+2025-11-12 14:58:36,689 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Extracting netlist from Python-generated component for YAML validation...
+2025-11-12 14:58:36,713 - fin_picasso_framework.gen_data_validated - WARNING - ⚠️  YAML netlist validation found issues: Missing required key: 'connections'
+2025-11-12 14:58:36,716 - fin_picasso_framework.gen_data_validated - INFO - Running P&R validation...
+2025-11-12 14:58:36,718 - fin_picasso_framework.validators.pnr_validator - INFO - P&R Validation: PASS (0 errors, 1 warnings)
+2025-11-12 14:58:36,718 - fin_picasso_framework.gen_data_validated - INFO - Running DRC validation...
+2025-11-12 14:58:36,724 - fin_picasso_framework.validators.drc_validator - WARNING - KLayout executable not found - skipping DRC check
+2025-11-12 14:58:36,724 - fin_picasso_framework.gen_data_validated - INFO - Running SAX validation...
+2025-11-12 14:58:36,744 - fin_picasso_framework.validators.sax_validator - INFO - SAX Validation: FAIL (compilation: False, routing: True)
+2025-11-12 14:58:36,744 - fin_picasso_framework.gen_data_validated - WARNING - SAX validation failed
+2025-11-12 14:58:36,748 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: pnr - pass (problem 4, sample 0, attempt 2)
+2025-11-12 14:58:36,751 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: drc - pass (problem 4, sample 0, attempt 2)
+2025-11-12 14:58:36,754 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: sax - fail (problem 4, sample 0, attempt 2)
+2025-11-12 14:58:36,754 - hf_inference_workflow.retry_handler - INFO - Recorded retry attempt 2 (failed at sax)
+2025-11-12 14:58:36,754 - fin_picasso_framework.gen_data_validated - WARNING - Validation failed at stage: sax
+2025-11-12 14:58:36,754 - fin_picasso_framework.gen_data_validated - WARNING - Max retries reached
+2025-11-12 14:58:36,754 - fin_picasso_framework.gen_data_validated - INFO - Attempting auto-correction as fallback...
+2025-11-12 14:58:36,754 - hf_inference_workflow.auto_corrector - INFO - Attempting auto-correction for error type: pilot_error
+2025-11-12 14:58:36,754 - hf_inference_workflow.auto_corrector - WARNING - No auto-correction available for pilot_error
+2025-11-12 14:58:36,754 - fin_picasso_framework.gen_data_validated - WARNING - No auto-correction available for this error type
+2025-11-12 14:58:36,754 - fin_picasso_framework.gen_data_validated - INFO - 📊 Phase 2 (Framework): ❌ FAILED (retries: 2)
+2025-11-12 14:58:36,754 - fin_picasso_framework.gen_data_validated - INFO - 
+============================================================
+2025-11-12 14:58:36,754 - fin_picasso_framework.gen_data_validated - INFO - Pass@3 failure detected - Updating pilot prompt for next attempt...
+2025-11-12 14:58:36,754 - fin_picasso_framework.gen_data_validated - INFO - Error: PILOT_ERROR: Syntax error: unterminated string literal (detected at line 6) (<unknown>, line 6)
+2025-11-12 14:58:36,754 - fin_picasso_framework.gen_data_validated - INFO - ============================================================
+2025-11-12 14:58:36,754 - fin_picasso_framework.pilot.pilot_prompt_updater - INFO - Analyzing 1 failed cases after pass@3
+2025-11-12 14:58:36,754 - fin_picasso_framework.gen_data_validated - INFO - ℹ️ No new pilot rules to apply after pass@3 (may need more context)
+Generating validated designs:  37%|███▋      | 10/27 [11:46<17:06, 60.36s/it]2025-11-12 14:58:36,755 - fin_picasso_framework.gen_data_validated - INFO - 
+============================================================
+2025-11-12 14:58:36,755 - fin_picasso_framework.gen_data_validated - INFO - Problem 4: QPSK Modulator - Sample 2/3
+2025-11-12 14:58:36,755 - fin_picasso_framework.gen_data_validated - INFO - ============================================================
+2025-11-12 14:58:36,755 - fin_picasso_framework.gen_data_validated - INFO - Problem 4, Sample 1, Attempt 1/4
+2025-11-12 14:59:00,923 - fin_picasso_framework.gen_data_validated - INFO - 📊 Using Vanilla LLM prompt (Phase 1 baseline - no component specs)
+2025-11-12 14:59:00,925 - fin_picasso_framework.gen_data_validated - INFO - Code cleaning applied (removed Unicode/fixed decimals)
+2025-11-12 14:59:00,925 - fin_picasso_framework.gen_data_validated - INFO - Running pilot validation (pre-execution checks)...
+2025-11-12 14:59:00,932 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: pilot - fail (problem 4, sample 1, attempt 0)
+2025-11-12 14:59:00,932 - fin_picasso_framework.gen_data_validated - WARNING - ❌ Pilot validation failed: Syntax error: unterminated string literal (detected at line 12) (<unknown>, line 12)
+2025-11-12 14:59:00,932 - fin_picasso_framework.gen_data_validated - INFO - Pilot feedback for LLM: Syntax error: unterminated string literal (detected at line 12) (<unknown>, line 12)
+
+Fix: Check for unterminated strings, missing quotes, or invalid characters.
+2025-11-12 14:59:00,933 - hf_inference_workflow.retry_handler - INFO - Recorded retry attempt 0 (failed at parsing)
+2025-11-12 14:59:00,933 - fin_picasso_framework.gen_data_validated - INFO - Problem 4, Sample 1, Attempt 2/4
+2025-11-12 14:59:00,933 - fin_picasso_framework.gen_data_validated - INFO - 📊 Using Framework prompt (Phase 2 - with component specs & validation feedback)
+2025-11-12 14:59:39,462 - fin_picasso_framework.gen_data_validated - INFO - Running pilot validation (pre-execution checks)...
+2025-11-12 14:59:39,464 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: pilot - pass (problem 4, sample 1, attempt 1)
+2025-11-12 14:59:39,464 - fin_picasso_framework.gen_data_validated - INFO - ✅ Pilot validation passed
+2025-11-12 14:59:39,464 - fin_picasso_framework.gen_data_validated - INFO - Parsing and executing generated code...
+2025-11-12 14:59:39,493 - fin_picasso_framework.gen_data_validated - ERROR - Execution error: All ports at the target (end) must have the same angle. r.start.t=r180 190000,-47632/r.end.t=r0 310000,0
+2025-11-12 14:59:39,493 - fin_picasso_framework.gen_data_validated - ERROR - Failed to parse/execute code: EXECUTION_ERROR: All ports at the target (end) must have the same angle. r.start.t=r180 190000,-47632/r.end.t=r0 310000,0
+2025-11-12 14:59:39,493 - hf_inference_workflow.retry_handler - INFO - Recorded retry attempt 1 (failed at parsing)
+2025-11-12 14:59:39,493 - fin_picasso_framework.gen_data_validated - INFO - Problem 4, Sample 1, Attempt 3/4
+2025-11-12 14:59:39,493 - fin_picasso_framework.gen_data_validated - INFO - 📊 Using Framework prompt (Phase 2 - with component specs & validation feedback)
+2025-11-12 15:00:11,707 - fin_picasso_framework.gen_data_validated - INFO - Running pilot validation (pre-execution checks)...
+2025-11-12 15:00:11,714 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: pilot - pass (problem 4, sample 1, attempt 2)
+2025-11-12 15:00:11,714 - fin_picasso_framework.gen_data_validated - INFO - ✅ Pilot validation passed
+2025-11-12 15:00:11,714 - fin_picasso_framework.gen_data_validated - INFO - Parsing and executing generated code...
+2025-11-12 15:00:11,735 - fin_picasso_framework.gen_data_validated - ERROR - Execution error: "key='o3' is not a valid port name or index. Make sure the instance is an array when giving it a tuple. Available ports: ['o1', 'o2', 'e3', 'e6', 'e10', 'e15', 'e4', 'e5', 'e9', 'e16', 'e1', 'e8', 'e12', 'e13', 'e2', 'e7', 'e11', 'e14']"
+2025-11-12 15:00:11,735 - fin_picasso_framework.gen_data_validated - ERROR - Failed to parse/execute code: EXECUTION_ERROR: "key='o3' is not a valid port name or index. Make sure the instance is an array when giving it a tuple. Available ports: ['o1', 'o2', 'e3', 'e6', 'e10', 'e15', 'e4', 'e5', 'e9', 'e16', 'e1', 'e8', 'e12', 'e13', 'e2', 'e7', 'e11', 'e14']"
+2025-11-12 15:00:11,735 - hf_inference_workflow.retry_handler - INFO - Recorded retry attempt 2 (failed at parsing)
+2025-11-12 15:00:11,735 - fin_picasso_framework.gen_data_validated - INFO - Problem 4, Sample 1, Attempt 4/4
+2025-11-12 15:00:11,735 - fin_picasso_framework.gen_data_validated - INFO - 📊 Using Framework prompt (Phase 2 - with component specs & validation feedback)
+2025-11-12 15:00:40,290 - fin_picasso_framework.gen_data_validated - INFO - Running pilot validation (pre-execution checks)...
+2025-11-12 15:00:40,292 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: pilot - pass (problem 4, sample 1, attempt 3)
+2025-11-12 15:00:40,292 - fin_picasso_framework.gen_data_validated - INFO - ✅ Pilot validation passed
+2025-11-12 15:00:40,292 - fin_picasso_framework.gen_data_validated - INFO - Parsing and executing generated code...
+2025-11-12 15:00:40,352 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Extracting netlist from Python-generated component for YAML validation...
+2025-11-12 15:00:40,375 - fin_picasso_framework.gen_data_validated - WARNING - ⚠️  YAML netlist validation found issues: Missing required key: 'connections'
+2025-11-12 15:00:40,379 - fin_picasso_framework.gen_data_validated - INFO - Running P&R validation...
+2025-11-12 15:00:40,380 - fin_picasso_framework.validators.pnr_validator - INFO - P&R Validation: PASS (0 errors, 1 warnings)
+2025-11-12 15:00:40,380 - fin_picasso_framework.gen_data_validated - INFO - Running DRC validation...
+2025-11-12 15:00:40,385 - fin_picasso_framework.validators.drc_validator - WARNING - KLayout executable not found - skipping DRC check
+2025-11-12 15:00:40,385 - fin_picasso_framework.gen_data_validated - INFO - Running SAX validation...
+2025-11-12 15:00:40,407 - fin_picasso_framework.validators.sax_validator - INFO - SAX Validation: FAIL (compilation: False, routing: True)
+2025-11-12 15:00:40,407 - fin_picasso_framework.gen_data_validated - WARNING - SAX validation failed
+2025-11-12 15:00:40,411 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: pnr - pass (problem 4, sample 1, attempt 3)
+2025-11-12 15:00:40,416 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: drc - pass (problem 4, sample 1, attempt 3)
+2025-11-12 15:00:40,420 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: sax - fail (problem 4, sample 1, attempt 3)
+2025-11-12 15:00:40,420 - hf_inference_workflow.retry_handler - INFO - Recorded retry attempt 3 (failed at sax)
+2025-11-12 15:00:40,420 - fin_picasso_framework.gen_data_validated - WARNING - Validation failed at stage: sax
+2025-11-12 15:00:40,420 - fin_picasso_framework.gen_data_validated - WARNING - Max retries reached
+2025-11-12 15:00:40,420 - fin_picasso_framework.gen_data_validated - INFO - Attempting auto-correction as fallback...
+2025-11-12 15:00:40,420 - hf_inference_workflow.auto_corrector - INFO - Attempting auto-correction for error type: execution_error
+2025-11-12 15:00:40,421 - hf_inference_workflow.auto_corrector - WARNING - No auto-correction available for execution_error
+2025-11-12 15:00:40,421 - fin_picasso_framework.gen_data_validated - WARNING - No auto-correction available for this error type
+2025-11-12 15:00:40,421 - fin_picasso_framework.gen_data_validated - INFO - 📊 Phase 2 (Framework): ❌ FAILED (retries: 3)
+2025-11-12 15:00:40,421 - fin_picasso_framework.gen_data_validated - INFO - 
+============================================================
+2025-11-12 15:00:40,421 - fin_picasso_framework.gen_data_validated - INFO - Pass@4 failure detected - Updating pilot prompt for next attempt...
+2025-11-12 15:00:40,421 - fin_picasso_framework.gen_data_validated - INFO - Error: EXECUTION_ERROR: "key='o3' is not a valid port name or index. Make sure the instance is an array whe
+2025-11-12 15:00:40,421 - fin_picasso_framework.gen_data_validated - INFO - ============================================================
+2025-11-12 15:00:40,421 - fin_picasso_framework.pilot.pilot_prompt_updater - INFO - Analyzing 1 failed cases after pass@4
+2025-11-12 15:00:40,422 - fin_picasso_framework.gen_data_validated - INFO - ℹ️ No new pilot rules to apply after pass@4 (may need more context)
+Generating validated designs:  41%|████      | 11/27 [13:50<21:15, 79.74s/it]2025-11-12 15:00:40,422 - fin_picasso_framework.gen_data_validated - INFO - 
+============================================================
+2025-11-12 15:00:40,422 - fin_picasso_framework.gen_data_validated - INFO - Problem 4: QPSK Modulator - Sample 3/3
+2025-11-12 15:00:40,422 - fin_picasso_framework.gen_data_validated - INFO - ============================================================
+2025-11-12 15:00:40,422 - fin_picasso_framework.gen_data_validated - INFO - Problem 4, Sample 2, Attempt 1/4
+2025-11-12 15:01:11,619 - fin_picasso_framework.gen_data_validated - INFO - 📊 Using Vanilla LLM prompt (Phase 1 baseline - no component specs)
+2025-11-12 15:01:11,624 - fin_picasso_framework.gen_data_validated - INFO - Running pilot validation (pre-execution checks)...
+2025-11-12 15:01:11,627 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: pilot - fail (problem 4, sample 2, attempt 0)
+2025-11-12 15:01:11,627 - fin_picasso_framework.gen_data_validated - WARNING - ❌ Pilot validation failed: Syntax error: unterminated string literal (detected at line 12) (<unknown>, line 12)
+2025-11-12 15:01:11,628 - fin_picasso_framework.gen_data_validated - INFO - Pilot feedback for LLM: Syntax error: unterminated string literal (detected at line 12) (<unknown>, line 12)
+
+Fix: Check for unterminated strings, missing quotes, or invalid characters.
+2025-11-12 15:01:11,628 - hf_inference_workflow.retry_handler - INFO - Recorded retry attempt 0 (failed at parsing)
+2025-11-12 15:01:11,628 - fin_picasso_framework.gen_data_validated - INFO - Problem 4, Sample 2, Attempt 2/4
+2025-11-12 15:01:11,628 - fin_picasso_framework.gen_data_validated - INFO - 📊 Using Framework prompt (Phase 2 - with component specs & validation feedback)
+2025-11-12 15:01:34,868 - fin_picasso_framework.gen_data_validated - INFO - Running pilot validation (pre-execution checks)...
+2025-11-12 15:01:34,871 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: pilot - pass (problem 4, sample 2, attempt 1)
+2025-11-12 15:01:34,871 - fin_picasso_framework.gen_data_validated - INFO - ✅ Pilot validation passed
+2025-11-12 15:01:34,871 - fin_picasso_framework.gen_data_validated - INFO - Parsing and executing generated code...
+2025-11-12 15:01:34,925 - fin_picasso_framework.gen_data_validated - ERROR - Routing collision detected: Routing collision in straight_L20p625_N2_CSs_880e1511
+2025-11-12 15:01:34.925 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 15:01:34,926 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Attempting immediate auto-correction for routing collision (YAML netlist fix)...
+2025-11-12 15:01:34,940 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Falling back to code-based auto-correction...
+2025-11-12 15:01:34,940 - hf_inference_workflow.auto_corrector - INFO - Attempting auto-correction for error type: routing_error
+2025-11-12 15:01:34,941 - hf_inference_workflow.auto_corrector - INFO - Applied spacing increase (2.0x)
+2025-11-12 15:01:34,941 - hf_inference_workflow.auto_corrector - INFO - Auto-correction applied for routing_error (Unicode fixed: False)
+2025-11-12 15:01:34,941 - fin_picasso_framework.gen_data_validated - INFO - ✅ Auto-correction applied: Increased spacing by 2.0x (code-based fix)
+2025-11-12 15:01:34.940 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 15:01:34,956 - fin_picasso_framework.gen_data_validated - ERROR - Routing collision detected: Routing collision in straight_L20p625_N2_CSs_880e1511
+2025-11-12 15:01:34,956 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Attempting immediate auto-correction for routing collision (YAML netlist fix)...
+2025-11-12 15:01:34.955 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 15:01:34,969 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Falling back to code-based auto-correction...
+2025-11-12 15:01:34.969 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 15:01:34,969 - hf_inference_workflow.auto_corrector - INFO - Attempting auto-correction for error type: routing_error
+2025-11-12 15:01:34,969 - hf_inference_workflow.auto_corrector - INFO - Applied spacing increase (2.0x)
+2025-11-12 15:01:34,969 - hf_inference_workflow.auto_corrector - INFO - Auto-correction applied for routing_error (Unicode fixed: False)
+2025-11-12 15:01:34,969 - fin_picasso_framework.gen_data_validated - INFO - ✅ Auto-correction applied: Increased spacing by 2.0x (code-based fix)
+2025-11-12 15:01:34,985 - fin_picasso_framework.gen_data_validated - ERROR - Routing collision detected: Routing collision in straight_L20p625_N2_CSs_880e1511
+2025-11-12 15:01:34.985 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 15:01:34,985 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Attempting immediate auto-correction for routing collision (YAML netlist fix)...
+2025-11-12 15:01:34,998 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Falling back to code-based auto-correction...
+2025-11-12 15:01:34,998 - hf_inference_workflow.auto_corrector - INFO - Attempting auto-correction for error type: routing_error
+2025-11-12 15:01:34,998 - hf_inference_workflow.auto_corrector - INFO - Applied spacing increase (2.0x)
+2025-11-12 15:01:34,998 - hf_inference_workflow.auto_corrector - INFO - Auto-correction applied for routing_error (Unicode fixed: False)
+2025-11-12 15:01:34,998 - fin_picasso_framework.gen_data_validated - INFO - ✅ Auto-correction applied: Increased spacing by 2.0x (code-based fix)
+2025-11-12 15:01:34.998 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 15:01:35,013 - fin_picasso_framework.gen_data_validated - ERROR - Routing collision detected: Routing collision in straight_L20p625_N2_CSs_880e1511
+2025-11-12 15:01:35.013 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 15:01:35,013 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Attempting immediate auto-correction for routing collision (YAML netlist fix)...
+2025-11-12 15:01:35,026 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Falling back to code-based auto-correction...
+2025-11-12 15:01:35,026 - hf_inference_workflow.auto_corrector - INFO - Attempting auto-correction for error type: routing_error
+2025-11-12 15:01:35,026 - hf_inference_workflow.auto_corrector - INFO - Applied spacing increase (2.0x)
+2025-11-12 15:01:35,026 - hf_inference_workflow.auto_corrector - INFO - Auto-correction applied for routing_error (Unicode fixed: False)
+2025-11-12 15:01:35.025 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 15:01:35,026 - fin_picasso_framework.gen_data_validated - INFO - ✅ Auto-correction applied: Increased spacing by 2.0x (code-based fix)
+2025-11-12 15:01:35,041 - fin_picasso_framework.gen_data_validated - ERROR - Routing collision detected: Routing collision in straight_L20p625_N2_CSs_880e1511
+2025-11-12 15:01:35.041 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 15:01:35,041 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Attempting immediate auto-correction for routing collision (YAML netlist fix)...
+2025-11-12 15:01:35,054 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Falling back to code-based auto-correction...
+2025-11-12 15:01:35,054 - hf_inference_workflow.auto_corrector - INFO - Attempting auto-correction for error type: routing_error
+2025-11-12 15:01:35,054 - hf_inference_workflow.auto_corrector - INFO - Applied spacing increase (2.0x)
+2025-11-12 15:01:35,054 - hf_inference_workflow.auto_corrector - INFO - Auto-correction applied for routing_error (Unicode fixed: False)
+2025-11-12 15:01:35.054 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 15:01:35,054 - fin_picasso_framework.gen_data_validated - INFO - ✅ Auto-correction applied: Increased spacing by 2.0x (code-based fix)
+2025-11-12 15:01:35,069 - fin_picasso_framework.gen_data_validated - ERROR - Routing collision detected: Routing collision in straight_L20p625_N2_CSs_880e1511
+2025-11-12 15:01:35.069 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 15:01:35,069 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Attempting immediate auto-correction for routing collision (YAML netlist fix)...
+2025-11-12 15:01:35,081 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Falling back to code-based auto-correction...
+2025-11-12 15:01:35,081 - hf_inference_workflow.auto_corrector - INFO - Attempting auto-correction for error type: routing_error
+2025-11-12 15:01:35.081 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 15:01:35,082 - hf_inference_workflow.auto_corrector - INFO - Applied spacing increase (2.0x)
+2025-11-12 15:01:35,082 - hf_inference_workflow.auto_corrector - INFO - Auto-correction applied for routing_error (Unicode fixed: False)
+2025-11-12 15:01:35,082 - fin_picasso_framework.gen_data_validated - INFO - ✅ Auto-correction applied: Increased spacing by 2.0x (code-based fix)
+2025-11-12 15:01:35,096 - fin_picasso_framework.gen_data_validated - ERROR - Routing collision detected: Routing collision in straight_L20p625_N2_CSs_880e1511
+2025-11-12 15:01:35.096 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 15:01:35,096 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Attempting immediate auto-correction for routing collision (YAML netlist fix)...
+2025-11-12 15:01:35,109 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Falling back to code-based auto-correction...
+2025-11-12 15:01:35,109 - hf_inference_workflow.auto_corrector - INFO - Attempting auto-correction for error type: routing_error
+2025-11-12 15:01:35,109 - hf_inference_workflow.auto_corrector - INFO - Applied spacing increase (2.0x)
+2025-11-12 15:01:35,109 - hf_inference_workflow.auto_corrector - INFO - Auto-correction applied for routing_error (Unicode fixed: False)
+2025-11-12 15:01:35,109 - fin_picasso_framework.gen_data_validated - INFO - ✅ Auto-correction applied: Increased spacing by 2.0x (code-based fix)
+2025-11-12 15:01:35.109 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 15:01:35,124 - fin_picasso_framework.gen_data_validated - ERROR - Routing collision detected: Routing collision in straight_L20p625_N2_CSs_880e1511
+2025-11-12 15:01:35.124 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 15:01:35,124 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Attempting immediate auto-correction for routing collision (YAML netlist fix)...
+2025-11-12 15:01:35,137 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Falling back to code-based auto-correction...
+2025-11-12 15:01:35.137 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 15:01:35,137 - hf_inference_workflow.auto_corrector - INFO - Attempting auto-correction for error type: routing_error
+2025-11-12 15:01:35,137 - hf_inference_workflow.auto_corrector - INFO - Applied spacing increase (2.0x)
+2025-11-12 15:01:35,137 - hf_inference_workflow.auto_corrector - INFO - Auto-correction applied for routing_error (Unicode fixed: False)
+2025-11-12 15:01:35,137 - fin_picasso_framework.gen_data_validated - INFO - ✅ Auto-correction applied: Increased spacing by 2.0x (code-based fix)
+2025-11-12 15:01:35,151 - fin_picasso_framework.gen_data_validated - ERROR - Routing collision detected: Routing collision in straight_L20p625_N2_CSs_880e1511
+2025-11-12 15:01:35.151 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 15:01:35,151 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Attempting immediate auto-correction for routing collision (YAML netlist fix)...
+2025-11-12 15:01:35,162 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Falling back to code-based auto-correction...
+2025-11-12 15:01:35.162 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 15:01:35,162 - hf_inference_workflow.auto_corrector - INFO - Attempting auto-correction for error type: routing_error
+2025-11-12 15:01:35,162 - hf_inference_workflow.auto_corrector - INFO - Applied spacing increase (2.0x)
+2025-11-12 15:01:35,162 - hf_inference_workflow.auto_corrector - INFO - Auto-correction applied for routing_error (Unicode fixed: False)
+2025-11-12 15:01:35,162 - fin_picasso_framework.gen_data_validated - INFO - ✅ Auto-correction applied: Increased spacing by 2.0x (code-based fix)
+2025-11-12 15:01:35,175 - fin_picasso_framework.gen_data_validated - ERROR - Routing collision detected: Routing collision in straight_L20p625_N2_CSs_880e1511
+2025-11-12 15:01:35.175 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 15:01:35,175 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Attempting immediate auto-correction for routing collision (YAML netlist fix)...
+2025-11-12 15:01:35,188 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Falling back to code-based auto-correction...
+2025-11-12 15:01:35.188 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 15:01:35,188 - hf_inference_workflow.auto_corrector - INFO - Attempting auto-correction for error type: routing_error
+2025-11-12 15:01:35,188 - hf_inference_workflow.auto_corrector - INFO - Applied spacing increase (2.0x)
+2025-11-12 15:01:35,188 - hf_inference_workflow.auto_corrector - INFO - Auto-correction applied for routing_error (Unicode fixed: False)
+2025-11-12 15:01:35,188 - fin_picasso_framework.gen_data_validated - INFO - ✅ Auto-correction applied: Increased spacing by 2.0x (code-based fix)
+2025-11-12 15:01:35,203 - fin_picasso_framework.gen_data_validated - ERROR - Routing collision detected: Routing collision in straight_L20p625_N2_CSs_880e1511
+2025-11-12 15:01:35.203 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 15:01:35,203 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Attempting immediate auto-correction for routing collision (YAML netlist fix)...
+2025-11-12 15:01:35,216 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Falling back to code-based auto-correction...
+2025-11-12 15:01:35.216 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 15:01:35,216 - hf_inference_workflow.auto_corrector - INFO - Attempting auto-correction for error type: routing_error
+2025-11-12 15:01:35,216 - hf_inference_workflow.auto_corrector - INFO - Applied spacing increase (2.0x)
+2025-11-12 15:01:35,216 - hf_inference_workflow.auto_corrector - INFO - Auto-correction applied for routing_error (Unicode fixed: False)
+2025-11-12 15:01:35,216 - fin_picasso_framework.gen_data_validated - INFO - ✅ Auto-correction applied: Increased spacing by 2.0x (code-based fix)
+2025-11-12 15:01:35,230 - fin_picasso_framework.gen_data_validated - ERROR - Routing collision detected: Routing collision in straight_L20p625_N2_CSs_880e1511
+2025-11-12 15:01:35.230 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 15:01:35,230 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Attempting immediate auto-correction for routing collision (YAML netlist fix)...
+2025-11-12 15:01:35,243 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Falling back to code-based auto-correction...
+2025-11-12 15:01:35,243 - hf_inference_workflow.auto_corrector - INFO - Attempting auto-correction for error type: routing_error
+2025-11-12 15:01:35,243 - hf_inference_workflow.auto_corrector - INFO - Applied spacing increase (2.0x)
+2025-11-12 15:01:35,243 - hf_inference_workflow.auto_corrector - INFO - Auto-correction applied for routing_error (Unicode fixed: False)
+2025-11-12 15:01:35,243 - fin_picasso_framework.gen_data_validated - INFO - ✅ Auto-correction applied: Increased spacing by 2.0x (code-based fix)
+2025-11-12 15:01:35.243 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 15:01:35,258 - fin_picasso_framework.gen_data_validated - ERROR - Routing collision detected: Routing collision in straight_L20p625_N2_CSs_880e1511
+2025-11-12 15:01:35,258 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Attempting immediate auto-correction for routing collision (YAML netlist fix)...
+2025-11-12 15:01:35.258 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 15:01:35,272 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Falling back to code-based auto-correction...
+2025-11-12 15:01:35,272 - hf_inference_workflow.auto_corrector - INFO - Attempting auto-correction for error type: routing_error
+2025-11-12 15:01:35,272 - hf_inference_workflow.auto_corrector - INFO - Applied spacing increase (2.0x)
+2025-11-12 15:01:35,272 - hf_inference_workflow.auto_corrector - INFO - Auto-correction applied for routing_error (Unicode fixed: False)
+2025-11-12 15:01:35,272 - fin_picasso_framework.gen_data_validated - INFO - ✅ Auto-correction applied: Increased spacing by 2.0x (code-based fix)
+2025-11-12 15:01:35.271 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 15:01:35,287 - fin_picasso_framework.gen_data_validated - ERROR - Routing collision detected: Routing collision in straight_L20p625_N2_CSs_880e1511
+2025-11-12 15:01:35,287 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Attempting immediate auto-correction for routing collision (YAML netlist fix)...
+2025-11-12 15:01:35.287 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 15:01:35,301 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Falling back to code-based auto-correction...
+2025-11-12 15:01:35.301 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 15:01:35,301 - hf_inference_workflow.auto_corrector - INFO - Attempting auto-correction for error type: routing_error
+2025-11-12 15:01:35,301 - hf_inference_workflow.auto_corrector - INFO - Applied spacing increase (2.0x)
+2025-11-12 15:01:35,301 - hf_inference_workflow.auto_corrector - INFO - Auto-correction applied for routing_error (Unicode fixed: False)
+2025-11-12 15:01:35,301 - fin_picasso_framework.gen_data_validated - INFO - ✅ Auto-correction applied: Increased spacing by 2.0x (code-based fix)
+2025-11-12 15:01:35,318 - fin_picasso_framework.gen_data_validated - ERROR - Routing collision detected: Routing collision in straight_L20p625_N2_CSs_880e1511
+2025-11-12 15:01:35,318 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Attempting immediate auto-correction for routing collision (YAML netlist fix)...
+2025-11-12 15:01:35.318 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 15:01:35,333 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Falling back to code-based auto-correction...
+2025-11-12 15:01:35,333 - hf_inference_workflow.auto_corrector - INFO - Attempting auto-correction for error type: routing_error
+2025-11-12 15:01:35,333 - hf_inference_workflow.auto_corrector - INFO - Applied spacing increase (2.0x)
+2025-11-12 15:01:35,333 - hf_inference_workflow.auto_corrector - INFO - Auto-correction applied for routing_error (Unicode fixed: False)
+2025-11-12 15:01:35,333 - fin_picasso_framework.gen_data_validated - INFO - ✅ Auto-correction applied: Increased spacing by 2.0x (code-based fix)
+2025-11-12 15:01:35.332 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 15:01:35,349 - fin_picasso_framework.gen_data_validated - ERROR - Routing collision detected: Routing collision in straight_L20p625_N2_CSs_880e1511
+2025-11-12 15:01:35,349 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Attempting immediate auto-correction for routing collision (YAML netlist fix)...
+2025-11-12 15:01:35.349 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 15:01:35,364 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Falling back to code-based auto-correction...
+2025-11-12 15:01:35,364 - hf_inference_workflow.auto_corrector - INFO - Attempting auto-correction for error type: routing_error
+2025-11-12 15:01:35,364 - hf_inference_workflow.auto_corrector - INFO - Applied spacing increase (2.0x)
+2025-11-12 15:01:35,364 - hf_inference_workflow.auto_corrector - INFO - Auto-correction applied for routing_error (Unicode fixed: False)
+2025-11-12 15:01:35,364 - fin_picasso_framework.gen_data_validated - INFO - ✅ Auto-correction applied: Increased spacing by 2.0x (code-based fix)
+2025-11-12 15:01:35.364 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 15:01:35,499 - fin_picasso_framework.gen_data_validated - INFO - ✅ Auto-correction SUCCESS! Routing collision fixed by spacing adjustment
+2025-11-12 15:01:35,499 - fin_picasso_framework.gen_data_validated - INFO - ✅ Auto-correction SUCCESS! Routing collision fixed by spacing adjustment
+2025-11-12 15:01:35,499 - fin_picasso_framework.gen_data_validated - INFO - ✅ Auto-correction SUCCESS! Routing collision fixed by spacing adjustment
+2025-11-12 15:01:35,499 - fin_picasso_framework.gen_data_validated - INFO - ✅ Auto-correction SUCCESS! Routing collision fixed by spacing adjustment
+2025-11-12 15:01:35,499 - fin_picasso_framework.gen_data_validated - INFO - ✅ Auto-correction SUCCESS! Routing collision fixed by spacing adjustment
+2025-11-12 15:01:35,499 - fin_picasso_framework.gen_data_validated - INFO - ✅ Auto-correction SUCCESS! Routing collision fixed by spacing adjustment
+2025-11-12 15:01:35,499 - fin_picasso_framework.gen_data_validated - INFO - ✅ Auto-correction SUCCESS! Routing collision fixed by spacing adjustment
+2025-11-12 15:01:35,499 - fin_picasso_framework.gen_data_validated - INFO - ✅ Auto-correction SUCCESS! Routing collision fixed by spacing adjustment
+2025-11-12 15:01:35,499 - fin_picasso_framework.gen_data_validated - INFO - ✅ Auto-correction SUCCESS! Routing collision fixed by spacing adjustment
+2025-11-12 15:01:35,499 - fin_picasso_framework.gen_data_validated - INFO - ✅ Auto-correction SUCCESS! Routing collision fixed by spacing adjustment
+2025-11-12 15:01:35,499 - fin_picasso_framework.gen_data_validated - INFO - ✅ Auto-correction SUCCESS! Routing collision fixed by spacing adjustment
+2025-11-12 15:01:35,499 - fin_picasso_framework.gen_data_validated - INFO - ✅ Auto-correction SUCCESS! Routing collision fixed by spacing adjustment
+2025-11-12 15:01:35,499 - fin_picasso_framework.gen_data_validated - INFO - ✅ Auto-correction SUCCESS! Routing collision fixed by spacing adjustment
+2025-11-12 15:01:35,499 - fin_picasso_framework.gen_data_validated - INFO - ✅ Auto-correction SUCCESS! Routing collision fixed by spacing adjustment
+2025-11-12 15:01:35,499 - fin_picasso_framework.gen_data_validated - INFO - ✅ Auto-correction SUCCESS! Routing collision fixed by spacing adjustment
+2025-11-12 15:01:35,499 - fin_picasso_framework.gen_data_validated - INFO - ✅ Auto-correction SUCCESS! Routing collision fixed by spacing adjustment
+2025-11-12 15:01:35,499 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Extracting netlist from Python-generated component for YAML validation...
+2025-11-12 15:01:35,504 - fin_picasso_framework.utils.yaml_netlist_helper - WARNING - ⚠️  Netlist extraction failed: More than two connected optical ports: ['mzi_DL10_LY2_LX200_Bben_ff43f7ce_2147483647_0,o2', 'bend_euler_R15_A90_P0p5_14998747_m2147187649_m15000,o2', 'bend_euler_R15_A90_P0p5_14998747_m2147202649_0,o1', 'straight_L271_N2_CSstrip_WNone_m2147202649_0,o1']
+2025-11-12 15:01:35,504 - fin_picasso_framework.utils.yaml_netlist_helper - WARNING -    This is a GDSFactory limitation for complex port connections.
+2025-11-12 15:01:35,504 - fin_picasso_framework.utils.yaml_netlist_helper - WARNING -    Skipping YAML-based fixes for this component.
+2025-11-12 15:01:35,507 - fin_picasso_framework.gen_data_validated - INFO - Running P&R validation...
+2025-11-12 15:01:35,508 - fin_picasso_framework.validators.pnr_validator - INFO - P&R Validation: PASS (0 errors, 1 warnings)
+2025-11-12 15:01:35,508 - fin_picasso_framework.gen_data_validated - INFO - Running DRC validation...
+2025-11-12 15:01:35,517 - fin_picasso_framework.validators.drc_validator - WARNING - KLayout executable not found - skipping DRC check
+2025-11-12 15:01:35,517 - fin_picasso_framework.gen_data_validated - INFO - Running SAX validation...
+2025-11-12 15:01:35,528 - fin_picasso_framework.validators.sax_validator - INFO - SAX Validation: FAIL (compilation: False, routing: True)
+2025-11-12 15:01:35,528 - fin_picasso_framework.gen_data_validated - WARNING - SAX validation failed
+2025-11-12 15:01:35,532 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: pnr - pass (problem 4, sample 2, attempt 1)
+2025-11-12 15:01:35,535 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: drc - pass (problem 4, sample 2, attempt 1)
+2025-11-12 15:01:35,539 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: sax - fail (problem 4, sample 2, attempt 1)
+2025-11-12 15:01:35,539 - hf_inference_workflow.retry_handler - INFO - Recorded retry attempt 1 (failed at sax)
+2025-11-12 15:01:35,539 - fin_picasso_framework.gen_data_validated - WARNING - Validation failed at stage: sax
+2025-11-12 15:01:35,539 - fin_picasso_framework.gen_data_validated - INFO - Problem 4, Sample 2, Attempt 3/4
+2025-11-12 15:01:35,539 - fin_picasso_framework.gen_data_validated - INFO - 📊 Using Framework prompt (Phase 2 - with component specs & validation feedback)
+2025-11-12 15:02:13,547 - fin_picasso_framework.gen_data_validated - INFO - Running pilot validation (pre-execution checks)...
+2025-11-12 15:02:13,549 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: pilot - pass (problem 4, sample 2, attempt 2)
+2025-11-12 15:02:13,549 - fin_picasso_framework.gen_data_validated - INFO - ✅ Pilot validation passed
+2025-11-12 15:02:13,549 - fin_picasso_framework.gen_data_validated - INFO - Parsing and executing generated code...
+2025-11-12 15:02:13,625 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Extracting netlist from Python-generated component for YAML validation...
+2025-11-12 15:02:13,644 - fin_picasso_framework.gen_data_validated - WARNING - ⚠️  YAML netlist validation found issues: Missing required key: 'connections'
+2025-11-12 15:02:13,648 - fin_picasso_framework.gen_data_validated - INFO - Running P&R validation...
+2025-11-12 15:02:13,648 - fin_picasso_framework.validators.pnr_validator - INFO - P&R Validation: PASS (0 errors, 1 warnings)
+2025-11-12 15:02:13,649 - fin_picasso_framework.gen_data_validated - INFO - Running DRC validation...
+2025-11-12 15:02:13,655 - fin_picasso_framework.validators.drc_validator - WARNING - KLayout executable not found - skipping DRC check
+2025-11-12 15:02:13,656 - fin_picasso_framework.gen_data_validated - INFO - Running SAX validation...
+2025-11-12 15:02:13,674 - fin_picasso_framework.validators.sax_validator - INFO - SAX Validation: FAIL (compilation: False, routing: True)
+2025-11-12 15:02:13,674 - fin_picasso_framework.gen_data_validated - WARNING - SAX validation failed
+2025-11-12 15:02:13,677 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: pnr - pass (problem 4, sample 2, attempt 2)
+2025-11-12 15:02:13,681 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: drc - pass (problem 4, sample 2, attempt 2)
+2025-11-12 15:02:13,684 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: sax - fail (problem 4, sample 2, attempt 2)
+2025-11-12 15:02:13,684 - hf_inference_workflow.retry_handler - INFO - Recorded retry attempt 2 (failed at sax)
+2025-11-12 15:02:13,684 - fin_picasso_framework.gen_data_validated - WARNING - Validation failed at stage: sax
+2025-11-12 15:02:13,684 - fin_picasso_framework.gen_data_validated - WARNING - Max retries reached
+2025-11-12 15:02:13,684 - fin_picasso_framework.gen_data_validated - INFO - Attempting auto-correction as fallback...
+2025-11-12 15:02:13,684 - hf_inference_workflow.auto_corrector - INFO - Attempting auto-correction for error type: pilot_error
+2025-11-12 15:02:13,685 - hf_inference_workflow.auto_corrector - WARNING - No auto-correction available for pilot_error
+2025-11-12 15:02:13,685 - fin_picasso_framework.gen_data_validated - WARNING - No auto-correction available for this error type
+2025-11-12 15:02:13,685 - fin_picasso_framework.gen_data_validated - INFO - 📊 Phase 2 (Framework): ❌ FAILED (retries: 2)
+2025-11-12 15:02:13,685 - fin_picasso_framework.gen_data_validated - INFO - 
+============================================================
+2025-11-12 15:02:13,685 - fin_picasso_framework.gen_data_validated - INFO - Pass@3 failure detected - Updating pilot prompt for next attempt...
+2025-11-12 15:02:13,685 - fin_picasso_framework.gen_data_validated - INFO - Error: PILOT_ERROR: Syntax error: unterminated string literal (detected at line 12) (<unknown>, line 12)
+2025-11-12 15:02:13,685 - fin_picasso_framework.gen_data_validated - INFO - ============================================================
+2025-11-12 15:02:13,685 - fin_picasso_framework.pilot.pilot_prompt_updater - INFO - Analyzing 1 failed cases after pass@3
+2025-11-12 15:02:13,685 - fin_picasso_framework.gen_data_validated - INFO - ℹ️ No new pilot rules to apply after pass@3 (may need more context)
+Generating validated designs:  44%|████▍     | 12/27 [15:23<20:57, 83.85s/it]2025-11-12 15:02:13,685 - fin_picasso_framework.gen_data_validated - INFO - 
+============================================================
+2025-11-12 15:02:13,685 - fin_picasso_framework.gen_data_validated - INFO - Problem 4 Summary: 3/3 samples failed
+2025-11-12 15:02:13,685 - fin_picasso_framework.gen_data_validated - INFO - ============================================================
+2025-11-12 15:02:13,685 - fin_picasso_framework.gen_data_validated - INFO - 
+============================================================
+2025-11-12 15:02:13,685 - fin_picasso_framework.gen_data_validated - INFO - Problem 7: WDM Multiplexer - Sample 1/3
+2025-11-12 15:02:13,685 - fin_picasso_framework.gen_data_validated - INFO - ============================================================
+2025-11-12 15:02:13,685 - fin_picasso_framework.gen_data_validated - INFO - Problem 7, Sample 0, Attempt 1/4
+2025-11-12 15:03:20,433 - fin_picasso_framework.gen_data_validated - INFO - 📊 Using Vanilla LLM prompt (Phase 1 baseline - no component specs)
+/opt/homebrew/anaconda3/envs/picasso/lib/python3.10/multiprocessing/resource_tracker.py:224: UserWarning: resource_tracker: There appear to be 9 leaked semaphore objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '

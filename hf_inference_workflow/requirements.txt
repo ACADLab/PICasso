@@ -7,9 +7,10 @@ pandas>=2.0.0                   # Data handling
 tqdm>=4.65.0                    # Progress bars
 
 # Optional but recommended
-sax>=0.15.0                     # Circuit simulation (for SAX validation)
-jax>=0.4.0                      # Required by SAX
-jaxlib>=0.4.0                   # Required by SAX
+sax>=0.14.2                     # Circuit simulation (for SAX validation)
+jax==0.4.35                     # Required by SAX (pinned for klujax compatibility)
+jaxlib==0.4.35                  # Required by SAX (pinned for klujax compatibility)
+klujax==0.3.1                   # Required by SAX backend (pinned for compatibility)
 
 # For DRC checking (optional - install separately if needed)
 # klayout                       # KLayout for DRC (install from klayout.de)

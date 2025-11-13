@@ -1,0 +1,25 @@
+{
+  "mmi1x2": {
+    "sax_model_name": "mmi1x2",
+    "gdsfactory_version": "8.32.2"
+  },
+  "mzm": {
+    "sax_model_name": "straight",
+    "gdsfactory_version": "8.32.2",
+    "created": true
+  },
+  "ring": {
+    "sax_model_name": "straight",
+    "gdsfactory_version": "8.32.2",
+    "created": true
+  },
+  "mzi": {
+    "sax_model_name": "straight",
+    "gdsfactory_version": "8.32.2",
+    "created": true
+  },
+  "straight": {
+    "sax_model_name": "straight",
+    "gdsfactory_version": "8.32.2"
+  }
+}

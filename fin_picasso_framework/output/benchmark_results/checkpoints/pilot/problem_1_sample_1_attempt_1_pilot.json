@@ -1,0 +1,13 @@
+{
+  "timestamp": "2025-11-12T17:01:17.919867",
+  "stage": "pilot",
+  "problem_idx": 1,
+  "sample_idx": 1,
+  "attempt": 1,
+  "status": "pass",
+  "error": null,
+  "metadata": {
+    "validation_type": "pilot"
+  },
+  "code": "import gdsfactory as gf\n\nc = gf.Component()\n\n# Add MZI with specified parameters\nmzi_component = c.add_ref(gf.components.mzi(delta_length=10.0, length_x=100.0))\nmzi_component.move((0, 0))\n\n# Expose input and output ports\nc.add_port('o1', port=mzi_component.ports['o1'])\nc.add_port('o2', port=mzi_component.ports['o2'])\n\nc.draw_ports()\nc.plot()"
+}

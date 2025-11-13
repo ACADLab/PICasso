@@ -1,0 +1,23 @@
+{
+  "timestamp": "2025-11-12T14:55:26.800178",
+  "stage": "sax",
+  "problem_idx": 10,
+  "sample_idx": 0,
+  "attempt": 1,
+  "status": "fail",
+  "error": "SAX compilation check error: More than two connected optical ports: ['mzi_DL10_LY2_LX0p1_Bben_4daac747_0_0,o1', 'bend_euler_R15_A90_P0p5_14998747_m25000_m15000,o2', 'o1']",
+  "metadata": {
+    "validation_type": "sax"
+  },
+  "code": "import gdsfactory as gf\n\nr = gf.Component()\n\n# Instantiate components with settings\nmzi_switch = r.add_ref(gf.components.mzi())\nmzi_switch.move((0, 0))\n\nphase_control = r.add_ref(gf.components.straight_heater_metal())\nphase_control.move((200, 0))\n\n# Route connections\ngf.routing.route_single(\n    r,\n    mzi_switch.ports['o1'],\n    phase_control.ports['o1'],\n    cross_section='strip',\n    radius=15\n)\n\ngf.routing.route_single(\n    r,\n    mzi_switch.ports['o2'],\n    phase_control.ports['o2'],\n    cross_section='strip',\n    radius=15\n)\n\n# Expose external ports\nr.add_port('o1', port=mzi_switch.ports['o1'])\nr.add_port('o2', port=mzi_switch.ports['o2'])\n\nr.draw_ports()\nr.plot()",
+  "validation_report": {
+    "passed": false,
+    "errors": [
+      "SAX compilation check error: More than two connected optical ports: ['mzi_DL10_LY2_LX0p1_Bben_4daac747_0_0,o1', 'bend_euler_R15_A90_P0p5_14998747_m25000_m15000,o2', 'o1']"
+    ],
+    "warnings": [],
+    "sax_compiled": false,
+    "routing_validated": true
+  },
+  "gds_file": "checkpoints/sax/problem_10_sample_0_attempt_1_sax.gds"
+}

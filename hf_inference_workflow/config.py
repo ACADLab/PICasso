@@ -21,7 +21,8 @@ HF_API_TOKEN = os.getenv("HF_API_TOKEN", "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"
 
 # Model selection - Recommended models for code generation
 # NOTE: Most models require proper token permissions (see above)
-DEFAULT_MODEL = "Qwen/Qwen2.5-Coder-32B-Instruct"
+# DEFAULT_MODEL = "Qwen/Qwen2.5-Coder-32B-Instruct"  # Previous model (had syntax errors)
+DEFAULT_MODEL = "meta-llama/Llama-3.2-3B-Instruct"  # Testing smaller, faster model for better code quality
 
 # Alternative models (try these if one doesn't work):
 # DEFAULT_MODEL = "meta-llama/Llama-3.2-3B-Instruct"  # Smaller, faster
@@ -38,7 +39,7 @@ DEFAULT_MODEL = "Qwen/Qwen2.5-Coder-32B-Instruct"
 # ============================================================================
 
 SAMPLES_PER_PROBLEM = 3      # Number of design samples to generate per problem (pass@3 benchmarking)
-MAX_RETRY_ATTEMPTS = 3       # Maximum retry attempts for failed validations
+MAX_RETRY_ATTEMPTS = 2       # Maximum retry attempts for failed validations (reduced from 3 to force better first attempts)
 REFINE_ROUNDS = 0            # Additional refinement rounds (set to 0 for efficiency)
 
 # Two-Phase Tracking (for benchmarking raw LLM vs framework)
@@ -141,7 +142,7 @@ Write the python code to instantiate the circuit in GDSFactory 9.9.4.
 
 Follow the following structure for creating the circuit:
   1. Instantiate all components (with settings)
-  2. Move parts to avoid overlap (DRC-safe with minimum 20µm spacing)
+  2. Move parts to avoid overlap (DRC-safe with minimum 20um spacing)
   3. Connect ports with route_bundle (NOT route_single) for clean routing
   4. Expose external ports
 
@@ -152,7 +153,22 @@ Restrictions (immutable across problems):
   - Ports labelled o1, o2, … clockwise
   - Do not create custom names for any models/components, use the id's specified in the problem
   - Use route_bundle for coordinated routing (prevents messy layouts)
+  - CRITICAL: route_single() does NOT accept 'separation' parameter - only route_bundle() does
+  - CRITICAL: route_single() parameters: (component, port1, port2, cross_section, radius)
+  - CRITICAL: route_bundle() parameters: (component, ports1, ports2, cross_section, radius, separation)
   - Use single quotes around strings, avoid double quotes like ""xx""
+  - ⚠️⚠️⚠️ CRITICAL: Use ONLY ASCII characters. NEVER use Unicode characters! ⚠️⚠️⚠️
+     * Use 'um' NOT 'µm' (micro symbol)
+     * Use 'x' NOT '×' (multiplication symbol)
+     * Use '->' NOT '→' (arrow symbol)
+     * Use 'DeltaL' NOT 'ΔL' (Greek delta)
+     * This is MANDATORY - Unicode will cause syntax errors!
+  - CRITICAL: All numbers must be valid Python floats. Use 10.0 not 10 microns, not 10µm, not 10.0.5
+  - Example: If problem says "L = 10 microns", use length=10.0 (just the number as a float)
+  - CRITICAL: NEVER generate incomplete method calls like 'mmi2.0)' or 'component.0)'. Always include the complete method name.
+    * ❌ WRONG: mmi2.0)  # Missing method name!
+    * ✅ CORRECT: mmi2.move((250, 0))  # Complete method call
+    * ✅ CORRECT: mmi2.mirror()  # Complete method call
 
 Use the following example for your reference:
 import gdsfactory as gf
@@ -162,8 +178,9 @@ r = gf.Component()
 mmi_splitter = r.add_ref(gf.components.mmi1x2())
 mmi_splitter.move((0,0))
 
-mmi_combiner = r.add_ref(gf.components.mmi2x1())
-mmi_combiner.move((200, 0))
+mmi_combiner = r.add_ref(gf.components.mmi1x2())  # NOTE: mmi2x1 does NOT exist! Use mmi1x2 and mirror it
+mmi_combiner.mirror()  # Mirror to create 2x1 combiner from 1x2 splitter
+mmi_combiner.move((250, 0))  # Increased spacing for DRC safety
 
 ps1 = r.add_ref(gf.components.straight_heater_metal(length=10))
 ps1.move((100, 50))
@@ -171,23 +188,31 @@ ps1.move((100, 50))
 ps2 = r.add_ref(gf.components.straight_heater_metal(length=10))
 ps2.move((100, -50))
 
+# ✅ CORRECT: route_bundle() for multiple connections (accepts 'separation' parameter)
 gf.routing.route_bundle(
     r,
     [mmi_splitter.ports['o2'], mmi_splitter.ports['o3']],
     [ps1.ports['o1'], ps2.ports['o1']],
     cross_section='strip',
-    radius=10,
-    separation=10
+    radius=20,  # 20um (not 15um) - larger radius prevents routing issues
+    separation=20  # ✅ separation is ONLY for route_bundle(), 20um (not 15um) for safety
 )
 
+# ✅ CORRECT: route_bundle() for multiple connections
 gf.routing.route_bundle(
     r,
     [ps1.ports['o2'], ps2.ports['o2']],
     [mmi_combiner.ports['o1'], mmi_combiner.ports['o2']],
     cross_section='strip',
-    radius=10,
-    separation=10
+    radius=20,  # 20um (not 15um) - larger radius prevents routing issues
+    separation=20  # ✅ separation is ONLY for route_bundle(), 20um (not 15um) for safety
 )
+
+# ❌ WRONG: route_single() does NOT accept 'separation' parameter
+# gf.routing.route_single(r, port1, port2, cross_section='strip', separation=15)  # ❌ ERROR!
+
+# ✅ CORRECT: route_single() for single connections (no 'separation' parameter)
+# gf.routing.route_single(r, port1, port2, cross_section='strip', radius=15)  # ✅
 
 r.add_port('o1', port=mmi_splitter.ports['o1'])
 r.add_port('o2', port=mmi_combiner.ports['o3'])
@@ -236,6 +261,14 @@ Follow the following JSON netlist template:
 
 PYTHON_PROMPT_TEMPLATE = f"""
 You are a professional Photonic Integrated Circuit (PIC) designer with expertise in GDSFactory.
+
+⚠️⚠️⚠️ CRITICAL REQUIREMENT - READ THIS FIRST: ⚠️⚠️⚠️
+You MUST use ONLY ASCII characters in your code. NEVER use Unicode characters like 'µm', '×', '→', or 'Δ'.
+- Use 'um' NOT 'µm' (micro symbol)
+- Use 'x' NOT '×' (multiplication symbol)  
+- Use '->' NOT '→' (arrow symbol)
+- Use 'DeltaL' NOT 'ΔL' (Greek delta)
+Unicode characters will cause syntax errors and your code will fail validation. This is MANDATORY!
 Your task is to generate Python code based on the circuit design requirements provided.
 
 {'--- AVAILABLE GDSFACTORY COMPONENTS REFERENCE ---' if ENABLE_COMPONENT_INJECTION else ''}
@@ -244,6 +277,13 @@ Your task is to generate Python code based on the circuit design requirements pr
 {COMPONENT_SPECS if ENABLE_COMPONENT_INJECTION else ''}
 {'</warning>' if ENABLE_COMPONENT_INJECTION else ''}
 {'--- END COMPONENTS REFERENCE ---' if ENABLE_COMPONENT_INJECTION else ''}
+
+{'⚠️ CRITICAL: Common mistakes to avoid:' if ENABLE_COMPONENT_INJECTION else ''}
+{'  - mmi2x1 does NOT exist! Use mmi1x2() and mirror it: ref = r.add_ref(gf.components.mmi1x2()); ref.mirror()' if ENABLE_COMPONENT_INJECTION else ''}
+{'  - Always verify component names exist in gf.components before using them' if ENABLE_COMPONENT_INJECTION else ''}
+{'  - Check component.ports to see available port names' if ENABLE_COMPONENT_INJECTION else ''}
+{'  - Check SAX model availability: Components with ✅ have SAX models, ❌ means no SAX model' if ENABLE_COMPONENT_INJECTION else ''}
+{'  - If component has no SAX model, see SAX MODEL CREATION INSTRUCTIONS below' if ENABLE_COMPONENT_INJECTION else ''}
 
 IMPORTANT RESTRICTIONS (to avoid common mistakes):
   1. Component Selection:
@@ -256,28 +296,55 @@ IMPORTANT RESTRICTIONS (to avoid common mistakes):
      - Common mistake: Assuming port names like 'o3' exist when they don't
      - MMI ports: typically 'o1', 'o2' (outputs), check reference for exact names
      - All optical ports MUST be connected (no dangling ports)
+     - CRITICAL: Avoid connecting external ports to multiple internal ports simultaneously
+     - CRITICAL: GDSFactory's get_netlist() fails for "More than two connected optical ports"
+     - Solution: Connect ports one-to-one, avoid fan-out connections in netlist extraction
+     - If you need multiple connections, use intermediate routing components
 
   3. Component Mirroring (CRITICAL ERROR TO AVOID):
      - WRONG: gf.components.mmi1x2().mirror()  # Cell objects don't have mirror()
      - CORRECT: ref = r.add_ref(gf.components.mmi1x2()); ref.mirror()
      - Always call mirror() AFTER add_ref(), on the ComponentReference
 
-  4. Spacing Rules (prevents ROUTING_COLLISION):
-     - Minimum 80µm spacing between components (150µm for complex designs)
-     - Vertical stacking: Use ±60µm or more vertical offset
-     - Horizontal placement: 150-200µm separation
-     - Bend radius: ≥ 15µm (20-30µm for safety)
-     - Route separation in route_bundle: ≥ 15µm
+  4. Spacing Rules (prevents ROUTING_COLLISION) - CRITICAL:
+     - MINIMUM 200um spacing between components (MANDATORY - prevents routing collisions)
+     - For simple designs (≤5 components): 200um minimum
+     - For complex designs (>5 components): 250um+ spacing required
+     - Vertical stacking: Use +/-100um or more vertical offset (not 60um)
+     - Horizontal placement: 250-300um separation (not 150-200um)
+     - Bend radius: >= 20um (not 15um - larger is safer)
+     - Route separation in route_bundle: >= 20um (not 15um)
+     - CRITICAL: Framework will auto-fix routing collisions, but better spacing prevents issues
+     
+  5. Routing API Rules (CRITICAL - prevents API errors):
+     - route_single(component, port1, port2, cross_section, radius) - for SINGLE connections
+     - route_bundle(component, ports1, ports2, cross_section, radius, separation) - for MULTIPLE connections
+     - ❌ NEVER use: route_single(..., separation=...) - separation is ONLY for route_bundle()
+     - ✅ Use route_single() for 1-to-1 connections
+     - ✅ Use route_bundle() for multiple parallel connections (with separation parameter)
 
   5. Parameters and Settings:
      - Use default values unless explicitly specified in the problem
-     - If parameter difference specified (e.g., ΔL = 10µm), set one to default, adjust other
-     - Default unit: microns (µm)
+     - If parameter difference specified (e.g., DeltaL = 10um), set one to default, adjust other
+     - Default unit: microns (um)
 
   6. Code Format:
      - Use single quotes for strings (not double quotes)
      - No comments or explanations in code
-     - Follow the structure: instantiate → move → route → add_ports
+     - Follow the structure: instantiate -> move -> route -> add_ports
+     - ⚠️⚠️⚠️ CRITICAL: Use ONLY ASCII characters. NEVER use Unicode! ⚠️⚠️⚠️
+       * 'um' NOT 'µm' | 'x' NOT '×' | '->' NOT '→' | 'DeltaL' NOT 'ΔL'
+       * Unicode causes syntax errors - this is MANDATORY!
+     - CRITICAL: All numeric values must be valid Python floats. Examples:
+       * "10 microns" -> use 10.0 (not 10 microns, not 10µm, not 10.0.5)
+       * "DeltaL = 10" -> use delta_length=10.0 (just the number)
+       * "100um spacing" -> use 100.0 (just the number)
+       * Never attach units to numbers in code: use 10.0 not 10.0um
+     - CRITICAL: NEVER generate incomplete method calls like 'mmi2.0)' or 'component.0)'. 
+       * ❌ WRONG: mmi2.0)  # Missing method name!
+       * ✅ CORRECT: mmi2.move((250, 0))  # Complete method call
+       * ✅ CORRECT: mmi2.mirror()  # Complete method call
+       * Every method call must have: object.method_name(arguments)
 
 Your response MUST consist of TWO sections:
 
@@ -308,14 +375,21 @@ component2 = r.add_ref(gf.components.yyy(...))
 component2.move((x2, y2))
 
 # 2. Route connections
+# ✅ CORRECT: route_bundle() for multiple connections (accepts 'separation')
 gf.routing.route_bundle(
     r,
     [source_ports],
     [dest_ports],
     cross_section='strip',
     radius=15,
-    separation=15
+    separation=15  # ✅ separation parameter is ONLY for route_bundle()
 )
+
+# ❌ WRONG: route_single() does NOT accept 'separation' parameter
+# gf.routing.route_single(r, port1, port2, cross_section='strip', separation=15)  # ❌ ERROR!
+
+# ✅ CORRECT: route_single() for single connections (no 'separation')
+# gf.routing.route_single(r, port1, port2, cross_section='strip', radius=15)  # ✅
 
 # 3. Expose external ports
 r.add_port('o1', port=component1.ports['xxx'])
@@ -329,18 +403,18 @@ r.plot()
 REFERENCE EXAMPLE:
 <analysis>
 We need to create a Mach-Zehnder Modulator with:
-  1. One splitter (MMI 1×2)
+  1. One splitter (MMI 1x2)
   2. Two phase shifters (straight_heater_metal)
-  3. One combiner (MMI 2×1, needs mirroring for correct orientation)
+  3. One combiner (MMI 2x1, needs mirroring for correct orientation)
 
 Component arrangement:
   - Splitter at (0, 0)
-  - Phase shifters at (100, 50) and (100, -50) - vertical separation 100µm prevents collision
-  - Combiner at (250, 0) - horizontal separation 250µm provides safe routing space
+  - Phase shifters at (200, 100) and (200, -100) - vertical separation 200um prevents collision (not 100um)
+  - Combiner at (400, 0) - horizontal separation 400um provides safe routing space (not 250um)
 
 Port connections:
-  - Splitter o2, o3 → Phase shifter inputs
-  - Phase shifter outputs → Combiner o2, o1 (note reversed order after mirroring)
+  - Splitter o2, o3 -> Phase shifter inputs
+  - Phase shifter outputs -> Combiner o2, o1 (note reversed order after mirroring)
 
 Critical: Combiner needs mirror() called AFTER add_ref() to match port orientation.
 </analysis>
@@ -353,9 +427,9 @@ r = gf.Component()
 mmi_splitter = r.add_ref(gf.components.mmi1x2())
 mmi_splitter.move((0,0))
 
-mmi_combiner = r.add_ref(gf.components.mmi2x1())
-mmi_combiner.mirror()
-mmi_combiner.move((250, 0))
+mmi_combiner = r.add_ref(gf.components.mmi1x2())  # NOTE: mmi2x1 does NOT exist! Use mmi1x2 and mirror it
+mmi_combiner.mirror()  # Mirror to create 2x1 combiner from 1x2 splitter
+mmi_combiner.move((250, 0))  # Increased spacing for DRC safety
 
 ps1 = r.add_ref(gf.components.straight_heater_metal(length=10))
 ps1.move((100, 50))
@@ -363,23 +437,31 @@ ps1.move((100, 50))
 ps2 = r.add_ref(gf.components.straight_heater_metal(length=10))
 ps2.move((100, -50))
 
+# ✅ CORRECT: route_bundle() for multiple connections (accepts 'separation' parameter)
 gf.routing.route_bundle(
     r,
     [mmi_splitter.ports['o2'], mmi_splitter.ports['o3']],
     [ps1.ports['o1'], ps2.ports['o1']],
     cross_section='strip',
-    radius=15,
-    separation=15
+    radius=20,  # 20um (not 15um) - larger radius prevents routing issues
+    separation=20  # ✅ separation is ONLY for route_bundle(), 20um (not 15um) for safety
 )
 
+# ✅ CORRECT: route_bundle() for multiple connections
 gf.routing.route_bundle(
     r,
     [ps1.ports['o2'], ps2.ports['o2']],
     [mmi_combiner.ports['o2'], mmi_combiner.ports['o1']],
     cross_section='strip',
-    radius=15,
-    separation=15
+    radius=20,  # 20um (not 15um) - larger radius prevents routing issues
+    separation=20  # ✅ separation is ONLY for route_bundle(), 20um (not 15um) for safety
 )
+
+# ❌ WRONG: route_single() does NOT accept 'separation' parameter
+# gf.routing.route_single(r, port1, port2, cross_section='strip', separation=15)  # ❌ ERROR!
+
+# ✅ CORRECT: route_single() for single connections (no 'separation' parameter)
+# gf.routing.route_single(r, port1, port2, cross_section='strip', radius=15)  # ✅
 
 r.add_port('o1', port=mmi_splitter.ports['o1'])
 r.add_port('o2', port=mmi_combiner.ports['o3'])
@@ -447,3 +529,38 @@ MAX_GPU_MEMORY_GB = None          # Max GPU memory per device (None = auto)
 # Model Caching
 CACHE_DIR = PROJECT_ROOT / ".model_cache"  # Directory for model weights
 CACHE_DIR.mkdir(parents=True, exist_ok=True)
+
+# ============================================================================
+# Auto-Correction Configuration (PhIDO-inspired fallback corrections)
+# ============================================================================
+
+# Enable auto-correction fallback (after max retries exhausted)
+ENABLE_AUTO_CORRECTION = True         # Try rule-based corrections as last resort
+AUTO_CORRECT_MAX_ATTEMPTS = 1         # Number of auto-correction attempts (1 is usually sufficient)
+
+# Auto-correction applies PhIDO-inspired rule-based transformations:
+#   - mirror() on Cell → proper ComponentReference pattern
+#   - Spacing violations → increase spacing by 1.5x
+#   - Port name errors → common substitutions (e1→o1, out1→o1, etc.)
+#   - route_single overuse → suggest route_bundle conversion
+#   - Combiner orientation → add missing .mirror() calls
+
+# ============================================================================
+# Pilot Validator Configuration (Pre-execution validation)
+# ============================================================================
+
+# Pilot validator thresholds (stricter for complex circuits like 8-QAM)
+PILOT_MIN_SPACING_UM = 100.0          # Minimum component spacing (increased from 80µm)
+                                       # Higher threshold prevents dense layout collisions
+PILOT_MIN_VERTICAL_SPACING_UM = 60.0  # Minimum vertical spacing for stacked components
+                                       # Important for multi-MZM circuits like 8-QAM
+PILOT_MIN_BEND_RADIUS_UM = 15.0       # Minimum bend radius for low-loss routing
+PILOT_LEARNING_THRESHOLD = 3          # Create persistent rule after N occurrences
+
+# Pilot validation checks (pre-execution):
+#   1. Mirror errors: Detects gf.components.xxx().mirror() pattern (invalid)
+#   2. Spacing violations: Checks .move() coordinates for minimum separation
+#   3. Port errors: Catches common invalid port names (e1, out1, in1)
+#   4. Routing errors: Validates bend radius in route calls
+#   5. Routing method: Detects route_single overuse (>3 calls)
+#   6. Combiner orientation: Ensures MMI combiners have .mirror() call
