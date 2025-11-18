@@ -1,7 +1,7 @@
 """
 Analyze failed examples to extract error patterns.
 
-Purpose: Analyze all failed examples (PhIDO + converted Python) to extract error patterns,
+Purpose: Analyze all failed examples (YAML + converted Python) to extract error patterns,
 categorize errors, and generate statistics for base pilot prompt creation.
 """
 

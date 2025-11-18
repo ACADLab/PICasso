@@ -14,19 +14,196 @@ FRAMEWORK_ROOT = Path(__file__).parent
 OUTPUT_DIR = FRAMEWORK_ROOT / "output"
 VALIDATION_OUTPUT_DIR = FRAMEWORK_ROOT / "validation"
 FALSE_EXAMPLES_YAML_DIR = VALIDATION_OUTPUT_DIR / "false_examples_yaml"
-PHIDO_EXAMPLES_DIR = VALIDATION_OUTPUT_DIR / "phido_failed_examples"
 
 # Create output directories
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 FALSE_EXAMPLES_YAML_DIR.mkdir(parents=True, exist_ok=True)
-PHIDO_EXAMPLES_DIR.mkdir(parents=True, exist_ok=True)
 
 # ============================================================================
 # YAML DSL Prompt Template
 # ============================================================================
 
+# System prompt (embedded in injection)
+SYSTEM_PROMPT = """You are a photonic circuit synthesis engine.
+
+Your job is to generate valid YAML photonic circuits compatible with gdsfactory's generic_tech PDK.
+
+You must strictly follow these three items:
+
+1. YAML DSL SPECIFICATION
+2. CANONICAL YAML TEMPLATE
+3. STRICT OUTPUT RULES"""
+
 YAML_DSL_PROMPT_TEMPLATE = """
-You are a professional photonic integrated circuit (PIC) designer. Your task is to generate a YAML DSL netlist for the requested circuit using GDSFactory components.
+{system_prompt}
+
+===================================================
+### YAML DSL SPECIFICATION
+===================================================
+
+Top-level keys (all required):
+- instances
+- placements
+- routes (for connections - NOT 'connections')
+- ports
+
+------------------------------------------
+INSTANCES
+------------------------------------------
+instances:
+  <id>:
+    component: <component_name>
+    settings:
+      <parameter>: <value>
+
+Rules:
+- <id> must be unique.
+- component must be from ALLOWED_COMPONENTS.
+- settings may be {{}} if empty.
+- Numeric values must be raw numbers.
+
+------------------------------------------
+PLACEMENTS
+------------------------------------------
+placements:
+  <instance_id>:
+    x: <float>
+    y: <float>
+    rotation: <0|90|180|270>
+    mirror: <true|false>
+
+Rules:
+- Each instance appears exactly once as a key.
+- rotation ∈ {{0,90,180,270}}.
+- placements is a DICTIONARY (not a list).
+
+------------------------------------------
+ROUTES (for connections)
+------------------------------------------
+routes:
+  optical:
+    settings:
+      cross_section: strip
+      radius: 20.0
+    links:
+      <instance1>,<port1>: <instance2>,<port2>
+
+Rules:
+- Use 'routes' section (NOT 'connections').
+- routes.optical.links is a DICTIONARY (not a list).
+- Format: "source_instance,port: target_instance,port"
+
+------------------------------------------
+PORTS
+------------------------------------------
+ports:
+  <exported_port_name>: <instance_id>,<port>
+
+Rules:
+- ports is a DICTIONARY (not a list).
+- Format: "port_name: instance,port"
+
+------------------------------------------
+ALLOWED COMPONENTS (generic_tech PDK)
+------------------------------------------
+⚠️ CRITICAL: Use ONLY these components. Others do NOT exist in generic_tech PDK!
+
+✅ Available components:
+- straight (NOT 'waveguide')
+- bend_euler
+- mmi1x2 (use with mirror: true for 2x1 combiner - mmi2x1 does NOT exist)
+- mmi2x2
+- coupler (NOT 'dc_2x2')
+- mzi
+- ring_single
+- straight_heater_metal (NOT 'phase_shifter' or 'heater')
+- taper
+- spiral
+- grating_coupler_elliptical
+- crossing
+- bend_s
+- bend_circular
+
+❌ Components that DO NOT exist (use alternatives):
+- mmi2x1 → Use mmi1x2 with mirror: true
+- phase_shifter → Use straight_heater_metal
+- heater → Use straight_heater_metal
+- y_splitter → Use coupler or mmi1x2
+- y_junction → Use coupler or mmi1x2
+- dc_2x2 → Use coupler
+- waveguide → Use straight
+- star_coupler → Use coupler or mmi2x2
+- photodiode → Not available in generic_tech PDK
+
+------------------------------------------
+VALID PORT NAMES (gdsfactory standard)
+------------------------------------------
+straight: o1, o2
+bend_euler: o1, o2
+mmi1x2: o1, o2, o3 (o1=input, o2/o3=outputs)
+mmi2x2: o1, o2, o3, o4
+mzi: o1, o2
+coupler: o1, o2, o3, o4
+ring_single: o1, o2
+straight_heater_metal: o1, o2
+
+===================================================
+### CANONICAL YAML TEMPLATE (REFERENCE)
+===================================================
+
+instances:
+  splitter:
+    component: mmi1x2
+    settings: {{}}
+  phase:
+    component: straight_heater_metal
+    settings: {{length: 20}}
+  combiner:
+    component: mmi1x2
+    settings: {{}}
+
+placements:
+  splitter:
+    x: 0
+    y: 0
+    rotation: 0
+    mirror: false
+  phase:
+    x: 40
+    y: 0
+    rotation: 0
+    mirror: false
+  combiner:
+    x: 80
+    y: 0
+    rotation: 0
+    mirror: true
+
+routes:
+  optical:
+    settings:
+      cross_section: strip
+      radius: 20.0
+    links:
+      splitter,o2: phase,o1
+      phase,o2: combiner,o1
+
+ports:
+  in: splitter,o1
+  out: combiner,o2
+
+===================================================
+### STRICT OUTPUT RULES
+===================================================
+
+- Output **YAML only** (no text or commentary).
+- No comments (# ...).
+- No invented components or ports.
+- All components must be from ALLOWED_COMPONENTS.
+- All ports must be valid.
+- Must follow DSL structure exactly.
+- Must be loadable by gf.read.from_yaml().
+- Do NOT perform optimization; only layout topology.
 
 CRITICAL REQUIREMENT - READ THIS FIRST: ASCII ONLY - NO UNICODE!
 ⚠️⚠️⚠️ MANDATORY: Use ONLY ASCII characters in YAML DSL output! ⚠️⚠️⚠️
@@ -78,7 +255,7 @@ instances:
     settings:
       width: 4.0
       length: 10.0
-  phase_shifter:
+  phase_arm:
     component: straight_heater_metal
     settings:
       length: 100.0
@@ -90,7 +267,7 @@ placements:
     x: 250.0
     y: 0.0
     mirror: true
-  phase_shifter:
+  phase_arm:
     x: 100.0
     y: 0.0
 routes:
@@ -99,8 +276,8 @@ routes:
       cross_section: strip
       radius: 20.0
     links:
-      mmi_splitter,o2: phase_shifter,o1
-      phase_shifter,o2: mmi_combiner,o1
+      mmi_splitter,o2: phase_arm,o1
+      phase_arm,o2: mmi_combiner,o1
 ports:
   in: mmi_splitter,o1
   out: mmi_combiner,o2
@@ -145,6 +322,83 @@ CRITICAL RULES:
 Your response MUST be ONLY the YAML DSL netlist (no explanations, no markdown code blocks, just the YAML).
 """
 
+# Vanilla prompt (Phase 1 - no injection, no pilot)
+VANILLA_PROMPT_TEMPLATE = """
+{system_prompt}
+
+===================================================
+### YAML DSL SPECIFICATION
+===================================================
+
+Top-level keys (all required):
+- instances
+- placements
+- routes (for connections - NOT 'connections')
+- ports
+
+See CANONICAL YAML TEMPLATE below for structure.
+
+===================================================
+### CANONICAL YAML TEMPLATE (REFERENCE)
+===================================================
+
+instances:
+  splitter:
+    component: mmi1x2
+    settings: {{}}
+  phase:
+    component: straight_heater_metal
+    settings: {{length: 20}}
+  combiner:
+    component: mmi1x2
+    settings: {{}}
+
+placements:
+  splitter:
+    x: 0
+    y: 0
+    rotation: 0
+    mirror: false
+  phase:
+    x: 40
+    y: 0
+    rotation: 0
+    mirror: false
+  combiner:
+    x: 80
+    y: 0
+    rotation: 0
+    mirror: true
+
+routes:
+  optical:
+    settings:
+      cross_section: strip
+      radius: 20.0
+    links:
+      splitter,o2: phase,o1
+      phase,o2: combiner,o1
+
+ports:
+  in: splitter,o1
+  out: combiner,o2
+
+===================================================
+### STRICT OUTPUT RULES
+===================================================
+
+- Output **YAML only** (no text or commentary).
+- No comments (# ...).
+- No invented components or ports.
+- Must follow DSL structure exactly.
+- Must be loadable by gf.read.from_yaml().
+- Do NOT perform optimization; only layout topology.
+
+CRITICAL: ASCII ONLY - NO UNICODE! Use 'um' NOT 'µm', 'x' NOT '×', '->' NOT '→', 'DeltaL' NOT 'ΔL'.
+
+Your response MUST be ONLY the YAML DSL netlist (no explanations, no markdown code blocks, just the YAML).
+"""
+
 # Component injection placeholder (will be filled by component_spec_loader)
 COMPONENT_INJECTION_PLACEHOLDER = "{component_injection}"
 
@@ -159,6 +413,8 @@ PILOT_PROMPT_PLACEHOLDER = "{pilot_prompt}"
 ENABLE_YAML_PILOT_VALIDATION = True
 ENABLE_DRC_CHECK = True
 ENABLE_LVS_CHECK = True  # If scalable
+ENABLE_SAX_CHECK = True  # Functional validation using SAX
+SAX_TIMEOUT = 30  # Maximum time for SAX compilation (seconds)
 ENABLE_AUTO_CORRECTION = True
 ENABLE_DEVICE_OPTIMIZATION = True
 ENABLE_CIRCUIT_OPTIMIZATION = True

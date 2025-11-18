@@ -39,32 +39,101 @@ def estimate_pass_at_k(num_samples: int, num_correct: int, k: int) -> float:
     return 1.0 - numerator / denominator
 
 
-def compute_spec_at_k(results: List[Dict], k: int = 3) -> float:
+def compute_spec_at_k_structural(results: List[Dict], k: int = 3) -> float:
     """
-    Compute Spec@k: Specification satisfaction @k.
-
-    Spec@k extends Pass@k by requiring BOTH structural AND functional validation.
-
+    Compute Spec@k_structural: Structural specification satisfaction @k.
+    
+    For Phase 1 (vanilla LLM baseline): Only checks structural correctness.
+    
+    Structural Pass Criteria:
+    - ✅ YAML builds into gdsfactory component (component_built = True)
+    - ✅ DRC passes (drc_passed = True)
+    
+    Formula: Spec@k_structural = 1 - C(n-c_s, k) / C(n, k)
+    Where c_s = number of structurally valid samples.
+    
     Args:
         results: List of generation results with validation reports
         k: Number of samples to consider (default: 3)
+    
+    Returns:
+        Spec@k_structural score (0.0 to 1.0)
+    """
+    # Count samples passing structural validation
+    structural_successes = []
+    
+    for r in results:
+        # Structural pass: component built AND DRC passed
+        component_built = r.get('component_built', False)
+        drc_passed = r.get('drc_passed', True)  # Default True if DRC not checked
+        
+        structural_successes.append(component_built and drc_passed)
+    
+    num_correct = sum(structural_successes)
+    num_samples = len(results)
+    
+    return estimate_pass_at_k(num_samples, num_correct, k)
 
+
+def compute_spec_at_k_full(results: List[Dict], k: int = 3) -> float:
+    """
+    Compute Spec@k_full: Full specification satisfaction @k.
+    
+    For Phase 2 (PICasso framework): Checks structural + functional + optimization correctness.
+    
+    Full Pass Criteria:
+    - ✅ Structural Pass: Component builds, DRC passes
+    - ✅ Functional Pass: Circuit behavior matches specification (SAX validation)
+    - ✅ Optimization Pass: Optimization completed successfully (if enabled)
+    
+    Formula: Spec@k_full = 1 - C(n-c_f, k) / C(n, k)
+    Where c_f = number of samples passing structural AND functional AND optimization validation.
+    
+    Args:
+        results: List of generation results with validation reports
+        k: Number of samples to consider (default: 3)
+    
+    Returns:
+        Spec@k_full score (0.0 to 1.0)
+    """
+    # Count samples passing structural, functional, and optimization validation
+    full_successes = []
+    
+    for r in results:
+        # Structural pass: component built AND DRC passed
+        component_built = r.get('component_built', False)
+        drc_passed = r.get('drc_passed', True)  # Default True if DRC not checked
+        structural_pass = component_built and drc_passed
+        
+        # Functional pass: SAX validation passed
+        functional_pass = r.get('functional_pass', False)
+        
+        # Optimization pass: optimization completed (if enabled)
+        # If optimization is not enabled, this is considered passed
+        optimization_done = r.get('optimization_done', True)  # Default True if optimization not enabled
+        
+        full_successes.append(structural_pass and functional_pass and optimization_done)
+    
+    num_correct = sum(full_successes)
+    num_samples = len(results)
+    
+    return estimate_pass_at_k(num_samples, num_correct, k)
+
+
+def compute_spec_at_k(results: List[Dict], k: int = 3) -> float:
+    """
+    Compute Spec@k: Specification satisfaction @k (legacy function, now calls Spec@k_full).
+    
+    This is kept for backward compatibility. Use compute_spec_at_k_full() for clarity.
+    
+    Args:
+        results: List of generation results with validation reports
+        k: Number of samples to consider (default: 3)
+    
     Returns:
         Spec@k score (0.0 to 1.0)
     """
-    # Count samples passing both structural and functional validation
-    spec_successes = []
-
-    for r in results:
-        structural_pass = r.get('success', False)
-        functional_pass = r.get('validation_reports', {}).get('functional', {}).get('passed', False)
-
-        spec_successes.append(structural_pass and functional_pass)
-
-    num_correct = sum(spec_successes)
-    num_samples = len(results)
-
-    return estimate_pass_at_k(num_samples, num_correct, k)
+    return compute_spec_at_k_full(results, k)
 
 
 def compute_opt_efficiency(result: Dict, epsilon: float = 0.1) -> float:
@@ -202,7 +271,8 @@ def compute_metrics_for_circuit(
     beta: float = 0.2,
     gamma: float = 0.3,
     epsilon: float = 0.1,
-    compute_robust_pass: bool = False
+    compute_robust_pass: bool = False,
+    phase: str = "picasso"  # "vanilla" or "picasso"
 ) -> Dict:
     """
     Compute all metrics for a single circuit type.
@@ -215,16 +285,23 @@ def compute_metrics_for_circuit(
         gamma: RobustPass weight in robustness score
         epsilon: Small constant for OptEff calculation (default: 0.1 dB)
         compute_robust_pass: Whether to compute RobustPass (can be slow, default: False)
+        phase: "vanilla" (Phase 1) or "picasso" (Phase 2), determines which Spec@k to compute
 
     Returns:
         Dictionary with all computed metrics
     """
-    # Pass@k (structural only)
+    # Pass@k (structural only - legacy)
     structural_successes = sum(1 for r in results if r.get('success', False))
     pass_at_k = estimate_pass_at_k(len(results), structural_successes, k)
 
-    # Spec@k (structural + functional)
-    spec_at_k = compute_spec_at_k(results, k)
+    # Spec@k_structural (used for both Phase 1 and Phase 2)
+    spec_at_k_structural = compute_spec_at_k_structural(results, k)
+    
+    # Spec@k_full (evaluated separately for both phases)
+    spec_at_k_full = compute_spec_at_k_full(results, k)
+    
+    # Use Spec@k_structural as the primary metric for both phases
+    spec_at_k = spec_at_k_structural
 
     # Average Opt-Efficiency
     opt_efficiencies = [
@@ -244,16 +321,26 @@ def compute_metrics_for_circuit(
         spec_at_k, avg_opt_efficiency, robust_pass_val, alpha, beta, gamma
     )
 
+    # Count structural passes (for Spec@k_structural)
+    num_structural_pass = sum(1 for r in results 
+                              if r.get('component_built', False) and r.get('drc_passed', True))
+    
+    # Count full passes (for Spec@k_full)
+    num_full_pass = sum(1 for r in results
+                       if (r.get('component_built', False) and r.get('drc_passed', True) and
+                           r.get('functional_pass', False) and r.get('optimization_done', True)))
+    
     return {
         'pass_at_k': float(pass_at_k),
-        'spec_at_k': float(spec_at_k),
+        'spec_at_k_structural': float(spec_at_k_structural),
+        'spec_at_k_full': float(spec_at_k_full),
+        'spec_at_k': float(spec_at_k),  # Depends on phase
         'avg_opt_efficiency': float(avg_opt_efficiency),
         'robust_pass': float(robust_pass_val),
         'robustness_score': float(robustness),
         'num_samples': len(results),
-        'num_structural_pass': structural_successes,
-        'num_spec_pass': sum(1 for r in results if r.get('success', False) and
-                            r.get('validation_reports', {}).get('functional', {}).get('passed', False))
+        'num_structural_pass': num_structural_pass,
+        'num_full_pass': num_full_pass
     }
 
 

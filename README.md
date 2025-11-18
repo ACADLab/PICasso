@@ -2,239 +2,169 @@
 
 **AI-Powered Photonic Integrated Circuit Generation with Validation + Optimization**
 
-## 🎯 What's New: Optimization + GPU Cluster Support
+## Overview
 
-**Latest Updates (Jan 2025)**:
-- 🎯 **Novel Benchmarking Metrics**: Spec@k, Opt-Efficiency, Robustness Score
-- 🧪 **Functional Validation**: SPICE-style testbenches using SAX simulation
-- 🛡️ **Pilot System**: SPICEPilot-inspired error prevention (learns from mistakes)
-- ⚡ **Local GPU Models**: Run on your cluster (no API limits, 10× faster)
-- 🎛️ **Two-Level Optimization**: Device geometries + circuit parameters
-- 🎯 **Loss Target Validation**: Verify against research benchmarks
-- 📊 **PIC-bench Comparison**: Outperforms baseline on 36 circuits
+PICasso is a framework for automated photonic integrated circuit (PIC) design using Large Language Models (LLMs). The framework uses a YAML DSL approach where LLMs generate YAML netlists directly compatible with GDSFactory's `generic_tech` PDK.
 
-### ✅ Complete Workflow:
-1. **Generate** with local GPU LLMs (DeepSeek, Qwen, etc.)
-2. **Pilot Validate** (pre-execution error prevention)
-3. **Validate** with P&R + DRC + SAX + Functional checks
-4. **Optimize** device geometries + circuit parameters
-5. **Verify** against target values from research literature
-6. **Save** only designs that meet all criteria
+**Primary Framework**: The main development work is in the `gd_picasso/` directory. See [gd_picasso/README.md](gd_picasso/README.md) for complete documentation.
 
-### ✅ Key Features:
-- **Quad Validation**: P&R + DRC + SAX + Functional testbenches
-- **Novel Metrics**: Spec@k (functional correctness), Opt-Efficiency, Robustness Score
-- **Two-Level Optimization**: Device geometries + phase shifters/couplers
-- **Pilot System**: Catches errors before execution (mirror, spacing, ports)
-- **Loss Target Validation**: Compare against 20+ research-based targets
-- **Smart Retry**: LLM gets feedback and corrects designs
-- **Local GPU Support**: No rate limits, faster, unlimited generation
-- **100% Quality**: Only saves validated + optimized designs
+## 🎯 Key Features
 
-### 🚀 Quick Start: GPU Cluster (Recommended)
+- **YAML DSL Generation**: LLMs generate YAML netlists directly (no Python code)
+- **Two-Phase Testing**: Vanilla (baseline) and PICasso (with framework features) comparison
+- **Pre-execution Validation**: Pilot validator catches errors before component building
+- **Retry Logic with Feedback**: LLM learns from errors and fixes them iteratively
+- **DRC Validation**: Real design rule checking using `generic_tech` PDK and KLayout
+- **LVS Validation**: Layout vs Schematic verification
+- **Two-Level Optimization**: Device-level (component geometries) and circuit-level (phase/coupling parameters)
+- **Comprehensive Metrics**: Spec@k, Opt-Efficiency, RobustPass, Overall Robustness Score
+- **Optimization Analysis**: Before/after comparison of circuit performance
+
+## 🚀 Quick Start
+
+### Prerequisites
 
 ```bash
-# 1. Setup (one-time, 15-20 min)
-pip install torch transformers accelerate gdsfactory sax
-# See GPU_CLUSTER_SETUP.md for detailed setup
+# Install dependencies
+pip install gdsfactory sax pydantic pyyaml
 
-# 2. Generate with local GPU models + optimization
-cd hf_models
-python hf_gen_data.py  # Uses local DeepSeek-R1-Qwen-14B
-
-# 3. Full validated + optimized workflow
-cd hf_inference_workflow
-python gen_data_validated.py --problems ../problems.txt
-
-# Results:
-# - output/results/*.csv (with IL metrics)
-# - output/gds_files/*.gds (validated + optimized)
+# Set API keys (for LLM access)
+export OPENAI_API_KEY="your-key-here"  # For GPT models
+export ANTHROPIC_API_KEY="your-key-here"  # For Claude models
+export HF_TOKEN="your-token-here"  # For HuggingFace models
 ```
 
-**📖 Guides:**
-- **[GPU_CLUSTER_SETUP.md](GPU_CLUSTER_SETUP.md)** - Complete GPU setup (start here!)
-- **[TODO.md](TODO.md)** - Implementation tasks and testing
-- **[FUTURE_WORK.md](FUTURE_WORK.md)** - Research directions
-
-### 🚀 Quick Start: API Inference (For Testing)
+### Run Framework Tests
 
 ```bash
-cd hf_inference_workflow
+cd gd_picasso
 
-# Quick test with API (no GPU needed)
-python run_test_with_llm.py
+# Run full test suite (both vanilla and picasso phases)
+python test_with_llm.py \
+    --model gpt-4o \
+    --problems problems_parsed.txt \
+    --num-problems 36 \
+    --samples 5
 
-# Full generation with API
-python gen_data_validated.py --problems test_challenging_problems.txt
+# Run vanilla phase only (baseline)
+python test_with_llm.py \
+    --model gpt-4o \
+    --problems problems_parsed.txt \
+    --num-problems 36 \
+    --samples 5 \
+    --vanilla-only
+
+# Run PICasso phase only (with framework)
+python test_with_llm.py \
+    --model gpt-4o \
+    --problems problems_parsed.txt \
+    --num-problems 36 \
+    --samples 5 \
+    --picasso-only
 ```
 
-**See [hf_inference_workflow/START_HERE.md](hf_inference_workflow/START_HERE.md) for API setup!**
+### Run Optimization Analysis
 
----
+```bash
+cd gd_picasso
+
+# Quick analysis (Problem 1, 20 samples)
+python quick_optimization_analysis.py
+
+# Full analysis (All problems, all models)
+python analyze_all_optimizations.py --max-samples 5
+```
 
 ## 📁 Project Structure
 
-```bash
+```
 PICasso/
-├── picasso_flow_package/       # Original workflow
-│   ├── schemas.py              → JSON netlist schema (Pydantic)
-│   ├── placer.py              → Safe component placement
-│   ├── router.py              → Deterministic routing with gdsfactory
-│   ├── pipeline.py            → LLM → validated netlist → GDS
-│   └── cli.py                 → Command-line interface
+├── gd_picasso/                    # Main framework (primary development)
+│   ├── README.md                  → Complete framework documentation
+│   ├── FRAMEWORK.md               → Detailed architecture and workflow
+│   ├── USAGE.md                   → Usage guide and examples
+│   ├── OPTIMIZATION_ANALYSIS_README.md → Optimization analysis guide
+│   ├── agents/                    → LLM agent implementations
+│   ├── validators/                → Validation modules (YAML, DRC, LVS, SAX, P&R)
+│   ├── optimizers/                → Device and circuit optimizers
+│   ├── pilot/                     → Error prevention system
+│   ├── injection/                 → Component specification injection
+│   ├── utils/                     → Utility functions
+│   ├── tests/                     → Test suite
+│   ├── config.py                  → Configuration and prompts
+│   ├── metrics.py                 → Metrics calculation
+│   ├── test_with_llm.py           → Main test runner
+│   └── problems_parsed.txt        → 36 benchmark problems
 │
-├── hf_inference_workflow/      # NEW: Validated generation
-│   ├── gen_data_validated.py  → Main workflow with P&R/DRC/SAX validation
-│   ├── hf_api_client.py        → HuggingFace Inference API wrapper
-│   ├── validators/             → P&R, DRC, SAX validators
-│   ├── retry_handler.py        → Smart retry with LLM feedback
-│   ├── README.md               → Complete documentation
-│   └── START_HERE.md           → Quick start guide
-│
-├── openAI_llms/                # OpenAI GPT-4 workflow
-│   ├── gen_data.py             → Data generation
-│   └── agent.py                → LLM agent
-│
-└── hf_models/                  # HuggingFace local models
-    └── hf_agent.py             → Local model inference
+├── picasso_flow_package/          # Legacy: Original JSON netlist workflow
+├── hf_inference_workflow/         # Legacy: HuggingFace inference workflow
+├── fin_picasso_framework/         # Legacy: Previous framework iteration
+└── openAI_llms/                   # Legacy: OpenAI workflow
 ```
-
-## 🚀 How to Use
-
-### Option 1: HF Inference Workflow (Recommended - Validated Designs)
-
-**Complete validation with P&R/DRC/SAX checks:**
-
-```bash
-cd hf_inference_workflow
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Configure HF API token
-# Get token from https://huggingface.co/settings/tokens
-export HF_API_TOKEN=your_token_here  # Linux/Mac
-# or
-set HF_API_TOKEN=your_token_here     # Windows
-
-# Run validation workflow
-python gen_data_validated.py --problems test_challenging_problems.txt
-
-# Results:
-# - CSV: output/results/*.csv (validation status for each design)
-# - GDS: output/gds_files/*.gds (only validated designs)
-```
-
-**Key Benefits:**
-- ✅ Catches messy layouts (P&R validation)
-- ✅ Ensures fabrication compliance (DRC validation)
-- ✅ Verifies functional correctness (SAX validation)
-- ✅ Auto-corrects failed designs with LLM feedback
-- ✅ No more "clumsy but SAX-passing" designs!
-
-**See [hf_inference_workflow/README.md](hf_inference_workflow/README.md) for details.**
-
----
-
-### Option 2: Original Pipeline (JSON Netlist-based)
-
-**For pre-validated netlists:**
-
-```bash
-pip install gdsfactory pydantic
-
-# Run pipeline with sample problem + netlist
-python -m picasso_flow.cli \
-  --problem sample_problem.txt \
-  --llm-json sample_llm_netlist.json \
-  --out-gds design.gds
-```
-
-Replace `--llm-json` with actual LLM outputs (JSON).
-
-Extend `run_pipeline()` in pipeline.py to call your LLM.
-
----
-
-### Option 3: OpenAI GPT-4 Workflow
-
-**For GPT-4 based generation:**
-
-```bash
-cd openAI_llms
-
-# Configure API key in gen_data.py
-python gen_data.py
-```
-
-**Note:** This workflow lacks validation - consider using HF Inference Workflow instead.
-
----
-
-## 🎯 Comparison of Workflows
-
-| Feature | HF Inference Workflow | Original Pipeline | OpenAI Workflow |
-|---------|----------------------|-------------------|-----------------|
-| **Validation** | ✅ P&R + DRC + SAX | ⚠️ Basic only | ❌ None |
-| **Messy Design Detection** | ✅ Yes | ❌ No | ❌ No |
-| **Auto-correction** | ✅ Smart retry | ❌ No | ❌ No |
-| **Cost** | 💵 Low ($0.02/6 designs) | 💵 Free (local) | 💰 High ($3-5) |
-| **Quality Guarantee** | ✅ 100% validated | ⚠️ Variable | ❌ Variable |
-| **Model Downloads** | ✅ No (cloud API) | ⚠️ Depends | ✅ No (API) |
-
-**Recommendation:** Use **HF Inference Workflow** for production designs requiring validation.
-
----
 
 ## 📚 Documentation
 
-- **[hf_inference_workflow/README.md](hf_inference_workflow/README.md)** - Complete HF workflow guide
-- **[hf_inference_workflow/START_HERE.md](hf_inference_workflow/START_HERE.md)** - Quick start
-- **[hf_inference_workflow/HOW_TO_RUN_AND_SEE_RESULTS.md](hf_inference_workflow/HOW_TO_RUN_AND_SEE_RESULTS.md)** - Execution guide
+### Primary Documentation (gd_picasso)
 
----
+- **[gd_picasso/README.md](gd_picasso/README.md)** - Framework overview and quick start
+- **[gd_picasso/FRAMEWORK.md](gd_picasso/FRAMEWORK.md)** - Complete architecture and workflow documentation
+- **[gd_picasso/USAGE.md](gd_picasso/USAGE.md)** - Detailed usage guide with examples
+- **[gd_picasso/OPTIMIZATION_ANALYSIS_README.md](gd_picasso/OPTIMIZATION_ANALYSIS_README.md)** - Optimization analysis guide
 
-## 🔧 Key Improvements (HF Workflow)
+## 🔧 Framework Workflow
 
-### Problem Solved: "Clumsy but SAX-passing" Designs
-
-**Before:**
-- Designs pass SAX simulation ✅
-- But layouts are messy (overlaps, poor spacing) ❌
-- Not fabricatable ❌
-
-**After (with HF Workflow):**
-- P&R validation catches messy layouts
-- Corrector sends feedback to LLM
-- LLM regenerates with proper spacing
-- All designs pass P&R + DRC + SAX ✅
-
-### Example: 8-QAM Modulator
-
-**Attempt 1 (Messy):**
 ```
-❌ P&R FAIL: Component spacing 12µm < 20µm minimum
-```
-
-**Corrector sends feedback:**
-```
-"Increase spacing to 20µm, use route_bundle instead of route_single"
-```
-
-**Attempt 2 (Clean):**
-```
-✅ P&R PASS: Quality score 0.91, all spacing correct
-✅ DRC PASS: No fabrication violations
-✅ SAX PASS: Functional correctness verified
+LLM generates YAML DSL
+    ↓
+[Injection: Rich component examples in YAML format]
+[Pilot: Error prevention rules]
+    ↓
+YAML Pilot Validation (syntax, structure, component names, ports, spacing)
+    ↓
+Auto-Corrector (multi-turn tries if validation fails)
+    ↓
+Parse YAML → Component (gf.read.from_yaml())
+    ↓
+Auto-Fix Routing Collisions (iterative spacing + rotation)
+    ↓
+DRC Check (generic_tech PDK - real, not toy)
+    ↓
+LVS Check (layout vs schematic)
+    ↓
+Device-Level Optimization (component geometries → target losses)
+    ↓
+Circuit-Level Optimization (phase/coupling → minimize σ₁²(T))
+    ↓
+SAX Validation (functional correctness)
+    ↓
+P&R Validation (placement & routing)
+    ↓
+Metrics Calculation (pass@k, spec@k, opt-efficiency, robust score)
 ```
 
----
+## 📊 Two-Phase Testing
+
+The framework supports two-phase testing to compare baseline LLM performance with framework-enhanced performance:
+
+- **Phase 1 (Vanilla)**: System prompt + problem only (baseline)
+- **Phase 2 (PICasso)**: System prompt + injection + pilot + problem (with full framework features)
+
+Results are saved separately for comparison in `gd_picasso/output/{model}_results/vanilla/` and `picasso/`.
+
+## 🎯 Metrics
+
+The framework calculates comprehensive metrics:
+
+- **Spec@k**: Functional correctness at k samples
+- **Opt-Efficiency**: Normalized optimization efficiency
+- **RobustPass**: Perturbation-based robustness score
+- **Overall Robustness Score**: Combined metric gated by correctness
+
+See [gd_picasso/metrics.py](gd_picasso/metrics.py) for detailed formulas.
 
 ## 🤝 Contributing
 
 Improvements welcome! This is an active research project.
-
----
 
 ## 📄 License
 

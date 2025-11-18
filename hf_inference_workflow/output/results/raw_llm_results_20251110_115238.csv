@@ -1,7 +1,0 @@
-problem_idx,circuit_type,sample_idx,success,error_type,error_details,code_length
-12,crossbar 8x8 switch,2,False,EXECUTION_ERROR,"EXECUTION_ERROR: ""key='sw1' is not a valid port name or index. Available ports: []""",1160
-18,spanke–benes 8x8,1,True,,,4458
-22,reck 8x8 mesh,0,False,EXECUTION_ERROR,"EXECUTION_ERROR: ""key='o3' is not a valid port name or index. Make sure the instance is an array when giving it a tuple. Available ports: ['o1', 'o2']""",1460
-30,y-branch power splitter,0,False,ATTRIBUTE_ERROR,ATTRIBUTE_ERROR: module 'gdsfactory.components' has no attribute 'y_1550',283
-30,y-branch power splitter,1,False,ATTRIBUTE_ERROR,ATTRIBUTE_ERROR: module 'gdsfactory.components' has no attribute 'y_1550',285
-30,y-branch power splitter,2,False,ATTRIBUTE_ERROR,ATTRIBUTE_ERROR: module 'gdsfactory.components' has no attribute 'y_1550',283

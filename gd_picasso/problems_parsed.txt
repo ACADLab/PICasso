@@ -1,0 +1,1235 @@
+TASK 1 - MZI (Mach-Zehnder Interferometer)
+
+Create an MZI using:
+- Two MMI1x2 (ids: mmi1, mmi2)
+- One straight_heater_metal component (id: phase_shifter) - NOTE: use component type 'straight_heater_metal', NOT 'phase_shifter'
+
+Parameters:
+DeltaL = 10.0
+L = 10.0
+
+Output YAML only.
+
+TASK 2 - MZM (Mach-Zehnder Modulator)
+
+Use:
+- One MMI1x2 splitter (splitter)
+- One MMI1x2 combiner (combiner) - NOTE: use component type 'mmi1x2' with mirror: true (mmi2x1 does NOT exist)
+- Two straight_heater_metal components (phase_shifter1, phase_shifter2) - NOTE: use component type 'straight_heater_metal', NOT 'phase_shifter'
+
+Parameter: L = 10.0
+
+Output YAML only.
+
+TASK 3 - Direct Modulator
+
+Use:
+- One MZM (mzm)
+- One straight waveguide (straight)
+
+Output YAML only.
+
+TASK 4 - QPSK Modulator
+
+Use:
+- Two MZMs (mzm_i, mzm_q)
+- One MMI1x2 splitter (splitter)
+- One MMI1x2 combiner (combiner) - NOTE: use component type 'mmi1x2' with mirror: true (mmi2x1 does NOT exist)
+- Two straight_heater_metal components (pb_i, pb_q) - NOTE: use component type 'straight_heater_metal' for phase biasers
+
+Output YAML only.
+
+TASK 5 - 8-QAM Modulator
+
+Use:
+- Three MZMs (mzm_bit1, mzm_bit2, mzm_bit3)
+- Two MMI1x2 splitters (splitter1, splitter2)
+- Two MMI1x2 combiners (combiner1, combiner2) - NOTE: use component type 'mmi1x2' with mirror: true (mmi2x1 does NOT exist)
+
+MZMs must be vertically aligned with 100.0 um spacing.
+
+Output YAML only.
+
+TASK 6 - 64-QAM Modulator
+
+You are a design-assistant for the GDSFactory framework, writing YAML definitions for photonic circuits.
+
+Below is a *single example* (one-shot) of a small circuit definition, followed by a new task for you to generate.
+
+---
+
+Example:
+
+```yaml
+name: simple_mzi_example
+instances:
+  mmi1:
+    component: mmi1x2
+  mmi2:
+    component: mmi1x2
+  ps1:
+    component: straight_heater_metal
+placements:
+  mmi1:
+    x: 0
+    y: 0
+  mmi2:
+    x: 100
+    y: 0
+  ps1:
+    x: 50
+    y: 0
+connections:
+  mmi1,o2: ps1,o1
+  ps1,o2: mmi2,o1
+ports:
+  in: mmi1,o1
+  out: mmi2,o2
+```
+
+---
+
+Now:
+
+Design a circuit called `qam64_modulator` using GDSFactory component types.
+
+**Constraints and specification:**
+
+* Must have 1 input port named `in` and 1 output port named `out`.
+* Use exactly 26 component instances total, with the following breakdown:
+  - MZI components: 6 instances (e.g., `mzm1`, `mzm2`, `mzm3`, `mzm4`, `mzm5`, `mzm6`)
+  - mmi1x2 components (splitters): 7 instances (e.g., `splitter1`...`splitter7`)
+  - mmi1x2 components (combiners, use mirror: true): 7 instances (e.g., `combiner1`...`combiner7`)
+  - straight_heater_metal components (phase biasers): 6 instances (e.g., `pb1`...`pb6`)
+* Component type notes:
+  - NOTE: use component type 'mmi1x2' with mirror: true for combiners (mmi2x1 does NOT exist)
+  - NOTE: use component type 'straight_heater_metal' for phase biasers, NOT 'phase_shifter'
+* Define a `connections:` section that creates a meaningful hierarchical 64-QAM modulator topology between the instances (6-bit QAM structure with appropriate splitting and combining stages).
+* Provide `placements:` with (x,y) coordinates for all instances (you can choose appropriate spacing, e.g., 100 µm units).
+* Use the same port naming convention as the example (component_instance,port_name).
+* Do **not** introduce any new component types beyond those specified.
+* At the end, map the top-level ports to the appropriate instance ports.
+* Ensure the YAML is syntactically valid (proper indentation, colons, etc.).
+
+---
+
+Please output the full YAML definition (with `name:`, `instances:`, `placements:`, `connections:`, and `ports:` sections) for the circuit `qam64_modulator`.
+
+TASK 7 - WDM Multiplexer
+
+You are a design-assistant for the GDSFactory framework, writing YAML definitions for photonic circuits.
+
+Below is a *single example* (one-shot) of a small circuit definition, followed by a new task for you to generate.
+
+---
+
+Example:
+
+```yaml
+name: simple_mzi_example
+instances:
+  mmi1:
+    component: mmi1x2
+  mmi2:
+    component: mmi1x2
+  ps1:
+    component: straight_heater_metal
+placements:
+  mmi1:
+    x: 0
+    y: 0
+  mmi2:
+    x: 100
+    y: 0
+  ps1:
+    x: 50
+    y: 0
+connections:
+  mmi1,o2: ps1,o1
+  ps1,o2: mmi2,o1
+ports:
+  in: mmi1,o1
+  out: mmi2,o2
+```
+
+---
+
+Now:
+
+Design a circuit called `wdm_multiplexer` using GDSFactory component types.
+
+**Constraints and specification:**
+
+* Must have 8 input ports named `in1`, `in2`, `in3`, `in4`, `in5`, `in6`, `in7`, `in8` and 1 output port named `out`.
+* Use exactly 7 component instances total, with the following breakdown:
+  - mmi1x2 components (splitters): 7 instances (e.g., `splitter1`...`splitter7`)
+* Component type notes:
+  - NOTE: use component type 'mmi1x2' for splitters
+  - NOTE: you may also use 'coupler' components if preferred for the splitter network
+* Define a `connections:` section that creates a meaningful binary tree multiplexer topology that combines 8 input wavelengths into a single output.
+* Provide `placements:` with (x,y) coordinates for all instances (you can choose appropriate spacing, e.g., 100 µm units).
+* Use the same port naming convention as the example (component_instance,port_name).
+* Do **not** introduce any new component types beyond those specified.
+* At the end, map the top-level ports to the appropriate instance ports.
+* Ensure the YAML is syntactically valid (proper indentation, colons, etc.).
+
+---
+
+Please output the full YAML definition (with `name:`, `instances:`, `placements:`, `connections:`, and `ports:` sections) for the circuit `wdm_multiplexer`.
+
+TASK 8 - WDM Demultiplexer
+
+You are a design-assistant for the GDSFactory framework, writing YAML definitions for photonic circuits.
+
+Below is a *single example* (one-shot) of a small circuit definition, followed by a new task for you to generate.
+
+---
+
+Example:
+
+```yaml
+name: simple_mzi_example
+instances:
+  mmi1:
+    component: mmi1x2
+  mmi2:
+    component: mmi1x2
+  ps1:
+    component: straight_heater_metal
+placements:
+  mmi1:
+    x: 0
+    y: 0
+  mmi2:
+    x: 100
+    y: 0
+  ps1:
+    x: 50
+    y: 0
+connections:
+  mmi1,o2: ps1,o1
+  ps1,o2: mmi2,o1
+ports:
+  in: mmi1,o1
+  out: mmi2,o2
+```
+
+---
+
+Now:
+
+Design a circuit called `wdm_demultiplexer` using GDSFactory component types.
+
+**Constraints and specification:**
+
+* Must have 1 input port named `in` and 8 output ports named `out1`, `out2`, `out3`, `out4`, `out5`, `out6`, `out7`, `out8`.
+* Use exactly 7 component instances total, with the following breakdown:
+  - mmi1x2 components (combiners, use mirror: true): 7 instances (e.g., `combiner1`...`combiner7`)
+* Component type notes:
+  - NOTE: use component type 'mmi1x2' with mirror: true for combiners (mmi2x1 does NOT exist)
+  - NOTE: you may also use 'coupler' components if preferred for the combiner network
+* Define a `connections:` section that creates a meaningful binary tree demultiplexer topology that splits a single input into 8 output wavelengths.
+* Provide `placements:` with (x,y) coordinates for all instances (you can choose appropriate spacing, e.g., 100 µm units).
+* Use the same port naming convention as the example (component_instance,port_name).
+* Do **not** introduce any new component types beyond those specified.
+* At the end, map the top-level ports to the appropriate instance ports.
+* Ensure the YAML is syntactically valid (proper indentation, colons, etc.).
+
+---
+
+Please output the full YAML definition (with `name:`, `instances:`, `placements:`, `connections:`, and `ports:` sections) for the circuit `wdm_demultiplexer`.
+
+TASK 9 - 90 Degree Optical Hybrid
+
+Use:
+- One MMI2x2 (mmi22) - NOTE: use component type 'mmi2x2' (2x4 MMI not available, use mmi2x2)
+- One MMI2x2 (mmi22)
+- One straight_heater_metal component (pb) - NOTE: use component type 'straight_heater_metal' for phase biaser
+
+Output YAML only.
+
+TASK 10 - 2x2 Optical Switch
+
+Use:
+- One MZI cell (sw1)
+- One phase control (ctrl1)
+
+Output YAML only.
+
+TASK 11 - 4x4 Crossbar Switch
+
+You are a design-assistant for the GDSFactory framework, writing YAML definitions for photonic circuits.
+
+Below is a *single example* (one-shot) of a small circuit definition, followed by a new task for you to generate.
+
+---
+
+Example:
+
+```yaml
+name: simple_mzi_example
+instances:
+  mmi1:
+    component: mmi1x2
+  mmi2:
+    component: mmi1x2
+  ps1:
+    component: straight_heater_metal
+placements:
+  mmi1:
+    x: 0
+    y: 0
+  mmi2:
+    x: 100
+    y: 0
+  ps1:
+    x: 50
+    y: 0
+connections:
+  mmi1,o2: ps1,o1
+  ps1,o2: mmi2,o1
+ports:
+  in: mmi1,o1
+  out: mmi2,o2
+```
+
+---
+
+Now:
+
+Design a circuit called `crossbar_4x4_switch` using GDSFactory component types.
+
+**Constraints and specification:**
+
+* Must have 4 input ports named `in1`, `in2`, `in3`, `in4` and 4 output ports named `out1`, `out2`, `out3`, `out4`.
+* Use exactly 48 component instances total, with the following breakdown:
+  - mzi components (switch nodes): 16 instances (e.g., `sw1`...`sw16`)
+  - coupler components: 16 instances (e.g., `cou1`...`cou16`)
+  - straight_heater_metal components (phase control elements): 16 instances (e.g., `phase1`...`phase16`)
+* Component type notes:
+  - NOTE: use component type 'straight_heater_metal' for phase control, NOT 'phase_shifter'
+  - NOTE: use component type 'coupler' for coupler elements
+* Define a `connections:` section that creates a meaningful 4x4 crossbar switch topology (full crossbar matrix allowing any input to connect to any output).
+* Provide `placements:` with (x,y) coordinates for all instances (you can choose appropriate spacing, e.g., 100 µm units).
+* Use the same port naming convention as the example (component_instance,port_name).
+* Do **not** introduce any new component types beyond those specified.
+* At the end, map the top-level ports to the appropriate instance ports.
+* Ensure the YAML is syntactically valid (proper indentation, colons, etc.).
+
+---
+
+Please output the full YAML definition (with `name:`, `instances:`, `placements:`, `connections:`, and `ports:` sections) for the circuit `crossbar_4x4_switch`.
+
+TASK 12 - 8x8 Crossbar Switch
+
+You are a design-assistant for the GDSFactory framework, writing YAML definitions for photonic circuits.
+
+Below is a *single example* (one-shot) of a small circuit definition, followed by a new task for you to generate.
+
+---
+
+Example:
+
+```yaml
+name: simple_mzi_example
+instances:
+  mmi1:
+    component: mmi1x2
+  mmi2:
+    component: mmi1x2
+  ps1:
+    component: straight_heater_metal
+placements:
+  mmi1:
+    x: 0
+    y: 0
+  mmi2:
+    x: 100
+    y: 0
+  ps1:
+    x: 50
+    y: 0
+connections:
+  mmi1,o2: ps1,o1
+  ps1,o2: mmi2,o1
+ports:
+  in: mmi1,o1
+  out: mmi2,o2
+```
+
+---
+
+Now:
+
+Design a circuit called `crossbar_8x8_switch` using GDSFactory component types.
+
+**Constraints and specification:**
+
+* Must have 8 input ports named `in1`, `in2`, `in3`, `in4`, `in5`, `in6`, `in7`, `in8` and 8 output ports named `out1`, `out2`, `out3`, `out4`, `out5`, `out6`, `out7`, `out8`.
+* Use exactly 192 component instances total, with the following breakdown:
+  - mzi components (switch nodes): 64 instances (e.g., `sw1`...`sw64`)
+  - coupler components: 64 instances (e.g., `cou1`...`cou64`)
+  - straight_heater_metal components (phase control elements): 64 instances (e.g., `phase1`...`phase64`)
+* Component type notes:
+  - NOTE: use component type 'straight_heater_metal' for phase control, NOT 'phase_shifter'
+  - NOTE: use component type 'coupler' for coupler elements
+* Define a `connections:` section that creates a meaningful 8x8 crossbar switch topology (full crossbar matrix allowing any input to connect to any output).
+* Provide `placements:` with (x,y) coordinates for all instances (you can choose appropriate spacing, e.g., 100 µm units).
+* Use the same port naming convention as the example (component_instance,port_name).
+* Do **not** introduce any new component types beyond those specified.
+* At the end, map the top-level ports to the appropriate instance ports.
+* Ensure the YAML is syntactically valid (proper indentation, colons, etc.).
+
+---
+
+Please output the full YAML definition (with `name:`, `instances:`, `placements:`, `connections:`, and `ports:` sections) for the circuit `crossbar_8x8_switch`.
+
+TASK 13 - Spanke 4x4 Switch
+
+You are a design-assistant for the GDSFactory framework, writing YAML definitions for photonic circuits.
+
+Below is a *single example* (one-shot) of a small circuit definition, followed by a new task for you to generate.
+
+---
+
+Example:
+
+```yaml
+name: simple_mzi_example
+instances:
+  mmi1:
+    component: mmi1x2
+  mmi2:
+    component: mmi1x2
+  ps1:
+    component: straight_heater_metal
+placements:
+  mmi1:
+    x: 0
+    y: 0
+  mmi2:
+    x: 100
+    y: 0
+  ps1:
+    x: 50
+    y: 0
+connections:
+  mmi1,o2: ps1,o1
+  ps1,o2: mmi2,o1
+ports:
+  in: mmi1,o1
+  out: mmi2,o2
+```
+
+---
+
+Now:
+
+Design a circuit called `spanke_4x4_switch` using GDSFactory component types.
+
+**Constraints and specification:**
+
+* Must have 4 input ports named `in1`, `in2`, `in3`, `in4` and 4 output ports named `out1`, `out2`, `out3`, `out4`.
+* Use exactly 12 component instances total, with the following breakdown:
+  - mzi components (switch nodes): 6 instances (e.g., `mzi1`...`mzi6`)
+  - straight_heater_metal components (phase controls): 6 instances (e.g., `phase1`...`phase6`)
+* Component type notes:
+  - NOTE: use component type 'straight_heater_metal' for phase control, NOT 'phase_shifter'
+* Define a `connections:` section that creates a meaningful Spanke network topology (staged switching network with 3 stages for 4x4 connectivity).
+* Provide `placements:` with (x,y) coordinates for all instances (you can choose appropriate spacing, e.g., 100 µm units).
+* Use the same port naming convention as the example (component_instance,port_name).
+* Do **not** introduce any new component types beyond those specified.
+* At the end, map the top-level ports to the appropriate instance ports.
+* Ensure the YAML is syntactically valid (proper indentation, colons, etc.).
+
+---
+
+Please output the full YAML definition (with `name:`, `instances:`, `placements:`, `connections:`, and `ports:` sections) for the circuit `spanke_4x4_switch`.
+
+TASK 14 - Spanke 8x8 Switch
+
+You are a design-assistant for the GDSFactory framework, writing YAML definitions for photonic circuits.
+
+Below is a *single example* (one-shot) of a small circuit definition, followed by a new task for you to generate.
+
+---
+
+Example:
+
+```yaml
+name: simple_mzi_example
+instances:
+  mmi1:
+    component: mmi1x2
+  mmi2:
+    component: mmi1x2
+  ps1:
+    component: straight_heater_metal
+placements:
+  mmi1:
+    x: 0
+    y: 0
+  mmi2:
+    x: 100
+    y: 0
+  ps1:
+    x: 50
+    y: 0
+connections:
+  mmi1,o2: ps1,o1
+  ps1,o2: mmi2,o1
+ports:
+  in: mmi1,o1
+  out: mmi2,o2
+```
+
+---
+
+Now:
+
+Design a circuit called `spanke_8x8_switch` using GDSFactory component types.
+
+**Constraints and specification:**
+
+* Must have 8 input ports named `in1`, `in2`, `in3`, `in4`, `in5`, `in6`, `in7`, `in8` and 8 output ports named `out1`, `out2`, `out3`, `out4`, `out5`, `out6`, `out7`, `out8`.
+* Use exactly 24 component instances total, with the following breakdown:
+  - mzi components (switch nodes): 12 instances (e.g., `mzi1`...`mzi12`)
+  - straight_heater_metal components (phase controls): 12 instances (e.g., `phase1`...`phase12`)
+* Component type notes:
+  - NOTE: use component type 'straight_heater_metal' for phase control, NOT 'phase_shifter'
+* Define a `connections:` section that creates a meaningful Spanke network topology (staged switching network with 7 stages for 8x8 connectivity).
+* Provide `placements:` with (x,y) coordinates for all instances (you can choose appropriate spacing, e.g., 100 µm units).
+* Use the same port naming convention as the example (component_instance,port_name).
+* Do **not** introduce any new component types beyond those specified.
+* At the end, map the top-level ports to the appropriate instance ports.
+* Ensure the YAML is syntactically valid (proper indentation, colons, etc.).
+
+---
+
+Please output the full YAML definition (with `name:`, `instances:`, `placements:`, `connections:`, and `ports:` sections) for the circuit `spanke_8x8_switch`.
+
+TASK 15 - Benes 4x4 Switch
+
+You are a design-assistant for the GDSFactory framework, writing YAML definitions for photonic circuits.
+
+Below is a *single example* (one-shot) of a small circuit definition, followed by a new task for you to generate.
+
+---
+
+Example:
+
+```yaml
+name: simple_mzi_example
+instances:
+  mmi1:
+    component: mmi1x2
+  mmi2:
+    component: mmi1x2
+  ps1:
+    component: straight_heater_metal
+placements:
+  mmi1:
+    x: 0
+    y: 0
+  mmi2:
+    x: 100
+    y: 0
+  ps1:
+    x: 50
+    y: 0
+connections:
+  mmi1,o2: ps1,o1
+  ps1,o2: mmi2,o1
+ports:
+  in: mmi1,o1
+  out: mmi2,o2
+```
+
+---
+
+Now:
+
+Design a circuit called `benes_4x4_switch` using GDSFactory component types.
+
+**Constraints and specification:**
+
+* Must have 4 input ports named `in1`, `in2`, `in3`, `in4` and 4 output ports named `out1`, `out2`, `out3`, `out4`.
+* Use exactly 16 component instances total, with the following breakdown:
+  - mzi components (switch nodes): 8 instances (e.g., `bn1`...`bn8`)
+  - straight_heater_metal components (phase controls): 8 instances (e.g., `pc1`...`pc8`)
+* Component type notes:
+  - NOTE: use component type 'straight_heater_metal' for phase control, NOT 'phase_shifter'
+* Define a `connections:` section that creates a meaningful Benes network topology (rearrangeable non-blocking network with 4 stages for 4x4 connectivity).
+* Provide `placements:` with (x,y) coordinates for all instances (you can choose appropriate spacing, e.g., 100 µm units).
+* Use the same port naming convention as the example (component_instance,port_name).
+* Do **not** introduce any new component types beyond those specified.
+* At the end, map the top-level ports to the appropriate instance ports.
+* Ensure the YAML is syntactically valid (proper indentation, colons, etc.).
+
+---
+
+Please output the full YAML definition (with `name:`, `instances:`, `placements:`, `connections:`, and `ports:` sections) for the circuit `benes_4x4_switch`.
+
+TASK 16 - Benes 8x8 Switch
+
+You are a design-assistant for the GDSFactory framework, writing YAML definitions for photonic circuits.
+
+Below is a *single example* (one-shot) of a small circuit definition, followed by a new task for you to generate.
+
+---
+
+Example:
+
+```yaml
+name: simple_mzi_example
+instances:
+  mmi1:
+    component: mmi1x2
+  mmi2:
+    component: mmi1x2
+  ps1:
+    component: straight_heater_metal
+placements:
+  mmi1:
+    x: 0
+    y: 0
+  mmi2:
+    x: 100
+    y: 0
+  ps1:
+    x: 50
+    y: 0
+connections:
+  mmi1,o2: ps1,o1
+  ps1,o2: mmi2,o1
+ports:
+  in: mmi1,o1
+  out: mmi2,o2
+```
+
+---
+
+Now:
+
+Design a circuit called `benes_8x8_switch` using GDSFactory component types.
+
+**Constraints and specification:**
+
+* Must have 8 input ports named `in1`, `in2`, `in3`, `in4`, `in5`, `in6`, `in7`, `in8` and 8 output ports named `out1`, `out2`, `out3`, `out4`, `out5`, `out6`, `out7`, `out8`.
+* Use exactly 40 component instances total, with the following breakdown:
+  - mzi components (switch nodes): 20 instances (e.g., `bn1`...`bn20`)
+  - straight_heater_metal components (phase controls): 20 instances (e.g., `pc1`...`pc20`)
+* Component type notes:
+  - NOTE: use component type 'straight_heater_metal' for phase control, NOT 'phase_shifter'
+* Define a `connections:` section that creates a meaningful Benes network topology (rearrangeable non-blocking network with 5 stages for 8x8 connectivity).
+* Provide `placements:` with (x,y) coordinates for all instances (you can choose appropriate spacing, e.g., 100 µm units).
+* Use the same port naming convention as the example (component_instance,port_name).
+* Do **not** introduce any new component types beyond those specified.
+* At the end, map the top-level ports to the appropriate instance ports.
+* Ensure the YAML is syntactically valid (proper indentation, colons, etc.).
+
+---
+
+Please output the full YAML definition (with `name:`, `instances:`, `placements:`, `connections:`, and `ports:` sections) for the circuit `benes_8x8_switch`.
+
+TASK 17 - Spanke-Benes 4x4
+
+You are a design-assistant for the GDSFactory framework, writing YAML definitions for photonic circuits.
+
+Below is a *single example* (one-shot) of a small circuit definition, followed by a new task for you to generate.
+
+---
+
+Example:
+
+```yaml
+name: simple_mzi_example
+instances:
+  mmi1:
+    component: mmi1x2
+  mmi2:
+    component: mmi1x2
+  ps1:
+    component: straight_heater_metal
+placements:
+  mmi1:
+    x: 0
+    y: 0
+  mmi2:
+    x: 100
+    y: 0
+  ps1:
+    x: 50
+    y: 0
+connections:
+  mmi1,o2: ps1,o1
+  ps1,o2: mmi2,o1
+ports:
+  in: mmi1,o1
+  out: mmi2,o2
+```
+
+---
+
+Now:
+
+Design a circuit called `spanke_benes_4x4_switch` using GDSFactory component types.
+
+**Constraints and specification:**
+
+* Must have 4 input ports named `in1`, `in2`, `in3`, `in4` and 4 output ports named `out1`, `out2`, `out3`, `out4`.
+* Use exactly 12 component instances total, with the following breakdown:
+  - mzi components (switch nodes): 6 instances (e.g., `nb1`...`nb6`)
+  - straight_heater_metal components (phase/coupling controls): 6 instances (e.g., `pc1`...`pc6`)
+* Component type notes:
+  - NOTE: use component type 'straight_heater_metal' for phase control, NOT 'phase_shifter'
+* Define a `connections:` section that creates a meaningful Spanke-Benes hybrid network topology (combining features of both Spanke and Benes networks for 4x4 connectivity).
+* Provide `placements:` with (x,y) coordinates for all instances (you can choose appropriate spacing, e.g., 100 µm units).
+* Use the same port naming convention as the example (component_instance,port_name).
+* Do **not** introduce any new component types beyond those specified.
+* At the end, map the top-level ports to the appropriate instance ports.
+* Ensure the YAML is syntactically valid (proper indentation, colons, etc.).
+
+---
+
+Please output the full YAML definition (with `name:`, `instances:`, `placements:`, `connections:`, and `ports:` sections) for the circuit `spanke_benes_4x4_switch`.
+
+TASK 18 - Spanke-Benes 8x8
+
+You are a design-assistant for the GDSFactory framework, writing YAML definitions for photonic circuits.
+
+Below is a *single example* (one-shot) of a small circuit definition, followed by a new task for you to generate.
+
+---
+
+Example:
+
+```yaml
+name: simple_mzi_example
+instances:
+  mmi1:
+    component: mmi1x2
+  mmi2:
+    component: mmi1x2
+  ps1:
+    component: straight_heater_metal
+placements:
+  mmi1:
+    x: 0
+    y: 0
+  mmi2:
+    x: 100
+    y: 0
+  ps1:
+    x: 50
+    y: 0
+connections:
+  mmi1,o2: ps1,o1
+  ps1,o2: mmi2,o1
+ports:
+  in: mmi1,o1
+  out: mmi2,o2
+```
+
+---
+
+Now:
+
+Design a circuit called `spanke_benes_8x8_switch` using GDSFactory component types.
+
+**Constraints and specification:**
+
+* Must have 8 input ports named `in1`, `in2`, `in3`, `in4`, `in5`, `in6`, `in7`, `in8` and 8 output ports named `out1`, `out2`, `out3`, `out4`, `out5`, `out6`, `out7`, `out8`.
+* Use exactly 32 component instances total, with the following breakdown:
+  - mzi components (switch nodes): 16 instances (e.g., `nb1`...`nb16`)
+  - straight_heater_metal components (phase/coupling controls): 16 instances (e.g., `pc1`...`pc16`)
+* Component type notes:
+  - NOTE: use component type 'straight_heater_metal' for phase control, NOT 'phase_shifter'
+* Define a `connections:` section that creates a meaningful Spanke-Benes hybrid network topology (combining features of both Spanke and Benes networks for 8x8 connectivity).
+* Provide `placements:` with (x,y) coordinates for all instances (you can choose appropriate spacing, e.g., 100 µm units).
+* Use the same port naming convention as the example (component_instance,port_name).
+* Do **not** introduce any new component types beyond those specified.
+* At the end, map the top-level ports to the appropriate instance ports.
+* Ensure the YAML is syntactically valid (proper indentation, colons, etc.).
+
+---
+
+Please output the full YAML definition (with `name:`, `instances:`, `placements:`, `connections:`, and `ports:` sections) for the circuit `spanke_benes_8x8_switch`.
+
+TASK 19 - U-Matrix 2x2 Block
+
+Use:
+- One MZI (u_mzi)
+- Two straight_heater_metal components (u_ps1, u_ps2) - NOTE: use component type 'straight_heater_metal', NOT 'phase_shifter'
+
+Output YAML only.
+
+TASK 20 - Clements 4x4 Interferometer
+
+You are a design-assistant for the GDSFactory framework, writing YAML definitions for photonic circuits.
+
+Below is a *single example* (one-shot) of a small circuit definition, followed by a new task for you to generate.
+
+---
+
+Example:
+
+```yaml
+name: simple_mzi_example
+instances:
+  mmi1:
+    component: mmi1x2
+  mmi2:
+    component: mmi1x2
+  ps1:
+    component: straight_heater_metal
+placements:
+  mmi1:
+    x: 0
+    y: 0
+  mmi2:
+    x: 100
+    y: 0
+  ps1:
+    x: 50
+    y: 0
+connections:
+  mmi1,o2: ps1,o1
+  ps1,o2: mmi2,o1
+ports:
+  in: mmi1,o1
+  out: mmi2,o2
+```
+
+---
+
+Now:
+
+Design a circuit called `clements_4x4_interferometer` using GDSFactory component types.
+
+**Constraints and specification:**
+
+* Must have 4 input ports named `in1`, `in2`, `in3`, `in4` and 4 output ports named `out1`, `out2`, `out3`, `out4`.
+* Use exactly 24 component instances total, with the following breakdown:
+  - mzi components (mesh elements): 12 instances (e.g., `mesh_mzi1`...`mesh_mzi12`)
+  - straight_heater_metal components (phase shifters): 12 instances (e.g., `phase1`...`phase12`)
+* Component type notes:
+  - NOTE: use component type 'straight_heater_metal' for phase shifters, NOT 'phase_shifter'
+* Define a `connections:` section that creates a meaningful Clements mesh interferometer topology (rectangular mesh pattern for 4x4 universal linear optical transformation).
+* Provide `placements:` with (x,y) coordinates for all instances (you can choose appropriate spacing, e.g., 100 µm units).
+* Use the same port naming convention as the example (component_instance,port_name).
+* Do **not** introduce any new component types beyond those specified.
+* At the end, map the top-level ports to the appropriate instance ports.
+* Ensure the YAML is syntactically valid (proper indentation, colons, etc.).
+
+---
+
+Please output the full YAML definition (with `name:`, `instances:`, `placements:`, `connections:`, and `ports:` sections) for the circuit `clements_4x4_interferometer`.
+
+TASK 21 - Reck 4x4 Mesh
+
+You are a design-assistant for the GDSFactory framework, writing YAML definitions for photonic circuits.
+
+Below is a *single example* (one-shot) of a small circuit definition, followed by a new task for you to generate.
+
+---
+
+Example:
+
+```yaml
+name: simple_mzi_example
+instances:
+  mmi1:
+    component: mmi1x2
+  mmi2:
+    component: mmi1x2
+  ps1:
+    component: straight_heater_metal
+placements:
+  mmi1:
+    x: 0
+    y: 0
+  mmi2:
+    x: 100
+    y: 0
+  ps1:
+    x: 50
+    y: 0
+connections:
+  mmi1,o2: ps1,o1
+  ps1,o2: mmi2,o1
+ports:
+  in: mmi1,o1
+  out: mmi2,o2
+```
+
+---
+
+Now:
+
+Design a circuit called `reck_4x4_mesh` using GDSFactory component types.
+
+**Constraints and specification:**
+
+* Must have 4 input ports named `in1`, `in2`, `in3`, `in4` and 4 output ports named `out1`, `out2`, `out3`, `out4`.
+* Use exactly 24 component instances total, with the following breakdown:
+  - mzi components: 12 instances (e.g., `mzi1`...`mzi12`)
+  - straight_heater_metal components (phase shifters): 12 instances (e.g., `ps1`...`ps12`)
+* Component type notes:
+  - NOTE: use component type 'straight_heater_metal' for phase shifters, NOT 'phase_shifter'
+* Define a `connections:` section that creates a meaningful Reck mesh interferometer topology (triangular mesh pattern for 4x4 universal linear optical transformation).
+* Provide `placements:` with (x,y) coordinates for all instances (you can choose appropriate spacing, e.g., 100 µm units).
+* Use the same port naming convention as the example (component_instance,port_name).
+* Do **not** introduce any new component types beyond those specified.
+* At the end, map the top-level ports to the appropriate instance ports.
+* Ensure the YAML is syntactically valid (proper indentation, colons, etc.).
+
+---
+
+Please output the full YAML definition (with `name:`, `instances:`, `placements:`, `connections:`, and `ports:` sections) for the circuit `reck_4x4_mesh`.
+
+TASK 22 - Reck 8x8 Mesh
+
+You are a design-assistant for the GDSFactory framework, writing YAML definitions for photonic circuits.
+
+Below is a *single example* (one-shot) of a small circuit definition, followed by a new task for you to generate.
+
+---
+
+Example:
+
+```yaml
+name: simple_mzi_example
+instances:
+  mmi1:
+    component: mmi1x2
+  mmi2:
+    component: mmi1x2
+  ps1:
+    component: straight_heater_metal
+placements:
+  mmi1:
+    x: 0
+    y: 0
+  mmi2:
+    x: 100
+    y: 0
+  ps1:
+    x: 50
+    y: 0
+connections:
+  mmi1,o2: ps1,o1
+  ps1,o2: mmi2,o1
+ports:
+  in: mmi1,o1
+  out: mmi2,o2
+```
+
+---
+
+Now:
+
+Design a circuit called `reck_8x8_mesh` using GDSFactory component types.
+
+**Constraints and specification:**
+
+* Must have 8 input ports named `in1`, `in2`, `in3`, `in4`, `in5`, `in6`, `in7`, `in8` and 8 output ports named `out1`, `out2`, `out3`, `out4`, `out5`, `out6`, `out7`, `out8`.
+* Use exactly 112 component instances total, with the following breakdown:
+  - mzi components: 56 instances (e.g., `mzi1`...`mzi56`)
+  - straight_heater_metal components (phase shifters): 56 instances (e.g., `ps1`...`ps56`)
+* Component type notes:
+  - NOTE: use component type 'straight_heater_metal' for phase shifters, NOT 'phase_shifter'
+* Define a `connections:` section that creates a meaningful Reck mesh interferometer topology (triangular mesh pattern for 8x8 universal linear optical transformation).
+* Provide `placements:` with (x,y) coordinates for all instances (you can choose appropriate spacing, e.g., 100 µm units).
+* Use the same port naming convention as the example (component_instance,port_name).
+* Do **not** introduce any new component types beyond those specified.
+* At the end, map the top-level ports to the appropriate instance ports.
+* Ensure the YAML is syntactically valid (proper indentation, colons, etc.).
+
+---
+
+Please output the full YAML definition (with `name:`, `instances:`, `placements:`, `connections:`, and `ports:` sections) for the circuit `reck_8x8_mesh`.
+
+TASK 23 - Ring Add-Drop Filter
+
+Use:
+- Ring (ring1) - NOTE: use component type 'ring_single'
+- Two coupler components (in_cpl, out_cpl) - NOTE: use component type 'coupler' (NOT 'directional_coupler')
+
+Output YAML only.
+
+TASK 24 - Dual-Ring Tunable Filter
+
+Use:
+- Two ring_single components (ring1, ring2) - NOTE: use component type 'ring_single'
+- Two coupler components (cpl_in, cpl_out) - NOTE: use component type 'coupler'
+- Two straight_heater_metal components (phase1, phase2) - NOTE: use component type 'straight_heater_metal' for phase controls
+
+Output YAML only.
+
+TASK 25 - 4-Channel WDM Cascaded MZI
+
+You are a design-assistant for the GDSFactory framework, writing YAML definitions for photonic circuits.
+
+Below is a *single example* (one-shot) of a small circuit definition, followed by a new task for you to generate.
+
+---
+
+Example:
+
+```yaml
+name: simple_mzi_example
+instances:
+  mmi1:
+    component: mmi1x2
+  mmi2:
+    component: mmi1x2
+  ps1:
+    component: straight_heater_metal
+placements:
+  mmi1:
+    x: 0
+    y: 0
+  mmi2:
+    x: 100
+    y: 0
+  ps1:
+    x: 50
+    y: 0
+connections:
+  mmi1,o2: ps1,o1
+  ps1,o2: mmi2,o1
+ports:
+  in: mmi1,o1
+  out: mmi2,o2
+```
+
+---
+
+Now:
+
+Design a circuit called `wdm_4channel_cascaded_mzi` using GDSFactory component types.
+
+**Constraints and specification:**
+
+* Must have 1 input port named `in` and 4 output ports named `out1`, `out2`, `out3`, `out4`.
+* Use exactly 12 component instances total, with the following breakdown:
+  - mzi components: 4 instances (e.g., `mzi1`...`mzi4`)
+  - coupler components: 4 instances (e.g., `cpl1`...`cpl4`)
+  - straight_heater_metal components (phase biasers): 4 instances (e.g., `pb1`...`pb4`)
+* Component type notes:
+  - NOTE: use component type 'coupler' for coupler elements
+  - NOTE: use component type 'straight_heater_metal' for phase biasers, NOT 'phase_shifter'
+* Define a `connections:` section that creates a meaningful cascaded MZI topology for 4-channel WDM demultiplexing (cascaded MZI filters with appropriate wavelength routing).
+* Provide `placements:` with (x,y) coordinates for all instances (you can choose appropriate spacing, e.g., 100 µm units).
+* Use the same port naming convention as the example (component_instance,port_name).
+* Do **not** introduce any new component types beyond those specified.
+* At the end, map the top-level ports to the appropriate instance ports.
+* Ensure the YAML is syntactically valid (proper indentation, colons, etc.).
+
+---
+
+Please output the full YAML definition (with `name:`, `instances:`, `placements:`, `connections:`, and `ports:` sections) for the circuit `wdm_4channel_cascaded_mzi`.
+
+TASK 26 - Tunable 1x4 Optical Switch
+
+Use:
+- MZI stages (sw1...sw3)
+- Control phases (ctrl1...ctrl3)
+
+Output YAML only.
+
+TASK 27 - Balanced Coherent Receiver
+
+Use:
+- 90 degree hybrid (hyb) - NOTE: use MMI2x2 or coupler components to build hybrid
+- Splitters/combiners (sp1, sp2) - NOTE: use component type 'mmi1x2' or 'coupler'
+- Photodiodes (pd_i, pd_q) - NOTE: photodiode component NOT available in generic_tech PDK - use placeholder or omit
+
+Output YAML only.
+
+TASK 28 - 16-Channel AWG
+
+You are a design-assistant for the GDSFactory framework, writing YAML definitions for photonic circuits.
+
+Below is a *single example* (one-shot) of a small circuit definition, followed by a new task for you to generate.
+
+---
+
+Example:
+
+```yaml
+name: simple_mzi_example
+instances:
+  mmi1:
+    component: mmi1x2
+  mmi2:
+    component: mmi1x2
+  ps1:
+    component: straight_heater_metal
+placements:
+  mmi1:
+    x: 0
+    y: 0
+  mmi2:
+    x: 100
+    y: 0
+  ps1:
+    x: 50
+    y: 0
+connections:
+  mmi1,o2: ps1,o1
+  ps1,o2: mmi2,o1
+ports:
+  in: mmi1,o1
+  out: mmi2,o2
+```
+
+---
+
+Now:
+
+Design a circuit called `awg_16channel` using GDSFactory component types.
+
+**Constraints and specification:**
+
+* Must have 1 input port named `in` and 16 output ports named `out1`, `out2`, `out3`, `out4`, `out5`, `out6`, `out7`, `out8`, `out9`, `out10`, `out11`, `out12`, `out13`, `out14`, `out15`, `out16`.
+* Use exactly 18 component instances total, with the following breakdown:
+  - mmi2x2 or coupler component (star coupler input): 1 instance (e.g., `star_in`)
+  - straight components (array waveguides): 16 instances (e.g., `array1`...`array16`)
+  - mmi2x2 or coupler component (star coupler output): 1 instance (e.g., `star_out`)
+* Component type notes:
+  - NOTE: 'star_coupler' does NOT exist, use 'coupler' or 'mmi2x2' for star couplers
+  - NOTE: use component type 'straight' for array waveguides, NOT 'waveguide'
+* Define a `connections:` section that creates a meaningful AWG (Arrayed Waveguide Grating) topology (input star coupler connected to 16 arrayed waveguides with path length differences, connected to output star coupler).
+* Provide `placements:` with (x,y) coordinates for all instances (you can choose appropriate spacing, e.g., 100 µm units).
+* Use the same port naming convention as the example (component_instance,port_name).
+* Do **not** introduce any new component types beyond those specified.
+* At the end, map the top-level ports to the appropriate instance ports.
+* Ensure the YAML is syntactically valid (proper indentation, colons, etc.).
+
+---
+
+Please output the full YAML definition (with `name:`, `instances:`, `placements:`, `connections:`, and `ports:` sections) for the circuit `awg_16channel`.
+
+TASK 29 - Thermo-Optic 2x2 Switch
+
+Use:
+- One MZI (sw1)
+- Two straight_heater_metal components (ps1, ps2) - NOTE: use component type 'straight_heater_metal', NOT 'phase_shifter'
+
+Output YAML only.
+
+TASK 30 - Y-Branch Splitter
+
+Use:
+- One Y-junction (y1) - NOTE: 'y_junction' or 'y_splitter' do NOT exist, use 'coupler' or 'mmi1x2' instead
+
+Output YAML only.
+
+TASK 31 - 1x8 Wavelength-Selective Switch
+
+You are a design-assistant for the GDSFactory framework, writing YAML definitions for photonic circuits.
+
+Below is a *single example* (one-shot) of a small circuit definition, followed by a new task for you to generate.
+
+---
+
+Example:
+
+```yaml
+name: simple_mzi_example
+instances:
+  mmi1:
+    component: mmi1x2
+  mmi2:
+    component: mmi1x2
+  ps1:
+    component: straight_heater_metal
+placements:
+  mmi1:
+    x: 0
+    y: 0
+  mmi2:
+    x: 100
+    y: 0
+  ps1:
+    x: 50
+    y: 0
+connections:
+  mmi1,o2: ps1,o1
+  ps1,o2: mmi2,o1
+ports:
+  in: mmi1,o1
+  out: mmi2,o2
+```
+
+---
+
+Now:
+
+Design a circuit called `wss_1x8` using GDSFactory component types.
+
+**Constraints and specification:**
+
+* Must have 1 input port named `in` and 8 output ports named `out1`, `out2`, `out3`, `out4`, `out5`, `out6`, `out7`, `out8`.
+* Use exactly 17 component instances total, with the following breakdown:
+  - coupler component (input coupler): 1 instance (e.g., `in_cpl`)
+  - mzi or coupler components (switch cells): 8 instances (e.g., `sw1`...`sw8`)
+  - straight_heater_metal components (thermal phase shifters): 8 instances (e.g., `ps1`...`ps8`)
+* Component type notes:
+  - NOTE: use component type 'coupler' for the input coupler
+  - NOTE: use component type 'mzi' or 'coupler' for switch cells
+  - NOTE: use component type 'straight_heater_metal' for thermal phase shifters, NOT 'phase_shifter'
+* Define a `connections:` section that creates a meaningful wavelength-selective switch topology (input coupler splitting to 8 switch cells, each with phase control for wavelength selection).
+* Provide `placements:` with (x,y) coordinates for all instances (you can choose appropriate spacing, e.g., 100 µm units).
+* Use the same port naming convention as the example (component_instance,port_name).
+* Do **not** introduce any new component types beyond those specified.
+* At the end, map the top-level ports to the appropriate instance ports.
+* Ensure the YAML is syntactically valid (proper indentation, colons, etc.).
+
+---
+
+Please output the full YAML definition (with `name:`, `instances:`, `placements:`, `connections:`, and `ports:` sections) for the circuit `wss_1x8`.
+
+TASK 32 - 2x2 PCM Switch
+
+Use:
+- PCM coupler (pcm_cpl) - NOTE: use component type 'coupler' (NOT 'dc_2x2' which does NOT exist)
+- Two straight components (ctrl1, ctrl2) - NOTE: use component type 'straight' for control waveguides (NOT 'waveguide')
+
+Output YAML only.
+
+TASK 33 - Optical Delay Line
+
+Use:
+- Looped straight component (loop1) - NOTE: use component type 'straight' with spiral or bend (NOT 'waveguide')
+- Input coupler (in_cpl) - NOTE: use component type 'coupler'
+- Output coupler (out_cpl) - NOTE: use component type 'coupler'
+
+Output YAML only.
+
+TASK 34 - Simple 1x2 MMI Splitter
+
+Use:
+- One MMI1x2 (mmi)
+
+Output YAML only.
+
+TASK 35 - Simple 2x1 MMI Combiner
+
+Use:
+- One MMI1x2 (mmi) - NOTE: use component type 'mmi1x2' with mirror: true (mmi2x1 does NOT exist)
+
+Output YAML only.
+
+TASK 36 - Straight Waveguide with Phase Shifter
+
+Use:
+- One straight_heater_metal component (ps) - NOTE: use component type 'straight_heater_metal' (NOT 'phase_shifter')
+
+Parameter:
+length = 100.0
+
+Output YAML only.
+
