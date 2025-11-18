@@ -157,5 +157,95 @@
     },
     "port_count": 2,
     "settings": {}
+  },
+  "coupler": {
+    "component_type": "coupler",
+    "ports": [
+      "o1",
+      "o2",
+      "o3",
+      "o4"
+    ],
+    "port_details": {
+      "o1": {
+        "name": "o1",
+        "orientation": 180.0,
+        "width": 500
+      },
+      "o2": {
+        "name": "o2",
+        "orientation": 180.0,
+        "width": 500
+      },
+      "o3": {
+        "name": "o3",
+        "orientation": 0.0,
+        "width": 500
+      },
+      "o4": {
+        "name": "o4",
+        "orientation": 0.0,
+        "width": 500
+      }
+    },
+    "port_count": 4,
+    "parameters": {},
+    "settings": {}
+  },
+  "mmi2x2": {
+    "component_type": "mmi2x2",
+    "ports": [
+      "o1",
+      "o2",
+      "o3",
+      "o4"
+    ],
+    "port_details": {
+      "o1": {
+        "name": "o1",
+        "orientation": 180.0,
+        "width": 500
+      },
+      "o2": {
+        "name": "o2",
+        "orientation": 180.0,
+        "width": 500
+      },
+      "o3": {
+        "name": "o3",
+        "orientation": 0.0,
+        "width": 500
+      },
+      "o4": {
+        "name": "o4",
+        "orientation": 0.0,
+        "width": 500
+      }
+    },
+    "port_count": 4,
+    "parameters": {},
+    "settings": {}
+  },
+  "mzi": {
+    "component_type": "mzi",
+    "ports": [
+      "o1",
+      "o2"
+    ],
+    "port_details": {
+      "o1": {
+        "name": "o1",
+        "orientation": 180.0,
+        "width": 500
+      },
+      "o2": {
+        "name": "o2",
+        "orientation": 0.0,
+        "width": 500
+      }
+    },
+    "port_count": 2,
+    "parameters": {},
+    "settings": {}
   }
 }

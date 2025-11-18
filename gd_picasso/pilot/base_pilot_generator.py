@@ -102,7 +102,7 @@ This is the #1 cause of syntax errors - ALWAYS use ASCII equivalents."""
         return "\n".join(rules)
 
     def _generate_component_rules(self) -> str:
-        """Generate component rules."""
+        """Generate component rules with mapping."""
         component_errors = getattr(self.analyzer, 'error_categories', {}).get('component', [])
         
         rules = ["COMPONENT RULES:"]
@@ -110,6 +110,17 @@ This is the #1 cause of syntax errors - ALWAYS use ASCII equivalents."""
         rules.append("2. Component names must match exactly (case-sensitive)")
         rules.append("3. Settings must be valid for the component type")
         rules.append("4. All numeric values must be valid floats (e.g., 10.0, not '10 microns')")
+        rules.append("")
+        rules.append("⚠️ CRITICAL: Component name mappings (use these instead of invalid names):")
+        rules.append("  ❌ mmi2x1 → ✅ mmi1x2 (and set mirror: true in placements)")
+        rules.append("  ❌ phase_shifter → ✅ straight_heater_metal")
+        rules.append("  ❌ heater → ✅ straight_heater_metal")
+        rules.append("  ❌ y_splitter → ✅ coupler or mmi1x2")
+        rules.append("  ❌ y_junction → ✅ coupler or mmi1x2")
+        rules.append("  ❌ dc_2x2 → ✅ coupler")
+        rules.append("  ❌ waveguide → ✅ straight")
+        rules.append("  ❌ star_coupler → ✅ coupler or mmi2x2")
+        rules.append("  ❌ photodiode → ❌ NOT AVAILABLE in generic_tech PDK")
         
         if component_errors:
             rules.append("\nCommon component errors to avoid:")
@@ -139,12 +150,22 @@ This is the #1 cause of syntax errors - ALWAYS use ASCII equivalents."""
         """Generate routing rules."""
         routing_errors = getattr(self.analyzer, 'error_categories', {}).get('routing', [])
         
-        rules = ["ROUTING RULES:"]
+        rules = ["ROUTING RULES (CRITICAL - all components must be connected):"]
         rules.append("1. ALL components MUST be connected via routes (no components placed but not routed)")
-        rules.append("2. Routes section is REQUIRED if you have multiple components")
-        rules.append("3. Route format: 'source_instance,port: target_instance,port'")
-        rules.append("4. Use 'routes.optical.links' for optical connections")
-        rules.append("5. Route settings: cross_section='strip', radius>=20 (not 15)")
+        rules.append("2. Routes section is REQUIRED if you have multiple components (even 2 components)")
+        rules.append("3. For complex circuits (>10 components): Routes section is MANDATORY - cannot be omitted")
+        rules.append("4. Route format: 'source_instance,port: target_instance,port'")
+        rules.append("5. Use 'routes.optical.links' for optical connections (dictionary format)")
+        rules.append("6. Route settings: cross_section='strip', radius>=20 (not 15)")
+        rules.append("7. Example structure:")
+        rules.append("   routes:")
+        rules.append("     optical:")
+        rules.append("       settings:")
+        rules.append("         cross_section: strip")
+        rules.append("         radius: 20.0")
+        rules.append("       links:")
+        rules.append("         comp1,o2: comp2,o1")
+        rules.append("         comp2,o2: comp3,o1")
         
         if routing_errors:
             rules.append("\nCommon routing errors to avoid:")
@@ -161,12 +182,14 @@ This is the #1 cause of syntax errors - ALWAYS use ASCII equivalents."""
         
         rules = ["SPACING RULES (CRITICAL - prevents routing collisions):"]
         rules.append("1. MINIMUM 200um spacing between components (MANDATORY)")
-        rules.append("2. Simple designs (≤5 components): 200um minimum")
-        rules.append("3. Complex designs (>5 components): 250um+ spacing required")
-        rules.append("4. Vertical stacking: Use +/-100um or more vertical offset")
-        rules.append("5. Horizontal placement: 250-300um separation")
-        rules.append("6. Route radius: >= 20um (not 15um - larger is safer)")
-        rules.append("7. Route separation in bundles: >= 20um")
+        rules.append("2. Simple designs (≤10 components): 200um minimum")
+        rules.append("3. Medium designs (11-20 components): 250um+ spacing required")
+        rules.append("4. Complex designs (>20 components): 300um+ spacing REQUIRED")
+        rules.append("5. Very complex designs (40+ components): 350um+ spacing REQUIRED")
+        rules.append("6. Vertical stacking: Use +/-150um or more vertical offset")
+        rules.append("7. Horizontal placement: 250-300um separation (300um+ for >20 components)")
+        rules.append("8. Route radius: >= 20um (not 15um - larger is safer)")
+        rules.append("9. Route separation in bundles: >= 20um")
         
         if spacing_errors:
             rules.append("\nCommon spacing errors to avoid:")

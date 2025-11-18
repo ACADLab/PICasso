@@ -2,7 +2,7 @@
 
 ## Summary
 
-The `gd_picasso` framework is now fully implemented and tested. It uses a YAML DSL approach (inspired by PhIDO) where the LLM directly outputs YAML netlists that are validated, built into GDSFactory components, and optimized.
+The `gd_picasso` framework is now fully implemented and tested. It uses a YAML DSL approach where the LLM directly outputs YAML netlists that are validated, built into GDSFactory components, and optimized.
 
 ## Key Features Implemented
 
