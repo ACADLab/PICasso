@@ -159,3 +159,44 @@ parallel_runs_*/
 gd_picasso/validation/false_examples_yaml/
 gd_picasso/validation/phido_failed_examples/
 
+# ============================================================================
+# Legacy Python Files - Not used in current gd_picasso framework
+# ============================================================================
+
+# Legacy frameworks (entire directories)
+fin_picasso_framework/**/*.py
+hf_inference_workflow/**/*.py
+hf_models/**/*.py
+openAI_llms/**/*.py
+picasso_flow_package/**/*.py
+
+# Root level test/utility files (not part of gd_picasso)
+check_benchmark_progress.py
+check_klayout_config.py
+custom_models.py
+demo_mzi.py
+demo_netlist.py
+gf_optimize.py
+monitor_test.py
+netlist_optimize.py
+optical_optimize.py
+optimizie_circuit_loss.py
+run_9_problem_test.py
+run_full_benchmark.py
+run_full_benchmark_36.py
+run_pnr_and_drc.py
+s_optimize.py
+temp_fixed_8qam.py
+test_csv_format.py
+test_error_detection_simple.py
+test_full_integration.py
+test_new_features.py
+test_routing_collision_handling.py
+test_two_level_optimization.py
+test_two_phase_tracking.py
+
+# Output directories with generated Python files
+output/**/*.py
+fin_picasso_framework/output/**/*.py
+hf_inference_workflow/output/**/*.py
+
