@@ -36,16 +36,26 @@ class DRCValidator:
 
     def __init__(
         self,
-        klayout_executable: str = "klayout",
+        klayout_executable: Optional[str] = None,
         use_generic_tech: bool = True
     ):
         """
         Initialize DRC validator.
 
         Args:
-            klayout_executable: Path to KLayout executable
+            klayout_executable: Path to KLayout executable (if None, auto-detect)
             use_generic_tech: Whether to use generic_tech PDK (real, not toy)
         """
+        # Auto-detect KLayout path if not provided
+        if klayout_executable is None:
+            # Try common macOS installation path first
+            macos_path = "/Applications/KLayout/klayout.app/Contents/MacOS/klayout"
+            if os.path.exists(macos_path):
+                klayout_executable = macos_path
+            else:
+                # Fall back to system PATH
+                klayout_executable = "klayout"
+        
         self.klayout_exec = klayout_executable
         self.use_generic_tech = use_generic_tech and GENERIC_TECH_AVAILABLE
         self.drc_script_path = None
@@ -77,8 +87,12 @@ class DRCValidator:
         # Check if KLayout is available
         if not self._check_klayout_available():
             report["warnings"].append("KLayout not found - DRC check skipped")
+            report["errors"].append("KLayout executable not found - cannot perform DRC validation")
             logger.warning("KLayout executable not found - skipping DRC check")
-            return True, report
+            # Return False to indicate DRC validation was not performed
+            # This ensures we don't falsely report DRC as passing
+            report["passed"] = False
+            return False, report
 
         # Generate DRC script if using generic_tech
         if self.use_generic_tech and GPLUGINS_AVAILABLE:
@@ -160,9 +174,17 @@ class DRCValidator:
     def _check_klayout_available(self) -> bool:
         """Check if KLayout is installed and accessible."""
         try:
+            # Check if executable exists
+            if not os.path.exists(self.klayout_exec) and self.klayout_exec == "klayout":
+                # Try macOS path if default not found
+                macos_path = "/Applications/KLayout/klayout.app/Contents/MacOS/klayout"
+                if os.path.exists(macos_path):
+                    self.klayout_exec = macos_path
+            
             result = subprocess.run(
                 [self.klayout_exec, "-v"],
-                capture_output=True,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,  # Suppress version output
                 timeout=5
             )
             return result.returncode == 0
@@ -197,8 +219,23 @@ class DRCValidator:
                 cmd,
                 capture_output=True,
                 text=True,
-                timeout=60
+                timeout=60,
+                stderr=subprocess.PIPE  # Capture stderr to filter warnings
             )
+            
+            # Filter out common KLayout warnings that don't affect DRC results
+            if result.stderr:
+                stderr_lines = result.stderr.split('\n')
+                important_errors = [
+                    line for line in stderr_lines
+                    if line.strip() and 
+                    'Warning: Cellname cannot be reconstructed' not in line and
+                    'already openend' not in line.lower() and
+                    'already opened' not in line.lower()
+                ]
+                if important_errors:
+                    # Only log if there are errors beyond the common warnings
+                    logger.debug(f"KLayout stderr (filtered): {''.join(important_errors[:3])}")
 
             # Parse DRC report
             violations = self._parse_drc_report(drc_report_path, report)

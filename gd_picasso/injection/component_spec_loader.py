@@ -6,6 +6,7 @@ Includes component specs in YAML format and common error patterns to avoid.
 """
 
 import logging
+import inspect
 import gdsfactory as gf
 from typing import Dict, List, Optional
 from pathlib import Path
@@ -179,7 +180,7 @@ class ComponentSpecLoader:
         if component_types is None:
             component_types = [
                 'mmi1x2', 'bend_euler', 'straight', 'straight_heater_metal',
-                'y_branch', 'directional_coupler', 'ring_single'
+                'coupler', 'ring_single', 'mmi2x2', 'mzi'
             ]
 
         specs = self.load_multiple_specs(component_types)
