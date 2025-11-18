@@ -6,7 +6,7 @@ This report documents the validation of the `gd_picasso` framework using false e
 
 ## Validation Methodology
 
-1. **Extract False Examples**: Python false examples from `ALL_FALSE_CODE_EXAMPLES.md` and PhIDO failed examples
+1. **Extract False Examples**: Python false examples from `ALL_FALSE_CODE_EXAMPLES.md` and external YAML examples
 2. **Convert to YAML**: Convert Python examples to YAML DSL format
 3. **Unit Test Components**: Test each framework component individually
 4. **Integration Test**: Test full pipeline with false examples
@@ -24,7 +24,7 @@ This report documents the validation of the `gd_picasso` framework using false e
 - **Status**: COMPLETE
 - **Python Extractor**: ✅ Extracts from markdown
 - **Python to YAML Converter**: ✅ Basic implementation
-- **PhIDO Extractor**: ✅ Extracts YAML examples
+- **YAML Extractor**: ✅ Extracts YAML examples from external sources
 
 ### Phase 3: Failure Analysis ✅
 - **Status**: COMPLETE

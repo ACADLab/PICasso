@@ -1,4 +1,0 @@
-problem_idx,circuit_type,sample_idx,success,error_type,error_details,code_length
-4,mach-zehnder modulator,0,False,EXECUTION_ERROR,EXECUTION_ERROR: mmi1x2() got an unexpected keyword argument 'splitter',938
-4,mach-zehnder modulator,1,False,EXECUTION_ERROR,EXECUTION_ERROR: mmi1x2() got an unexpected keyword argument 'splitter',937
-4,mach-zehnder modulator,2,False,EXECUTION_ERROR,EXECUTION_ERROR: mmi1x2() got an unexpected keyword argument 'splitter',938

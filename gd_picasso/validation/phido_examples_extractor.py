@@ -1,7 +1,7 @@
 """
-Extract failed YAML examples from PhIDO repository.
+Extract failed YAML examples from external repository.
 
-Purpose: Extract YAML examples from PhIDO that failed DRC, routing, or functional validation.
+Purpose: Extract YAML examples from external sources that failed DRC, routing, or functional validation.
 """
 
 import yaml
@@ -12,34 +12,34 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class PhIDOExamplesExtractor:
-    """Extract YAML examples from PhIDO repository."""
+class YAMLExamplesExtractor:
+    """Extract YAML examples from external repository."""
 
-    def __init__(self, phido_root: str):
+    def __init__(self, repo_root: str):
         """
         Initialize extractor.
 
         Args:
-            phido_root: Path to PhIDO-Release repository root
+            repo_root: Path to external repository root
         """
-        self.phido_root = Path(phido_root)
+        self.repo_root = Path(repo_root)
         self.examples = []
 
     def extract(self) -> List[Dict]:
         """
-        Extract YAML examples from PhIDO repository.
+        Extract YAML examples from external repository.
 
         Returns:
             List of dictionaries containing:
             - file_path: str
             - yaml_content: str
-            - format: str ('phido' or 'gdsfactory')
+            - format: str ('external' or 'gdsfactory')
         """
         # Look for YAML files in PhotonicsAI/Photon/
-        photon_dir = self.phido_root / "PhotonicsAI" / "Photon"
+        photon_dir = self.repo_root / "PhotonicsAI" / "Photon"
         
         if not photon_dir.exists():
-            logger.warning(f"PhIDO Photon directory not found: {photon_dir}")
+            logger.warning(f"External repository Photon directory not found: {photon_dir}")
             return []
 
         # Find all YAML files
@@ -50,9 +50,9 @@ class PhIDOExamplesExtractor:
                 content = yaml_file.read_text()
                 yaml_data = yaml.safe_load(content)
                 
-                # Determine format (PhIDO uses 'nodes' and 'edges', GDSFactory uses 'instances' and 'routes')
+                # Determine format (external format uses 'nodes' and 'edges', GDSFactory uses 'instances' and 'routes')
                 if 'nodes' in yaml_data or 'CIRCUIT_' in yaml_file.stem:
-                    format_type = 'phido'
+                    format_type = 'external'
                 else:
                     format_type = 'gdsfactory'
                 
@@ -97,11 +97,11 @@ class PhIDOExamplesExtractor:
 
 if __name__ == "__main__":
     # Example usage
-    extractor = PhIDOExamplesExtractor("../../PhIDO-Release")
+    extractor = YAMLExamplesExtractor("../../external-repo")
     examples = extractor.extract()
-    print(f"Extracted {len(examples)} YAML examples from PhIDO")
+    print(f"Extracted {len(examples)} YAML examples from external repository")
     
     # Save examples
-    extractor.save_examples("phido_failed_examples")
-    print("Saved examples to phido_failed_examples/")
+    extractor.save_examples("external_failed_examples")
+    print("Saved examples to external_failed_examples/")
 

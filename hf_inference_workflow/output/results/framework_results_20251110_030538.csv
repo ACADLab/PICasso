@@ -1,4 +1,0 @@
-problem_idx,circuit_type,sample_idx,success,retries_used,validation_passed,pnr_score,layout_area,drc_violations,sax_compiled,il_after_db,il_improvement_db
-4,mach-zehnder modulator,0,True,0,True,0.5385335413416538,35575500000.0,0,False,,0.0
-4,mach-zehnder modulator,1,True,1,True,0.5385335413416538,35575500000.0,0,False,,0.0
-4,mach-zehnder modulator,2,True,1,True,0.5385335413416538,35575500000.0,0,False,,0.0
