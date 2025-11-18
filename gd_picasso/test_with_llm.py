@@ -316,11 +316,10 @@ def create_agent(model_name: str = "gpt-4o") -> Optional[object]:
             logger.error("HFInferenceAgent not available")
             return None
         
-        # Get HuggingFace API token
-        from hf_inference_workflow.config import HF_API_TOKEN
-        api_token = os.getenv('HF_TOKEN') or os.getenv('HF_API_TOKEN') or HF_API_TOKEN
+        # Get HuggingFace API token from environment variables only
+        api_token = os.getenv('HF_TOKEN') or os.getenv('HF_API_TOKEN')
         
-        if not api_token or api_token == "ENTER_YOUR_HF_TOKEN_HERE":
+        if not api_token:
             logger.error("HF_TOKEN or HF_API_TOKEN environment variable not set")
             logger.error("Please set your HuggingFace API token. Get it from: https://huggingface.co/settings/tokens")
             return None
