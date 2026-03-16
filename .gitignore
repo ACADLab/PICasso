@@ -131,17 +131,26 @@ hf_inference_workflow/TOKEN_ISSUE_REPORT.md
 # Jupyter notebooks checkpoints
 .ipynb_checkpoints/
 
-# Environment and config files with secrets
+# Environment and config files with secrets (never commit)
 .env
+.env.*
+!.env.example
 *.key
 *.token
+keys.txt
 hf_token.txt
+*.pem
 
 # Benchmark and test logs
 benchmark_*.log
 *_test.log
 gd_picasso_test.log
 framework_test*.log
+ablation_study.log
+*_run.log
+*.log.*
+log/
+logs/
 
 # Data files
 *.csv

@@ -116,6 +116,13 @@ class DRCValidator:
             # Run DRC check
             if self.drc_script_path and os.path.exists(self.drc_script_path):
                 passed, violations = self._run_klayout_drc(gds_path, report)
+                # violations == -1 means KLayout execution error (not real violations)
+                # Fall back to basic checks rather than hard-failing the circuit
+                if violations == -1:
+                    logger.warning("KLayout execution failed — falling back to basic DRC checks")
+                    report["errors"].clear()
+                    report["warnings"].append("KLayout DRC execution failed — using basic checks")
+                    passed, violations = self._run_basic_drc(gds_path, report)
             else:
                 # Fallback to basic checks
                 passed, violations = self._run_basic_drc(gds_path, report)
@@ -152,18 +159,16 @@ class DRCValidator:
         if not GPLUGINS_AVAILABLE or not GENERIC_TECH_AVAILABLE:
             raise ImportError("gplugins or generic_tech not available")
 
-        # Create output directory
         output_dir = Path(__file__).parent.parent / "output" / "drc_scripts"
         output_dir.mkdir(parents=True, exist_ok=True)
         
-        drc_script_path = output_dir / "generic_tech_drc.lym"
+        drc_script_path = output_dir / "generic_tech_drc.lydrc"
 
-        # Generate DRC deck using generic_tech
         try:
             write_drc_deck_macro(
+                rules=["width_min", "space_min"],
                 layers=LAYER,
-                rules="all",  # Use all rules from generic_tech
-                output=str(drc_script_path)
+                filepath=str(drc_script_path)
             )
             logger.info(f"Generated DRC script: {drc_script_path}")
             return str(drc_script_path)

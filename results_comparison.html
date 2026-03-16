@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>PICasso — Final Results</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#080d1a; --panel:#0f1829; --border:#1a2b42;
+    --text:#e2e8f0; --muted:#4a6080;
+    --green:#10b981; --cyan:#00d4ff; --purple:#8b5cf6;
+    --amber:#f59e0b; --red:#f43f5e; --orange:#fb923c;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--text);font-family:'Space Grotesk',sans-serif;padding:28px;min-height:100vh;}
+
+  header{text-align:center;margin-bottom:30px;}
+  header h1{font-size:2rem;font-weight:700;letter-spacing:-0.04em;
+    background:linear-gradient(100deg,#00d4ff 0%,#8b5cf6 50%,#10b981 100%);
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:6px;}
+  header p{color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:0.8rem;}
+
+  .legend{display:flex;justify-content:center;gap:20px;flex-wrap:wrap;margin-bottom:26px;}
+  .legend-item{display:flex;align-items:center;gap:7px;font-size:0.78rem;color:var(--muted);}
+  .swatch{width:14px;height:10px;border-radius:2px;}
+
+  /* ── KPI strip ── */
+  .kpi-strip{display:grid;grid-template-columns:repeat(9,1fr);gap:10px;margin-bottom:24px;}
+  .kpi{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:12px 10px;text-align:center;}
+  .kpi .label{font-size:0.62rem;color:var(--muted);font-family:'JetBrains Mono',monospace;margin-bottom:5px;text-transform:uppercase;letter-spacing:.04em;line-height:1.3;}
+  .kpi .val{font-size:1.45rem;font-weight:700;font-family:'JetBrains Mono',monospace;line-height:1;}
+  .kpi .delta{font-size:0.65rem;margin-top:4px;font-family:'JetBrains Mono',monospace;}
+  .kpi .model{font-size:0.6rem;color:var(--muted);margin-top:2px;}
+  .up{color:var(--green);} .dn{color:var(--red);} .neu{color:var(--amber);}
+
+  /* ── Charts ── */
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px;}
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:18px 20px 16px;}
+  .card.wide{grid-column:1/-1;}
+  .card h2{font-size:0.88rem;font-weight:600;color:var(--text);margin-bottom:3px;}
+  .card .sub{font-size:0.7rem;color:var(--muted);font-family:'JetBrains Mono',monospace;margin-bottom:14px;}
+  .badge{display:inline-block;padding:1px 7px;border-radius:4px;font-size:.6rem;font-weight:700;letter-spacing:.06em;vertical-align:middle;margin-left:5px;}
+  .bl{background:#10b98120;color:#10b981;border:1px solid #10b98140;}
+  .bp{background:#f43f5e20;color:#f43f5e;border:1px solid #f43f5e40;}
+  .ba{background:#8b5cf620;color:#8b5cf6;border:1px solid #8b5cf640;}
+  .bn{background:#f59e0b20;color:#f59e0b;border:1px solid #f59e0b40;}
+
+  /* ── Big comparison table ── */
+  .tbl-wrap{overflow-x:auto;}
+  table{width:100%;border-collapse:collapse;font-size:0.78rem;font-family:'JetBrains Mono',monospace;}
+  th{color:var(--muted);font-weight:500;padding:6px 10px;border-bottom:1px solid var(--border);text-align:center;font-size:.68rem;text-transform:uppercase;letter-spacing:.04em;}
+  th.left{text-align:left;}
+  td{padding:5px 10px;border-bottom:1px solid #0d1a2a;text-align:center;}
+  td.left{text-align:left;color:var(--text);font-weight:500;}
+  tr:last-child td{border-bottom:none;}
+  .hi{color:var(--green);font-weight:700;}
+  .lo{color:var(--red);}
+  .md{color:var(--amber);}
+  .pill{display:inline-block;border-radius:3px;padding:1px 7px;font-size:.72rem;font-weight:600;}
+  .p-g{background:#10b98120;color:#10b981;}
+  .p-a{background:#f59e0b20;color:#f59e0b;}
+  .p-r{background:#f43f5e20;color:#f43f5e;}
+  .p-b{background:#00d4ff20;color:#00d4ff;}
+
+  footer{text-align:center;font-size:.7rem;color:var(--muted);font-family:'JetBrains Mono',monospace;margin-top:12px;}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>PICasso — Final Results vs Paper</h1>
+  <p>Mar 13 2026 &nbsp;·&nbsp; All Table 1 runs complete (36 problems) ✅ &nbsp;·&nbsp; Claude · GPT-4o · Llama 3.1 70B &nbsp;·&nbsp; Probabilistic Spec@k</p>
+</header>
+
+<div class="legend">
+  <div class="legend-item"><div class="swatch" style="background:#f43f5e"></div>Paper — Vanilla</div>
+  <div class="legend-item"><div class="swatch" style="background:#00d4ff"></div>Current — Vanilla</div>
+  <div class="legend-item"><div class="swatch" style="background:#8b5cf6"></div>Paper — PICasso</div>
+  <div class="legend-item"><div class="swatch" style="background:#10b981"></div>Current — PICasso</div>
+  <div class="legend-item"><div class="swatch" style="background:#f59e0b"></div>Ablation variant</div>
+</div>
+
+<!-- KPI strip (9 headline numbers) -->
+<div class="kpi-strip">
+  <div class="kpi"><div class="label">GPT-4o PICasso Struct C1</div><div class="val up">97.8%</div><div class="delta up">↑ +47.8pp</div><div class="model">paper: 50.0%</div></div>
+  <div class="kpi"><div class="label">GPT-4o PICasso Full C1</div><div class="val up">88.9%</div><div class="delta up">↑ +38.9pp</div><div class="model">paper: 50.0%</div></div>
+  <div class="kpi"><div class="label">GPT-4o PICasso Full C2</div><div class="val up">80.0%</div><div class="delta dn">↓ −2.1pp</div><div class="model">paper: 82.1%</div></div>
+  <div class="kpi"><div class="label">Llama PICasso Struct C3</div><div class="val up">77.3%</div><div class="delta up">↑ +77.3pp</div><div class="model">paper: 0.0% ⚡</div></div>
+  <div class="kpi"><div class="label">Llama PICasso Full C1</div><div class="val up">68.9%</div><div class="delta up">↑ +36.4pp</div><div class="model">paper: 32.5%</div></div>
+  <div class="kpi"><div class="label">Claude PICasso Struct C1/C2</div><div class="val up">100%</div><div class="delta up">↑ full 36 tasks</div><div class="model">paper: 77.5/85%</div></div>
+  <div class="kpi"><div class="label">Claude PICasso Full C1</div><div class="val up">100%</div><div class="delta up">↑ +35pp</div><div class="model">paper: 65.0%</div></div>
+  <div class="kpi"><div class="label">Claude PICasso Full C3</div><div class="val up">52.0%</div><div class="delta up">↑ +27pp</div><div class="model">paper: 25.0%</div></div>
+  <div class="kpi"><div class="label">Claude Vanilla Struct C2</div><div class="val neu">52.5%</div><div class="delta neu">raw baseline</div><div class="model">C1: 28.9%</div></div>
+</div>
+
+<!-- Row 1: GPT-4o charts -->
+<div class="grid">
+  <div class="card">
+    <h2>GPT-4o — Structural Spec@3 <span class="badge bl">CURRENT</span><span class="badge bp">PAPER</span></h2>
+    <div class="sub">vanilla + PICasso · pass-rate avg by complexity tier · 5 samples</div>
+    <canvas id="gptStruct" height="200"></canvas>
+  </div>
+  <div class="card">
+    <h2>GPT-4o — Full Spec@3 <span class="badge bl">CURRENT</span><span class="badge bp">PAPER</span></h2>
+    <div class="sub">structural + functional correctness · by complexity tier</div>
+    <canvas id="gptFull" height="200"></canvas>
+  </div>
+
+  <!-- Row 2: Llama charts -->
+  <div class="card">
+    <h2>Llama 3.1 70B — Structural Spec@3 <span class="badge bl">CURRENT</span><span class="badge bp">PAPER</span></h2>
+    <div class="sub">via OpenRouter (fixes HF 402 errors) · C3: 0%→77.3% is biggest gain</div>
+    <canvas id="llamaStruct" height="200"></canvas>
+  </div>
+  <div class="card">
+    <h2>Llama 3.1 70B — Full Spec@3 <span class="badge bl">CURRENT</span><span class="badge bp">PAPER</span></h2>
+    <div class="sub">functional correctness · C1: 32.5%→68.9% · C3 still challenging</div>
+    <canvas id="llamaFull" height="200"></canvas>
+  </div>
+
+  <!-- Row 3: Claude Table 1 (36 problems) -->
+  <div class="card">
+    <h2>Claude Sonnet 4.5 — Structural Spec@3 <span class="badge bl">CURRENT</span><span class="badge bp">PAPER</span></h2>
+    <div class="sub">full 36 problems · vanilla vs PICasso · 5 samples</div>
+    <canvas id="claudeStruct" height="200"></canvas>
+  </div>
+  <div class="card">
+    <h2>Claude Sonnet 4.5 — Full Spec@3 <span class="badge bl">CURRENT</span><span class="badge bp">PAPER</span></h2>
+    <div class="sub">C1/C2: 100% under PICasso · C3: 52.0%</div>
+    <canvas id="claudeFull" height="200"></canvas>
+  </div>
+
+  <!-- Row 4: Ablation -->
+  <div class="card">
+    <h2>Claude Ablation — Structural V1→V5 <span class="badge ba">ABLATION</span></h2>
+    <div class="sub">avg Spec@5_S over 12 designs · V3 (Pilot) unlocks structural 100%</div>
+    <canvas id="ablStruct" height="200"></canvas>
+  </div>
+  <div class="card">
+    <h2>Claude Ablation — Full Spec V1→V5 <span class="badge ba">ABLATION</span></h2>
+    <div class="sub">functional only unlocks at V4 (+DRC/SAX) · all tiers reach 75–100%</div>
+    <canvas id="ablFull" height="200"></canvas>
+  </div>
+
+  <!-- Row 5: Big comparison + Error patterns -->
+  <div class="card wide">
+    <h2>Paper vs Current — PICasso Full Spec · All Models · All Tiers <span class="badge bp">PAPER</span><span class="badge bl">CURRENT</span></h2>
+    <div class="sub">purple = paper Spec@3 · green = current (36 problems, 5 samples) · Claude = full Table 1 run</div>
+    <canvas id="bigComp" height="120"></canvas>
+  </div>
+
+  <div class="card wide">
+    <h2>Error Pattern Analysis — Claude Ablation V1→V5 <span class="badge bn">NEW</span></h2>
+    <div class="sub">failure count per error category · routing errors dominate vanilla · eliminated by V3 pilot validation</div>
+    <canvas id="errChart" height="120"></canvas>
+  </div>
+</div>
+
+<!-- Full numeric table -->
+<div class="card wide" style="margin-bottom:18px;">
+  <h2>Full Numeric Comparison Table <span class="badge bl">ALL RUNS COMPLETE</span></h2>
+  <div class="sub">Spec@3 (paper) vs current probabilistic Spec@k (36 problems, 5 samples) · Δ = current PICasso minus paper PICasso</div>
+  <br>
+  <div class="tbl-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th class="left" rowspan="2">Model</th>
+        <th class="left" rowspan="2">Tier</th>
+        <th colspan="2">Vanilla Structural</th>
+        <th colspan="2">Vanilla Full</th>
+        <th colspan="2">PICasso Structural</th>
+        <th colspan="2">PICasso Full</th>
+        <th colspan="2">Δ PICasso</th>
+      </tr>
+      <tr>
+        <th>Paper</th><th>Current</th>
+        <th>Paper</th><th>Current</th>
+        <th>Paper</th><th>Current</th>
+        <th>Paper</th><th>Current</th>
+        <th>ΔS</th><th>ΔF</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- GPT-4o -->
+      <tr><td class="left" rowspan="3">GPT-4o</td>
+        <td>C1</td><td>25.0</td><td class="md">46.7</td><td>0.0</td><td>0.0</td>
+        <td>50.0</td><td class="hi">97.8</td><td>50.0</td><td class="hi">88.9</td>
+        <td class="hi">+47.8</td><td class="hi">+38.9</td></tr>
+      <tr><td>C2</td><td>54.3</td><td class="lo">31.7</td><td>0.0</td><td>0.0</td>
+        <td>82.1</td><td class="hi">95.0</td><td>82.1</td><td class="md">80.0</td>
+        <td class="hi">+12.9</td><td class="dn">−2.1</td></tr>
+      <tr><td>C3</td><td>4.3</td><td class="lo">0.0</td><td>0.0</td><td>0.0</td>
+        <td>25.0</td><td class="hi">48.0</td><td>10.7</td><td class="lo">8.0</td>
+        <td class="hi">+23.0</td><td class="dn">−2.7</td></tr>
+      <!-- Claude (full 36-problem Table 1) -->
+      <tr style="border-top:1px solid #1a2b42;"><td class="left" rowspan="3">Claude Sonnet 4.5<br><small style="color:var(--muted)">36 problems</small></td>
+        <td>C1</td><td>20.0</td><td class="md">22.2</td><td>0.0</td><td>0.0</td>
+        <td>77.5</td><td class="hi">100.0</td><td>65.0</td><td class="hi">100.0</td>
+        <td class="hi">+22.5</td><td class="hi">+35.0</td></tr>
+      <tr><td>C2</td><td>38.6</td><td class="md">33.3</td><td>0.0</td><td>0.0</td>
+        <td>85.0</td><td class="hi">100.0</td><td>85.0</td><td class="hi">100.0</td>
+        <td class="hi">+15.0</td><td class="hi">+15.0</td></tr>
+      <tr><td>C3</td><td>31.4</td><td class="lo">8.0</td><td>0.0</td><td>0.0</td>
+        <td>40.7</td><td class="hi">84.0</td><td>25.0</td><td class="hi">52.0</td>
+        <td class="hi">+43.3</td><td class="hi">+27.0</td></tr>
+      <!-- Llama -->
+      <tr style="border-top:1px solid #1a2b42;"><td class="left" rowspan="3">Llama 3.1 70B</td>
+        <td>C1</td><td>32.5</td><td class="md">33.3</td><td>0.0</td><td>0.0</td>
+        <td>32.5</td><td class="hi">80.0</td><td>32.5</td><td class="hi">68.9</td>
+        <td class="hi">+47.5</td><td class="hi">+36.4</td></tr>
+      <tr><td>C2</td><td>7.1</td><td class="lo">0.0</td><td>0.0</td><td>0.0</td>
+        <td>59.3</td><td class="hi">71.7</td><td>58.6</td><td class="lo">33.3</td>
+        <td class="hi">+12.4</td><td class="dn">−25.3</td></tr>
+      <tr><td>C3</td><td>0.0</td><td class="md">2.7</td><td>0.0</td><td>0.0</td>
+        <td>0.0</td><td class="hi">77.3</td><td>0.0</td><td class="lo">0.0</td>
+        <td class="hi">+77.3 ⚡</td><td>0.0</td></tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+
+<footer>All Table 1 runs complete as of Mar 13 2026 · Claude + GPT-4o + Llama 3.1 70B (36 problems, 5 samples each) · Ablation (Claude, 12 designs, V1–V5) · Spec@k = 1 − C(n−c,k)/C(n,k)</footer>
+
+<script>
+const G='#1a2b4260', T='#4a6080';
+const base={
+  responsive:true,
+  plugins:{
+    legend:{labels:{color:'#94a3b8',font:{family:'Space Grotesk',size:11},boxWidth:13,padding:12}},
+    tooltip:{bodyFont:{family:'JetBrains Mono',size:11},titleFont:{family:'Space Grotesk',size:12},
+      callbacks:{label:c=>` ${c.dataset.label}: ${c.parsed.y.toFixed(1)}%`}}
+  },
+  scales:{
+    x:{ticks:{color:T,font:{family:'Space Grotesk',size:11}},grid:{color:G}},
+    y:{min:0,max:100,ticks:{color:T,font:{family:'JetBrains Mono',size:10},callback:v=>v+'%'},grid:{color:G}}
+  }
+};
+const TIERS=['C1 (Simple)','C2 (Medium)','C3 (Complex)'];
+
+function barDS(label,data,hex,alpha=0.55){
+  return{label,data,backgroundColor:`${hex}${Math.round(alpha*255).toString(16).padStart(2,'0')}`,borderColor:hex,borderWidth:1.5};
+}
+
+// ── GPT-4o Structural ──────────────────────────
+new Chart('gptStruct',{type:'bar',data:{labels:TIERS,datasets:[
+  barDS('Vanilla — Paper',  [25.0, 54.3, 4.3],  '#f43f5e'),
+  barDS('Vanilla — Current',[46.7, 31.7, 0.0],  '#00d4ff'),
+  barDS('PICasso — Paper',  [50.0, 82.1,25.0],  '#8b5cf6'),
+  barDS('PICasso — Current',[97.8, 95.0,48.0],  '#10b981'),
+]},options:base});
+
+// ── GPT-4o Full ────────────────────────────────
+new Chart('gptFull',{type:'bar',data:{labels:TIERS,datasets:[
+  barDS('Vanilla — Paper',  [0.0,  0.0, 0.0],   '#f43f5e'),
+  barDS('Vanilla — Current',[0.0,  0.0, 0.0],   '#00d4ff'),
+  barDS('PICasso — Paper',  [50.0,82.1,10.7],   '#8b5cf6'),
+  barDS('PICasso — Current',[88.9,80.0, 8.0],   '#10b981'),
+]},options:base});
+
+// ── Llama Structural ───────────────────────────
+new Chart('llamaStruct',{type:'bar',data:{labels:TIERS,datasets:[
+  barDS('Vanilla — Paper',  [32.5,  7.1, 0.0],  '#f43f5e'),
+  barDS('Vanilla — Current',[33.3,  0.0, 2.7],  '#00d4ff'),
+  barDS('PICasso — Paper',  [32.5, 59.3, 0.0],  '#8b5cf6'),
+  barDS('PICasso — Current',[80.0, 71.7,77.3],  '#10b981'),
+]},options:base});
+
+// ── Llama Full ─────────────────────────────────
+new Chart('llamaFull',{type:'bar',data:{labels:TIERS,datasets:[
+  barDS('Vanilla — Paper',  [0.0,  0.0, 0.0],   '#f43f5e'),
+  barDS('Vanilla — Current',[0.0,  0.0, 0.0],   '#00d4ff'),
+  barDS('PICasso — Paper',  [32.5,58.6, 0.0],   '#8b5cf6'),
+  barDS('PICasso — Current',[68.9,33.3, 0.0],   '#10b981'),
+]},options:base});
+
+// ── Claude Structural (full 36) ─────────────────
+new Chart('claudeStruct',{type:'bar',data:{labels:TIERS,datasets:[
+  barDS('Vanilla — Paper',  [20.0, 38.6,31.4],  '#f43f5e'),
+  barDS('Vanilla — Current',[22.2, 33.3, 8.0],  '#00d4ff'),
+  barDS('PICasso — Paper',  [77.5, 85.0,40.7],  '#8b5cf6'),
+  barDS('PICasso — Current',[100.0,100.0,84.0],'#10b981'),
+]},options:base});
+
+// ── Claude Full (full 36) ───────────────────────
+new Chart('claudeFull',{type:'bar',data:{labels:TIERS,datasets:[
+  barDS('Vanilla — Paper',  [0.0,  0.0, 0.0],   '#f43f5e'),
+  barDS('Vanilla — Current',[0.0,  0.0, 0.0],   '#00d4ff'),
+  barDS('PICasso — Paper',  [65.0, 85.0,25.0],  '#8b5cf6'),
+  barDS('PICasso — Current',[100.0,100.0,52.0],'#10b981'),
+]},options:base});
+
+// ── Ablation Structural (line) ─────────────────
+const XLABS=['V1\nVanilla','V2\n+YAML','V3\n+Pilot','V4\n+DRC/SAX','V5\nFull'];
+const lineOpts={...base,scales:{...base.scales,x:{...base.scales.x,ticks:{color:T,font:{family:'Space Grotesk',size:9}}}}};
+function lineDS(label,data,hex){
+  return{label,data,borderColor:hex,backgroundColor:`${hex}15`,tension:.25,
+    pointRadius:6,pointBackgroundColor:hex,fill:true,borderWidth:2.5};
+}
+new Chart('ablStruct',{type:'line',data:{labels:XLABS,datasets:[
+  lineDS('C1',[ 0.0,100.0,100.0,100.0,100.0],'#00d4ff'),
+  lineDS('C2',[50.0, 75.0,100.0,100.0,100.0],'#f59e0b'),
+  lineDS('C3',[25.0,  0.0,100.0,100.0,100.0],'#8b5cf6'),
+]},options:lineOpts});
+
+new Chart('ablFull',{type:'line',data:{labels:XLABS,datasets:[
+  lineDS('C1',[0,0,0,100.0,100.0],'#00d4ff'),
+  lineDS('C2',[0,0,0,100.0, 75.0],'#f59e0b'),
+  lineDS('C3',[0,0,0, 75.0, 75.0],'#8b5cf6'),
+]},options:lineOpts});
+
+// ── Big comparison (PICasso Full) ──────────────
+new Chart('bigComp',{type:'bar',
+  data:{labels:['GPT-4o C1','GPT-4o C2','GPT-4o C3','Claude C1','Claude C2','Claude C3','Llama C1','Llama C2','Llama C3'],
+    datasets:[
+      barDS('Paper PICasso Full Spec@3', [50.0,82.1,10.7, 65.0,85.0,25.0, 32.5,58.6,0.0],'#8b5cf6',0.65),
+      barDS('Current PICasso Full Spec', [88.9,80.0, 8.0,100.0,100.0,52.0, 68.9,33.3,0.0],'#10b981',0.65),
+    ]},
+  options:{...base,scales:{...base.scales,x:{...base.scales.x,ticks:{color:T,font:{family:'Space Grotesk',size:10}}}}}
+});
+
+// ── Error patterns ─────────────────────────────
+const ECATS=['Routing angle\nmismatch','Routing\ncollision','YAML schema\nerror','YAML\ntruncated','YAML syntax\nerror','Build failed\n(other)','Missing\nroutes'];
+new Chart('errChart',{type:'bar',
+  data:{labels:ECATS,datasets:[
+    barDS('V1 Vanilla',     [22,6,15,0,3,5,0], '#f43f5e'),
+    barDS('V2 +YAML',       [28,1,11,0,4,0,0], '#fb923c'),
+    barDS('V3 +Pilot',      [ 0,0, 0,4,0,1,5], '#facc15'),
+    barDS('V4 +DRC/SAX',    [ 0,0, 0,0,0,0,5], '#8b5cf6'),
+    barDS('V5 Full PICasso',[ 0,0, 1,2,0,1,6], '#10b981'),
+  ]},
+  options:{...base,
+    scales:{
+      x:{ticks:{color:T,font:{family:'Space Grotesk',size:9}},grid:{color:G}},
+      y:{ticks:{color:T,font:{family:'JetBrains Mono',size:10},stepSize:5},grid:{color:G},
+         title:{display:true,text:'failure count',color:T,font:{size:10}}}
+    }
+  }
+});
+</script>
+</body>
+</html>

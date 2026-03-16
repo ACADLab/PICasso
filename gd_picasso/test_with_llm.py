@@ -27,6 +27,19 @@ except ImportError as e:
     print(f"ERROR: gdsfactory not available: {e}")
     sys.exit(1)
 
+# Fix kfactory version parsing for KLayout versions like "0.30.4-1"
+# and suppress klive show() spam during batch runs (collision checker
+# sends every failed routing attempt to the KLayout GUI).
+try:
+    import kfactory.kcell as _kc
+    if '-' in _kc._klayout_version:
+        _kc._klayout_version = _kc._klayout_version.split('-')[0]
+    import kfactory
+    kfactory.show = lambda *a, **kw: None
+    _kc.show = lambda *a, **kw: None
+except Exception:
+    pass
+
 # Import gd_picasso components
 from gd_picasso.config import (
     YAML_DSL_PROMPT_TEMPLATE,
@@ -190,13 +203,17 @@ def load_problems(problems_file: str) -> List[Dict]:
 def create_agent(model_name: str = "gpt-4o") -> Optional[object]:
     """
     Create inference agent for specified model.
-    
+
+    API keys must be set via environment variables (see README). For GPT models,
+    OPENROUTER_API is preferred over OPENAI_API_KEY for higher rate limits.
+
     Args:
         model_name: Model name ('gpt-4o', 'gpt-4o-mini', 'deepseek-r1', 'kimi2', etc.)
-        
+
     Returns:
         Agent instance or None
     """
+
     # Model name mapping (short names -> full HuggingFace model IDs)
     MODEL_MAPPING = {
         # DeepSeek (HuggingFace)
@@ -250,7 +267,33 @@ def create_agent(model_name: str = "gpt-4o") -> Optional[object]:
         
         api_key = os.getenv('ANTHROPIC_API_KEY')
         if not api_key:
-            logger.error("ANTHROPIC_API_KEY environment variable not set")
+            # Fallback: load from ~/.claude/anthropic_key.sh
+            _key_file = Path.home() / ".claude" / "anthropic_key.sh"
+            if _key_file.exists():
+                try:
+                    import re
+                    raw = _key_file.read_text().strip()
+                    for line in raw.splitlines():
+                        line = line.strip()
+                        if line.startswith("#") or not line:
+                            continue
+                        if "ANTHROPIC_API_KEY=" in line:
+                            api_key = line.split("ANTHROPIC_API_KEY=", 1)[1].split("#")[0].strip().strip("'\"")
+                            if api_key:
+                                break
+                        if line.startswith("sk-ant-") and len(line) > 20:
+                            api_key = line.split("#")[0].strip().strip("'\"")
+                            if api_key:
+                                break
+                        # Script may only echo the key: echo "sk-ant-..." or echo 'sk-ant-...'
+                        m = re.search(r'["\'](sk-ant-[a-zA-Z0-9_-]+)["\']', line)
+                        if m and len(m.group(1)) > 20:
+                            api_key = m.group(1)
+                            break
+                except Exception:
+                    pass
+        if not api_key:
+            logger.error("ANTHROPIC_API_KEY environment variable not set (and not found in ~/.claude/anthropic_key.sh)")
             return None
         
         try:
@@ -287,38 +330,64 @@ def create_agent(model_name: str = "gpt-4o") -> Optional[object]:
             logger.error(f"Failed to create Gemini agent: {e}")
             return None
     
-    # Check if it's a GPT model (OpenAI) - including GPT-5 and o3
+    # Check if it's a GPT model (OpenAI/OpenRouter) - including GPT-5 and o3
     elif model_name.startswith('gpt') or model_name.startswith('o3'):
         if not OPENAI_AGENT_AVAILABLE:
             logger.error("OpenAIInferenceAgent not available")
             return None
-        
-        # Check for API key
-        api_key = os.getenv('OPENAI_API_KEY')
-        if not api_key:
-            logger.error("OPENAI_API_KEY environment variable not set")
+
+        # Prefer OpenRouter (higher rate limits); fall back to direct OpenAI
+        openrouter_key = os.getenv('OPENROUTER_API')
+        openai_key = os.getenv('OPENAI_API_KEY')
+        if not openrouter_key and not openai_key:
+            logger.error("Neither OPENROUTER_API nor OPENAI_API_KEY is set")
             return None
-        
+
         try:
-            agent = OpenAIInferenceAgent(model=model_name, api_key=api_key)
-            logger.info(f"✅ Created OpenAI agent with model: {model_name}")
+            # Pass None – the agent picks up OPENROUTER_API automatically
+            agent = OpenAIInferenceAgent(model=model_name)
+            backend = getattr(agent, '_backend', 'unknown')
+            logger.info(f"✅ Created OpenAI agent — backend={backend} model={agent.model}")
             return agent
         except Exception as e:
             logger.error(f"Failed to create OpenAI agent: {e}")
             return None
     
-    # Check if it's a HuggingFace model (but not DeepSeek API models)
-    elif (model_name in MODEL_MAPPING or '/' in model_name or 
+    # Check if it's a HuggingFace / open model — try OpenRouter first if available
+    elif (model_name in MODEL_MAPPING or '/' in model_name or
           model_name.startswith('kimi') or model_name.startswith('llama') or
           model_name.startswith('qwen') or model_name.startswith('mistral') or
           model_name.startswith('phi')):
+
+        # OpenRouter supports many open models (Llama, Mistral, Qwen, etc.) and
+        # avoids HF Scaleway 402 Payment-Required errors on large models.
+        openrouter_key = os.getenv('OPENROUTER_API')
+        if openrouter_key and OPENAI_AGENT_AVAILABLE:
+            # Map short name to OpenRouter model ID
+            _OR_MODEL_MAP = {
+                'llama-3.1-70b': 'meta-llama/llama-3.1-70b-instruct',
+                'llama-3.1-8b':  'meta-llama/llama-3.1-8b-instruct',
+                'llama-3-70b':   'meta-llama/llama-3-70b-instruct',
+                'qwen-2.5-32b':  'qwen/qwen-2.5-72b-instruct',
+                'mistral-large': 'mistralai/mistral-large',
+                'phi-4':         'microsoft/phi-4',
+            }
+            or_model = _OR_MODEL_MAP.get(model_name, model_name)
+            try:
+                agent = OpenAIInferenceAgent(model=or_model)
+                backend = getattr(agent, '_backend', 'unknown')
+                logger.info(f"✅ Created agent via OpenRouter — model={agent.model}")
+                return agent
+            except Exception as e:
+                logger.warning(f"OpenRouter failed for {or_model}: {e}, falling back to HF")
+
         if not HF_AGENT_AVAILABLE:
             logger.error("HFInferenceAgent not available")
             return None
-        
+
         # Get HuggingFace API token from environment variables only
         api_token = os.getenv('HF_TOKEN') or os.getenv('HF_API_TOKEN')
-        
+
         if not api_token:
             logger.error("HF_TOKEN or HF_API_TOKEN environment variable not set")
             logger.error("Please set your HuggingFace API token. Get it from: https://huggingface.co/settings/tokens")
@@ -383,18 +452,278 @@ def validate_yaml_dsl(yaml_str: str, pilot_validator: YAMLPilotValidator) -> tup
     return pilot_validator.validate(yaml_str)
 
 
-def build_component_from_yaml(yaml_str: str) -> tuple:
+# Max mirror combinations to try per failed build (avoids 2^N blow-up on large designs)
+_MAX_MIRROR_COMBOS = 128
+
+def _try_all_mirror_combos(yaml_str: str) -> tuple:
+    """
+    Brute-force mirror fix: try combinations of mirror=true/false for mmi1x2
+    until the build succeeds. Capped at _MAX_MIRROR_COMBOS to avoid runaway
+    runtime on large designs (e.g. 2^10 = 1024 attempts per sample).
+    """
+    import yaml as _yaml
+    from itertools import product as _product, islice as _islice
+
+    try:
+        data = _yaml.safe_load(yaml_str)
+        if not isinstance(data, dict):
+            return None, None
+
+        instances = data.get("instances", {})
+        placements = data.get("placements", {})
+
+        mmi_names = [
+            name for name, info in instances.items()
+            if isinstance(info, dict) and info.get("component") == "mmi1x2"
+        ]
+
+        if not mmi_names or len(mmi_names) > 12:
+            return None, None
+
+        combos = _product([False, True], repeat=len(mmi_names))
+        for combo in _islice(combos, _MAX_MIRROR_COMBOS):
+            trial = _yaml.safe_load(_yaml.dump(data, default_flow_style=False, sort_keys=False))
+            pls = trial.get("placements", {})
+            for name, mirror_val in zip(mmi_names, combo):
+                pl = pls.get(name, {})
+                if not isinstance(pl, dict):
+                    pl = {}
+                pl["mirror"] = mirror_val
+                pls[name] = pl
+            trial["placements"] = pls
+
+            trial_yaml = _yaml.dump(trial, default_flow_style=False, sort_keys=False, allow_unicode=False)
+            try:
+                component = gf.read.from_yaml(trial_yaml)
+                logger.info(
+                    "Auto-mirror fix succeeded with: %s",
+                    {n: m for n, m in zip(mmi_names, combo)},
+                )
+                return component, trial_yaml
+            except Exception:
+                continue
+
+        if len(mmi_names) > 7:
+            logger.debug(
+                "Auto-mirror gave up after %d attempts (%d MMIs); increase _MAX_MIRROR_COMBOS if needed",
+                _MAX_MIRROR_COMBOS,
+                len(mmi_names),
+            )
+        return None, None
+    except Exception:
+        return None, None
+
+
+def _sanitize_yaml(yaml_str: str) -> str:
+    """
+    Fix common LLM mistakes in the YAML before handing it to gdsfactory.
+
+    1. Evaluate simple arithmetic EVERYWHERE in the YAML (port names,
+       settings, link keys/values).  Uses a deep-walk of the parsed
+       structure so nothing is missed.
+    2. Strip stray 'component' / 'settings' keys from placements.
+    3. Normalise route section names (e.g. 'route1' → 'optical').
+    """
+    import yaml as _yaml
+    import re as _re
+
+    _ARITH = _re.compile(r'(\d+)\s*([+\-])\s*(\d+)')
+
+    def _eval_arith(s: str) -> str:
+        """Evaluate ALL simple integer arithmetic inside a string."""
+        def _repl(m):
+            a, op, b = int(m.group(1)), m.group(2), int(m.group(3))
+            return str(a + int(b) if op == '+' else a - int(b))
+        prev = None
+        while prev != s:
+            prev = s
+            s = _ARITH.sub(_repl, s)
+        return s
+
+    def _to_numeric(s: str):
+        """If the string is a plain number after arithmetic, return as int/float."""
+        try:
+            if '.' in s:
+                return float(s)
+            return int(s)
+        except (ValueError, TypeError):
+            return s
+
+    def _deep_fix(obj):
+        """Recursively walk any nested YAML structure, fixing strings."""
+        if isinstance(obj, str):
+            fixed = _eval_arith(obj)
+            if fixed != obj and fixed.lstrip('-').replace('.', '', 1).isdigit():
+                return _to_numeric(fixed)
+            return fixed
+        if isinstance(obj, dict):
+            return {_eval_arith(str(k)) if isinstance(k, str) else k:
+                    _deep_fix(v) for k, v in obj.items()}
+        if isinstance(obj, list):
+            return [_deep_fix(item) for item in obj]
+        return obj
+
+    # --- Parse ---------------------------------------------------------------
+    try:
+        data = _yaml.safe_load(yaml_str)
+        if not isinstance(data, dict):
+            return yaml_str
+    except Exception:
+        return yaml_str
+
+    data = _deep_fix(data)
+
+    # --- Clean placements (stray component/settings keys) --------------------
+    placements = data.get("placements", {})
+    if isinstance(placements, dict):
+        for _inst, pl in placements.items():
+            if isinstance(pl, dict):
+                for stray_key in ("component", "settings"):
+                    pl.pop(stray_key, None)
+
+    # --- Normalise routes: split into one bundle per link ----------------------
+    # gdsfactory's route_bundle routes ALL links in a group as a parallel bundle,
+    # requiring all target ports to face the same direction. LLMs often put links
+    # with different directions into one group, causing "same angle" errors.
+    # Fix: give each link its own route bundle so they're routed independently.
+    routes = data.get("routes", {})
+    if isinstance(routes, dict) and routes:
+        shared_settings = {"cross_section": "strip", "radius": 20.0}
+        all_links = {}
+        for rname, rdef in list(routes.items()):
+            if isinstance(rdef, dict):
+                s = rdef.get("settings", {})
+                if isinstance(s, dict):
+                    shared_settings.update(s)
+                links = rdef.get("links", {})
+                if isinstance(links, dict):
+                    all_links.update(links)
+
+        # Strip routing_strategy (not supported by gf.read.from_yaml)
+        shared_settings.pop("routing_strategy", None)
+
+        new_routes = {}
+        for i, (src, dst) in enumerate(all_links.items()):
+            new_routes[f"r{i}"] = {"settings": dict(shared_settings), "links": {src: dst}}
+        data["routes"] = new_routes
+
+    return _yaml.dump(data, default_flow_style=False, sort_keys=False)
+
+
+def build_component_from_yaml(yaml_str: str, sanitize: bool = True) -> tuple:
     """
     Build GDSFactory component from YAML DSL.
-    
+    Pre-sanitizes common LLM errors (stray keys, arithmetic in ports),
+    then if the build fails with a routing-angle error brute-forces all
+    mirror combinations for mmi1x2 instances before giving up.
+
+    Args:
+        yaml_str: Raw YAML string from LLM
+        sanitize: If True (default), apply _sanitize_yaml first.
+                  Pass False for vanilla/baseline phase to measure raw LLM output.
+
     Returns:
         (component, error_message)
     """
+    if sanitize:
+        yaml_str = _sanitize_yaml(yaml_str)
     try:
         component = gf.read.from_yaml(yaml_str)
         return component, None
     except Exception as e:
-        return None, str(e)
+        error_msg = str(e)
+
+    routing_errors = ("same angle", "ports at the target", "routing collision")
+    if any(pat in error_msg.lower() for pat in routing_errors):
+        component, _fixed = _try_all_mirror_combos(yaml_str)
+        if component is not None:
+            return component, None
+
+    return None, error_msg
+
+
+def translate_build_error(error_msg: str) -> str:
+    """
+    Convert cryptic gdsfactory build errors into actionable LLM feedback.
+    """
+    msg = error_msg.lower()
+
+    if "same angle" in msg or "ports at the target" in msg or "routing collision" in msg:
+        return (
+            "ROUTING ANGLE ERROR: gdsfactory cannot route between ports that face the same direction.\n"
+            "\nROOT CAUSE: You are likely missing 'mirror: true' on the combiner/second MMI, "
+            "OR you have a route connecting two output ports (both facing right) instead of "
+            "connecting an output to an input.\n"
+            "\nFIX RULES:\n"
+            "1. For mmi1x2 used as a COMBINER: add 'mirror: true' in its placements entry.\n"
+            "   Without mirror:true, all ports face the same direction as the splitter — unroutable.\n"
+            "2. Route only OUTPUT→INPUT pairs:\n"
+            "   - mmi1x2 splitter: o1=input, o2=output, o3=output\n"
+            "   - mmi1x2 combiner (mirror:true): o1=output, o2=input, o3=input\n"
+            "   - straight/straight_heater_metal: o1=left-input, o2=right-output\n"
+            "3. Each port must appear at most ONCE across all links.\n"
+            "4. Never route o2→o2 or o3→o3 between two components at the same x-position.\n"
+            "\nEXAMPLE of correct MZI routing:\n"
+            "  routes:\n"
+            "    optical:\n"
+            "      settings: {cross_section: strip, radius: 20.0}\n"
+            "      links:\n"
+            "        mmi1,o2: ps1,o1\n"
+            "        mmi1,o3: ps2,o1\n"
+            "        ps1,o2: mmi2,o3\n"
+            "        ps2,o2: mmi2,o2\n"
+            "  placements:\n"
+            "    mmi2: {x: 300, y: 0, mirror: true}  # <-- mirror: true is REQUIRED\n"
+        )
+
+    if "invalid literal for int" in msg or "invalid literal for float" in msg:
+        import re
+        bad_val = re.search(r"'([^']+)'", error_msg)
+        bad_str = f" ('{bad_val.group(1)}')" if bad_val else ""
+        return (
+            f"ARITHMETIC EXPRESSION ERROR: The YAML contains an arithmetic expression{bad_str} "
+            "where a plain number or port name was expected.\n"
+            "\nThis can happen in SETTINGS, PORT NAMES, or ROUTE LINKS.\n"
+            "\nFIX: Use ONLY literal values — NEVER arithmetic:\n"
+            "  WRONG: length: 4-1   →  CORRECT: length: 3\n"
+            "  WRONG: splitter,o4-1 →  CORRECT: splitter,o3\n"
+            "  WRONG: mmi1,o3+1     →  CORRECT: mmi1,o4\n"
+            "  WRONG: n_bend_90: 2+1 →  CORRECT: n_bend_90: 3\n"
+            "Compute the value yourself and write the result directly.\n"
+            "Port names are ALWAYS literal: o1, o2, o3, etc.\n"
+        )
+
+    if "not found" in msg and "component" in msg:
+        return (
+            f"COMPONENT NOT FOUND ERROR: {error_msg}\n"
+            "\nFIX: Use only valid gdsfactory generic_tech components:\n"
+            "  Valid: mmi1x2, straight, bend_euler, coupler, straight_heater_metal,\n"
+            "         ring_single, grating_coupler_elliptical, mzi, crossing\n"
+            "  ❌ mmi2x1 → use mmi1x2 with mirror: true\n"
+            "  ❌ phase_shifter / heater → use straight_heater_metal\n"
+        )
+
+    if "port" in msg and ("not found" in msg or "does not exist" in msg):
+        return (
+            f"PORT ERROR: {error_msg}\n"
+            "\nFIX: Use correct port names for each component:\n"
+            "  mmi1x2:              o1 (single side), o2, o3 (dual side)\n"
+            "  straight:            o1 (left), o2 (right)\n"
+            "  straight_heater_metal: o1 (left), o2 (right)\n"
+            "  coupler:             o1, o2 (inputs), o3, o4 (outputs)\n"
+            "  bend_euler:          o1 (input), o2 (output)\n"
+        )
+
+    # Generic fallback — return original with a hint
+    return (
+        f"COMPONENT BUILD ERROR: {error_msg}\n"
+        "\nPlease review your YAML for:\n"
+        "  1. Component names (use only valid gdsfactory components)\n"
+        "  2. Port names (o1, o2, o3 — not p1, p2, input, output)\n"
+        "  3. Route directions (output → input only, never output → output)\n"
+        "  4. mirror: true on combiner MMIs\n"
+        "  5. Numeric-only parameter values (no expressions like '4-1')\n"
+    )
 
 
 def save_results(
@@ -654,10 +983,10 @@ def run_single_problem(
             'passed': False,
             'errors': [],
             'warnings': [],
-            'yaml_valid': not enable_validation,  # Skip validation in vanilla = assume valid
+            'yaml_valid': not enable_validation or not ENABLE_YAML_PILOT_VALIDATION,
             'component_built': False,
-            'drc_passed': not enable_validation,  # Skip DRC in vanilla = assume pass
-            'lvs_passed': not enable_validation,  # Skip LVS in vanilla = assume pass
+            'drc_passed': not enable_validation or not ENABLE_DRC_CHECK,
+            'lvs_passed': not enable_validation or not ENABLE_LVS_CHECK,
             'optimization_done': False
         }
         
@@ -695,8 +1024,8 @@ def run_single_problem(
                         else:
                             feedback_text += f"\nPlease fix: {error_msg}\n"
                     if build_error:
-                        feedback_text += f"\n\nComponent build error:\n{build_error}\n"
-                        feedback_text += "\nPlease fix the YAML DSL and try again.\n"
+                        actionable = translate_build_error(build_error)
+                        feedback_text += f"\n\n{actionable}\n"
                     
                     user_query = f"Problem:\n{problem_desc}\n{feedback_text}\n\nGenerate the corrected YAML DSL netlist:"
                     logger.info(f"Retrying LLM call (attempt {attempt + 1}/{MAX_RETRY_ATTEMPTS + 1})...")
@@ -792,6 +1121,14 @@ def run_single_problem(
                     break
                 continue
             
+            # Step 1.5: Pre-sanitize YAML (fix arithmetic, stray keys, route names)
+            # Only runs in picasso/framework phase so vanilla measures raw LLM output.
+            # The sanitizer also runs inside build_component_from_yaml as a safety net
+            # for picasso mode (belt-and-suspenders); in vanilla mode build_component_from_yaml
+            # is patched to skip it too (see below).
+            if phase == "picasso":
+                yaml_output = _sanitize_yaml(yaml_output)
+            
             # Step 2: Validate YAML DSL (pilot validation)
             error_msg = None
             error_details = None
@@ -817,7 +1154,10 @@ def run_single_problem(
                 logger.info("✅ YAML pilot validation passed")
             
             # Step 3: Build component from YAML
-            component, build_error = build_component_from_yaml(yaml_output)
+            # sanitize=False in vanilla so we measure the raw LLM output
+            component, build_error = build_component_from_yaml(
+                yaml_output, sanitize=(phase == "picasso")
+            )
             if component is None:
                 logger.error(f"Failed to build component: {build_error}")
                 if phase == "picasso" and attempt < max_attempts - 1:

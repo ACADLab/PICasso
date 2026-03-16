@@ -26,6 +26,8 @@ def estimate_pass_at_k(num_samples: int, num_correct: int, k: int) -> float:
     Returns:
         pass@k score (0.0 to 1.0)
     """
+    if num_samples < k:
+        return float(num_correct > 0)
     if num_correct >= k:
         return 1.0
     if num_correct == 0:
