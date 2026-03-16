@@ -1,0 +1,211 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs and process files
+*.log
+*.pid
+*.out
+
+# Generated GDS files and KLayout artifacts
+*.gds
+*.oas
+*.lyrdb
+*.gds.gz
+
+# Build artifacts
+build/
+*.o
+
+# gd_picasso output directories (results, metrics, plots)
+gd_picasso/output/**/*
+!gd_picasso/output/.gitkeep
+gd_picasso/output/*_results/
+gd_picasso/output/optimization_analysis/
+gd_picasso/output/parallel_runs_*/
+gd_picasso/output/test_results/
+gd_picasso/output/drc_scripts/
+gd_picasso/output/*.json
+gd_picasso/output/*.csv
+gd_picasso/output/*.png
+gd_picasso/output/*.log
+
+# Other workflow outputs
+hf_inference_workflow/output/
+fin_picasso_framework/output/
+openAI_llms/output/
+
+# Legacy/unused markdown documentation files
+# Root level
+IMPLEMENTATION_SUMMARY*.md
+TWO_PHASE_BENCHMARKING_README.md
+TESTING_PROTOCOL.md
+PIC_BENCH_COMPARISON.md
+BENCHMARK_STATUS_REPORT.md
+FINAL_STATUS.md
+ANSWERS_TO_QUESTIONS.md
+QUICK_REFERENCE.md
+SETUP_INSTRUCTIONS.md
+TEST_RESULTS.md
+ROUTING_COLLISION_FIX.md
+PILOT_SYSTEM.md
+FUNCTIONAL_VALIDATION.md
+METRICS_DEFINITION.md
+OPTIMIZATION_APPROACH.md
+GPU_CLUSTER_SETUP.md
+FUTURE_WORK.md
+
+# gd_picasso unused markdown files (keep essential: README.md, FRAMEWORK.md, USAGE.md, OPTIMIZATION_ANALYSIS_README.md)
+gd_picasso/IMPLEMENTATION_*.md
+gd_picasso/COMPLETION_*.md
+gd_picasso/FINAL_STATUS.md
+gd_picasso/SUMMARY.md
+gd_picasso/IMPLEMENTATION_STATUS.md
+gd_picasso/IMPLEMENTATION_COMPLETE.md
+gd_picasso/FRAMEWORK_COMPLETE.md
+gd_picasso/README_COMPLETE.md
+gd_picasso/ALL_PROMPT_FIXES_COMPLETE.md
+gd_picasso/AUTO_ROUTING_STATUS.md
+gd_picasso/COMMANDS_TO_RUN.md
+gd_picasso/COMPONENT_ERROR_FIXES.md
+gd_picasso/DEVICE_OPTIMIZER_CLARIFICATION.md
+gd_picasso/DRY_RUN_RESULTS.md
+gd_picasso/FUNCTIONAL_VALIDATION_EXPLANATION.md
+gd_picasso/KIMI_TIMEOUT_FIX.md
+gd_picasso/METRICS_EXPLANATION.md
+gd_picasso/MODEL_SUPPORT.md
+gd_picasso/MULTI_MODEL_SETUP_SUMMARY.md
+gd_picasso/PLOT_EXPLANATION.md
+gd_picasso/PROBLEMS_CLARIFICATION.md
+gd_picasso/PROMPT_FIXES_SUMMARY.md
+gd_picasso/QUICK_START_MULTI_MODEL.md
+gd_picasso/RUN_MISSING_VANILLA_PHASES.md
+gd_picasso/TESTING_RESULTS.md
+
+# fin_picasso_framework (legacy - ignore all markdown)
+fin_picasso_framework/*.md
+
+# hf_inference_workflow (keep only README.md)
+hf_inference_workflow/START_HERE.md
+hf_inference_workflow/HOW_TO_RUN*.md
+hf_inference_workflow/IMPLEMENTATION_SUMMARY.md
+hf_inference_workflow/FUNCTIONAL_CORRECTNESS.md
+hf_inference_workflow/QUICKSTART.md
+hf_inference_workflow/OPENAI_inference.md
+hf_inference_workflow/README_OPENAI.md
+hf_inference_workflow/LINUX_SETUP_GUIDE.md
+hf_inference_workflow/INSTALL_PYTHON.md
+hf_inference_workflow/RATE_LIMIT_FIX.md
+hf_inference_workflow/FIX_TOKEN_GUIDE.md
+hf_inference_workflow/TOKEN_ISSUE_REPORT.md
+
+# Temporary and test files
+*.tmp
+*.bak
+*.backup
+*_backup.txt
+*_original_backup.txt
+*_unicode_backup.txt
+
+# Jupyter notebooks checkpoints
+.ipynb_checkpoints/
+
+# Environment and config files with secrets (never commit)
+.env
+.env.*
+!.env.example
+*.key
+*.token
+keys.txt
+hf_token.txt
+*.pem
+
+# Benchmark and test logs
+benchmark_*.log
+*_test.log
+gd_picasso_test.log
+framework_test*.log
+ablation_study.log
+*_run.log
+*.log.*
+log/
+logs/
+
+# Data files
+*.csv
+*.json
+!gd_picasso/config.py
+!gd_picasso/problems_parsed.txt
+!package.json
+!requirements*.txt
+!environment.yml
+
+# Parallel run directories
+parallel_runs_*/
+
+# Validation output directories
+gd_picasso/validation/false_examples_yaml/
+gd_picasso/validation/phido_failed_examples/
+
+# ============================================================================
+# Legacy Python Files - Not used in current gd_picasso framework
+# ============================================================================
+
+# Legacy frameworks (entire directories)
+fin_picasso_framework/**/*.py
+hf_inference_workflow/**/*.py
+hf_models/**/*.py
+openAI_llms/**/*.py
+picasso_flow_package/**/*.py
+
+# Root level test/utility files (not part of gd_picasso)
+check_benchmark_progress.py
+check_klayout_config.py
+custom_models.py
+demo_mzi.py
+demo_netlist.py
+gf_optimize.py
+monitor_test.py
+netlist_optimize.py
+optical_optimize.py
+optimizie_circuit_loss.py
+run_9_problem_test.py
+run_full_benchmark.py
+run_full_benchmark_36.py
+run_pnr_and_drc.py
+s_optimize.py
+temp_fixed_8qam.py
+test_csv_format.py
+test_error_detection_simple.py
+test_full_integration.py
+test_new_features.py
+test_routing_collision_handling.py
+test_two_level_optimization.py
+test_two_phase_tracking.py
+
+# Output directories with generated Python files
+output/**/*.py
+fin_picasso_framework/output/**/*.py
+hf_inference_workflow/output/**/*.py
+

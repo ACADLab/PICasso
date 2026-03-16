@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "/Users/deepakvungarala/Desktop/shigoto/PICasso/fin_picasso_framework/test_with_model.py", line 27, in <module>
+    from fin_picasso_framework.gen_data_validated import (
+  File "/Users/deepakvungarala/Desktop/shigoto/PICasso/fin_picasso_framework/gen_data_validated.py", line 65, in <module>
+    from .debug import CheckpointManager
+  File "/Users/deepakvungarala/Desktop/shigoto/PICasso/fin_picasso_framework/debug/__init__.py", line 3, in <module>
+    from .checkpoint_manager import CheckpointManager
+  File "/Users/deepakvungarala/Desktop/shigoto/PICasso/fin_picasso_framework/debug/checkpoint_manager.py", line 20, in <module>
+    class CheckpointManager:
+  File "/Users/deepakvungarala/Desktop/shigoto/PICasso/fin_picasso_framework/debug/checkpoint_manager.py", line 257, in CheckpointManager
+    ) -> List[Dict]:
+NameError: name 'List' is not defined. Did you mean: 'list'?

@@ -1,0 +1,20 @@
+# HuggingFace Inference Workflow Requirements
+
+# Core dependencies
+huggingface-hub>=0.20.0        # HF Inference API client
+gdsfactory>=9.9.4               # Photonic circuit design
+pandas>=2.0.0                   # Data handling
+tqdm>=4.65.0                    # Progress bars
+
+# Optional but recommended
+sax>=0.14.2                     # Circuit simulation (for SAX validation)
+jax==0.4.35                     # Required by SAX (pinned for klujax compatibility)
+jaxlib==0.4.35                  # Required by SAX (pinned for klujax compatibility)
+klujax==0.3.1                   # Required by SAX backend (pinned for compatibility)
+
+# For DRC checking (optional - install separately if needed)
+# klayout                       # KLayout for DRC (install from klayout.de)
+
+# Development dependencies (optional)
+pytest>=7.0.0                   # Testing
+black>=23.0.0                   # Code formatting

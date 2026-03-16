@@ -1,0 +1,109 @@
+Problem 1 (Mach-Zehnder Modulator):
+Design a Mach-Zehnder Modulator with the following specifications:
+- Use a 1x2 MMI splitter at the input
+- Two arms with straight_heater_metal phase shifters (length=50µm)
+- Use a 2x1 MMI combiner at the output
+- Ensure minimum 20µm spacing between all components
+- Position components to avoid overlap
+- Use route_bundle for all optical connections with bend radius 10µm and separation 10µm
+- Expose input port as 'o1' and output port as 'o2'
+
+Problem 2 (8-QAM Modulator):
+Design an 8-QAM modulator with hierarchical structure:
+- First-level splitter: 1x2 MMI
+- Second-level splitter: 1x2 MMI
+- Three MZM modulators (use gf.components.mzm)
+- Two combiners: 2x1 MMI each
+- Hierarchical combination of signals
+- Ensure all components have minimum 25µm spacing
+- Use route_bundle for clean routing with radius=12µm
+- Final output should combine all three MZM outputs
+
+Problem 3 (Ring Resonator Add-Drop Filter):
+Design a ring resonator add-drop filter:
+- Input/output couplers using directional couplers (coupler component)
+- Ring waveguide using bend_circular
+- Through port and drop port
+- Proper coupling gaps and ring radius
+- Ensure no waveguide overlaps
+- Use route_bundle with careful spacing
+
+Problem 4 (Dual-Ring Resonator Tunable Filter):
+Design a cascaded dual-ring resonator system with the following specifications:
+- Input waveguide using straight component (length=100µm)
+- First ring resonator with bend_circular (radius=10µm)
+- Directional coupler for first ring (coupling_length=20µm, gap=0.2µm)
+- Second ring resonator with bend_circular (radius=12µm) 
+- Directional coupler for second ring (coupling_length=25µm, gap=0.3µm)
+- Include straight_heater_metal on each ring (length=30µm) for tuning
+- Output waveguide using straight component (length=100µm)
+- Ensure 30µm minimum spacing between rings
+- Use route_bundle with bend_radius=10µm, separation=5µm
+- Expose ports: 'in' for input, 'through' for through port, 'drop' for drop port
+
+Design Constraints:
+- Rings must not overlap with couplers
+- Heaters positioned on opposite side of coupling region
+- Through and drop ports must be accessible
+- Total footprint should not exceed 500µm x 300µm
+
+Problem 5 (4-Channel WDM using Cascaded MZIs):
+Design a 4-channel wavelength division multiplexer:
+- Four input waveguides (straight, length=50µm each)
+- Three stages of 2x2 MZI wavelength filters
+  * Stage 1: Two 2x2 MZIs (path difference: 100µm and 150µm)
+  * Stage 2: One 2x2 MZI (path difference: 200µm)
+- Each MZI uses 2x2 MMI couplers for split/combine
+- Include grating couplers at all inputs and outputs
+- Minimum component spacing: 35µm
+- Use route_bundle with bend_radius=15µm, separation=8µm
+- Expose input ports as 'i1', 'i2', 'i3', 'i4'
+- Expose output ports as 'o1', 'o2', 'o3', 'o4'
+
+Design Constraints:
+- MZIs must have specified path length differences
+- No waveguide crossings allowed
+- All gratings must be vertically aligned
+- Total device footprint optimized for fiber array coupling
+
+Problem 6 (Tunable 1x4 Optical Switch - Spanke Architecture):
+Design a reconfigurable 1x4 optical switch:
+
+One input port with grating coupler
+Two levels of 2x2 thermo-optic switches using mzm components
+Level 1: One 2x2 switch at input
+Level 2: Two 2x2 switches for routing
+Each switch contains straight_heater_metal phase shifters (length=80µm)
+Four output ports with grating couplers
+Minimum 40µm spacing between switches
+Use route_bundle with bend_radius=20µm and separation=12µm
+Include electrical routing for heater control pads
+Expose optical port 'input' and outputs 'out1' through 'out4'
+
+Problem 7 (Balanced Coherent Receiver):
+Design a balanced coherent receiver frontend:
+
+Two input ports: signal and local oscillator (LO) using grating couplers
+2x2 90-degree hybrid using four 2x2 MMI couplers arranged in quadrature
+Four output ports connected to straight waveguides (length=50µm)
+Include directional couplers (length=30µm) for 3dB splitting
+Waveguide phase sections (length=25µm) for 90-degree phase shift
+Minimum 25µm spacing between hybrid components
+Use route_bundle with radius=10µm and separation=8µm
+Expose ports: 'signal_in', 'lo_in', 'i_plus', 'i_minus', 'q_plus', 'q_minus'
+Ensure path length matching between I and Q branches within 1µm
+
+Problem 8 (16-Channel Arrayed Waveguide Grating - AWG):
+Design a 16-channel arrayed waveguide grating demultiplexer:
+
+Single input waveguide with grating coupler
+Input free propagation region (FPR) using taper and slab region
+64 arrayed waveguides with incremental path length differences (ΔL = 15µm per step)
+Output FPR mirror of input FPR
+16 output waveguides with grating couplers at 50µm pitch
+Use bend_euler for low-loss array waveguide bends
+Minimum 5µm spacing between adjacent array waveguides
+Central wavelength: 1550nm, channel spacing: 100GHz (0.8nm)
+Use route_bundle with radius=25µm for input/output connections
+Expose input port 'in' and output ports 'ch1' through 'ch16'
+Total footprint should be optimized for minimal device size while maintaining low crosstalk

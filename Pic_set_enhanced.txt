@@ -1,0 +1,230 @@
+Problem 1 (MZI – Mach-Zehnder Interferometer) [Complexity 1]:
+Create a Mach-Zehnder interferometer with a single optical input and output. Use:
+• Two MMI1x2 (id: mmi1, mmi2)
+• One phase shifter (id: phase_shifter)
+Parameters:
+DeltaL = 10.0 (length difference in microns, use as float: 10.0)
+L = 10.0 (length in microns, use as float: 10.0)
+
+Problem 2 (MZM – Mach-Zehnder Modulator) [Complexity 1]:
+Create a single-input / single-output Mach-Zehnder Modulator (MZM). Use:
+• One MMI1x2 Splitter (id: splitter)
+• One MMI2x1 Combiner (id: combiner)
+• Two Straight Heat Metals / phase shifters (id: phase_shifter1, phase_shifter2)
+Parameters:
+L = 10.0 (length in microns, use as float: 10.0)
+
+Problem 3 (Direct Modulator) [Complexity 1]:
+Create a direct optical modulator using a single-drive MZM. Use:
+• One Mach-Zehnder Modulator (id: mzm)
+• One straight waveguide (id: straight)
+
+Problem 4 (QPSK Modulator) [Complexity 2]:
+Create an optical QPSK transmitter using:
+• Two Mach-Zehnder Modulators (ids: mzm_i, mzm_q)
+• One MMI1x2 Splitter (id: splitter)
+• One MMI2x1 Combiner (id: combiner)
+• Two phase biasers (ids: pb_i, pb_q)
+
+Problem 5 (8-QAM Modulator) [Complexity 2]:
+Create an optical 8-QAM transmitter using:
+• Three Mach-Zehnder Modulators (ids: mzm_bit1, mzm_bit2, mzm_bit3)
+• Two MMI1x2 Splitters (ids: splitter1, splitter2)
+• Two MMI2x1 Combiners (ids: combiner1, combiner2)
+The three MZMs should be vertically parallel with 100.0 spacing (use as float: 100.0).
+IMPORTANT: Use r.add_ref() then call mirror() on ComponentReference, NOT on Cell directly.
+
+Problem 6 (64-QAM Modulator) [Complexity 3]:
+Create an optical 64-QAM transmitter using a larger MZM/MMI network with phase biases per branch. Use:
+• Multiple Mach-Zehnder Modulators (ids: mzm1...mzmN)
+• Multiple Splitters/Combiners (MMI1x2) (ids: splitter1...splitterM, combiner1...combinerM)
+• Phase biasers (ids: pb1...pbN)
+Tune all biasers for symbol mapping.
+
+Problem 7 (WDM Multiplexer) [Complexity 2]:
+Create a WDM multiplexer circuit combining multiple wavelengths into one output. Use:
+• Multiple inputs (ids: in1...inN)
+• Splitter network (MMI or couplers) (ids: splitter1...splitterK)
+• Single output (id: out)
+Tune path-lengths and splitting ratios.
+
+Problem 8 (WDM Demultiplexer) [Complexity 2]:
+Create a WDM demultiplexer circuit separating multiple wavelengths from a single input. Use:
+• One input (id: in)
+• Combiner/splitter network (MMI/couplers) (ids: comb1...combK)
+• Multiple outputs (ids: out1...outN)
+Tune path-lengths and splitting ratios.
+
+Problem 9 (90° Optical Hybrid) [Complexity 2]:
+Create a 90° optical hybrid circuit. Use:
+• One 2x4 MMI (id: mmi24)
+• One 2x2 MMI (id: mmi22)
+• One phase biaser (id: pb)
+Produce the required 90° phase-shifted outputs.
+
+Problem 10 (2x2 Optical Switch) [Complexity 1]:
+Create a fundamental 2x2 optical switch using an MZI-based switch cell. Use:
+• One MZI cell (id: sw1)
+• One phase control (id: ctrl1)
+
+Problem 11 (Crossbar 4x4 Switch) [Complexity 3]:
+Create a 4x4 photonic crossbar switching network using 2x2 MZI-based switch nodes. Use:
+• Switch nodes (ids: sw1...sw16)
+• Coupler/phase elements (ids: cou1...cou32)
+Tune all coupler ratios and phase shifters to minimise insertion loss on the busiest path.
+
+Problem 12 (Crossbar 8x8 Switch) [Complexity 3]:
+Create an 8x8 photonic crossbar switching network built from 2x2 MZI cells. Use:
+• Switch nodes (ids: sw1...sw64)
+• Coupler/phase elements (ids: cou1...cou128)
+Tune all internal phases and couplings to minimise worst-case insertion loss.
+
+Problem 13 (Spanke 4x4 Switch) [Complexity 3]:
+Design a 4x4 ''Spanke'' architecture photonic switch fabric. Use:
+• Switch stages (ids: stage1...stageN)
+• MZI nodes (ids: mzi1...mziM)
+• Phase control elements (ids: phase1...phaseP)
+Minimise total insertion loss while routing any input to any output.
+
+Problem 14 (Spanke 8x8 Switch) [Complexity 3]:
+Design an 8x8 photonic switch with ''Spanke'' architecture. Use:
+• Switch stages (ids: stage1...stageK)
+• MZI nodes (ids: mzi1...mziQ)
+• Phase control elements (ids: phase1...phaseR)
+Minimise worst-path insertion loss across the network.
+
+Problem 15 (Benes 4x4 Switch) [Complexity 3]:
+Create a 4x4 Benes switching network using multi-stage 2x2 MZI cells. Use:
+• Benes nodes (ids: bn1...bnL)
+• Phase/coupler controls (ids: pc1...pcS)
+Optimize for minimal insertion loss from any input to any output.
+
+Problem 16 (Benes 8x8 Switch) [Complexity 3]:
+Create an 8x8 Benes photonic switch network. Use:
+• Benes nodes (ids: bn1...bnX)
+• Phase/coupler controls (ids: pc1...pcT)
+Tune for minimal insertion loss on the busiest route.
+
+Problem 17 (Spanke–Benes 4x4) [Complexity 3]:
+Design a 4x4 hybrid Spanke–Benes switching network (combining features of both architectures). Use:
+• Nodes (ids: nb1...nbY)
+• Phase/coupler elements (ids: pc1...pcZ)
+Minimise insertion loss under full connectivity conditions.
+
+Problem 18 (Spanke–Benes 8x8) [Complexity 3]:
+Design an 8x8 hybrid Spanke–Benes switch fabric. Use:
+• Network nodes (ids: nb1...nbW)
+• Phase/coupler elements (ids: pc1...pcV)
+Tune all controls to minimise worst-case insertion loss.
+
+Problem 19 (U-matrix Block 2x2) [Complexity 1]:
+Create a 2x2 unitary interferometric block (fundamental device) using:
+• One MZI cell (id: u_mzi)
+• Phase shifter(s) (ids: u_ps1, u_ps2)
+Tune to implement an arbitrary 2x2 unitary with minimal insertion loss.
+
+Problem 20 (Clements 4x4 Interferometer) [Complexity 3]:
+Create a 4x4 unitary interferometer using the Clements mesh architecture. Use:
+• MZI mesh elements (ids: mesh_mzi1...mesh_mzi12)
+• Phase shifters (ids: phase1...phase12)
+Tune for minimal insertion loss on the worst input-to-output path.
+
+Problem 21 (Reck 4x4 Mesh) [Complexity 3]:
+Create a 4x4 unitary interferometer using the Reck triangular arrangement. Use:
+• MZI mesh elements (ids: mzi1...mzi12)
+• Phase shifters (ids: ps1...ps12)
+Tune for minimal insertion loss on the worst input-to-output path.
+
+Problem 22 (Reck 8x8 Mesh) [Complexity 3]:
+Create an 8x8 unitary interferometer using the Reck triangular arrangement. Use:
+• MZI mesh elements (ids: mzi1...mzi56)
+• Phase shifters (ids: ps1...ps56)
+Tune for minimal worst-case insertion loss.
+
+Problem 23 (Ring Resonator Add-Drop Filter) [Complexity 2]:
+Create a single add-drop microring resonator filter. Use:
+• One ring resonator (id: ring1) - if available use gf.components.ring_single(), otherwise use curved waveguides
+• Two directional couplers (ids: in_cpl, out_cpl)
+Tune coupling gap and ring radius to minimise insertion loss.
+
+Problem 24 (Dual-Ring Resonator Tunable Filter) [Complexity 2]:
+Create a dual-ring filter with tunable rings. Use:
+• Two ring resonators (ids: ring1, ring2)
+• Input/output couplers (ids: cpl_in, cpl_out)
+• Phase control per ring (ids: phase1, phase2)
+Tune to reduce insertion loss at each ring port.
+
+Problem 25 (4-Channel WDM Cascaded MZI) [Complexity 3]:
+Create a 1->4 cascaded-MZI WDM demultiplexer. Use:
+• Four MZI stages (ids: mzi1...mzi4)
+• MMIs/couplers per stage (ids: cpl1...cplK)
+• Phase biasers (ids: pb1...pb4)
+Optimize for minimal insertion loss across channels.
+
+Problem 26 (Tunable 1x4 Optical Switch) [Complexity 2]:
+Create a 1x4 photonic switch using a binary tree of MZI elements. Use:
+• Three MZI switch stages (ids: sw1...sw3)
+• Control phases per stage (ids: ctrl1...ctrl3)
+Tune for minimal insertion loss on each path.
+
+Problem 27 (Balanced Coherent Receiver Front-End) [Complexity 2]:
+Create a balanced coherent optical receiver front-end. Use:
+• A 90° hybrid (id: hyb)
+• Splitters/combiners (ids: sp1, sp2)
+• Balanced photodiodes (ids: pd_i, pd_q)
+Tune splitter/coupler ratios and phases to minimise insertion loss.
+
+Problem 28 (16-Channel AWG Demultiplexer) [Complexity 3]:
+Create a 16-channel arrayed-waveguide grating (AWG) demultiplexer. Use:
+• Star coupler input (id: star_in)
+• Arrayed waveguides (ids: array1...array16)
+• Star coupler output (id: star_out)
+Tune waveguide path lengths, coupler splits, and channel spacing to minimise insertion loss.
+
+Problem 29 (2x2 Thermo-Optic Switch) [Complexity 2]:
+Create a single-stage 2x2 thermo-optic Mach-Zehnder switch. Use:
+• One MZI cell (id: sw1)
+• Two thermal phase shifters (ids: ps1, ps2)
+Tune the phase shifters to steer the optical signal from input to output with minimal insertion loss.
+
+Problem 30 (Y-Branch Power Splitter) [Complexity 1]:
+Create a Y-branch power splitter with one input and two outputs. Use:
+• One Y-junction (id: y1)
+Tune the geometrical parameters of the Y-branch to minimise splitting loss.
+
+Problem 31 (Wavelength-Selective Switch 1x8) [Complexity 3]:
+Create a 1x8 wavelength-selective photonic switch using thermo-optic tuning. Use:
+• One input coupler (id: in_cpl)
+• Eight switch cells (ids: sw1...sw8)
+• Thermal phase shifters (ids: ps1...ps8)
+Tune each switch cell and phase shifter to select the correct output channel with minimal insertion loss across the device.
+
+Problem 32 (2x2 PCM Switch) [Complexity 2]:
+Create a 2x2 photonic switch using phase-change material (PCM) for switching. Use:
+• One 2x2 PCM tunable coupler (id: pcm_cpl) - NOTE: If PCM component unavailable, use standard directional coupler
+• Two auxiliary control waveguides (ids: ctrl1, ctrl2)
+Tune the PCM state and coupler bias to minimise insertion loss in both states.
+
+Problem 33 (Optical Delay Line) [Complexity 1]:
+Create an on-chip optical delay line with fixed input and output. Use:
+• One looped waveguide (id: loop1)
+• One input coupler (id: in_cpl)
+• One output coupler (id: out_cpl)
+Tune the loop geometry (length and bend radius) to minimise insertion loss while achieving the required delay.
+
+Problem 34 (Simple MMI 1x2 Splitter) [Complexity 1]:
+Create a basic 1x2 power splitter using a single MMI. Use:
+• One MMI 1x2 (id: mmi)
+No routing required - just instantiate the component and expose its ports.
+
+Problem 35 (Simple MMI 2x1 Combiner) [Complexity 1]:
+Create a basic 2x1 power combiner using a single MMI. Use:
+• One MMI 2x1 (id: mmi)
+No routing required - just instantiate the component and expose its ports.
+
+Problem 36 (Straight Waveguide with Phase Shifter) [Complexity 1]:
+Create a simple phase-tunable waveguide. Use:
+• One straight heater metal waveguide (id: ps)
+Parameters:
+Length = 100 microns
+No routing required - just instantiate and expose ports.

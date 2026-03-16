@@ -1,0 +1,306 @@
+2025-11-12 12:51:56,708 - __main__ - INFO - Available models:
+2025-11-12 12:51:56,708 - __main__ - INFO -   deepseek_r1: DeepSeek-R1 via HuggingFace API
+2025-11-12 12:51:56,708 - __main__ - INFO -   deepseek_r1_local: DeepSeek-R1 via Local GPU
+2025-11-12 12:51:56,708 - __main__ - INFO -   kimi2: Kimi2 Thinking via HuggingFace API
+2025-11-12 12:51:56,708 - __main__ - INFO -   deepseek_r1_api: DeepSeek-R1 via DeepSeek API
+2025-11-12 12:51:56,708 - __main__ - INFO -   gpt4o_mini: GPT-4o-mini via OpenAI API
+2025-11-12 12:51:56,708 - __main__ - INFO - 
+2025-11-12 12:51:56,708 - __main__ - INFO - ======================================================================
+2025-11-12 12:51:56,708 - __main__ - INFO - PICASSO FRAMEWORK TEST WITH MODEL
+2025-11-12 12:51:56,708 - __main__ - INFO - ======================================================================
+2025-11-12 12:51:56,708 - __main__ - INFO - Model: gpt4o_mini
+2025-11-12 12:51:56,708 - __main__ - INFO - Problems: 1
+2025-11-12 12:51:56,708 - __main__ - INFO - Samples per problem: 3
+2025-11-12 12:51:56,708 - __main__ - INFO - ======================================================================
+2025-11-12 12:51:56,708 - __main__ - INFO - 
+Step 1: Creating inference agent...
+2025-11-12 12:51:56,708 - __main__ - INFO - Creating agent for: GPT-4o-mini via OpenAI API
+2025-11-12 12:51:56,708 - __main__ - INFO - Using OPENAI_API_KEY from environment variable
+2025-11-12 12:51:56,741 - hf_inference_workflow.openai_api_client - INFO - Initialized OpenAIInferenceAgent with model: gpt-4o-mini
+2025-11-12 12:51:56,741 - hf_inference_workflow.openai_api_client - INFO - Generation params: {'temperature': 0.3, 'max_tokens': 2048, 'top_p': 0.95}
+2025-11-12 12:51:56,741 - __main__ - INFO - ✅ Created OpenAI agent with model: gpt-4o-mini
+2025-11-12 12:51:56,741 - __main__ - INFO - 
+Step 2: Loading problems...
+2025-11-12 12:51:56,743 - fin_picasso_framework.gen_data_validated - INFO - Loaded 36 problems from /Users/deepakvungarala/Desktop/shigoto/PICasso/Pic_set_enhanced.txt
+2025-11-12 12:51:56,743 - __main__ - INFO - Loaded 36 problems
+2025-11-12 12:51:56,743 - __main__ - INFO - Testing with 1 problems (limited from 36 total)
+2025-11-12 12:51:56,743 - __main__ - INFO - 
+Step 3: Loading prompt template...
+2025-11-12 12:51:56,743 - __main__ - INFO - ✅ Loaded prompt template
+2025-11-12 12:51:56,743 - __main__ - INFO - 
+Step 4: Running framework generation...
+2025-11-12 12:51:56,743 - __main__ - INFO - ======================================================================
+2025-11-12 12:51:56,744 - fin_picasso_framework.port_matching.port_matcher - INFO - Detected gdsfactory version: 8.32.2
+2025-11-12 12:51:56,746 - fin_picasso_framework.pilot.pilot_prompt_updater - INFO - ✅ Loaded 2 existing pilot rules from /Users/deepakvungarala/Desktop/shigoto/PICasso/fin_picasso_framework/pilot_rules.json
+2025-11-12 12:51:57,086 - fin_picasso_framework.optimizers.device_optimizer - INFO - SAX is available - will use for device optimization
+2025-11-12 12:51:57,086 - fin_picasso_framework.port_matching.component_spec_loader - INFO - Using pydoc-based component loader for comprehensive specs
+2025-11-12 12:51:57,086 - fin_picasso_framework.sax_models.sax_model_manager - INFO - Detected gdsfactory version: 8.32.2
+2025-11-12 12:51:57,283 - fin_picasso_framework.gen_data_validated - INFO - ✅ Loaded component injection for 1 components
+2025-11-12 12:51:57,283 - fin_picasso_framework.gen_data_validated - INFO - Component injection length: 4695 chars
+2025-11-12 12:51:57,283 - fin_picasso_framework.gen_data_validated - INFO - ✅ Loaded permanent pilot rules (848 chars)
+Generating validated designs:   0%|          | 0/3 [00:00<?, ?it/s]2025-11-12 12:51:57,283 - fin_picasso_framework.gen_data_validated - INFO - 
+============================================================
+2025-11-12 12:51:57,283 - fin_picasso_framework.gen_data_validated - INFO - Problem 1: MZI – Mach-Zehnder Interferometer - Sample 1/3
+2025-11-12 12:51:57,283 - fin_picasso_framework.gen_data_validated - INFO - ============================================================
+2025-11-12 12:51:57,283 - fin_picasso_framework.gen_data_validated - INFO - Problem 1, Sample 0, Attempt 1/4
+2025-11-12 12:52:08,523 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-12 12:52:08,541 - fin_picasso_framework.gen_data_validated - INFO - 📊 Using Vanilla LLM prompt (Phase 1 baseline - no component specs)
+2025-11-12 12:52:08,543 - fin_picasso_framework.gen_data_validated - INFO - Running pilot validation (pre-execution checks)...
+2025-11-12 12:52:08,544 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: pilot - pass (problem 1, sample 0, attempt 0)
+2025-11-12 12:52:08,544 - fin_picasso_framework.gen_data_validated - INFO - ✅ Pilot validation passed
+2025-11-12 12:52:08,544 - fin_picasso_framework.gen_data_validated - INFO - Parsing and executing generated code...
+2025-11-12 12:52:08,784 - fin_picasso_framework.gen_data_validated - ERROR - Routing collision detected: Routing collision in Unnamed_0
+2025-11-12 12:52:08.782 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 12:52:08,784 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Attempting immediate auto-correction for routing collision (YAML netlist fix)...
+2025-11-12 12:52:08,802 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Falling back to code-based auto-correction...
+2025-11-12 12:52:08,802 - hf_inference_workflow.auto_corrector - INFO - Attempting auto-correction for error type: routing_error
+2025-11-12 12:52:08.802 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 12:52:08,811 - hf_inference_workflow.auto_corrector - INFO - Applied spacing increase (2.0x)
+2025-11-12 12:52:08,811 - hf_inference_workflow.auto_corrector - INFO - Auto-correction applied for routing_error (Unicode fixed: False)
+2025-11-12 12:52:08,811 - fin_picasso_framework.gen_data_validated - INFO - ✅ Auto-correction applied: Increased spacing by 2.0x (code-based fix)
+2025-11-12 12:52:08,820 - fin_picasso_framework.gen_data_validated - ERROR - Execution error: ports1=2 and ports2=1 must be equal
+2025-11-12 12:52:08,820 - fin_picasso_framework.gen_data_validated - WARNING - Auto-correction applied but still failed: EXECUTION_ERROR: ports1=2 and ports2=1 must be equal
+2025-11-12 12:52:08,820 - fin_picasso_framework.gen_data_validated - INFO - 📊 Phase 1 (Raw LLM): ❌ FAILED
+2025-11-12 12:52:08,820 - fin_picasso_framework.gen_data_validated - ERROR - Failed to parse/execute code: ROUTING_COLLISION: Routing collision in Unnamed_0
+2025-11-12 12:52:08,820 - hf_inference_workflow.retry_handler - INFO - Recorded retry attempt 0 (failed at parsing)
+2025-11-12 12:52:08,820 - fin_picasso_framework.gen_data_validated - INFO - Problem 1, Sample 0, Attempt 2/4
+2025-11-12 12:52:08,820 - fin_picasso_framework.gen_data_validated - INFO - 📊 Using Framework prompt (Phase 2 - with component specs & validation feedback)
+2025-11-12 12:52:28,236 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-12 12:52:28,250 - fin_picasso_framework.gen_data_validated - INFO - Code cleaning applied (removed Unicode/fixed decimals)
+2025-11-12 12:52:28,250 - fin_picasso_framework.gen_data_validated - INFO - Running pilot validation (pre-execution checks)...
+2025-11-12 12:52:28,251 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: pilot - fail (problem 1, sample 0, attempt 1)
+2025-11-12 12:52:28,251 - fin_picasso_framework.gen_data_validated - WARNING - ❌ Pilot validation failed: Syntax error: unmatched ')' (<unknown>, line 9)
+2025-11-12 12:52:28,251 - fin_picasso_framework.gen_data_validated - INFO - Pilot feedback for LLM: Syntax error: unmatched ')' (<unknown>, line 9)
+
+Fix: Check for unterminated strings, missing quotes, or invalid characters.
+2025-11-12 12:52:28,251 - hf_inference_workflow.retry_handler - INFO - Recorded retry attempt 1 (failed at parsing)
+2025-11-12 12:52:28,251 - fin_picasso_framework.gen_data_validated - INFO - Problem 1, Sample 0, Attempt 3/4
+2025-11-12 12:52:28,251 - fin_picasso_framework.gen_data_validated - INFO - 📊 Using Framework prompt (Phase 2 - with component specs & validation feedback)
+2025-11-12 12:52:42,971 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-12 12:52:43,017 - fin_picasso_framework.gen_data_validated - INFO - Code cleaning applied (removed Unicode/fixed decimals)
+2025-11-12 12:52:43,018 - fin_picasso_framework.gen_data_validated - INFO - Running pilot validation (pre-execution checks)...
+2025-11-12 12:52:43,020 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: pilot - fail (problem 1, sample 0, attempt 2)
+2025-11-12 12:52:43,020 - fin_picasso_framework.gen_data_validated - WARNING - ❌ Pilot validation failed: Syntax error: unmatched ')' (<unknown>, line 12)
+2025-11-12 12:52:43,020 - fin_picasso_framework.gen_data_validated - INFO - Pilot feedback for LLM: Syntax error: unmatched ')' (<unknown>, line 12)
+
+Fix: Check for unterminated strings, missing quotes, or invalid characters.
+2025-11-12 12:52:43,020 - hf_inference_workflow.retry_handler - INFO - Recorded retry attempt 2 (failed at parsing)
+2025-11-12 12:52:43,020 - fin_picasso_framework.gen_data_validated - WARNING - Max retries reached for pilot validation
+2025-11-12 12:52:43,020 - fin_picasso_framework.gen_data_validated - INFO - Attempting auto-correction for pilot validation failure...
+2025-11-12 12:52:43,020 - hf_inference_workflow.auto_corrector - INFO - Attempting auto-correction for error type: parsing
+2025-11-12 12:52:43,021 - hf_inference_workflow.auto_corrector - INFO - Auto-correction applied for parsing (Unicode fixed: True)
+2025-11-12 12:52:43,021 - fin_picasso_framework.gen_data_validated - INFO - Auto-correction pass 1 applied for parsing
+2025-11-12 12:52:43,022 - fin_picasso_framework.gen_data_validated - INFO - Auto-correction pass 1 fixed some issues, but new error: Syntax error: unmatched ')' (<unknown>, line 12)...
+2025-11-12 12:52:43,022 - hf_inference_workflow.auto_corrector - INFO - Attempting auto-correction for error type: parsing
+2025-11-12 12:52:43,023 - hf_inference_workflow.auto_corrector - WARNING - No auto-correction available for parsing
+2025-11-12 12:52:43,023 - fin_picasso_framework.gen_data_validated - WARNING - Auto-correction could not fix pilot error - no corrections applied
+2025-11-12 12:52:43,023 - fin_picasso_framework.gen_data_validated - INFO - 📊 Phase 2 (Framework): ❌ FAILED (retries: 2)
+2025-11-12 12:52:43,023 - fin_picasso_framework.gen_data_validated - INFO - 
+============================================================
+2025-11-12 12:52:43,023 - fin_picasso_framework.gen_data_validated - INFO - Pass@3 failure detected - Updating pilot prompt for next attempt...
+2025-11-12 12:52:43,023 - fin_picasso_framework.gen_data_validated - INFO - Error: PILOT_ERROR: Syntax error: unmatched ')' (<unknown>, line 12)
+2025-11-12 12:52:43,023 - fin_picasso_framework.gen_data_validated - INFO - ============================================================
+2025-11-12 12:52:43,023 - fin_picasso_framework.pilot.pilot_prompt_updater - INFO - Analyzing 1 failed cases after pass@3
+2025-11-12 12:52:43,023 - fin_picasso_framework.gen_data_validated - INFO - ℹ️ No new pilot rules to apply after pass@3 (may need more context)
+Generating validated designs:  33%|███▎      | 1/3 [00:45<01:31, 45.74s/it]2025-11-12 12:52:43,023 - fin_picasso_framework.gen_data_validated - INFO - 
+============================================================
+2025-11-12 12:52:43,023 - fin_picasso_framework.gen_data_validated - INFO - Problem 1: MZI – Mach-Zehnder Interferometer - Sample 2/3
+2025-11-12 12:52:43,023 - fin_picasso_framework.gen_data_validated - INFO - ============================================================
+2025-11-12 12:52:43,023 - fin_picasso_framework.gen_data_validated - INFO - Problem 1, Sample 1, Attempt 1/4
+2025-11-12 12:52:49,466 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-12 12:52:49,469 - fin_picasso_framework.gen_data_validated - INFO - 📊 Using Vanilla LLM prompt (Phase 1 baseline - no component specs)
+2025-11-12 12:52:49,504 - fin_picasso_framework.gen_data_validated - INFO - Running pilot validation (pre-execution checks)...
+2025-11-12 12:52:49,506 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: pilot - pass (problem 1, sample 1, attempt 0)
+2025-11-12 12:52:49,506 - fin_picasso_framework.gen_data_validated - INFO - ✅ Pilot validation passed
+2025-11-12 12:52:49,506 - fin_picasso_framework.gen_data_validated - INFO - Parsing and executing generated code...
+2025-11-12 12:52:49,560 - fin_picasso_framework.gen_data_validated - ERROR - Routing collision detected: Routing collision in Unnamed_28
+2025-11-12 12:52:49,560 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Attempting immediate auto-correction for routing collision (YAML netlist fix)...
+2025-11-12 12:52:49.559 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 12:52:49,573 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Falling back to code-based auto-correction...
+2025-11-12 12:52:49,573 - hf_inference_workflow.auto_corrector - INFO - Attempting auto-correction for error type: routing_error
+2025-11-12 12:52:49,573 - hf_inference_workflow.auto_corrector - INFO - Applied spacing increase (2.0x)
+2025-11-12 12:52:49,573 - hf_inference_workflow.auto_corrector - INFO - Auto-correction applied for routing_error (Unicode fixed: False)
+2025-11-12 12:52:49,573 - fin_picasso_framework.gen_data_validated - INFO - ✅ Auto-correction applied: Increased spacing by 2.0x (code-based fix)
+2025-11-12 12:52:49,580 - fin_picasso_framework.gen_data_validated - ERROR - Execution error: ports1=2 and ports2=1 must be equal
+2025-11-12 12:52:49.573 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 12:52:49,580 - fin_picasso_framework.gen_data_validated - WARNING - Auto-correction applied but still failed: EXECUTION_ERROR: ports1=2 and ports2=1 must be equal
+2025-11-12 12:52:49,581 - fin_picasso_framework.gen_data_validated - INFO - 📊 Phase 1 (Raw LLM): ❌ FAILED
+2025-11-12 12:52:49,581 - fin_picasso_framework.gen_data_validated - ERROR - Failed to parse/execute code: ROUTING_COLLISION: Routing collision in Unnamed_28
+2025-11-12 12:52:49,581 - hf_inference_workflow.retry_handler - INFO - Recorded retry attempt 0 (failed at parsing)
+2025-11-12 12:52:49,581 - fin_picasso_framework.gen_data_validated - INFO - Problem 1, Sample 1, Attempt 2/4
+2025-11-12 12:52:49,581 - fin_picasso_framework.gen_data_validated - INFO - 📊 Using Framework prompt (Phase 2 - with component specs & validation feedback)
+2025-11-12 12:53:02,610 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-12 12:53:02,645 - fin_picasso_framework.gen_data_validated - INFO - Running pilot validation (pre-execution checks)...
+2025-11-12 12:53:02,649 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: pilot - pass (problem 1, sample 1, attempt 1)
+2025-11-12 12:53:02,649 - fin_picasso_framework.gen_data_validated - INFO - ✅ Pilot validation passed
+2025-11-12 12:53:02,649 - fin_picasso_framework.gen_data_validated - INFO - Parsing and executing generated code...
+2025-11-12 12:53:02,668 - fin_picasso_framework.gen_data_validated - ERROR - Execution error: All ports at the target (end) must have the same angle. r.start.t=r0 110000,-50000/r.end.t=r180 234500,625
+2025-11-12 12:53:02,668 - fin_picasso_framework.gen_data_validated - ERROR - Failed to parse/execute code: EXECUTION_ERROR: All ports at the target (end) must have the same angle. r.start.t=r0 110000,-50000/r.end.t=r180 234500,625
+2025-11-12 12:53:02,668 - hf_inference_workflow.retry_handler - INFO - Recorded retry attempt 1 (failed at parsing)
+2025-11-12 12:53:02,668 - fin_picasso_framework.gen_data_validated - INFO - Problem 1, Sample 1, Attempt 3/4
+2025-11-12 12:53:02,668 - fin_picasso_framework.gen_data_validated - INFO - 📊 Using Framework prompt (Phase 2 - with component specs & validation feedback)
+2025-11-12 12:53:15,258 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-12 12:53:15,261 - fin_picasso_framework.gen_data_validated - INFO - Running pilot validation (pre-execution checks)...
+2025-11-12 12:53:15,265 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: pilot - pass (problem 1, sample 1, attempt 2)
+2025-11-12 12:53:15,265 - fin_picasso_framework.gen_data_validated - INFO - ✅ Pilot validation passed
+2025-11-12 12:53:15,265 - fin_picasso_framework.gen_data_validated - INFO - Parsing and executing generated code...
+2025-11-12 12:53:15,501 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Extracting netlist from Python-generated component for YAML validation...
+2025-11-12 12:53:15,588 - fin_picasso_framework.gen_data_validated - WARNING - ⚠️  YAML netlist validation found issues: Missing required key: 'connections'
+2025-11-12 12:53:15,591 - fin_picasso_framework.gen_data_validated - INFO - Running P&R validation...
+2025-11-12 12:53:15,591 - fin_picasso_framework.validators.pnr_validator - INFO - P&R Validation: PASS (0 errors, 1 warnings)
+2025-11-12 12:53:15,591 - fin_picasso_framework.gen_data_validated - INFO - Running DRC validation...
+2025-11-12 12:53:15,599 - fin_picasso_framework.validators.drc_validator - WARNING - KLayout executable not found - skipping DRC check
+2025-11-12 12:53:15,599 - fin_picasso_framework.gen_data_validated - INFO - Running SAX validation...
+2025-11-12 12:53:15,620 - fin_picasso_framework.validators.sax_validator - INFO - SAX Validation: FAIL (compilation: False, routing: True)
+2025-11-12 12:53:15,620 - fin_picasso_framework.gen_data_validated - WARNING - SAX validation failed
+2025-11-12 12:53:15,623 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: pnr - pass (problem 1, sample 1, attempt 2)
+2025-11-12 12:53:15,625 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: drc - pass (problem 1, sample 1, attempt 2)
+2025-11-12 12:53:15,628 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: sax - fail (problem 1, sample 1, attempt 2)
+2025-11-12 12:53:15,628 - hf_inference_workflow.retry_handler - INFO - Recorded retry attempt 2 (failed at sax)
+2025-11-12 12:53:15,628 - fin_picasso_framework.gen_data_validated - WARNING - Validation failed at stage: sax
+2025-11-12 12:53:15,628 - fin_picasso_framework.gen_data_validated - WARNING - Max retries reached
+2025-11-12 12:53:15,628 - fin_picasso_framework.gen_data_validated - INFO - Attempting auto-correction as fallback...
+2025-11-12 12:53:15,628 - hf_inference_workflow.auto_corrector - INFO - Attempting auto-correction for error type: execution_error
+2025-11-12 12:53:15,628 - hf_inference_workflow.auto_corrector - WARNING - No auto-correction available for execution_error
+2025-11-12 12:53:15,628 - fin_picasso_framework.gen_data_validated - WARNING - No auto-correction available for this error type
+2025-11-12 12:53:15,628 - fin_picasso_framework.gen_data_validated - INFO - 📊 Phase 2 (Framework): ❌ FAILED (retries: 2)
+2025-11-12 12:53:15,628 - fin_picasso_framework.gen_data_validated - INFO - 
+============================================================
+2025-11-12 12:53:15,628 - fin_picasso_framework.gen_data_validated - INFO - Pass@3 failure detected - Updating pilot prompt for next attempt...
+2025-11-12 12:53:15,628 - fin_picasso_framework.gen_data_validated - INFO - Error: EXECUTION_ERROR: All ports at the target (end) must have the same angle. r.start.t=r0 110000,-50000/
+2025-11-12 12:53:15,628 - fin_picasso_framework.gen_data_validated - INFO - ============================================================
+2025-11-12 12:53:15,628 - fin_picasso_framework.pilot.pilot_prompt_updater - INFO - Analyzing 1 failed cases after pass@3
+2025-11-12 12:53:15,628 - fin_picasso_framework.gen_data_validated - INFO - ℹ️ No new pilot rules to apply after pass@3 (may need more context)
+Generating validated designs:  67%|██████▋   | 2/3 [01:18<00:38, 38.01s/it]2025-11-12 12:53:15,629 - fin_picasso_framework.gen_data_validated - INFO - 
+============================================================
+2025-11-12 12:53:15,629 - fin_picasso_framework.gen_data_validated - INFO - Problem 1: MZI – Mach-Zehnder Interferometer - Sample 3/3
+2025-11-12 12:53:15,629 - fin_picasso_framework.gen_data_validated - INFO - ============================================================
+2025-11-12 12:53:15,629 - fin_picasso_framework.gen_data_validated - INFO - Problem 1, Sample 2, Attempt 1/4
+2025-11-12 12:53:22,619 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-12 12:53:22,623 - fin_picasso_framework.gen_data_validated - INFO - 📊 Using Vanilla LLM prompt (Phase 1 baseline - no component specs)
+2025-11-12 12:53:22,625 - fin_picasso_framework.gen_data_validated - INFO - Running pilot validation (pre-execution checks)...
+2025-11-12 12:53:22,628 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: pilot - pass (problem 1, sample 2, attempt 0)
+2025-11-12 12:53:22,628 - fin_picasso_framework.gen_data_validated - INFO - ✅ Pilot validation passed
+2025-11-12 12:53:22,628 - fin_picasso_framework.gen_data_validated - INFO - Parsing and executing generated code...
+2025-11-12 12:53:22,651 - fin_picasso_framework.gen_data_validated - ERROR - Routing collision detected: Routing collision in Unnamed_44
+2025-11-12 12:53:22.651 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 12:53:22,651 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Attempting immediate auto-correction for routing collision (YAML netlist fix)...
+2025-11-12 12:53:22,662 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Falling back to code-based auto-correction...
+2025-11-12 12:53:22.662 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 12:53:22,662 - hf_inference_workflow.auto_corrector - INFO - Attempting auto-correction for error type: routing_error
+2025-11-12 12:53:22,662 - hf_inference_workflow.auto_corrector - INFO - Applied spacing increase (2.0x)
+2025-11-12 12:53:22,662 - hf_inference_workflow.auto_corrector - INFO - Auto-correction applied for routing_error (Unicode fixed: False)
+2025-11-12 12:53:22,662 - fin_picasso_framework.gen_data_validated - INFO - ✅ Auto-correction applied: Increased spacing by 2.0x (code-based fix)
+2025-11-12 12:53:22,673 - fin_picasso_framework.gen_data_validated - ERROR - Routing collision detected: Routing collision in Unnamed_47
+2025-11-12 12:53:22.673 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 12:53:22,673 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Attempting immediate auto-correction for routing collision (YAML netlist fix)...
+2025-11-12 12:53:22,684 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Falling back to code-based auto-correction...
+2025-11-12 12:53:22.684 | WARNING  | kfactory.kcell:show:8768 - Could not connect to klive server
+2025-11-12 12:53:22,684 - hf_inference_workflow.auto_corrector - INFO - Attempting auto-correction for error type: routing_error
+2025-11-12 12:53:22,684 - hf_inference_workflow.auto_corrector - INFO - Applied spacing increase (2.0x)
+2025-11-12 12:53:22,684 - hf_inference_workflow.auto_corrector - INFO - Auto-correction applied for routing_error (Unicode fixed: False)
+2025-11-12 12:53:22,684 - fin_picasso_framework.gen_data_validated - INFO - ✅ Auto-correction applied: Increased spacing by 2.0x (code-based fix)
+2025-11-12 12:53:22,731 - fin_picasso_framework.gen_data_validated - INFO - ✅ Auto-correction SUCCESS! Routing collision fixed by spacing adjustment
+2025-11-12 12:53:22,731 - fin_picasso_framework.gen_data_validated - INFO - ✅ Auto-correction SUCCESS! Routing collision fixed by spacing adjustment
+2025-11-12 12:53:22,731 - fin_picasso_framework.gen_data_validated - INFO - 🔄 Extracting netlist from Python-generated component for YAML validation...
+2025-11-12 12:53:22,734 - fin_picasso_framework.utils.yaml_netlist_helper - ERROR - Error extracting netlist: More than two connected optical ports: ['mmi1x2_WNone_WT1_LT10_L_4e0f7121_0_0,o1', 'straight_L0p25_N2_CSstrip_WNone_m10250_0,o2', 'o1']
+2025-11-12 12:53:22,734 - fin_picasso_framework.gen_data_validated - INFO - 📊 Phase 1 (Raw LLM): ✅ PASSED
+2025-11-12 12:53:22,736 - fin_picasso_framework.gen_data_validated - INFO - Running P&R validation...
+2025-11-12 12:53:22,737 - fin_picasso_framework.validators.pnr_validator - INFO - P&R Validation: PASS (0 errors, 1 warnings)
+2025-11-12 12:53:22,737 - fin_picasso_framework.gen_data_validated - INFO - Running DRC validation...
+2025-11-12 12:53:22,742 - fin_picasso_framework.validators.drc_validator - WARNING - KLayout executable not found - skipping DRC check
+2025-11-12 12:53:22,742 - fin_picasso_framework.gen_data_validated - INFO - Running SAX validation...
+2025-11-12 12:53:22,750 - fin_picasso_framework.validators.sax_validator - INFO - SAX Validation: FAIL (compilation: False, routing: True)
+2025-11-12 12:53:22,750 - fin_picasso_framework.gen_data_validated - WARNING - SAX validation failed
+2025-11-12 12:53:22,752 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: pnr - pass (problem 1, sample 2, attempt 0)
+2025-11-12 12:53:22,754 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: drc - pass (problem 1, sample 2, attempt 0)
+2025-11-12 12:53:22,755 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: sax - fail (problem 1, sample 2, attempt 0)
+2025-11-12 12:53:22,755 - hf_inference_workflow.retry_handler - INFO - Recorded retry attempt 0 (failed at sax)
+2025-11-12 12:53:22,755 - fin_picasso_framework.gen_data_validated - WARNING - Validation failed at stage: sax
+2025-11-12 12:53:22,755 - fin_picasso_framework.gen_data_validated - INFO - Problem 1, Sample 2, Attempt 2/4
+2025-11-12 12:53:22,755 - fin_picasso_framework.gen_data_validated - INFO - 📊 Using Framework prompt (Phase 2 - with component specs & validation feedback)
+2025-11-12 12:53:33,601 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-12 12:53:33,619 - fin_picasso_framework.gen_data_validated - INFO - Running pilot validation (pre-execution checks)...
+2025-11-12 12:53:33,623 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: pilot - pass (problem 1, sample 2, attempt 1)
+2025-11-12 12:53:33,623 - fin_picasso_framework.gen_data_validated - INFO - ✅ Pilot validation passed
+2025-11-12 12:53:33,623 - fin_picasso_framework.gen_data_validated - INFO - Parsing and executing generated code...
+2025-11-12 12:53:33,633 - fin_picasso_framework.gen_data_validated - ERROR - Execution error: All ports at the target (end) must have the same angle. r.start.t=r0 110000,-50000/r.end.t=r0 260000,0
+2025-11-12 12:53:33,633 - fin_picasso_framework.gen_data_validated - ERROR - Failed to parse/execute code: EXECUTION_ERROR: All ports at the target (end) must have the same angle. r.start.t=r0 110000,-50000/r.end.t=r0 260000,0
+2025-11-12 12:53:33,634 - hf_inference_workflow.retry_handler - INFO - Recorded retry attempt 1 (failed at parsing)
+2025-11-12 12:53:33,634 - fin_picasso_framework.gen_data_validated - INFO - Problem 1, Sample 2, Attempt 3/4
+2025-11-12 12:53:33,634 - fin_picasso_framework.gen_data_validated - INFO - 📊 Using Framework prompt (Phase 2 - with component specs & validation feedback)
+2025-11-12 12:53:44,205 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-11-12 12:53:44,217 - fin_picasso_framework.gen_data_validated - INFO - Code cleaning applied (removed Unicode/fixed decimals)
+2025-11-12 12:53:44,218 - fin_picasso_framework.gen_data_validated - INFO - Running pilot validation (pre-execution checks)...
+2025-11-12 12:53:44,220 - fin_picasso_framework.debug.checkpoint_manager - INFO - Checkpoint saved: pilot - fail (problem 1, sample 2, attempt 2)
+2025-11-12 12:53:44,220 - fin_picasso_framework.gen_data_validated - WARNING - ❌ Pilot validation failed: Syntax error: unmatched ')' (<unknown>, line 9)
+2025-11-12 12:53:44,220 - fin_picasso_framework.gen_data_validated - INFO - Pilot feedback for LLM: Syntax error: unmatched ')' (<unknown>, line 9)
+
+Fix: Check for unterminated strings, missing quotes, or invalid characters.
+2025-11-12 12:53:44,220 - hf_inference_workflow.retry_handler - INFO - Recorded retry attempt 2 (failed at parsing)
+2025-11-12 12:53:44,221 - fin_picasso_framework.gen_data_validated - WARNING - Max retries reached for pilot validation
+2025-11-12 12:53:44,221 - fin_picasso_framework.gen_data_validated - INFO - Attempting auto-correction for pilot validation failure...
+2025-11-12 12:53:44,221 - hf_inference_workflow.auto_corrector - INFO - Attempting auto-correction for error type: parsing
+2025-11-12 12:53:44,221 - hf_inference_workflow.auto_corrector - INFO - Auto-correction applied for parsing (Unicode fixed: True)
+2025-11-12 12:53:44,221 - fin_picasso_framework.gen_data_validated - INFO - Auto-correction pass 1 applied for parsing
+2025-11-12 12:53:44,222 - fin_picasso_framework.gen_data_validated - INFO - Auto-correction pass 1 fixed some issues, but new error: Syntax error: unmatched ')' (<unknown>, line 9)...
+2025-11-12 12:53:44,222 - hf_inference_workflow.auto_corrector - INFO - Attempting auto-correction for error type: parsing
+2025-11-12 12:53:44,222 - hf_inference_workflow.auto_corrector - WARNING - No auto-correction available for parsing
+2025-11-12 12:53:44,222 - fin_picasso_framework.gen_data_validated - WARNING - Auto-correction could not fix pilot error - no corrections applied
+2025-11-12 12:53:44,222 - fin_picasso_framework.gen_data_validated - INFO - 📊 Phase 2 (Framework): ❌ FAILED (retries: 2)
+2025-11-12 12:53:44,223 - fin_picasso_framework.gen_data_validated - INFO - 
+============================================================
+2025-11-12 12:53:44,223 - fin_picasso_framework.gen_data_validated - INFO - Pass@3 failure detected - Updating pilot prompt for next attempt...
+2025-11-12 12:53:44,223 - fin_picasso_framework.gen_data_validated - INFO - Error: PILOT_ERROR: Syntax error: unmatched ')' (<unknown>, line 9)
+2025-11-12 12:53:44,223 - fin_picasso_framework.gen_data_validated - INFO - ============================================================
+2025-11-12 12:53:44,223 - fin_picasso_framework.pilot.pilot_prompt_updater - INFO - Analyzing 1 failed cases after pass@3
+2025-11-12 12:53:44,223 - fin_picasso_framework.gen_data_validated - INFO - ℹ️ No new pilot rules to apply after pass@3 (may need more context)
+Generating validated designs: 100%|██████████| 3/3 [01:46<00:00, 33.71s/it]2025-11-12 12:53:44,224 - fin_picasso_framework.gen_data_validated - INFO - 
+============================================================
+2025-11-12 12:53:44,224 - fin_picasso_framework.gen_data_validated - INFO - Problem 1 Summary: 3/3 samples failed
+2025-11-12 12:53:44,224 - fin_picasso_framework.gen_data_validated - INFO - ============================================================
+Generating validated designs: 100%|██████████| 3/3 [01:46<00:00, 35.65s/it]
+2025-11-12 12:53:44,236 - fin_picasso_framework.gen_data_validated - INFO - 
+============================================================
+2025-11-12 12:53:44,236 - fin_picasso_framework.gen_data_validated - INFO - GENERATION SUMMARY
+2025-11-12 12:53:44,236 - fin_picasso_framework.gen_data_validated - INFO - ============================================================
+2025-11-12 12:53:44,236 - fin_picasso_framework.gen_data_validated - INFO - Total designs attempted: 3
+2025-11-12 12:53:44,238 - fin_picasso_framework.gen_data_validated - INFO - Successful designs: 0 (0.0%)
+2025-11-12 12:53:44,238 - fin_picasso_framework.gen_data_validated - INFO - P&R pass rate: 2 (66.7%)
+2025-11-12 12:53:44,238 - fin_picasso_framework.gen_data_validated - INFO - DRC pass rate: 2 (66.7%)
+2025-11-12 12:53:44,238 - fin_picasso_framework.gen_data_validated - INFO - SAX pass rate: 0 (0.0%)
+2025-11-12 12:53:44,238 - fin_picasso_framework.gen_data_validated - INFO - Average retry attempts: 2.00
+2025-11-12 12:53:44,238 - fin_picasso_framework.gen_data_validated - INFO - Results saved to: /Users/deepakvungarala/Desktop/shigoto/PICasso/fin_picasso_framework/output/results/framework_test_gpt4o_mini_1problems.csv
+2025-11-12 12:53:44,240 - fin_picasso_framework.gen_data_validated - INFO - ✅ Saved raw LLM results to: /Users/deepakvungarala/Desktop/shigoto/PICasso/fin_picasso_framework/output/results/raw_llm_results_20251112_125344.csv
+2025-11-12 12:53:44,240 - fin_picasso_framework.gen_data_validated - INFO - ✅ Saved as: /Users/deepakvungarala/Desktop/shigoto/PICasso/fin_picasso_framework/output/results/raw_llm_results.csv
+2025-11-12 12:53:44,241 - fin_picasso_framework.gen_data_validated - INFO - ✅ Saved framework results to: /Users/deepakvungarala/Desktop/shigoto/PICasso/fin_picasso_framework/output/results/framework_results_20251112_125344.csv
+2025-11-12 12:53:44,242 - fin_picasso_framework.gen_data_validated - INFO - ✅ Saved as: /Users/deepakvungarala/Desktop/shigoto/PICasso/fin_picasso_framework/output/results/framework_results.csv
+2025-11-12 12:53:44,246 - fin_picasso_framework.gen_data_validated - INFO - ✅ Saved comparison metrics to: /Users/deepakvungarala/Desktop/shigoto/PICasso/fin_picasso_framework/output/results/comparison_metrics_20251112_125344.json
+2025-11-12 12:53:44,246 - fin_picasso_framework.gen_data_validated - INFO - ✅ Saved as: /Users/deepakvungarala/Desktop/shigoto/PICasso/fin_picasso_framework/output/results/comparison_metrics.json
+2025-11-12 12:53:44,246 - fin_picasso_framework.gen_data_validated - INFO - 
+======================================================================
+2025-11-12 12:53:44,246 - fin_picasso_framework.gen_data_validated - INFO - TWO-PHASE BENCHMARKING SUMMARY (WITH NOVEL METRICS)
+2025-11-12 12:53:44,246 - fin_picasso_framework.gen_data_validated - INFO - ======================================================================
+2025-11-12 12:53:44,246 - fin_picasso_framework.gen_data_validated - INFO - 
+mzi – mach-zehnder interferometer:
+2025-11-12 12:53:44,246 - fin_picasso_framework.gen_data_validated - INFO -   Raw LLM:
+2025-11-12 12:53:44,246 - fin_picasso_framework.gen_data_validated - INFO -     Pass@k:          100.0% (1/3)
+2025-11-12 12:53:44,246 - fin_picasso_framework.gen_data_validated - INFO -     Spec@k:          0.0% (no functional validation)
+2025-11-12 12:53:44,246 - fin_picasso_framework.gen_data_validated - INFO -   Framework:
+2025-11-12 12:53:44,246 - fin_picasso_framework.gen_data_validated - INFO -     Pass@k:          0.0% (0/3)
+2025-11-12 12:53:44,246 - fin_picasso_framework.gen_data_validated - INFO -     Spec@k:          0.0% (0/3)
+2025-11-12 12:53:44,246 - fin_picasso_framework.gen_data_validated - INFO -     Opt-Efficiency:  0.000
+2025-11-12 12:53:44,246 - fin_picasso_framework.gen_data_validated - INFO -     Robustness:      0.000
+2025-11-12 12:53:44,246 - fin_picasso_framework.gen_data_validated - INFO -   Improvement:
+2025-11-12 12:53:44,246 - fin_picasso_framework.gen_data_validated - INFO -     Pass@k:          +-100.0%
+2025-11-12 12:53:44,246 - fin_picasso_framework.gen_data_validated - INFO -     Spec@k:          +0.0%
+2025-11-12 12:53:44,246 - fin_picasso_framework.gen_data_validated - INFO -     Robustness:      0.000
+2025-11-12 12:53:44,246 - fin_picasso_framework.gen_data_validated - INFO - ======================================================================
+
+2025-11-12 12:53:44,246 - __main__ - INFO - 
+======================================================================
+2025-11-12 12:53:44,247 - __main__ - INFO - ✅ TEST COMPLETE
+2025-11-12 12:53:44,247 - __main__ - INFO - ======================================================================
+2025-11-12 12:53:44,247 - __main__ - INFO - Results saved to: framework_test_gpt4o_mini_1problems.csv
+2025-11-12 12:53:44,247 - __main__ - INFO - Check logs in: framework_test.log
+2025-11-12 12:53:44,247 - __main__ - INFO - Check checkpoints in: fin_picasso_framework/output/benchmark_results/checkpoints/

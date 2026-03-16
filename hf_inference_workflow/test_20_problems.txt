@@ -1,0 +1,241 @@
+Problem 1 (Mach-Zehnder Modulator):
+Design a Mach-Zehnder Modulator with the following specifications:
+- Use a 1x2 MMI splitter at the input
+- Two arms with straight_heater_metal phase shifters (length=50µm)
+- Use a 2x1 MMI combiner at the output
+- Ensure minimum 20µm spacing between all components
+- Position components to avoid overlap
+- Use route_bundle for all optical connections with bend radius 10µm and separation 10µm
+- Expose input port as 'o1' and output port as 'o2'
+
+Problem 2 (8-QAM Modulator):
+Design an 8-QAM modulator with hierarchical structure:
+- First-level splitter: 1x2 MMI
+- Second-level splitter: 1x2 MMI
+- Three MZM modulators (use gf.components.mzm)
+- Two combiners: 2x1 MMI each
+- Hierarchical combination of signals
+- Ensure all components have minimum 25µm spacing
+- Use route_bundle for clean routing with radius=12µm
+- Final output should combine all three MZM outputs
+
+Problem 3 (Ring Resonator Add-Drop Filter):
+Design a ring resonator add-drop filter:
+- Input/output couplers using directional couplers (coupler component)
+- Ring waveguide using bend_circular (radius=10µm)
+- Through port and drop port
+- Proper coupling gaps (0.2µm) and ring radius
+- Ensure no waveguide overlaps
+- Use route_bundle with careful spacing
+- Minimum 20µm spacing between components
+- Expose ports: 'input', 'through', 'drop'
+
+Problem 4 (Dual-Ring Resonator Tunable Filter):
+Design a cascaded dual-ring resonator system with the following specifications:
+- Input waveguide using straight component (length=100µm)
+- First ring resonator with bend_circular (radius=10µm)
+- Directional coupler for first ring (coupling_length=20µm, gap=0.2µm)
+- Second ring resonator with bend_circular (radius=12µm)
+- Directional coupler for second ring (coupling_length=25µm, gap=0.3µm)
+- Include straight_heater_metal on each ring (length=30µm) for tuning
+- Output waveguide using straight component (length=100µm)
+- Ensure 30µm minimum spacing between rings
+- Use route_bundle with bend_radius=10µm, separation=5µm
+- Expose ports: 'in' for input, 'through' for through port, 'drop' for drop port
+
+Problem 5 (4-Channel WDM using Cascaded MZIs):
+Design a 4-channel wavelength division multiplexer:
+- Four input waveguides (straight, length=50µm each)
+- Three stages of 2x2 MZI wavelength filters
+  * Stage 1: Two 2x2 MZIs (path difference: 100µm and 150µm)
+  * Stage 2: One 2x2 MZI (path difference: 200µm)
+- Each MZI uses 2x2 MMI couplers for split/combine
+- Include grating couplers at all inputs and outputs
+- Minimum component spacing: 35µm
+- Use route_bundle with bend_radius=15µm, separation=8µm
+- Expose input ports as 'i1', 'i2', 'i3', 'i4'
+- Expose output ports as 'o1', 'o2', 'o3', 'o4'
+
+Problem 6 (Tunable 1x4 Optical Switch - Spanke Architecture):
+Design a reconfigurable 1x4 optical switch:
+- One input port with grating coupler
+- Two levels of 2x2 thermo-optic switches using mzm components
+- Level 1: One 2x2 switch at input
+- Level 2: Two 2x2 switches for routing
+- Each switch contains straight_heater_metal phase shifters (length=80µm)
+- Four output ports with grating couplers
+- Minimum 40µm spacing between switches
+- Use route_bundle with bend_radius=20µm and separation=12µm
+- Include electrical routing for heater control pads
+- Expose optical port 'input' and outputs 'out1' through 'out4'
+
+Problem 7 (Balanced Coherent Receiver):
+Design a balanced coherent receiver frontend:
+- Two input ports: signal and local oscillator (LO) using grating couplers
+- 2x2 90-degree hybrid using four 2x2 MMI couplers arranged in quadrature
+- Four output ports connected to straight waveguides (length=50µm)
+- Include directional couplers (length=30µm) for 3dB splitting
+- Waveguide phase sections (length=25µm) for 90-degree phase shift
+- Minimum 25µm spacing between hybrid components
+- Use route_bundle with radius=10µm and separation=8µm
+- Expose ports: 'signal_in', 'lo_in', 'i_plus', 'i_minus', 'q_plus', 'q_minus'
+
+Problem 8 (16-Channel Arrayed Waveguide Grating - AWG):
+Design a 16-channel arrayed waveguide grating demultiplexer:
+- Single input waveguide with grating coupler
+- Input free propagation region (FPR) using taper and slab region
+- 16 arrayed waveguides with incremental path length differences (ΔL = 15µm per step)
+- Output FPR mirror of input FPR
+- 16 output waveguides with grating couplers at 50µm pitch
+- Use bend_euler for low-loss array waveguide bends
+- Minimum 5µm spacing between adjacent array waveguides
+- Use route_bundle with radius=25µm for input/output connections
+- Expose input port 'in' and output ports 'ch1' through 'ch16'
+
+Problem 9 (Micro-Ring Resonator Notch Filter):
+Design a single micro-ring resonator notch filter:
+- Input straight waveguide (length=100µm)
+- Single ring using bend_circular (radius=10µm)
+- Directional coupler for ring coupling (coupling_length=10µm, gap=0.2µm)
+- Output straight waveguide (length=100µm)
+- Add straight_heater_metal on ring (length=20µm) for wavelength tuning
+- Ensure 25µm spacing between waveguides
+- Use route_bundle with bend_radius=10µm
+- Expose ports: 'input' and 'output'
+- Total footprint should be compact (<200µm x 200µm)
+
+Problem 10 (2x2 Thermo-Optic Switch):
+Design a 2x2 thermo-optic switch using MZI architecture:
+- Two input ports with grating couplers
+- Input 2x2 MMI splitter
+- Two arms with straight_heater_metal phase shifters (length=100µm)
+- Output 2x2 MMI combiner
+- Two output ports with grating couplers
+- Ensure minimum 30µm spacing between arms
+- Use route_bundle with bend_radius=15µm and separation=10µm
+- Include electrical pads for heater control
+- Expose ports: 'in1', 'in2', 'out1', 'out2'
+
+Problem 11 (Y-Branch Power Splitter):
+Design a Y-branch 1x2 power splitter:
+- Single input straight waveguide (length=50µm)
+- Y-branch junction using taper components
+- Two output arms separated by 20µm
+- Each output arm has straight waveguide (length=100µm)
+- Add grating couplers at input and both outputs
+- Ensure smooth transitions (bend_radius=10µm)
+- Use route_bundle for output waveguides
+- Minimum 20µm spacing
+- Expose ports: 'input', 'output1', 'output2'
+
+Problem 12 (90-Degree Optical Hybrid):
+Design a 90-degree optical hybrid for coherent detection:
+- Two input ports: signal and LO (with grating couplers)
+- Two 2x2 MMI couplers for splitting
+- Phase shifter section (straight_heater_metal, length=30µm) for 90-degree shift
+- Two 2x2 MMI couplers for combining
+- Four output ports for balanced detection
+- Minimum 25µm component spacing
+- Use route_bundle with radius=10µm and separation=8µm
+- Ensure path length matching within 2µm
+- Expose ports: 'signal', 'lo', 'i_pos', 'i_neg', 'q_pos', 'q_neg'
+
+Problem 13 (Add-Drop Multiplexer - OADM):
+Design an optical add-drop multiplexer:
+- Input port with straight waveguide (length=100µm)
+- Ring resonator using bend_circular (radius=12µm)
+- Two directional couplers (coupling_length=15µm, gap=0.2µm)
+- Through port and drop port outputs
+- Add port input for wavelength insertion
+- Straight_heater_metal on ring (length=25µm) for tuning
+- Minimum 30µm spacing between components
+- Use route_bundle with radius=10µm
+- Expose ports: 'input', 'add', 'through', 'drop'
+
+Problem 14 (Tunable Ring Resonator Bank - 4 Rings):
+Design a bank of four tunable ring resonators:
+- Single input waveguide (straight, length=100µm)
+- Four cascaded ring resonators (radii: 8µm, 10µm, 12µm, 14µm)
+- Each ring has directional coupler (coupling_length=10µm, gap=0.2µm)
+- Each ring has straight_heater_metal (length=20µm) for independent tuning
+- Output waveguide (straight, length=100µm)
+- Rings spaced 40µm apart along bus waveguide
+- Use route_bundle with radius=10µm
+- Expose ports: 'input', 'output'
+- Include electrical pads for all four heaters
+
+Problem 15 (16-QAM Modulator):
+Design a 16-QAM modulator with nested MZI structure:
+- Input splitter: 1x2 MMI
+- I-arm: Nested MZI with two child MZIs (use gf.components.mzm)
+- Q-arm: Nested MZI with two child MZIs
+- 90-degree phase shifter between I and Q arms (straight_heater_metal, length=40µm)
+- Output combiner: 2x1 MMI
+- Minimum 30µm spacing between all MZIs
+- Use route_bundle with radius=15µm and separation=10µm
+- Expose ports: 'input', 'output'
+- Total of 4 RF drive signals for amplitude control
+
+Problem 16 (Cascaded Ring Filter - 3 Stages):
+Design a three-stage cascaded ring filter:
+- Input straight waveguide (length=100µm)
+- Three ring resonators in series (radii: 10µm, 11µm, 12µm)
+- Each ring coupled via directional coupler (coupling_length=12µm, gap=0.2µm)
+- Each ring has straight_heater_metal (length=25µm) for tuning
+- Output straight waveguide (length=100µm)
+- Rings spaced 50µm apart for isolation
+- Use route_bundle with radius=10µm
+- Expose ports: 'input', 'output'
+- Ensure flat-top filter response through varied coupling
+
+Problem 17 (Wavelength Selective Switch - 1x8):
+Design a 1x8 wavelength selective switch:
+- Single input port with grating coupler
+- Input splitter tree: three stages of 1x2 MMI splitters
+- Eight parallel paths with different length delays (ΔL = 50µm increments)
+- Each path has straight_heater_metal (length=80µm) for phase control
+- Output combiner tree: three stages of 2x1 MMI combiners
+- Eight output ports with grating couplers
+- Minimum 35µm spacing between paths
+- Use route_bundle with radius=20µm and separation=12µm
+- Expose ports: 'input', 'out1' through 'out8'
+
+Problem 18 (Grating Coupler Array - 8 Channels):
+Design an 8-channel grating coupler array for fiber coupling:
+- Eight grating couplers in linear array
+- Pitch between gratings: 127µm (standard fiber array pitch)
+- Each grating connected to straight waveguide (length=200µm)
+- Fanout routing to bring waveguides to 20µm pitch
+- Use bend_euler for low-loss fanout bends
+- Terminate with straight waveguides (length=100µm)
+- Minimum bend radius: 25µm
+- Use route_bundle for organized fanout
+- Expose ports: 'ch1' through 'ch8'
+- Ensure all waveguides are parallel at output
+
+Problem 19 (Integrated Balanced Photodetector):
+Design an integrated balanced photodetector frontend:
+- Two input ports with grating couplers (for differential detection)
+- Input straight waveguides (length=100µm)
+- Two photodetector regions (use straight component, length=50µm, width=10µm)
+- Waveguide tapers to match detector width
+- Electrical contact pads for detector biasing
+- Output termination using straight waveguides
+- Minimum 30µm spacing between detectors
+- Use route_bundle for input waveguides
+- Expose ports: 'signal_pos', 'signal_neg'
+- Balanced detection configuration
+
+Problem 20 (Microring Modulator with Feedback):
+Design a microring modulator with feedback control:
+- Input straight waveguide (length=100µm)
+- Main modulation ring: bend_circular (radius=15µm)
+- Coupling region: directional coupler (coupling_length=20µm, gap=0.2µm)
+- Modulation heater: straight_heater_metal (length=40µm) on ring
+- Tap coupler (10% coupling) for feedback monitoring
+- Feedback monitor waveguide to grating coupler
+- Through port output with grating coupler
+- Minimum 30µm spacing between components
+- Use route_bundle with radius=10µm
+- Expose ports: 'input', 'output', 'monitor'
+- Include electrical pads for modulation and monitoring
