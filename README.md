@@ -228,10 +228,3 @@ git commit -m "Public PICasso release: YAML DSL framework, no keys or logs"
 git branch -M main
 git push -u origin main
 ```
-
-**Before pushing:**
-
-- Ensure no `keys.txt`, `.env`, or `*.log` files are committed (they are in `.gitignore`).
-- If you already committed secrets in the past, rewrite history:  
-  `git filter-branch` or [BFG Repo-Cleaner](https://rtyley.github.io/bfg-repo-cleaner/) to remove them, then force-push.
-- Create the repository on GitHub first (e.g. `github.com/YOUR_USERNAME/PICasso`) and use that URL as `origin`.
