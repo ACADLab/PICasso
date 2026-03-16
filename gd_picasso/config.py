@@ -283,37 +283,119 @@ ports:
   out: mmi_combiner,o2
 ```
 
-CRITICAL RULES:
+CRITICAL RULES (READ CAREFULLY):
 
-1. Spacing Rules (prevents routing collisions):
-   - MINIMUM 200um spacing between components (MANDATORY)
-   - Simple designs (≤5 components): 200um minimum
-   - Complex designs (>5 components): 250um+ spacing required
-   - Vertical stacking: Use +/-100um or more vertical offset
-   - Horizontal placement: 250-300um separation
-   - Route radius: >= 20um (not 15um)
+1. Spacing Rules:
+   - Keep components compact: 50-100um spacing is fine.
+   - Vertical offset between parallel arms: 50um is sufficient.
+   - Route radius: >= 20um
    - Route separation: >= 20um
+   - DO NOT over-space (200-300um gaps make routing much harder).
 
 2. Routing Rules:
-   - ALL components MUST be connected via routes
-   - Routes section is REQUIRED if you have multiple components
+   - ALL components MUST be connected via routes.
+   - Routes section is REQUIRED if you have multiple components.
    - Route format: 'source_instance,port: target_instance,port'
-   - Use 'routes.optical.links' for optical connections
+   - Use 'routes.optical.links' for optical connections.
+   - For MZI combiners with mirror: true, the INPUT port is o1.
+     Route TO combiner,o2 and combiner,o3 (NOT combiner,o1).
 
 3. Component Rules:
    - Use valid GDSFactory component names (e.g., 'mmi1x2', 'bend_euler', 'straight_heater_metal')
-   - Component names must match exactly (case-sensitive)
-   - ⚠️ WARNING: mmi2x1 does NOT exist! Use mmi1x2 and set mirror: true
+   - Component names must match exactly (case-sensitive).
+   - WARNING: mmi2x1 does NOT exist! Use mmi1x2 and set mirror: true.
 
-4. Port Rules:
-   - Port names must match component port names exactly (typically 'o1', 'o2', 'o3', etc.)
-   - Ports are labeled clockwise: o1 (left-bottom), o2 (left-top), o3 (right-top), etc.
-   - All optical ports MUST be connected (no dangling ports)
+4. Port Name Rules:
+   - Port names are LITERAL STRINGS: o1, o2, o3, o4 etc.
+   - NEVER use arithmetic in port names. WRONG: o4-1, o3+1, o2*1.
+     CORRECT: o3, o4, o2.  Compute the number yourself and write the result.
+   - All numeric values must be literal numbers. WRONG: 4-1, 3+1. CORRECT: 3, 4.
 
-5. Syntax Rules:
-   - Valid YAML syntax: proper indentation, no tabs (use spaces)
-   - No Unicode characters (see above)
-   - All numeric values must be valid floats (e.g., 10.0, not '10 microns')
+5. Placements Rules:
+   - Placements ONLY contain: x, y, rotation, mirror.
+   - NEVER put 'component' or 'settings' inside placements.
+     Those belong ONLY in 'instances'.
+   - WRONG:
+       placements:
+         ps1:
+           component: straight_heater_metal   # FORBIDDEN here
+           settings: {{length: 50}}              # FORBIDDEN here
+           x: 100
+   - CORRECT:
+       instances:
+         ps1:
+           component: straight_heater_metal
+           settings: {{length: 50}}
+       placements:
+         ps1:
+           x: 100
+           y: 0
+
+6. Syntax Rules:
+   - Valid YAML syntax: proper indentation, no tabs (use spaces).
+   - No Unicode characters (see above).
+   - All numeric values must be valid floats (e.g., 10.0, not '10 microns').
+
+===================================================
+### MULTI-COMPONENT ROUTING EXAMPLE (generic pattern)
+===================================================
+
+This example shows how to route a design with TWO parallel arms
+(splitter -> arm components -> combiner).  Adapt the number of
+arms and components to the problem.
+
+instances:
+  sp:
+    component: mmi1x2
+    settings: {{}}
+  arm_upper:
+    component: straight_heater_metal
+    settings: {{length: 80}}
+  arm_lower:
+    component: straight
+    settings: {{length: 80}}
+  cb:
+    component: mmi1x2
+    settings: {{}}
+
+placements:
+  sp:
+    x: 0
+    y: 0
+  arm_upper:
+    x: 80
+    y: 30
+  arm_lower:
+    x: 80
+    y: -30
+  cb:
+    x: 200
+    y: 0
+    mirror: true
+
+routes:
+  optical:
+    settings:
+      cross_section: strip
+      radius: 20.0
+    links:
+      sp,o2: arm_upper,o1
+      sp,o3: arm_lower,o1
+      arm_upper,o2: cb,o2
+      arm_lower,o2: cb,o3
+
+ports:
+  in: sp,o1
+  out: cb,o1
+
+KEY PATTERNS TO FOLLOW:
+  - Splitter outputs (o2, o3) fan out to arm inputs (o1).
+  - Arm outputs (o2) converge on combiner inputs (o2, o3).
+  - Combiner has mirror: true so its o2/o3 face the arms.
+  - Combiner output is o1 (faces away from the arms).
+  - For NESTED sub-circuits (e.g. MZMs inside a larger design),
+    repeat the splitter-arms-combiner pattern for each sub-block,
+    then connect sub-block outputs to the next stage.
 
 {component_injection}
 

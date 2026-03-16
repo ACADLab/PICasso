@@ -19,7 +19,7 @@ class YAMLPilotValidator:
 
     def __init__(self):
         """Initialize YAML pilot validator."""
-        self.min_spacing_um = 200.0
+        self.min_spacing_um = 100.0
         self.min_route_radius_um = 20.0
         self.valid_components = set()  # Will be populated with available components
 
@@ -33,6 +33,11 @@ class YAMLPilotValidator:
         Returns:
             (is_valid, error_message, error_details)
         """
+        # Check 0: Truncation detection
+        truncation_check = self._check_truncation(yaml_str)
+        if not truncation_check[0]:
+            return False, truncation_check[1], {'error_type': 'syntax', 'category': 'truncation'}
+
         # Check 1: ASCII only (most critical)
         ascii_check = self._check_ascii_only(yaml_str)
         if not ascii_check[0]:
@@ -83,6 +88,29 @@ class YAMLPilotValidator:
             return False, numeric_check[1], {'error_type': 'syntax', 'category': 'invalid_numeric'}
 
         return True, None, None
+
+    def _check_truncation(self, yaml_str: str) -> Tuple[bool, Optional[str]]:
+        """Detect if LLM output was truncated mid-generation.
+        
+        Symptoms: YAML has instances/placements but no routes or ports,
+        or the last line is incomplete (no colon, dangling key).
+        """
+        lines = yaml_str.strip().split('\n')
+        if not lines:
+            return False, "Empty YAML output"
+        
+        last_line = lines[-1].strip()
+        # Incomplete last line (no colon, looks like a partial key)
+        if last_line and ':' not in last_line and not last_line.startswith('-') and not last_line.startswith('#'):
+            if len(last_line) < 60 and last_line.replace('_', '').replace(' ', '').isalnum():
+                return False, (
+                    f"YAML output appears TRUNCATED (last line: '{last_line}'). "
+                    "Your output was cut off before completion. "
+                    "Generate a SHORTER, more compact YAML. Use fewer components if needed. "
+                    "Make sure the YAML ends with a complete 'ports:' section."
+                )
+        
+        return True, None
 
     def _check_ascii_only(self, text: str) -> Tuple[bool, Optional[str]]:
         """Check for Unicode characters."""
@@ -168,29 +196,84 @@ class YAMLPilotValidator:
         return True, None, None
 
     def _check_port_names(self, yaml_data: Dict) -> Tuple[bool, Optional[str]]:
-        """Check that port names are valid."""
-        # This is a simplified check - full validation would require component instantiation
-        # For now, check common patterns
-        if 'routes' in yaml_data:
-            routes = yaml_data['routes']
-            if isinstance(routes, dict) and 'optical' in routes:
-                optical = routes['optical']
-                if isinstance(optical, dict) and 'links' in optical:
-                    links = optical.get('links', {})
-                    # links should be a dict, but iterate over values if it's a dict
-                    if isinstance(links, dict):
-                        for link in links.values():
-                            # Format: "instance,port: target,port"
-                            if isinstance(link, str) and ':' in link:
-                                parts = link.split(':')
-                                if len(parts) == 2:
-                                    source = parts[0].strip()
-                                    if ',' in source:
-                                        port = source.split(',')[1]
-                                        # Check for common invalid port names
-                                        if port.startswith('p') and port[1:].isdigit():
-                                            return False, f"Invalid port name pattern: {port} (use 'o1', 'o2', etc.)"
+        """Check port names in route links and port exports.
         
+        Detects:
+          - 'p1'-style names (should be 'o1')
+          - Arithmetic in port names ('o4-1' instead of 'o3')
+          - Ports that don't exist on the referenced component type
+        """
+        _ARITH_PORT = re.compile(r'o\d+[+\-*/]\d+')
+
+        # Build instance→component map and cache known ports per component type
+        instances = yaml_data.get('instances', {})
+        _inst_comp = {}
+        for iname, idef in instances.items():
+            if isinstance(idef, dict):
+                _inst_comp[iname] = idef.get('component', '')
+
+        _port_cache = {}
+        def _valid_ports(comp_type: str) -> Optional[List[str]]:
+            if comp_type in _port_cache:
+                return _port_cache[comp_type]
+            try:
+                func = getattr(gf.components, comp_type, None)
+                if func:
+                    c = func()
+                    from gdsfactory.port import get_ports_list
+                    names = [p.name for p in get_ports_list(c.ports)]
+                    _port_cache[comp_type] = names
+                    return names
+            except Exception:
+                pass
+            _port_cache[comp_type] = None
+            return None
+
+        def _check_ref(ref: str) -> Optional[str]:
+            """Return an error message if 'ref' contains an invalid port."""
+            parts = ref.strip().split(',')
+            if len(parts) == 2:
+                inst_name = parts[0].strip()
+                port = parts[1].strip()
+                if port.startswith('p') and port[1:].isdigit():
+                    return f"Invalid port name '{port}' in '{ref}' — use 'o1', 'o2', etc."
+                if _ARITH_PORT.search(port):
+                    return (f"Arithmetic in port name '{port}' in '{ref}' — "
+                            "compute the value yourself (e.g. o4-1 → o3)")
+                comp_type = _inst_comp.get(inst_name, '')
+                if comp_type:
+                    known = _valid_ports(comp_type)
+                    if known and port not in known:
+                        return (f"Port '{port}' does not exist on {comp_type} "
+                                f"(instance '{inst_name}'). Valid ports: {', '.join(known)}")
+            return None
+
+        if 'routes' in yaml_data:
+            routes = yaml_data.get('routes', {})
+            if isinstance(routes, dict):
+                for rname, rdef in routes.items():
+                    if not isinstance(rdef, dict):
+                        continue
+                    links = rdef.get('links', {})
+                    if not isinstance(links, dict):
+                        continue
+                    for k, v in links.items():
+                        err = _check_ref(str(k))
+                        if err:
+                            return False, err
+                        err = _check_ref(str(v))
+                        if err:
+                            return False, err
+
+        if 'ports' in yaml_data:
+            ports = yaml_data.get('ports', {})
+            if isinstance(ports, dict):
+                for pname, pref in ports.items():
+                    if isinstance(pref, str):
+                        err = _check_ref(pref)
+                        if err:
+                            return False, err
+
         return True, None
 
     def _check_component_parameters(self, yaml_data: Dict) -> Tuple[bool, Optional[str]]:
@@ -257,29 +340,38 @@ class YAMLPilotValidator:
         if not isinstance(placements, dict):
             return True, None  # Skip spacing check if placements is not a dict
         
+        instances = yaml_data.get('instances', {})
         positions = []
-        
+
         for inst_name, placement in placements.items():
             if isinstance(placement, dict):
-                x = placement.get('x', 0) or 0  # Handle None values
-                y = placement.get('y', 0) or 0  # Handle None values
-                # Only add if both x and y are valid numbers
+                x = placement.get('x', 0) or 0
+                y = placement.get('y', 0) or 0
                 if isinstance(x, (int, float)) and isinstance(y, (int, float)):
-                    positions.append((inst_name, float(x), float(y)))
-        
-        # Determine required spacing based on circuit complexity
+                    # Record component type so we can skip same-type pairs
+                    comp_type = ""
+                    inst_info = instances.get(inst_name, {})
+                    if isinstance(inst_info, dict):
+                        comp_type = inst_info.get("component", "")
+                    positions.append((inst_name, float(x), float(y), comp_type))
+
         num_components = len(positions)
         if num_components > 20:
-            required_spacing = 300.0  # Very complex: 300um+
+            required_spacing = 50.0
         elif num_components > 10:
-            required_spacing = 250.0  # Complex: 250um+
+            required_spacing = 50.0
+        elif num_components > 5:
+            required_spacing = 50.0
         else:
-            required_spacing = self.min_spacing_um  # Simple: 200um
-        
-        # Check spacing
+            required_spacing = self.min_spacing_um  # <=5 components: 100um
+
+        # Check spacing — skip pairs of the same component type (e.g. parallel
+        # phase-shifter arms inside an MZM are intentionally close together).
         violations = []
-        for i, (name1, x1, y1) in enumerate(positions):
-            for name2, x2, y2 in positions[i+1:]:
+        for i, (name1, x1, y1, type1) in enumerate(positions):
+            for name2, x2, y2, type2 in positions[i+1:]:
+                if type1 and type1 == type2:
+                    continue  # same-type pairs are allowed to be adjacent
                 distance = ((x2 - x1)**2 + (y2 - y1)**2)**0.5
                 if 0 < distance < required_spacing:
                     violations.append((name1, name2, distance, required_spacing))
@@ -293,29 +385,36 @@ class YAMLPilotValidator:
         return True, None
 
     def _check_routing(self, yaml_data: Dict) -> Tuple[bool, Optional[str]]:
-        """Check that routes exist if multiple components are present."""
+        """Check that routes exist if multiple components are present.
+        
+        Accepts any route name (the sanitizer will normalise to 'optical'
+        before the build step), so we just need at least one route with
+        at least one link.
+        """
         if 'instances' not in yaml_data:
             return True, None
         
         instances = yaml_data['instances']
         num_instances = len(instances)
         
-        # If multiple components, routes should exist
         if num_instances > 1:
             if 'routes' not in yaml_data:
                 return False, f"Missing routes section (required when {num_instances} components are placed)"
             
             routes = yaml_data.get('routes', {})
-            if not isinstance(routes, dict) or 'optical' not in routes:
-                return False, "Missing routes.optical section"
+            if not isinstance(routes, dict) or not routes:
+                return False, "Routes section is empty"
             
-            optical = routes['optical']
-            if not isinstance(optical, dict) or 'links' not in optical:
-                return False, "Missing routes.optical.links section"
+            has_links = False
+            for rname, rdef in routes.items():
+                if isinstance(rdef, dict):
+                    links = rdef.get('links', {})
+                    if isinstance(links, dict) and links:
+                        has_links = True
+                        break
             
-            links = optical.get('links', {})
-            if not links:
-                return False, "Routes section exists but no links defined"
+            if not has_links:
+                return False, "Routes section exists but no links defined in any route"
         
         return True, None
 

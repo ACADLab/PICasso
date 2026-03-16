@@ -1,12 +1,61 @@
-# PICasso - Photonic Circuit Design Automation
+# PICasso – Photonic Circuit Design Automation
 
-**AI-Powered Photonic Integrated Circuit Generation with Validation + Optimization**
+**AI-powered Photonic Integrated Circuit generation with validation and optimization.**
+
+PICasso is a framework for automated photonic integrated circuit (PIC) design using LLMs. It uses a YAML DSL where models produce YAML netlists compatible with GDSFactory's `generic_tech` PDK.
+
+## Install
+
+**From repo (recommended for development):**
+
+```bash
+# With uv (recommended)
+uv pip install -e .
+
+# Or with pip
+pip install -e .
+```
+
+**Optional:** install with full extras (KLayout, SAX plugins, JAX, etc.):
+
+```bash
+uv pip install -e ".[full]"
+# or
+pip install -e ".[full]"
+```
+
+**Requirements:** Python 3.9+. API keys are **not** bundled; set them via environment variables (see below).
+
+## API keys (environment only)
+
+Do **not** commit keys. Set these in your shell or a local `.env` (and add `.env` to `.gitignore`):
+
+```bash
+# For Claude
+export ANTHROPIC_API_KEY="your-anthropic-key"
+
+# For GPT / OpenRouter (OpenRouter preferred for rate limits)
+export OPENROUTER_API="your-openrouter-key"
+# or
+export OPENAI_API_KEY="your-openai-key"
+
+# For Hugging Face models
+export HF_TOKEN="your-hf-token"
+# or
+export HF_API_TOKEN="your-hf-token"
+
+# For DeepSeek
+export DEEPSEEK_API_KEY="your-deepseek-key"
+
+# For Gemini
+export GEMINI_API_KEY="your-gemini-key"
+```
+
+Get tokens: [OpenAI](https://platform.openai.com/api-keys) · [Anthropic](https://console.anthropic.com/) · [OpenRouter](https://openrouter.ai/keys) · [Hugging Face](https://huggingface.co/settings/tokens)
 
 ## Overview
 
-PICasso is a framework for automated photonic integrated circuit (PIC) design using Large Language Models (LLMs). The framework uses a YAML DSL approach where LLMs generate YAML netlists directly compatible with GDSFactory's `generic_tech` PDK.
-
-**Primary Framework**: The main development work is in the `gd_picasso/` directory. See [gd_picasso/README.md](gd_picasso/README.md) for complete documentation.
+**Primary framework:** `gd_picasso/`. See [gd_picasso/README.md](gd_picasso/README.md) for full documentation.
 
 ## 🎯 Key Features
 
@@ -22,19 +71,7 @@ PICasso is a framework for automated photonic integrated circuit (PIC) design us
 
 ## 🚀 Quick Start
 
-### Prerequisites
-
-```bash
-# Install dependencies
-pip install gdsfactory sax pydantic pyyaml
-
-# Set API keys (for LLM access)
-export OPENAI_API_KEY="your-key-here"  # For GPT models
-export ANTHROPIC_API_KEY="your-key-here"  # For Claude models
-export HF_TOKEN="your-token-here"  # For HuggingFace models
-```
-
-### Run Framework Tests
+### Run framework tests
 
 ```bash
 cd gd_picasso
@@ -168,4 +205,33 @@ Improvements welcome! This is an active research project.
 
 ## 📄 License
 
-See LICENSE file for details.
+See [LICENSE](LICENSE) for details.
+
+---
+
+## Pushing this repo to GitHub (public)
+
+From the **PICasso** directory (or repo root if the repo root is PICasso):
+
+```bash
+# 1. Initialize git (if not already)
+git init
+
+# 2. Add remote (replace with your repo URL)
+git remote add origin https://github.com/YOUR_USERNAME/PICasso.git
+
+# 3. Stage and commit
+git add .
+git commit -m "Public PICasso release: YAML DSL framework, no keys or logs"
+
+# 4. Push (create main branch and set upstream)
+git branch -M main
+git push -u origin main
+```
+
+**Before pushing:**
+
+- Ensure no `keys.txt`, `.env`, or `*.log` files are committed (they are in `.gitignore`).
+- If you already committed secrets in the past, rewrite history:  
+  `git filter-branch` or [BFG Repo-Cleaner](https://rtyley.github.io/bfg-repo-cleaner/) to remove them, then force-push.
+- Create the repository on GitHub first (e.g. `github.com/YOUR_USERNAME/PICasso`) and use that URL as `origin`.

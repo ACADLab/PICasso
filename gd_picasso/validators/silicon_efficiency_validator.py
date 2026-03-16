@@ -183,39 +183,23 @@ class SiliconEfficiencyValidator:
     def _calculate_excess_silicon(self, component: gf.Component, refs: List) -> float:
         """Calculate ratio of excess silicon area."""
         try:
-            # Get bounding box of component
             bbox = component.bbox()
             if bbox is None:
                 return 0.0
             
-            # Calculate total area
-            if hasattr(bbox, 'width'):
-                total_area = bbox.width * bbox.height
-            elif hasattr(bbox, 'xmax'):
-                total_area = (bbox.xmax - bbox.xmin) * (bbox.ymax - bbox.ymin)
-            else:
-                return 0.0
-            
+            total_area = self._box_area(bbox)
             if total_area == 0:
                 return 0.0
             
-            # Estimate component area (sum of bounding boxes)
             component_area = 0.0
             for ref in refs:
                 try:
                     ref_bbox = ref.bbox()
                     if ref_bbox:
-                        if hasattr(ref_bbox, 'width'):
-                            area = ref_bbox.width * ref_bbox.height
-                        elif hasattr(ref_bbox, 'xmax'):
-                            area = (ref_bbox.xmax - ref_bbox.xmin) * (ref_bbox.ymax - ref_bbox.ymin)
-                        else:
-                            continue
-                        component_area += area
-                except:
+                        component_area += self._box_area(ref_bbox)
+                except Exception:
                     pass
             
-            # Calculate excess ratio
             if total_area > 0:
                 excess_ratio = max(0.0, 1.0 - (component_area / total_area))
                 return excess_ratio
@@ -224,6 +208,20 @@ class SiliconEfficiencyValidator:
             
         except Exception as e:
             logger.warning(f"Error calculating excess silicon: {e}")
+            return 0.0
+
+    @staticmethod
+    def _box_area(bbox) -> float:
+        """Compute area from a bounding box, handling both property and method accessors."""
+        try:
+            w = bbox.width() if callable(bbox.width) else bbox.width
+            h = bbox.height() if callable(bbox.height) else bbox.height
+            return float(w) * float(h)
+        except (AttributeError, TypeError):
+            pass
+        try:
+            return float(bbox.xmax - bbox.xmin) * float(bbox.ymax - bbox.ymin)
+        except (AttributeError, TypeError):
             return 0.0
 
 

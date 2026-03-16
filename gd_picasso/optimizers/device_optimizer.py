@@ -441,8 +441,11 @@ class DeviceOptimizer:
             if bbox is None:
                 return 0.0, 0.0
 
-            # Get dimensions
-            if hasattr(bbox, 'width'):
+            # Get dimensions (bbox.width/height are methods on klayout.dbcore.Box)
+            if hasattr(bbox, 'width') and callable(bbox.width):
+                width = bbox.width()
+                height = bbox.height()
+            elif hasattr(bbox, 'width'):
                 width = bbox.width
                 height = bbox.height
             elif hasattr(bbox, 'xmax'):
