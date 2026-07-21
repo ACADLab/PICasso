@@ -200,7 +200,7 @@ def load_problems(problems_file: str) -> List[Dict]:
     return problems
 
 
-def create_agent(model_name: str = "gpt-4o") -> Optional[object]:
+def create_agent(model_name: str = "gpt-4o", multi_agent: bool = False) -> Optional[object]:
     """
     Create inference agent for specified model.
 
@@ -209,6 +209,7 @@ def create_agent(model_name: str = "gpt-4o") -> Optional[object]:
 
     Args:
         model_name: Model name ('gpt-4o', 'gpt-4o-mini', 'deepseek-r1', 'kimi2', etc.)
+        multi_agent: If True, wrap agent in a MultiAgentOrchestrator with a CriticAgent.
 
     Returns:
         Agent instance or None
@@ -441,6 +442,62 @@ def create_agent(model_name: str = "gpt-4o") -> Optional[object]:
         logger.error("  - Or use full HuggingFace model ID")
         return None
 
+    # NOTE: code below is unreachable — multi_agent wrapping happens after return above.
+    # Wrapping is done in the caller (run_tests) where agent is created.
+
+
+def wrap_multi_agent(agent, critic_model_name: str = None):
+    """
+    Wrap a generator agent in a MultiAgentOrchestrator with a CriticAgent.
+
+    Args:
+        agent: The generator agent to wrap
+        critic_model_name: Model to use for the critic. Defaults to same model as generator.
+
+    Returns:
+        MultiAgentOrchestrator instance
+    """
+    from gd_picasso.agents.critic_agent import CriticAgent
+    from gd_picasso.agents.orchestrator import MultiAgentOrchestrator
+
+    # Load PDK component specs to inject into the critic
+    try:
+        from gd_picasso.injection.component_spec_loader import ComponentSpecLoader
+        component_loader = ComponentSpecLoader()
+        component_spec_text = component_loader.generate_yaml_dsl_injection(
+            include_examples=False,
+            include_error_patterns=True
+        )
+        logger.info("✅ Component specs loaded for critic agent")
+    except Exception as e:
+        logger.warning(f"Could not load component specs for critic: {e}")
+        component_spec_text = ""
+
+    # Use gpt-4o as the dedicated critic — stronger instruction-following than gpt-4o-mini.
+    # Falls back to None (static-only critic) if the key is missing.
+    critic_llm = None
+    openai_key = os.getenv("OPENAI_API_KEY")
+    if openai_key and OPENAI_AGENT_AVAILABLE:
+        try:
+            critic_llm = OpenAIInferenceAgent(
+                api_key=openai_key,
+                model="gpt-4o"
+            )
+            logger.info("✅ gpt-4o critic agent created")
+        except Exception as e:
+            logger.warning(f"Could not create gpt-4o critic agent: {e} — using static-only critic")
+    else:
+        logger.info("ℹ️  OPENAI_API_KEY not set — critic will use static checks only")
+
+    critic_agent = CriticAgent(critic_llm, component_spec_text=component_spec_text)
+    orchestrator = MultiAgentOrchestrator(
+        generator_agent=agent,
+        critic_agent=critic_agent,
+        max_critic_rounds=2
+    )
+    logger.info("✅ Multi-agent mode enabled: Generator + Critic orchestrator created")
+    return orchestrator
+
 
 def validate_yaml_dsl(yaml_str: str, pilot_validator: YAMLPilotValidator) -> tuple:
     """
@@ -494,6 +551,11 @@ def _try_all_mirror_combos(yaml_str: str) -> tuple:
 
             trial_yaml = _yaml.dump(trial, default_flow_style=False, sort_keys=False, allow_unicode=False)
             try:
+                gf.gpdk.PDK.activate()
+                try:
+                    gf.clear_cache()
+                except Exception:
+                    pass
                 component = gf.read.from_yaml(trial_yaml)
                 logger.info(
                     "Auto-mirror fix succeeded with: %s",
@@ -628,6 +690,12 @@ def build_component_from_yaml(yaml_str: str, sanitize: bool = True) -> tuple:
     if sanitize:
         yaml_str = _sanitize_yaml(yaml_str)
     try:
+        gf.gpdk.PDK.activate()
+        # Clear cell cache to prevent naming conflicts across multiple builds
+        try:
+            gf.clear_cache()
+        except Exception:
+            pass
         component = gf.read.from_yaml(yaml_str)
         return component, None
     except Exception as e:
@@ -1126,7 +1194,7 @@ def run_single_problem(
             # The sanitizer also runs inside build_component_from_yaml as a safety net
             # for picasso mode (belt-and-suspenders); in vanilla mode build_component_from_yaml
             # is patched to skip it too (see below).
-            if phase == "picasso":
+            if phase in ("picasso", "multi_agent"):
                 yaml_output = _sanitize_yaml(yaml_output)
             
             # Step 2: Validate YAML DSL (pilot validation)
@@ -1136,7 +1204,7 @@ def run_single_problem(
                 is_valid, error_msg, error_details = validate_yaml_dsl(yaml_output, pilot_validator)
                 if not is_valid:
                     logger.warning(f"YAML pilot validation failed: {error_msg}")
-                    if phase == "picasso" and attempt < max_attempts - 1:
+                    if phase in ("picasso", "multi_agent") and attempt < max_attempts - 1:
                         # Generate detailed feedback for retry
                         if error_details:
                             error_details['error_message'] = error_msg  # Include error message in details
@@ -1156,11 +1224,11 @@ def run_single_problem(
             # Step 3: Build component from YAML
             # sanitize=False in vanilla so we measure the raw LLM output
             component, build_error = build_component_from_yaml(
-                yaml_output, sanitize=(phase == "picasso")
+                yaml_output, sanitize=(phase in ("picasso", "multi_agent"))
             )
             if component is None:
                 logger.error(f"Failed to build component: {build_error}")
-                if phase == "picasso" and attempt < max_attempts - 1:
+                if phase in ("picasso", "multi_agent") and attempt < max_attempts - 1:
                     continue  # Retry with feedback (picasso only)
                 else:
                     sample_result['errors'].append(f"Component build failed: {build_error}")
@@ -1374,7 +1442,8 @@ def run_test(
     vanilla_only: bool = False,
     picasso_only: bool = False,
     start_problem: Optional[int] = None,
-    start_phase: Optional[str] = None
+    start_phase: Optional[str] = None,
+    multi_agent: bool = False
 ):
     """
     Run full test suite with two-phase testing.
@@ -1411,6 +1480,10 @@ def run_test(
     if agent is None:
         logger.error("Failed to create agent")
         return
+
+    # Wrap in multi-agent orchestrator if requested
+    if multi_agent:
+        agent = wrap_multi_agent(agent)
     
     # Initialize validators and components
     pilot_validator = YAMLPilotValidator()
@@ -1447,7 +1520,12 @@ def run_test(
     
     # Check for existing results to enable automatic continuation
     completed_problems = get_completed_problems(model_name)
-    logger.info(f"📊 Existing results: {len(completed_problems['vanilla'])} vanilla, {len(completed_problems['picasso'])} picasso problems completed")
+    completed_problems.setdefault('multi_agent', set())
+    logger.info(
+        f"📊 Existing results: {len(completed_problems['vanilla'])} vanilla, "
+        f"{len(completed_problems['picasso'])} picasso, "
+        f"{len(completed_problems['multi_agent'])} multi_agent problems completed"
+    )
     
     # Handle resume functionality
     start_idx = 0
@@ -1501,7 +1579,7 @@ def run_test(
         logger.info(f"\nPhase 1 Summary: {sum(r['pass_count'] for r in vanilla_results)}/{len(vanilla_results) * samples_per_problem} passed")
     
     # Phase 2: PICasso Framework (if not vanilla_only)
-    if not vanilla_only and (start_phase is None or start_phase == "picasso"):
+    if not vanilla_only and (start_phase is None or start_phase in ("picasso", "multi_agent")):
         logger.info("\n" + "="*70)
         logger.info("PHASE 2: PICASSO FRAMEWORK")
         logger.info("="*70)
@@ -1544,6 +1622,56 @@ def run_test(
         
         logger.info(f"\nPhase 2 Summary: {sum(r['pass_count'] for r in picasso_results)}/{len(picasso_results) * samples_per_problem} passed")
     
+    # Phase 3: Multi-Agent (Generator + Critic) — runs when --multi-agent or --compare
+    if multi_agent and not vanilla_only:
+        logger.info("\n" + "="*70)
+        logger.info("PHASE 3: MULTI-AGENT (Generator + Critic)")
+        logger.info("="*70)
+
+        # Build the multi-agent orchestrator (fresh — don't reuse picasso agent state)
+        base_agent = create_agent(model_name)
+        multi_agent_runner = wrap_multi_agent(base_agent)
+
+        multi_agent_results = []
+        for problem in problems:
+            problem_id = problem.get('id', '')
+
+            if start_problem is None and problem_id in completed_problems['multi_agent']:
+                logger.info(f"⏭️  Skipping Problem {problem_id} (multi_agent) - already completed")
+                continue
+
+            result = run_single_problem(
+                problem=problem,
+                agent=multi_agent_runner,
+                prompt_template=picasso_prompt_template,
+                pilot_validator=pilot_validator,
+                drc_validator=drc_validator,
+                lvs_validator=lvs_validator,
+                sax_validator=sax_validator,
+                silicon_validator=silicon_validator,
+                port_connection_validator=port_connection_validator,
+                optimizer=optimizer,
+                model_name=model_name,
+                phase="multi_agent",
+                samples_per_problem=samples_per_problem,
+                enable_validation=True,
+                enable_optimization=True
+            )
+            multi_agent_results.append(result)
+            all_results.append(result)
+
+            try:
+                csv_path = save_aggregated_metrics(model_name, [result], append=True)
+                logger.debug(f"Updated metrics CSV after problem {result['problem_id']}")
+            except Exception as e:
+                logger.warning(f"Failed to update metrics CSV: {e}")
+
+        logger.info(
+            f"\nPhase 3 Summary: "
+            f"{sum(r['pass_count'] for r in multi_agent_results)}/"
+            f"{len(multi_agent_results) * samples_per_problem} passed"
+        )
+
     # Final save of aggregated metrics CSV (ensures completeness)
     # Use append=True to preserve existing results from previous runs
     try:
@@ -1572,7 +1700,8 @@ def run_test(
     # Compute overall metrics
     vanilla_results_list = [r for r in all_results if r.get('phase') == 'vanilla']
     picasso_results_list = [r for r in all_results if r.get('phase') == 'picasso']
-    
+    multi_agent_results_list = [r for r in all_results if r.get('phase') == 'multi_agent']
+
     logger.info("\n" + "="*70)
     logger.info("FINAL SUMMARY")
     logger.info("="*70)
@@ -1580,9 +1709,8 @@ def run_test(
     logger.info(f"Total samples: {total_samples}")
     logger.info(f"Total passed: {total_passed}")
     logger.info(f"Pass rate: {pass_rate:.1f}%")
-    
+
     if vanilla_results_list:
-        # Aggregate vanilla metrics
         all_vanilla_samples = []
         for r in vanilla_results_list:
             all_vanilla_samples.extend(r.get('samples', []))
@@ -1591,9 +1719,8 @@ def run_test(
             logger.info(f"\nPhase 1 (Vanilla) Metrics:")
             logger.info(f"  Spec@k_structural: {vanilla_metrics.get('spec_at_k_structural', 0.0):.3f}")
             logger.info(f"  Spec@k_full: {vanilla_metrics.get('spec_at_k_full', 0.0):.3f}")
-    
+
     if picasso_results_list:
-        # Aggregate picasso metrics
         all_picasso_samples = []
         for r in picasso_results_list:
             all_picasso_samples.extend(r.get('samples', []))
@@ -1604,7 +1731,59 @@ def run_test(
             logger.info(f"  Spec@k_full: {picasso_metrics.get('spec_at_k_full', 0.0):.3f}")
             logger.info(f"  Avg OptEff: {picasso_metrics.get('avg_opt_efficiency', 0.0):.3f}")
             logger.info(f"  Robustness Score: {picasso_metrics.get('robustness_score', 0.0):.3f}")
-    
+
+    if multi_agent_results_list:
+        all_multi_agent_samples = []
+        for r in multi_agent_results_list:
+            all_multi_agent_samples.extend(r.get('samples', []))
+        if all_multi_agent_samples:
+            multi_agent_metrics = compute_metrics_for_circuit(all_multi_agent_samples, k=3, phase="picasso")
+            logger.info(f"\nPhase 3 (Multi-Agent) Metrics:")
+            logger.info(f"  Spec@k_structural: {multi_agent_metrics.get('spec_at_k_structural', 0.0):.3f}")
+            logger.info(f"  Spec@k_full: {multi_agent_metrics.get('spec_at_k_full', 0.0):.3f}")
+            logger.info(f"  Avg OptEff: {multi_agent_metrics.get('avg_opt_efficiency', 0.0):.3f}")
+            logger.info(f"  Robustness Score: {multi_agent_metrics.get('robustness_score', 0.0):.3f}")
+
+    # Print comparison table if multiple phases ran
+    phases_run = (
+        (1 if vanilla_results_list else 0) +
+        (1 if picasso_results_list else 0) +
+        (1 if multi_agent_results_list else 0)
+    )
+    if phases_run > 1:
+        logger.info(f"\n{'='*70}")
+        logger.info("COMPARISON TABLE")
+        logger.info(f"{'='*70}")
+        logger.info(f"{'Phase':<20} {'Spec@k_struct':>14} {'Spec@k_full':>12} {'OptEff':>8} {'Robust':>8}")
+        logger.info(f"{'-'*70}")
+        if vanilla_results_list and all_vanilla_samples:
+            m = vanilla_metrics
+            logger.info(
+                f"{'1. Vanilla':<20} "
+                f"{m.get('spec_at_k_structural', 0.0):>14.3f} "
+                f"{m.get('spec_at_k_full', 0.0):>12.3f} "
+                f"{'N/A':>8} {'N/A':>8}"
+            )
+        if picasso_results_list and all_picasso_samples:
+            m = picasso_metrics
+            logger.info(
+                f"{'2. PICasso':<20} "
+                f"{m.get('spec_at_k_structural', 0.0):>14.3f} "
+                f"{m.get('spec_at_k_full', 0.0):>12.3f} "
+                f"{m.get('avg_opt_efficiency', 0.0):>8.3f} "
+                f"{m.get('robustness_score', 0.0):>8.3f}"
+            )
+        if multi_agent_results_list and all_multi_agent_samples:
+            m = multi_agent_metrics
+            logger.info(
+                f"{'3. Multi-Agent':<20} "
+                f"{m.get('spec_at_k_structural', 0.0):>14.3f} "
+                f"{m.get('spec_at_k_full', 0.0):>12.3f} "
+                f"{m.get('avg_opt_efficiency', 0.0):>8.3f} "
+                f"{m.get('robustness_score', 0.0):>8.3f}"
+            )
+        logger.info(f"{'='*70}")
+
     logger.info("="*70)
 
 
@@ -1620,14 +1799,22 @@ if __name__ == '__main__':
     parser.add_argument('--picasso-only', action='store_true', help='Run only Phase 2 (PICasso framework)')
     parser.add_argument('--start-problem', type=int, default=None, help='Resume from this problem number (1-based)')
     parser.add_argument('--start-phase', type=str, default=None, choices=['vanilla', 'picasso'], help='Resume from this phase')
-    
+    parser.add_argument('--multi-agent', action='store_true', help='Enable multi-agent mode (Generator + Critic)')
+    parser.add_argument('--compare', action='store_true', help='Run all 3 phases (vanilla, picasso, multi-agent) and print comparison table')
+
     args = parser.parse_args()
-    
+
     # Validate arguments
     if args.vanilla_only and args.picasso_only:
         logger.error("Cannot specify both --vanilla-only and --picasso-only")
         sys.exit(1)
-    
+
+    # --compare runs all three phases
+    if args.compare:
+        args.vanilla_only = False
+        args.picasso_only = False
+        args.multi_agent = True
+
     run_test(
         problems_file=args.problems,
         model_name=args.model,
@@ -1636,6 +1823,7 @@ if __name__ == '__main__':
         vanilla_only=args.vanilla_only,
         picasso_only=args.picasso_only,
         start_problem=args.start_problem,
-        start_phase=args.start_phase
+        start_phase=args.start_phase,
+        multi_agent=args.multi_agent
     )
 
