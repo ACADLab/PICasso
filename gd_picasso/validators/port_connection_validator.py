@@ -7,6 +7,8 @@ Ensures each port connects to exactly one other port.
 
 import logging
 from typing import Dict, List, Tuple, Optional, Set
+import ast
+import warnings
 import gdsfactory as gf
 from ..utils.port_utils import get_port_items
 
@@ -37,25 +39,155 @@ class PortConnectionValidator:
             "warnings": [],
             "same_port_connections": [],
             "duplicate_connections": [],
+            "unconnected_ports": [],
             "port_connection_map": {},
         }
         
         try:
-            # Get netlist to check connections
-            netlist = component.get_netlist()
+            # Get netlist to check connections. GDSFactory reports dangling
+            # component ports as warnings, so capture them and promote them
+            # into validator findings.
+            try:
+                with warnings.catch_warnings(record=True) as caught_warnings:
+                    warnings.simplefilter("always")
+                    netlist = component.get_netlist()
+            except Exception as netlist_error:
+                try:
+                    yaml_netlist = component.info.get("picasso_yaml_netlist", {}) or {}
+                except Exception:
+                    yaml_netlist = {}
+                if isinstance(yaml_netlist, dict) and yaml_netlist.get("connections"):
+                    caught_warnings = []
+                    netlist = yaml_netlist
+                    report["warnings"].append(
+                        f"Using YAML connectivity because GDSFactory netlist extraction failed: {netlist_error}"
+                    )
+                else:
+                    raise
             
             if not netlist:
                 report["errors"].append("Failed to extract netlist for port connection validation")
                 report["passed"] = False
                 return False, report
+
+            try:
+                yaml_netlist = component.info.get("picasso_yaml_netlist", {}) or {}
+            except Exception:
+                yaml_netlist = {}
+            yaml_connections = yaml_netlist.get("connections", {})
+            yaml_connected_ports = set()
+            if isinstance(yaml_connections, dict):
+                for src, dst in yaml_connections.items():
+                    yaml_connected_ports.add(str(src))
+                    yaml_connected_ports.add(str(dst))
+            yaml_exports = yaml_netlist.get("ports", {})
+            if isinstance(yaml_exports, dict):
+                yaml_connected_ports.update(str(port_ref) for port_ref in yaml_exports.values())
+            yaml_connected_instances = {
+                port_ref.partition(",")[0]
+                for port_ref in yaml_connected_ports
+                if isinstance(port_ref, str) and "," in port_ref
+            }
+
+            yaml_instances = yaml_netlist.get("instances", {})
+            component_by_instance = {}
+            heater_instances = set()
+            if isinstance(yaml_instances, dict):
+                for instance_name, instance_spec in yaml_instances.items():
+                    if isinstance(instance_spec, dict):
+                        component_by_instance[str(instance_name)] = instance_spec.get("component")
+                    if (
+                        isinstance(instance_spec, dict)
+                        and instance_spec.get("component") == "straight_heater_metal"
+                    ):
+                        heater_instances.add(str(instance_name))
+
+            def _is_ignored_unconnected_port(port: str) -> bool:
+                instance_name, _, port_name = port.partition(",")
+                component_name = component_by_instance.get(instance_name)
+                if ",l_e" in port or ",r_e" in port:
+                    return True
+
+                # MZI and waveguide-like parts are two-port optical paths; once
+                # placed in a design, both optical ports must be connected or
+                # exported. This catches truncated signal paths where one side
+                # of a required two-port component is left floating.
+                if component_name in {
+                    "mzi",
+                    "straight",
+                    "bend_euler",
+                    "bend_s",
+                    "bend_circular",
+                    "taper",
+                    "ring_single",
+                }:
+                    return False
+
+                # Heater metal pads are electrical. Optical heater ports are
+                # allowed to float only when the heater is not part of the YAML
+                # optical graph and is being used as a nearby thermal tuner.
+                if instance_name in heater_instances and port_name in {"o1", "o2"}:
+                    return instance_name not in yaml_connected_instances
+
+                # Crossings have two through paths. The horizontal o1-o3 path is
+                # often the modeled optical signal path; if either side is used,
+                # require the other side too. The vertical o2/o4 side may be a
+                # layout-only crossing artifact or an exposed top-level helper.
+                if component_name == "crossing":
+                    if port_name in {"o1", "o3"}:
+                        pair = "o3" if port_name == "o1" else "o1"
+                        return f"{instance_name},{pair}" not in yaml_connected_ports
+                    return True
+
+                # Multi-port splitters/couplers can intentionally leave one arm
+                # unused; still fail completely floating instances elsewhere.
+                if component_name in {"mmi1x2", "mmi2x2", "coupler"} and instance_name in yaml_connected_instances:
+                    return True
+                return False
+
+            for warning in caught_warnings:
+                warning_text = str(warning.message)
+                if "Unconnected ports:" not in warning_text:
+                    report["warnings"].append(warning_text)
+                    continue
+
+                _, _, ports_text = warning_text.partition("Unconnected ports:")
+                try:
+                    unconnected_ports = ast.literal_eval(ports_text.strip())
+                except Exception:
+                    unconnected_ports = [ports_text.strip()]
+
+                # Heater metal pads are electrical terminals, and heater optical
+                # ports are allowed to remain unused when the heater is only a
+                # thermal tuner. Keep non-heater optical ports strict.
+                unconnected_ports = [
+                    str(port)
+                    for port in unconnected_ports
+                    if not _is_ignored_unconnected_port(str(port))
+                    and str(port) not in yaml_connected_ports
+                ]
+
+                if unconnected_ports:
+                    report["unconnected_ports"].extend(unconnected_ports)
+                    preview = ", ".join(unconnected_ports[:10])
+                    if len(unconnected_ports) > 10:
+                        preview += f", ... (+{len(unconnected_ports) - 10} more)"
+                    report["errors"].append(
+                        f"Unconnected component ports found ({len(unconnected_ports)}): {preview}"
+                    )
+                    report["passed"] = False
             
             # Check connections
             connections = netlist.get('connections', {})
+            if not connections and isinstance(yaml_connections, dict):
+                connections = yaml_connections
+
             if not connections:
                 # No connections - might be single component
                 if len(netlist.get('instances', {})) > 1:
-                    report["warnings"].append("Multiple components but no connections found")
-                return True, report
+                    report["errors"].append("Multiple components but no netlist connections found")
+                    report["passed"] = False
+                return report["passed"], report
             
             # Build port connection map
             port_connections = {}  # {port_name: [connected_ports]}
@@ -127,5 +259,3 @@ class PortConnectionValidator:
                     feedback.append("  - Ensure format: 'source,port: target,port' (one-to-one mapping)")
         
         return "\n".join(feedback)
-
-

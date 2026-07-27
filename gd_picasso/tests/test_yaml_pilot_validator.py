@@ -17,9 +17,14 @@ import unittest
 import yaml
 from pathlib import Path
 import sys
+import gdsfactory as gf
 
 # Add parent directory to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
+
+gf.gpdk.PDK.activate()
+
+from gd_picasso.validators.yaml_pilot_validator import YAMLPilotValidator
 
 
 class TestYAMLPilotValidator(unittest.TestCase):
@@ -144,7 +149,23 @@ placements:
         # TODO: Implement test
         self.skipTest("YAML pilot validator not yet implemented")
 
+    def test_dbr_o2_port_is_valid(self):
+        """DBR exposes the physical through port used by YAML netlists."""
+        dbr_yaml = """
+instances:
+  dbr1:
+    component: dbr
+placements:
+  dbr1:
+    x: 0
+    y: 0
+ports:
+  in: dbr1,o1
+  out: dbr1,o2
+"""
+        is_valid, error_msg, _ = YAMLPilotValidator().validate(dbr_yaml)
+        self.assertTrue(is_valid, error_msg)
+
 
 if __name__ == '__main__':
     unittest.main()
-

@@ -17,6 +17,7 @@ logger = logging.getLogger(__name__)
 # Try to import port utilities
 try:
     from ..utils.port_utils import get_port_names, get_port_items
+    from ..utils.gdsfactory_compat import ensure_generic_pdk_active, patch_dbr_ports
 except ImportError:
     # Fallback if port_utils not available
     def get_port_names(ports):
@@ -28,6 +29,12 @@ except ImportError:
         if hasattr(ports, 'items'):
             return ports.items()
         return []
+
+    def patch_dbr_ports():
+        return False
+
+    def ensure_generic_pdk_active():
+        return False
 
 
 class ComponentSpecLoader:
@@ -41,6 +48,8 @@ class ComponentSpecLoader:
             cache_file: Optional path to cache file
         """
         self.cache_file = cache_file or Path(__file__).parent / "component_specs_cache.json"
+        ensure_generic_pdk_active()
+        patch_dbr_ports()
         self.specs_cache = self._load_cache()
 
     def _load_cache(self) -> Dict:
@@ -180,7 +189,9 @@ class ComponentSpecLoader:
         if component_types is None:
             component_types = [
                 'mmi1x2', 'bend_euler', 'straight', 'straight_heater_metal',
-                'coupler', 'ring_single', 'mmi2x2', 'mzi'
+                'coupler', 'ring_single', 'mmi2x2', 'mzi','dbr','spiral',
+                'ge_detector_straight_si_contacts', 'crossing',
+                'polarization_splitter_rotator',
             ]
 
         specs = self.load_multiple_specs(component_types)
@@ -327,4 +338,3 @@ class ComponentSpecLoader:
         """Validate that a port name exists for a component."""
         available_ports = self.get_available_ports(component_type)
         return port_name in available_ports
-
