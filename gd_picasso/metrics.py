@@ -28,8 +28,6 @@ def estimate_pass_at_k(num_samples: int, num_correct: int, k: int) -> float:
     """
     if num_samples < k:
         return float(num_correct > 0)
-    if num_correct >= k:
-        return 1.0
     if num_correct == 0:
         return 0.0
 
@@ -81,15 +79,18 @@ def compute_spec_at_k_full(results: List[Dict], k: int = 3) -> float:
     """
     Compute Spec@k_full: Full specification satisfaction @k.
     
-    For Phase 2 (PICasso framework): Checks structural + functional + optimization correctness.
+    For Phase 2 (PICasso framework): Checks structural + functional correctness.
     
     Full Pass Criteria:
     - ✅ Structural Pass: Component builds, DRC passes
+    - ✅ Port Connectivity Pass: optical ports are not left dangling or multiply reused
     - ✅ Functional Pass: Circuit behavior matches specification (SAX validation)
-    - ✅ Optimization Pass: Optimization completed successfully (if enabled)
+    Optimization is reported separately as OptEff/optimization_done; it is not
+    part of Spec@k_full because some generated circuits are valid but not
+    optimizable by the current device optimizer.
     
     Formula: Spec@k_full = 1 - C(n-c_f, k) / C(n, k)
-    Where c_f = number of samples passing structural AND functional AND optimization validation.
+    Where c_f = number of samples passing structural AND functional validation.
     
     Args:
         results: List of generation results with validation reports
@@ -109,12 +110,20 @@ def compute_spec_at_k_full(results: List[Dict], k: int = 3) -> float:
         
         # Functional pass: SAX validation passed
         functional_pass = r.get('functional_pass', False)
+
+        # Port connectivity pass: required by the validation harness when available.
+        port_connections_valid = r.get('port_connections_valid', True)
+
+        # Silicon efficiency pass: catches designs that are connected but leave
+        # excessive unused layout area/components according to the harness.
+        silicon_efficient = r.get('silicon_efficient', True)
         
-        # Optimization pass: optimization completed (if enabled)
-        # If optimization is not enabled, this is considered passed
-        optimization_done = r.get('optimization_done', True)  # Default True if optimization not enabled
-        
-        full_successes.append(structural_pass and functional_pass and optimization_done)
+        full_successes.append(
+            structural_pass
+            and silicon_efficient
+            and port_connections_valid
+            and functional_pass
+        )
     
     num_correct = sum(full_successes)
     num_samples = len(results)
@@ -330,7 +339,9 @@ def compute_metrics_for_circuit(
     # Count full passes (for Spec@k_full)
     num_full_pass = sum(1 for r in results
                        if (r.get('component_built', False) and r.get('drc_passed', True) and
-                           r.get('functional_pass', False) and r.get('optimization_done', True)))
+                           r.get('silicon_efficient', True) and
+                           r.get('port_connections_valid', True) and
+                           r.get('functional_pass', False)))
     
     return {
         'pass_at_k': float(pass_at_k),
@@ -378,4 +389,3 @@ def compute_comparison_metrics(
             'robustness_score': framework_metrics['robustness_score'] - raw_metrics['robustness_score']
         }
     }
-

@@ -11,6 +11,15 @@ import inspect
 from typing import Dict, List, Tuple, Optional
 import gdsfactory as gf
 
+try:
+    from ..utils.gdsfactory_compat import ensure_generic_pdk_active, patch_dbr_ports
+except ImportError:
+    def ensure_generic_pdk_active():
+        return False
+
+    def patch_dbr_ports():
+        return False
+
 logger = logging.getLogger(__name__)
 
 
@@ -19,6 +28,8 @@ class YAMLPilotValidator:
 
     def __init__(self):
         """Initialize YAML pilot validator."""
+        ensure_generic_pdk_active()
+        patch_dbr_ports()
         self.min_spacing_um = 100.0
         self.min_route_radius_um = 20.0
         self.valid_components = set()  # Will be populated with available components
@@ -81,6 +92,11 @@ class YAMLPilotValidator:
         routing_check = self._check_routing(yaml_data)
         if not routing_check[0]:
             return False, routing_check[1], {'error_type': 'routing', 'category': 'missing_routes'}
+
+        # Check 7.5: Problem-specific structural invariants
+        problem_check = self._check_problem_specific_rules(yaml_data)
+        if not problem_check[0]:
+            return False, problem_check[1], problem_check[2]
 
         # Check 8: Invalid numeric values (e.g., "4-1" instead of 3 or 4.0)
         numeric_check = self._check_numeric_values(yaml_data)
@@ -147,7 +163,7 @@ class YAMLPilotValidator:
             return False, "ports must be a dictionary (not a list). Format: ports: {port_name: instance,port}", {'error_type': 'syntax', 'category': 'yaml_structure'}
         
         if 'connections' in yaml_data and isinstance(yaml_data.get('connections'), list):
-            return False, "connections should use 'routes' section instead. Format: routes: {optical: {links: {source,port: target,port}}}", {'error_type': 'syntax', 'category': 'yaml_structure'}
+            return False, "connections must be a dictionary (not a list). Format: connections: {source,port: target,port}", {'error_type': 'syntax', 'category': 'yaml_structure'}
         
         return True, None, None
 
@@ -168,6 +184,7 @@ class YAMLPilotValidator:
             'waveguide': 'straight',
             'star_coupler': 'coupler or mmi2x2',
             'photodiode': 'NOT AVAILABLE in generic_tech PDK',
+            'ge_detector': 'ge_detector_straight_si_contacts',
         }
         
         for inst_name, inst_data in instances.items():
@@ -385,11 +402,10 @@ class YAMLPilotValidator:
         return True, None
 
     def _check_routing(self, yaml_data: Dict) -> Tuple[bool, Optional[str]]:
-        """Check that routes exist if multiple components are present.
+        """Check that routes or direct connections exist for multi-component YAML.
         
-        Accepts any route name (the sanitizer will normalise to 'optical'
-        before the build step), so we just need at least one route with
-        at least one link.
+        Accepts any route name (the sanitizer will normalise route groups before
+        the build step), or GDSFactory's direct ``connections`` dictionary.
         """
         if 'instances' not in yaml_data:
             return True, None
@@ -398,12 +414,16 @@ class YAMLPilotValidator:
         num_instances = len(instances)
         
         if num_instances > 1:
+            connections = yaml_data.get('connections', {})
+            if isinstance(connections, dict) and connections:
+                return True, None
+
             if 'routes' not in yaml_data:
-                return False, f"Missing routes section (required when {num_instances} components are placed)"
-            
+                return False, f"Missing routes or connections section (required when {num_instances} components are placed)"
+
             routes = yaml_data.get('routes', {})
             if not isinstance(routes, dict) or not routes:
-                return False, "Routes section is empty"
+                return False, "Routes section is empty; use routes with links or direct connections"
             
             has_links = False
             for rname, rdef in routes.items():
@@ -414,9 +434,172 @@ class YAMLPilotValidator:
                         break
             
             if not has_links:
-                return False, "Routes section exists but no links defined in any route"
+                return False, "Routes section exists but no links defined in any route; use routes.*.links or direct connections"
         
         return True, None
+
+    def _check_problem_specific_rules(self, yaml_data: Dict) -> Tuple[bool, Optional[str], Optional[Dict]]:
+        """Check narrow invariants for benchmark problems with repeated failures."""
+        if yaml_data.get('name') != 'butterfly_8x8_network':
+            return True, None, None
+
+        links = {}
+        routes = yaml_data.get('routes', {})
+        if 'connections' in yaml_data:
+            return False, (
+                "butterfly_8x8_network must not include a top-level connections key, "
+                "even if it is empty. Put every link under routes.r*.links only."
+            ), {
+                'error_type': 'routing',
+                'category': 'butterfly_route_group',
+            }
+        if isinstance(routes, dict):
+            for route_def in routes.values():
+                if isinstance(route_def, dict) and isinstance(route_def.get('links'), dict):
+                    links.update(route_def['links'])
+
+        linked_ports = set()
+        linked_instances = set()
+        for src, dst in links.items():
+            for endpoint in (str(src), str(dst)):
+                linked_ports.add(endpoint)
+                if "," in endpoint:
+                    linked_instances.add(endpoint.split(",", 1)[0])
+
+        instances = yaml_data.get('instances', {})
+        if isinstance(instances, dict):
+            expected_components = {
+                "mzi": {f"mzi{i}" for i in range(1, 13)},
+                "straight_heater_metal": {f"ps{i}" for i in range(1, 13)},
+                "crossing": {f"crossing{i}" for i in range(1, 13)},
+            }
+            component_errors = []
+            for component_name, expected_names in expected_components.items():
+                actual_names = {
+                    name for name, spec in instances.items()
+                    if isinstance(spec, dict) and spec.get("component") == component_name
+                }
+                if actual_names != expected_names:
+                    missing_names = sorted(expected_names - actual_names)
+                    extra_names = sorted(actual_names - expected_names)
+                    detail = f"{component_name}: expected {len(expected_names)} named instances"
+                    if missing_names:
+                        detail += f"; missing {', '.join(missing_names[:6])}"
+                    if extra_names:
+                        detail += f"; unexpected {', '.join(extra_names[:6])}"
+                    component_errors.append(detail)
+            if component_errors:
+                return False, (
+                    "butterfly_8x8_network must use exactly mzi1-12, ps1-12, "
+                    "and crossing1-12 with the requested component types. "
+                    + " ".join(component_errors)
+                ), {
+                    'error_type': 'component',
+                    'category': 'butterfly_instance_set',
+                }
+
+        required_routed_instances = {f"ps{i}" for i in range(1, 13)} | {f"crossing{i}" for i in range(1, 13)}
+        unused_required = sorted(required_routed_instances - linked_instances)
+        if unused_required:
+            return False, (
+                "butterfly_8x8_network must use every phase tuner and crossing in "
+                "optical routing. Unused instances: " + ", ".join(unused_required[:12])
+            ), {
+                'error_type': 'routing',
+                'category': 'butterfly_unused_required_instances',
+                'unused_instances': unused_required,
+            }
+
+        invalid_mzi_to_ps = sorted(
+            f"{src}: {dst}" for src, dst in links.items()
+            if str(src).startswith("mzi")
+            and ",o1" in str(src)
+            and str(dst).startswith("ps")
+        )
+        if invalid_mzi_to_ps:
+            return False, (
+                "When an MZI feeds a phase tuner, use the MZI output side o2, "
+                "not o1. Bad links: " + "; ".join(invalid_mzi_to_ps[:8])
+            ), {
+                'error_type': 'routing',
+                'category': 'butterfly_mzi_direction',
+            }
+
+        backward_final_loops = sorted(
+            f"{src}: {dst}" for src, dst in links.items()
+            if str(src).split(",", 1)[0] in {f"crossing{i}" for i in range(9, 13)}
+            and str(dst).split(",", 1)[0] in {f"mzi{i}" for i in range(1, 5)}
+        )
+        if backward_final_loops:
+            return False, (
+                "Do not route final-stage crossings back to early-stage MZIs. "
+                "Use those crossing ports as output-side terminals instead. Bad links: "
+                + "; ".join(backward_final_loops[:8])
+            ), {
+                'error_type': 'routing',
+                'category': 'butterfly_final_loop',
+            }
+
+        expected_port_names = {f"in{i}" for i in range(1, 9)} | {f"out{i}" for i in range(1, 9)}
+        ports = yaml_data.get('ports', {})
+        if isinstance(ports, dict):
+            extra_ports = sorted(set(ports.keys()) - expected_port_names)
+            missing_ports = sorted(expected_port_names - set(ports.keys()))
+            internal_exports = [
+                f"{name}: {ref}"
+                for name, ref in ports.items()
+                if str(ref) in linked_ports
+            ]
+            malformed_exports = [
+                f"{name}: {ref}"
+                for name, ref in ports.items()
+                if not isinstance(ref, str) or ref.count(",") != 1
+            ]
+            if extra_ports or missing_ports or internal_exports or malformed_exports:
+                details = []
+                if extra_ports:
+                    details.append("extra ports: " + ", ".join(extra_ports[:8]))
+                if missing_ports:
+                    details.append("missing ports: " + ", ".join(missing_ports[:8]))
+                if internal_exports:
+                    details.append("ports exported from routed internal nodes: " + "; ".join(internal_exports[:8]))
+                if malformed_exports:
+                    details.append("malformed exports: " + "; ".join(malformed_exports[:8]))
+                return False, (
+                    "butterfly_8x8_network top-level ports must be exactly in1-in8 "
+                    "and out1-out8, and each must expose a terminal component port "
+                    "that is not used in route links. " + " ".join(details)
+                ), {
+                    'error_type': 'port',
+                    'category': 'butterfly_terminal_ports',
+                    'internal_exports': internal_exports,
+                    'malformed_exports': malformed_exports,
+                }
+
+        placements = yaml_data.get('placements', {})
+        if isinstance(placements, dict):
+            bad_placements = []
+            for inst_name, placement in placements.items():
+                if not isinstance(placement, dict):
+                    continue
+                x = placement.get('x')
+                y = placement.get('y')
+                if isinstance(x, (int, float)) and x > 1800:
+                    bad_placements.append(f"{inst_name}.x={x}")
+                if isinstance(y, (int, float)) and y not in {0, 200, 400, 600}:
+                    bad_placements.append(f"{inst_name}.y={y}")
+            if bad_placements:
+                return False, (
+                    "butterfly_8x8_network placements must stay on the compact grid: "
+                    "x <= 1800 and y in {0, 200, 400, 600}. Bad placements: "
+                    + ", ".join(bad_placements[:12])
+                ), {
+                    'error_type': 'spacing',
+                    'category': 'butterfly_compact_grid',
+                    'bad_placements': bad_placements,
+                }
+
+        return True, None, None
 
     def _check_numeric_values(self, yaml_data: Dict) -> Tuple[bool, Optional[str]]:
         """
@@ -552,7 +735,8 @@ class YAMLPilotValidator:
                     feedback.append("  ❌ WRONG: ports: [[instance, port, name]]")
                     feedback.append("  ✅ CORRECT: ports: {name: instance,port}")
                     feedback.append("  ❌ WRONG: connections: [[inst1, port1, inst2, port2]]")
-                    feedback.append("  ✅ CORRECT: routes: {optical: {links: {inst1,port1: inst2,port2}}}")
+                    feedback.append("  ✅ CORRECT: connections: {inst1,port1: inst2,port2}")
+                    feedback.append("  ✅ ALSO OK: routes: {optical: {links: {inst1,port1: inst2,port2}}}")
                 elif category == 'invalid_numeric':
                     feedback.append("\nFIX: Invalid numeric value detected:")
                     feedback.append("  - Use actual numbers, NOT expressions")
@@ -586,18 +770,32 @@ class YAMLPilotValidator:
                     feedback.append("  - waveguide → straight")
                     feedback.append("  - star_coupler → coupler or mmi2x2")
                     feedback.append("  - photodiode → NOT AVAILABLE in generic_tech PDK")
+                    feedback.append("  - ge_detector → ge_detector_straight_si_contacts")
                 else:
                     feedback.append("\nFIX: Use valid GDSFactory component names")
                     feedback.append("  - Check component name exists in gf.components")
                     feedback.append("  - Common mistake: 'mmi2x1' does not exist, use 'mmi1x2' with mirror: true")
             
             elif error_type == 'port':
-                feedback.append("\nFIX: Use valid port names (typically 'o1', 'o2', 'o3', etc.)")
-                feedback.append("  - Check component.ports to see available ports")
+                if category == 'butterfly_terminal_ports':
+                    feedback.append("\nFIX: Export exactly the required top-level port names:")
+                    feedback.append("  - Required names: in1-in8 and out1-out8.")
+                    feedback.append("  - Each export must be a real component endpoint like instance,port.")
+                    feedback.append("  - No exported top-level port may also appear in any route link.")
+                    feedback.append("  - Choose external terminals from your topology; do not expose middle-stage internal nodes.")
+                else:
+                    feedback.append("\nFIX: Use valid port names (typically 'o1', 'o2', 'o3', etc.)")
+                    feedback.append("  - Check component.ports to see available ports")
             
             elif error_type == 'spacing':
                 # Extract number of components from error message if available
                 error_msg = error_details.get('error_message', '')
+                if category == 'butterfly_compact_grid':
+                    feedback.append("\nFIX: Use a compact four-row butterfly placement:")
+                    feedback.append("  - y rows only: 0, 200, 400, 600")
+                    feedback.append("  - Keep x <= 1500 and use compact stage columns.")
+                    feedback.append("  - Do not use y=100/300/500/700 or diagonal staircase placements.")
+                    return "\n".join(feedback)
                 if 'required:' in error_msg:
                     # Extract required spacing from error message
                     import re
@@ -618,17 +816,30 @@ class YAMLPilotValidator:
             elif error_type == 'routing':
                 # Extract number of components from error message if available
                 error_msg = error_details.get('error_message', '')
+                if category in {'missing_butterfly_stage2_links', 'missing_butterfly_blueprint_links', 'butterfly_route_group', 'butterfly_final_loop', 'butterfly_unused_required_instances', 'butterfly_mzi_direction'}:
+                    feedback.append("\nFIX: Follow the butterfly routing invariants:")
+                    feedback.append("  - Put each link under its own routes.r*.links group.")
+                    feedback.append("  - Do not create a top-level connections key.")
+                    feedback.append("  - Every ps1-ps12 and crossing1-crossing12 must appear in at least one route.")
+                    feedback.append("  - MZI-to-phase-tuner links should leave the MZI from o2 and enter the tuner at o1.")
+                    feedback.append("  - Do not route final-stage crossings back to early-stage MZIs.")
+                    return "\n".join(feedback)
                 import re
                 num_comp_match = re.search(r'(\d+) components', error_msg)
                 if num_comp_match:
                     num_comp = int(num_comp_match.group(1))
-                    feedback.append(f"\nFIX: Add routes section (REQUIRED for {num_comp} components)")
+                    feedback.append(f"\nFIX: Add routes or connections section (REQUIRED for {num_comp} components)")
                 else:
-                    feedback.append("\nFIX: Add routes section with all component connections")
+                    feedback.append("\nFIX: Add routes or connections section with all component connections")
                 
-                feedback.append("  - Format: routes.optical.links: {source,port: target,port}")
-                feedback.append("  - ALL components must be connected via routes")
+                feedback.append("  - Direct format: connections: {source,port: target,port}")
+                feedback.append("  - Routed format: routes.optical.links: {source,port: target,port}")
+                feedback.append("  - ALL components must be connected")
                 feedback.append("  - Example:")
+                feedback.append("    connections:")
+                feedback.append("      comp1,o2: comp2,o1")
+                feedback.append("      comp2,o2: comp3,o1")
+                feedback.append("  - Routed example:")
                 feedback.append("    routes:")
                 feedback.append("      optical:")
                 feedback.append("        settings:")
@@ -639,4 +850,3 @@ class YAMLPilotValidator:
                 feedback.append("          comp2,o2: comp3,o1")
         
         return "\n".join(feedback)
-

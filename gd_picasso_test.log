@@ -81527,3 +81527,226 @@ Phase 2 (PICasso) Metrics:
 2026-03-13 02:01:01,163 - __main__ - INFO -   Avg OptEff: 0.000
 2026-03-13 02:01:01,164 - __main__ - INFO -   Robustness Score: 0.500
 2026-03-13 02:01:01,164 - __main__ - INFO - ======================================================================
+2026-06-30 17:04:12,448 - gd_picasso.validators.drc_validator - INFO - DRC Validation: PASS (0 violations)
+2026-07-01 16:06:43,532 - gd_picasso.validators.drc_validator - INFO - DRC Validation: FAIL (75 violations)
+2026-07-01 16:06:44,498 - gd_picasso.validators.drc_validator - INFO - DRC Validation: FAIL (75 violations)
+2026-07-01 16:06:45,521 - gd_picasso.validators.drc_validator - INFO - DRC Validation: FAIL (75 violations)
+2026-07-01 16:08:30,024 - gd_picasso.validators.drc_validator - INFO - DRC Validation: FAIL (32 violations)
+2026-07-01 16:08:31,980 - gd_picasso.validators.sax_validator - WARNING - SAX compilation failed: SAX circuit compilation failed: Missing models. The following models are still missing to build the circuit:
+{
+    "Missing Models": [
+        "spiral"
+    ],
+    "Given Models": [
+        "straight",
+        "bend_euler",
+        "mmi1x2",
+        "mmi",
+        "mmi2x2",
+        "coupler",
+        "ring_single",
+        "dbr",
+        "straight_heater_metal",
+        "straight_heater_metal_undercut",
+        "phase_shifter",
+        "heater"
+    ],
+    "Required Models": [
+        "bend_euler",
+        "mmi1x2",
+        "spiral",
+        "straight"
+    ]
+} (missing SAX models for components)
+2026-07-01 16:08:31,981 - gd_picasso.validators.sax_validator - INFO - SAX Validation: FAIL (compilation: False, routing: True)
+2026-07-01 16:09:23,395 - gd_picasso.validators.drc_validator - INFO - DRC Validation: FAIL (32 violations)
+2026-07-01 16:09:23,621 - gd_picasso.validators.drc_validator - ERROR - DRC validation failed with exception: The following cell name(s) are used for more than one cell - can't write this layout:
+  mmi1x2_gdsfactorypcomponentspmmispmmi1x2_WNone_WT1_LT10_1f097353 in Cell.write
+2026-07-01 16:09:23,741 - gd_picasso.validators.drc_validator - ERROR - DRC validation failed with exception: The following cell name(s) are used for more than one cell - can't write this layout:
+  mmi1x2_gdsfactorypcomponentspmmispmmi1x2_WNone_WT1_LT10_1f097353 in Cell.write
+2026-07-01 16:09:23,869 - gd_picasso.validators.drc_validator - ERROR - DRC validation failed with exception: The following cell name(s) are used for more than one cell - can't write this layout:
+  mmi1x2_gdsfactorypcomponentspmmispmmi1x2_WNone_WT1_LT10_1f097353 in Cell.write
+2026-07-01 16:09:24,000 - gd_picasso.validators.drc_validator - ERROR - DRC validation failed with exception: The following cell name(s) are used for more than one cell - can't write this layout:
+  mmi1x2_gdsfactorypcomponentspmmispmmi1x2_WNone_WT1_LT10_1f097353 in Cell.write
+2026-07-01 16:09:24,975 - gd_picasso.validators.drc_validator - INFO - DRC Validation: FAIL (32 violations)
+2026-07-01 16:09:25,866 - gd_picasso.validators.drc_validator - INFO - DRC Validation: FAIL (48 violations)
+2026-07-01 16:09:26,839 - gd_picasso.validators.drc_validator - INFO - DRC Validation: FAIL (75 violations)
+2026-07-01 16:09:27,756 - gd_picasso.validators.drc_validator - INFO - DRC Validation: FAIL (123 violations)
+2026-07-01 16:09:28,661 - gd_picasso.validators.drc_validator - INFO - DRC Validation: FAIL (32 violations)
+2026-07-01 16:09:29,614 - gd_picasso.validators.drc_validator - INFO - DRC Validation: FAIL (32 violations)
+2026-07-01 16:09:30,517 - gd_picasso.validators.drc_validator - INFO - DRC Validation: FAIL (32 violations)
+2026-07-01 16:09:31,467 - gd_picasso.validators.drc_validator - INFO - DRC Validation: FAIL (32 violations)
+2026-07-01 16:09:32,517 - gd_picasso.validators.drc_validator - INFO - DRC Validation: FAIL (32 violations)
+2026-07-01 16:09:33,503 - gd_picasso.validators.drc_validator - INFO - DRC Validation: FAIL (32 violations)
+2026-07-01 16:09:34,444 - gd_picasso.validators.drc_validator - INFO - DRC Validation: FAIL (32 violations)
+2026-07-01 16:09:35,351 - gd_picasso.validators.drc_validator - INFO - DRC Validation: FAIL (33 violations)
+2026-07-01 16:09:36,352 - gd_picasso.validators.drc_validator - INFO - DRC Validation: FAIL (40 violations)
+2026-07-01 16:09:36,477 - gd_picasso.validators.drc_validator - ERROR - DRC validation failed with exception: The following cell name(s) are used for more than one cell - can't write this layout:
+  mmi1x2_gdsfactorypcomponentspmmispmmi1x2_WNone_WT1_LT10_1f097353 in Cell.write
+2026-07-01 16:09:36,725 - gd_picasso.validators.drc_validator - ERROR - DRC validation failed with exception: The following cell name(s) are used for more than one cell - can't write this layout:
+  mmi1x2_gdsfactorypcomponentspmmispmmi1x2_WNone_WT1_LT10_1f097353 in Cell.write
+2026-07-01 16:10:18,209 - gd_picasso.validators.drc_validator - INFO - DRC Validation: FAIL (75 violations)
+2026-07-01 16:10:19,982 - jax._src.xla_bridge - INFO - Unable to initialize backend 'tpu': INTERNAL: Failed to open libtpu.so: libtpu.so: cannot open shared object file: No such file or directory
+2026-07-01 16:10:20,839 - gd_picasso.validators.sax_validator - INFO - SAX Validation: PASS (compilation: True, routing: True)
+2026-07-01 16:11:56,409 - gd_picasso.validators.drc_validator - INFO - DRC Validation: FAIL (75 violations)
+2026-07-01 16:13:05,909 - gd_picasso.validators.drc_validator - ERROR - DRC validation failed with exception: The following cell name(s) are used for more than one cell - can't write this layout:
+  mmi1x2_gdsfactorypcomponentspmmispmmi1x2_WNone_WT1_LT10_1f097353 in Cell.write
+2026-07-01 16:13:06,042 - gd_picasso.validators.drc_validator - ERROR - DRC validation failed with exception: The following cell name(s) are used for more than one cell - can't write this layout:
+  mmi1x2_gdsfactorypcomponentspmmispmmi1x2_WNone_WT1_LT10_1f097353 in Cell.write
+2026-07-01 16:13:06,174 - gd_picasso.validators.drc_validator - ERROR - DRC validation failed with exception: The following cell name(s) are used for more than one cell - can't write this layout:
+  mmi1x2_gdsfactorypcomponentspmmispmmi1x2_WNone_WT1_LT10_1f097353 in Cell.write
+2026-07-01 16:13:06,302 - gd_picasso.validators.drc_validator - ERROR - DRC validation failed with exception: The following cell name(s) are used for more than one cell - can't write this layout:
+  mmi1x2_gdsfactorypcomponentspmmispmmi1x2_WNone_WT1_LT10_1f097353 in Cell.write
+2026-07-01 16:13:48,063 - gd_picasso.validators.drc_validator - INFO - DRC Validation: PASS (0 violations)
+2026-07-01 16:13:49,062 - jax._src.xla_bridge - INFO - Unable to initialize backend 'tpu': INTERNAL: Failed to open libtpu.so: libtpu.so: cannot open shared object file: No such file or directory
+2026-07-01 16:13:49,738 - gd_picasso.validators.sax_validator - INFO - SAX Validation: PASS (compilation: True, routing: True)
+2026-07-01 16:15:09,358 - gd_picasso.validators.drc_validator - INFO - DRC Validation: FAIL (32 violations)
+2026-07-01 16:15:10,634 - jax._src.xla_bridge - INFO - Unable to initialize backend 'tpu': INTERNAL: Failed to open libtpu.so: libtpu.so: cannot open shared object file: No such file or directory
+2026-07-01 16:15:11,585 - gd_picasso.validators.sax_validator - INFO - SAX Validation: PASS (compilation: True, routing: True)
+2026-07-01 16:16:33,920 - gd_picasso.validators.drc_validator - INFO - DRC Validation: FAIL (21 violations)
+2026-07-01 16:16:34,981 - jax._src.xla_bridge - INFO - Unable to initialize backend 'tpu': INTERNAL: Failed to open libtpu.so: libtpu.so: cannot open shared object file: No such file or directory
+2026-07-01 16:16:35,731 - gd_picasso.validators.sax_validator - INFO - SAX Validation: PASS (compilation: True, routing: True)
+2026-07-01 16:16:35,965 - gd_picasso.validators.drc_validator - ERROR - DRC validation failed with exception: The following cell name(s) are used for more than one cell - can't write this layout:
+  mmi1x2_gdsfactorypcomponentspmmispmmi1x2_WNone_WT1_LT10_1f097353 in Cell.write
+2026-07-01 16:16:35,971 - gd_picasso.validators.sax_validator - INFO - SAX Validation: FAIL (compilation: False, routing: True)
+2026-07-01 16:18:07,178 - gd_picasso.validators.drc_validator - INFO - DRC Validation: FAIL (7 violations)
+2026-07-01 16:18:08,201 - jax._src.xla_bridge - INFO - Unable to initialize backend 'tpu': INTERNAL: Failed to open libtpu.so: libtpu.so: cannot open shared object file: No such file or directory
+2026-07-01 16:18:08,989 - gd_picasso.validators.sax_validator - INFO - SAX Validation: PASS (compilation: True, routing: True)
+2026-07-01 16:18:46,088 - gd_picasso.validators.drc_validator - INFO - DRC Validation: FAIL (7 violations)
+2026-07-01 16:18:47,100 - jax._src.xla_bridge - INFO - Unable to initialize backend 'tpu': INTERNAL: Failed to open libtpu.so: libtpu.so: cannot open shared object file: No such file or directory
+2026-07-01 16:18:47,842 - gd_picasso.validators.sax_validator - INFO - SAX Validation: PASS (compilation: True, routing: True)
+2026-07-01 16:18:48,837 - gd_picasso.validators.drc_validator - INFO - DRC Validation: FAIL (30 violations)
+2026-07-01 16:18:49,253 - gd_picasso.validators.sax_validator - INFO - SAX Validation: PASS (compilation: True, routing: True)
+2026-07-02 16:22:51,256 - gd_picasso.validators.drc_validator - INFO - DRC Validation: PASS (0 violations, 56 waived)
+2026-07-05 21:03:04,254 - gd_picasso.validators.drc_validator - INFO - DRC Validation: FAIL (38 violations)
+2026-07-05 21:03:25,596 - gd_picasso.validators.drc_validator - INFO - DRC Validation: FAIL (38 violations)
+2026-07-05 21:04:19,255 - gd_picasso.validators.drc_validator - INFO - DRC Validation: FAIL (34 violations)
+2026-07-05 21:04:19,248 - gd_picasso.validators.drc_validator - INFO - DRC Validation: FAIL (34 violations)
+2026-07-05 21:04:21,720 - gd_picasso.validators.drc_validator - INFO - DRC Validation: FAIL (34 violations)
+2026-07-05 21:04:24,065 - gd_picasso.validators.drc_validator - INFO - DRC Validation: FAIL (34 violations)
+2026-07-05 21:05:34,768 - gd_picasso.validators.drc_validator - INFO - DRC Validation: FAIL (114 violations)
+2026-07-05 21:05:58,301 - gd_picasso.validators.drc_validator - INFO - DRC Validation: FAIL (114 violations)
+2026-07-05 21:06:28,016 - gd_picasso.validators.drc_validator - INFO - DRC Validation: FAIL (114 violations)
+2026-07-05 21:06:29,435 - gd_picasso.validators.drc_validator - INFO - DRC Validation: FAIL (114 violations)
+2026-07-05 21:06:30,641 - gd_picasso.validators.drc_validator - INFO - DRC Validation: FAIL (114 violations)
+2026-07-05 21:06:31,928 - gd_picasso.validators.drc_validator - INFO - DRC Validation: FAIL (114 violations)
+2026-07-05 21:06:33,246 - gd_picasso.validators.drc_validator - INFO - DRC Validation: FAIL (114 violations)
+2026-07-05 21:06:32,092 - gd_picasso.validators.drc_validator - INFO - DRC Validation: FAIL (176 violations)
+2026-07-05 21:06:57,517 - gd_picasso.validators.drc_validator - INFO - DRC Validation: FAIL (118 violations)
+2026-07-05 21:06:58,852 - gd_picasso.validators.drc_validator - INFO - DRC Validation: FAIL (118 violations)
+2026-07-05 21:07:00,126 - gd_picasso.validators.drc_validator - INFO - DRC Validation: FAIL (114 violations)
+2026-07-05 21:07:01,405 - gd_picasso.validators.drc_validator - INFO - DRC Validation: FAIL (236 violations)
+2026-07-05 21:07:02,804 - gd_picasso.validators.drc_validator - INFO - DRC Validation: FAIL (367 violations)
+2026-07-05 21:07:01,988 - gd_picasso.validators.drc_validator - INFO - DRC Validation: FAIL (791 violations)
+2026-07-05 21:07:27,441 - gd_picasso.validators.drc_validator - INFO - DRC Validation: PASS (0 violations)
+2026-07-05 21:08:25,703 - gd_picasso.validators.drc_validator - INFO - DRC Validation: PASS (0 violations)
+2026-07-05 21:09:03,807 - gd_picasso.validators.drc_validator - INFO - DRC Validation: PASS (0 violations)
+2026-07-10 14:21:20,829 - jax._src.xla_bridge - INFO - Unable to initialize backend 'tpu': INTERNAL: Failed to open libtpu.so: libtpu.so: cannot open shared object file: No such file or directory
+2026-07-10 14:21:22,434 - gd_picasso.validators.sax_validator - INFO - SAX Validation: PASS (compilation: True, routing: True)
+2026-07-10 14:22:10,858 - gd_picasso.validators.sax_validator - INFO - SAX Validation: FAIL (compilation: False, routing: False)
+2026-07-10 14:22:44,730 - gd_picasso.validators.sax_validator - INFO - SAX Validation: FAIL (compilation: False, routing: False)
+2026-07-10 15:04:35,830 - gd_picasso.validators.sax_validator - INFO - SAX Validation: FAIL (compilation: False, routing: True)
+2026-07-10 15:05:19,166 - jax._src.xla_bridge - INFO - Unable to initialize backend 'tpu': INTERNAL: Failed to open libtpu.so: libtpu.so: cannot open shared object file: No such file or directory
+2026-07-10 15:05:20,415 - gd_picasso.validators.sax_validator - INFO - SAX Validation: PASS (compilation: True, routing: True)
+2026-07-19 01:21:51,633 - gd_picasso.validators.sax_validator - WARNING - SAX compilation failed: SAX circuit compilation failed: Missing models. The following models are still missing to build the circuit:
+{
+    "Missing Models": [
+        "mzi"
+    ],
+    "Given Models": [
+        "_ideal_probe",
+        "straight",
+        "bend_euler",
+        "mmi1x2",
+        "mmi",
+        "mmi2x2",
+        "coupler",
+        "ring_single",
+        "dbr",
+        "spiral",
+        "crossing",
+        "ge_detector_straight_si_contacts",
+        "straight_heater_metal",
+        "straight_heater_metal_undercut",
+        "phase_shifter",
+        "heater"
+    ],
+    "Required Models": [
+        "mzi",
+        "straight_heater_metal",
+        "crossing",
+        "_ideal_probe"
+    ]
+} (missing SAX models for components)
+2026-07-19 01:21:51,637 - gd_picasso.validators.sax_validator - INFO - SAX Validation: FAIL (compilation: False, routing: True)
+2026-07-19 01:22:34,625 - jax._src.xla_bridge - INFO - Unable to initialize backend 'tpu': INTERNAL: Failed to open libtpu.so: libtpu.so: cannot open shared object file: No such file or directory
+2026-07-19 01:22:36,070 - gd_picasso.validators.sax_validator - INFO - SAX Validation: PASS (compilation: True, routing: True)
+2026-07-19 01:22:38,495 - gd_picasso.validators.drc_validator - INFO - DRC Validation: PASS (0 violations)
+2026-07-19 01:34:50,912 - jax._src.xla_bridge - INFO - Unable to initialize backend 'tpu': INTERNAL: Failed to open libtpu.so: libtpu.so: cannot open shared object file: No such file or directory
+2026-07-19 01:34:52,790 - gd_picasso.validators.sax_validator - INFO - SAX Validation: PASS (compilation: True, routing: True)
+2026-07-19 01:34:55,598 - gd_picasso.validators.drc_validator - INFO - DRC Validation: PASS (0 violations)
+2026-07-20 00:39:59,590 - jax._src.xla_bridge - INFO - Unable to initialize backend 'tpu': INTERNAL: Failed to open libtpu.so: libtpu.so: cannot open shared object file: No such file or directory
+2026-07-20 00:40:00,960 - gd_picasso.validators.sax_validator - INFO - SAX Validation: PASS (compilation: True, routing: True)
+2026-07-20 00:47:11,858 - jax._src.xla_bridge - INFO - Unable to initialize backend 'tpu': INTERNAL: Failed to open libtpu.so: libtpu.so: cannot open shared object file: No such file or directory
+2026-07-20 00:47:13,245 - gd_picasso.validators.sax_validator - INFO - SAX Validation: PASS (compilation: True, routing: True)
+2026-07-20 00:47:13,452 - gd_picasso.validators.sax_validator - INFO - SAX Validation: PASS (compilation: True, routing: True)
+2026-07-20 00:47:13,656 - gd_picasso.validators.sax_validator - INFO - SAX Validation: PASS (compilation: True, routing: True)
+2026-07-20 00:47:13,836 - gd_picasso.validators.sax_validator - INFO - SAX Validation: PASS (compilation: True, routing: True)
+2026-07-20 00:47:14,031 - gd_picasso.validators.sax_validator - INFO - SAX Validation: PASS (compilation: True, routing: True)
+2026-07-20 00:47:14,399 - gd_picasso.validators.sax_validator - INFO - SAX Validation: PASS (compilation: True, routing: True)
+2026-07-20 00:47:14,598 - gd_picasso.validators.sax_validator - INFO - SAX Validation: PASS (compilation: True, routing: True)
+2026-07-20 00:47:14,789 - gd_picasso.validators.sax_validator - INFO - SAX Validation: PASS (compilation: True, routing: True)
+2026-07-20 00:47:14,977 - gd_picasso.validators.sax_validator - INFO - SAX Validation: PASS (compilation: True, routing: True)
+2026-07-20 00:47:15,160 - gd_picasso.validators.sax_validator - INFO - SAX Validation: PASS (compilation: True, routing: True)
+2026-07-20 01:12:13,101 - jax._src.xla_bridge - INFO - Unable to initialize backend 'tpu': INTERNAL: Failed to open libtpu.so: libtpu.so: cannot open shared object file: No such file or directory
+2026-07-20 01:12:14,326 - gd_picasso.validators.sax_validator - INFO - SAX Validation: PASS (compilation: True, routing: True)
+2026-07-20 03:39:42,972 - jax._src.xla_bridge - INFO - Unable to initialize backend 'tpu': INTERNAL: Failed to open libtpu.so: libtpu.so: cannot open shared object file: No such file or directory
+2026-07-20 03:39:44,842 - gd_picasso.validators.sax_validator - INFO - SAX Validation: PASS (compilation: True, routing: True)
+2026-07-20 03:40:04,685 - gd_picasso.validators.drc_validator - INFO - DRC Validation: FAIL (1423 violations)
+2026-07-20 03:40:51,656 - gd_picasso.validators.drc_validator - INFO - DRC Validation: PASS (0 violations)
+2026-07-20 03:42:13,498 - jax._src.xla_bridge - INFO - Unable to initialize backend 'tpu': INTERNAL: Failed to open libtpu.so: libtpu.so: cannot open shared object file: No such file or directory
+2026-07-20 03:42:14,647 - gd_picasso.validators.sax_validator - INFO - SAX Validation: PASS (compilation: True, routing: True)
+2026-07-20 03:42:16,073 - gd_picasso.validators.drc_validator - INFO - DRC Validation: PASS (0 violations)
+2026-07-21 13:10:29,636 - gd_picasso.validators.drc_validator - INFO - DRC Validation: FAIL (28 violations)
+2026-07-21 13:10:30,094 - jax._src.xla_bridge - INFO - Unable to initialize backend 'tpu': INTERNAL: Failed to open libtpu.so: libtpu.so: cannot open shared object file: No such file or directory
+2026-07-21 13:10:31,647 - gd_picasso.validators.sax_validator - INFO - SAX Validation: PASS (compilation: True, routing: True)
+2026-07-21 13:11:08,398 - gd_picasso.validators.drc_validator - INFO - DRC Validation: PASS (0 violations)
+2026-07-21 13:11:10,106 - jax._src.xla_bridge - INFO - Unable to initialize backend 'tpu': INTERNAL: Failed to open libtpu.so: libtpu.so: cannot open shared object file: No such file or directory
+2026-07-21 13:11:11,376 - gd_picasso.validators.sax_validator - INFO - SAX Validation: PASS (compilation: True, routing: True)
+2026-07-22 13:57:02,097 - gd_picasso.validators.drc_validator - INFO - DRC Validation: PASS (0 violations, 134 waived)
+2026-07-22 13:57:18,272 - gd_picasso.validators.drc_validator - INFO - DRC Validation: PASS (0 violations, 134 waived)
+2026-07-22 13:57:20,008 - gd_picasso.validators.drc_validator - INFO - DRC Validation: PASS (0 violations, 134 waived)
+2026-07-22 13:57:21,558 - gd_picasso.validators.drc_validator - INFO - DRC Validation: PASS (0 violations, 134 waived)
+2026-07-22 13:57:23,294 - gd_picasso.validators.drc_validator - INFO - DRC Validation: PASS (0 violations, 134 waived)
+2026-07-22 13:57:25,039 - gd_picasso.validators.drc_validator - INFO - DRC Validation: PASS (0 violations, 134 waived)
+2026-07-22 13:57:26,604 - gd_picasso.validators.drc_validator - INFO - DRC Validation: PASS (0 violations, 134 waived)
+2026-07-22 13:57:28,338 - gd_picasso.validators.drc_validator - INFO - DRC Validation: PASS (0 violations, 134 waived)
+2026-07-22 13:57:30,036 - gd_picasso.validators.drc_validator - INFO - DRC Validation: PASS (0 violations, 134 waived)
+2026-07-22 13:57:31,776 - gd_picasso.validators.drc_validator - INFO - DRC Validation: PASS (0 violations, 134 waived)
+2026-07-22 13:57:33,307 - gd_picasso.validators.drc_validator - INFO - DRC Validation: PASS (0 violations, 134 waived)
+2026-07-22 20:30:48,186 - gd_picasso.validators.drc_validator - INFO - DRC Validation: FAIL (257 violations)
+2026-07-22 20:31:21,150 - gd_picasso.validators.drc_validator - INFO - DRC Validation: PASS (0 violations)
+2026-07-22 20:32:23,849 - gd_picasso.test_with_llm - INFO - Loaded 38 problems from gd_picasso/problems_parsed1.txt
+2026-07-22 20:53:33,928 - gd_picasso.test_with_llm - INFO - Loaded 38 problems from gd_picasso/problems_parsed1.txt
+2026-07-22 21:02:35,144 - gd_picasso.test_with_llm - INFO - Loaded 38 problems from gd_picasso/problems_parsed1.txt
+2026-07-22 21:29:19,068 - gd_picasso.test_with_llm - INFO - Loaded 38 problems from gd_picasso/problems_parsed1.txt
+2026-07-23 10:50:35,777 - gd_picasso.test_with_llm - INFO - Loaded 38 problems from gd_picasso/problems_parsed1.txt
+2026-07-23 10:50:49,883 - gd_picasso.test_with_llm - INFO - Loaded 38 problems from gd_picasso/problems_parsed1.txt
+2026-07-23 10:51:00,003 - gd_picasso.test_with_llm - INFO - Loaded 38 problems from gd_picasso/problems_parsed1.txt
+2026-07-24 15:10:43,068 - __main__ - INFO - ======================================================================
+2026-07-24 15:10:43,069 - __main__ - INFO - gd_picasso Framework Test Suite
+2026-07-24 15:10:43,069 - __main__ - INFO - ======================================================================
+2026-07-24 15:10:43,069 - __main__ - INFO - Model: __no_such_model__
+2026-07-24 15:10:43,069 - __main__ - INFO - Problems file: gd_picasso/problems_parsed1.txt
+2026-07-24 15:10:43,069 - __main__ - INFO - Samples per problem: 0
+2026-07-24 15:10:43,069 - __main__ - INFO - Loaded 38 problems from gd_picasso/problems_parsed1.txt
+2026-07-24 15:10:43,069 - __main__ - INFO - Testing first 1 problems
+2026-07-24 15:10:43,069 - __main__ - ERROR - Unknown model: __no_such_model__
+2026-07-24 15:10:43,069 - __main__ - ERROR - Supported models:
+2026-07-24 15:10:43,070 - __main__ - ERROR -   - OpenAI: gpt-4o, gpt-5, o3-mini, o3
+2026-07-24 15:10:43,070 - __main__ - ERROR -   - DeepSeek API: deepseek-r1-api, deepseek-v3-api
+2026-07-24 15:10:43,070 - __main__ - ERROR -   - Anthropic: claude-sonnet-4.5
+2026-07-24 15:10:43,070 - __main__ - ERROR -   - Google: gemini-2.5-pro, gemini-2.0-flash-exp
+2026-07-24 15:10:43,070 - __main__ - ERROR -   - HuggingFace: deepseek-r1, kimi-v2, kimi-thinking, llama-3.1-70b, qwen-2.5-32b, mistral-large, phi-4
+2026-07-24 15:10:43,070 - __main__ - ERROR -   - Or use full HuggingFace model ID
+2026-07-24 15:10:43,070 - __main__ - ERROR - Failed to create agent

@@ -10,10 +10,17 @@ This addresses the issue where SAX passes despite poor physical routing.
 """
 
 import logging
+import warnings
 from typing import Dict, Tuple
 import gdsfactory as gf
 
 logger = logging.getLogger(__name__)
+
+try:
+    from .sax_models import get_patched_sax_models, polarization_splitter_rotator
+except ImportError:
+    get_patched_sax_models = None
+    polarization_splitter_rotator = None
 
 # Try to import port utilities (may not exist in gd_picasso)
 try:
@@ -146,8 +153,36 @@ class SAXValidator:
             except ImportError:
                 from gplugins import sax
 
-            # Try to get netlist and compile circuit
-            netlist = component.get_netlist()
+            try:
+                yaml_netlist = component.info.get("picasso_yaml_netlist", {}) or {}
+            except Exception:
+                yaml_netlist = {}
+            try:
+                with warnings.catch_warnings(record=True) as caught_warnings:
+                    warnings.simplefilter("always")
+                    netlist = component.get_netlist()
+                for warning in caught_warnings:
+                    warning_text = str(warning.message)
+                    if "Unconnected ports:" not in warning_text:
+                        report["warnings"].append(warning_text)
+            except Exception as netlist_error:
+                if isinstance(yaml_netlist, dict) and yaml_netlist.get("connections"):
+                    netlist = yaml_netlist
+                    report["warnings"].append(
+                        f"Using YAML connectivity because GDSFactory netlist extraction failed: {netlist_error}"
+                    )
+                else:
+                    raise
+            if (
+                isinstance(yaml_netlist, dict)
+                and yaml_netlist.get("connections")
+                and not netlist.get("connections")
+            ):
+                netlist = {
+                    "instances": yaml_netlist.get("instances", netlist.get("instances", {})),
+                    "connections": yaml_netlist.get("connections", {}),
+                    "ports": yaml_netlist.get("ports", netlist.get("ports", {})),
+                }
 
             if not netlist:
                 report["errors"].append("Failed to extract netlist from component")
@@ -159,13 +194,26 @@ class SAXValidator:
                 return False
 
             if 'connections' not in netlist or not netlist.get('connections'):
+                if len(netlist.get("instances", {})) > 1:
+                    report["errors"].append("Netlist has multiple component instances but no connections")
+                    return False
                 report["warnings"].append("Netlist has no connections (might be single component)")
 
             # Try to build SAX circuit with models
             try:
+                patched_models = get_patched_sax_models() if get_patched_sax_models is not None else {}
+                requested_components = {
+                    instance.get("component")
+                    for instance in netlist.get("instances", {}).values()
+                    if isinstance(instance, dict)
+                }
+                requested_patched_components = requested_components & set(patched_models)
+                models = {}
                 # Try with gplugins models first
                 try:
                     from gplugins import sax as gs
+                    sax.set_port_naming_strategy("optical")
+
                     models = {
                         "straight": gs.models.straight,
                         "bend_euler": gs.models.bend,
@@ -174,7 +222,11 @@ class SAXValidator:
                         "mmi2x2": gs.models.mmi2x2 if hasattr(gs.models, 'mmi2x2') else gs.models.mmi1x2,
                         "coupler": gs.models.coupler if hasattr(gs.models, 'coupler') else gs.models.mmi1x2,
                         "ring_single": gs.models.ring_single if hasattr(gs.models, 'ring_single') else gs.models.bend,
+                        "mzi": sax.models.model_2port("o1", "o2"),
+                        **patched_models,
                     }
+                    if polarization_splitter_rotator is not None:
+                        models["polarization_splitter_rotator"] = polarization_splitter_rotator
                     # Add phase shifter models - map all variants to phase_shifter
                     try:
                         phase_model = sax.models.phase_shifter if hasattr(sax.models, 'phase_shifter') else gs.models.straight
@@ -190,7 +242,11 @@ class SAXValidator:
                         models["heater"] = gs.models.straight
                     
                     # Try to compile with models
-                    circuit, _ = sax.circuit(netlist, models=models)
+                    circuit, _ = sax.circuit(
+                        netlist,
+                        models=models,
+                        on_internal_port="as_probes",
+                    )
                     report["sax_compiled"] = True
                     logger.debug("SAX compilation successful with gplugins models")
                     return True
@@ -218,11 +274,14 @@ class SAXValidator:
                             "straight_heater_metal": gs.models.straight,
                             "phase_shifter": gs.models.straight,
                             "heater": gs.models.straight,
-                            "mzi": gs.models.mmi1x2,  # MZI can use MMI model as approximation
+                            "mzi": sax.models.model_2port("o1", "o2"),
                             "y_branch": gs.models.mmi1x2,
                             "y_splitter": gs.models.mmi1x2,
                             "y_junction": gs.models.mmi1x2,
+                            **patched_models,
                         }
+                        if polarization_splitter_rotator is not None:
+                            default_mappings["polarization_splitter_rotator"] = polarization_splitter_rotator
                         
                         # Add missing models using mappings
                         for missing in missing_models:
@@ -232,16 +291,31 @@ class SAXValidator:
                         
                         # Try again with extended models
                         if models:
-                            circuit, _ = sax.circuit(netlist, models=models)
+                            circuit, _ = sax.circuit(
+                                netlist,
+                                models=models,
+                                on_internal_port="as_probes",
+                            )
                             report["sax_compiled"] = True
                             logger.debug("SAX compilation successful with auto-mapped models")
                             return True
                     except Exception as e2:
                         pass
                     
-                    # Fallback 2: try without models (use default)
+                    # Fallback 2: try without models (use default), but never for
+                    # repo-patched mocks that must not come from installed SAX.
+                    if requested_patched_components:
+                        error_msg = f"SAX circuit compilation failed: {str(e1)}"
+                        if "Missing models" in str(e1):
+                            error_msg += " (missing SAX models for components)"
+                        report["errors"].append(error_msg)
+                        logger.warning(f"SAX compilation failed: {error_msg}")
+                        return False
                     try:
-                        circuit, _ = sax.circuit(netlist)
+                        circuit, _ = sax.circuit(
+                            netlist,
+                            on_internal_port="as_probes",
+                        )
                         report["sax_compiled"] = True
                         logger.debug("SAX compilation successful with default models")
                         return True
@@ -428,4 +502,3 @@ class SAXValidator:
         feedback_parts.append("  - Ensure connections in netlist match physical routing")
 
         return "\n".join(feedback_parts)
-

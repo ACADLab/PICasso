@@ -106,7 +106,7 @@ This is the #1 cause of syntax errors - ALWAYS use ASCII equivalents."""
         component_errors = getattr(self.analyzer, 'error_categories', {}).get('component', [])
         
         rules = ["COMPONENT RULES:"]
-        rules.append("1. Use valid GDSFactory component names (e.g., 'mmi1x2', 'bend_euler', 'straight_heater_metal')")
+        rules.append("1. Use valid GDSFactory component names (e.g., 'mmi1x2', 'bend_euler', 'straight_heater_metal', 'ge_detector_straight_si_contacts')")
         rules.append("2. Component names must match exactly (case-sensitive)")
         rules.append("3. Settings must be valid for the component type")
         rules.append("4. All numeric values must be valid floats (e.g., 10.0, not '10 microns')")
@@ -121,6 +121,7 @@ This is the #1 cause of syntax errors - ALWAYS use ASCII equivalents."""
         rules.append("  ❌ waveguide → ✅ straight")
         rules.append("  ❌ star_coupler → ✅ coupler or mmi2x2")
         rules.append("  ❌ photodiode → ❌ NOT AVAILABLE in generic_tech PDK")
+        rules.append("  ❌ ge_detector → ✅ ge_detector_straight_si_contacts")
         
         if component_errors:
             rules.append("\nCommon component errors to avoid:")
@@ -242,4 +243,3 @@ if __name__ == "__main__":
     print(prompt)
     
     generator.save("base_pilot_prompt.txt")
-

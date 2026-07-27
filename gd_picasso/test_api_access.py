@@ -3,16 +3,28 @@
 Test API access for all model providers.
 Verifies which models are accessible with the provided API keys.
 """
-
 import os
 import sys
 from pathlib import Path
+from dotenv import load_dotenv
 
 # Add parent directory to path
 framework_dir = Path(__file__).parent
 parent_dir = framework_dir.parent
+
+# Load .env from project root
+load_dotenv(parent_dir / ".env")
+
 if str(parent_dir) not in sys.path:
     sys.path.insert(0, str(parent_dir))
+
+# Debug prints (remove later)
+print(f"Framework dir: {framework_dir}")
+print(f"Parent dir: {parent_dir}")
+print(f"Env file: {parent_dir / '.env'}")
+print(f"Env exists: {(parent_dir / '.env').exists()}")
+print(f"OPENAI_API_KEY loaded: {os.getenv('OPENAI_API_KEY') is not None}")
+print(f"GEMINI_API_KEY loaded: {os.getenv('GEMINI_API_KEY') is not None}")
 
 def test_openai_models():
     """Test OpenAI API access for GPT-5 and o3 models."""

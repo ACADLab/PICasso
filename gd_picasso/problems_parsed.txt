@@ -1233,3 +1233,559 @@ length = 100.0
 
 Output YAML only.
 
+TASK 37 - Fabry-Perot Resonator
+
+Design a circuit called `fabry_perot_resonator` using GDSFactory component types.
+
+Constraints and specification:
+
+Must have 1 input port named `in` and 1 output port named `out`.
+
+Use exactly 3 component instances total, with the following breakdown:
+- Two DBR components: `dbr1`, `dbr2`
+- One straight waveguide cavity: `cavity`
+
+Component type notes:
+- Use component type `dbr` for both `dbr1` and `dbr2`.
+- Use component type `straight` for `cavity`.
+- The cavity must have a length parameter `length: 50.0` (units: µm) in its `settings:` section.
+
+Topology and port usage:
+- The DBR components act as mirrors forming a Fabry–Perot resonator.
+- Connect the right port of `dbr1` (`dbr1,o2`) to the left port of the cavity (`cavity,o1`).
+- Connect the right port of the cavity (`cavity,o2`) to the left port of `dbr2` (`dbr2,o1`).
+- Expose `dbr1,o1` as the top-level input port `in`.
+- Expose `dbr2,o2` as the top-level output port `out`.
+
+Geometry / placements:
+- Place all components along a straight horizontal line (same `y` coordinate) to avoid bends.
+- Use non-overlapping `x` coordinates (for example, `dbr1` at `x: 0`, `cavity` at `x: 60`, `dbr2` at `x: 120`).
+
+Define:
+- An `instances:` section listing `dbr1`, `dbr2`, and `cavity` with their component types (and cavity settings).
+- A `placements:` section with `(x,y)` coordinates for all three instances.
+- A `connections:` section with the two internal connections:
+  - `dbr1,o2: cavity,o1`
+  - `cavity,o2: dbr2,o1`
+- A `ports:` section mapping:
+  - `in: dbr1,o1`
+  - `out: dbr2,o2`
+
+Use the same port naming convention as the example (instance_name,port_name).
+
+Ensure the YAML is syntactically valid (proper indentation, colons, etc.).
+
+Please output the full YAML definition (with `name:`, `instances:`, `placements:`, `connections:`, and `ports:` sections) for the circuit `fabry_perot_resonator`.
+
+TASK 38 - Unbalanced Mach-Zehnder Interferometer (Delay MZI)
+
+Design a circuit called `delay_mzi` using GDSFactory component types.
+
+Constraints and specification:
+
+Must have 1 input port named `in` and 1 output port named `out`.
+
+Use exactly 6 component instances total, with the following breakdown:
+- Two MMI1x2 components:
+  - `splitter`
+  - `combiner`
+- One spiral waveguide:
+  - `delay_arm`
+- One straight waveguide:
+  - `reference_arm`
+- Two straight waveguides:
+  - `input_wg`
+  - `output_wg`
+
+Component type notes:
+- Use component type `mmi1x2` for `splitter`.
+- Use component type `mmi1x2` with `mirror: true` for `combiner` (mmi2x1 does NOT exist).
+- Use component type `spiral` for `delay_arm`.
+- Use component type `straight` for `reference_arm`, `input_wg`, and `output_wg`.
+
+Settings:
+- `delay_arm` must have:
+  - `length: 500.0`
+  - `spacing: 3.0`
+  - `n_loops: 6`
+- `reference_arm` must have:
+  - `length: 100.0`
+- `input_wg` and `output_wg` must each have:
+  - `length: 20.0`
+
+Topology and port usage:
+- The splitter divides the input signal into two optical paths.
+- The upper arm contains the spiral delay line.
+- The lower arm contains the straight reference waveguide.
+- The two arms recombine using the combiner.
+
+Create the following internal connections:
+- `input_wg,o2: splitter,o1`
+- `splitter,o2: delay_arm,o1`
+- `splitter,o3: reference_arm,o1`
+- `delay_arm,o2: combiner,o2`
+- `reference_arm,o2: combiner,o3`
+- `combiner,o1: output_wg,o1`
+
+Expose:
+- `input_wg,o1` as the top-level input port `in`
+- `output_wg,o2` as the top-level output port `out`
+
+Geometry / placements:
+- Place the splitter to the left of the combiner.
+- Place the spiral above the reference arm.
+- Keep all components non-overlapping.
+- Use reasonable spacing between stages (for example, 100 µm).
+
+Define:
+- An `instances:` section listing all six instances with their component types and settings.
+- A `placements:` section with `(x,y)` coordinates for every instance.
+- A `connections:` section containing all six internal connections.
+- A `ports:` section mapping:
+  - `in: input_wg,o1`
+  - `out: output_wg,o2`
+
+Use the same port naming convention as the examples (`instance_name,port_name`).
+
+Ensure the YAML is syntactically valid (proper indentation, colons, etc.).
+
+Please output the full YAML definition (with `name:`, `instances:`, `placements:`, `connections:`, and `ports:` sections) for the circuit `delay_mzi`.
+
+TASK 39 - Waveguide Propagation Loss Characterization Circuit
+
+You are a design-assistant for the GDSFactory framework, writing YAML definitions for photonic circuits.
+
+Below is a *single example* (one-shot) of a small circuit definition, followed by a new task for you to generate.
+
+---
+
+Example:
+
+```yaml
+name: simple_splitter_example
+instances:
+  splitter:
+    component: mmi1x2
+  spiral:
+    component: spiral
+    settings:
+      length: 1000.0
+      spacing: 3.0
+      n_loops: 6
+placements:
+  splitter:
+    x: 0
+    y: 0
+  spiral:
+    x: 100
+    y: 50
+connections:
+  splitter,o2: spiral,o1
+ports:
+  in: splitter,o1
+  out: spiral,o2
+
+Now:
+
+Design a circuit called waveguide_loss_characterization using GDSFactory component types.
+
+Constraints and Specification
+-----------------------------
+
+Ports:
+- Input: in
+- Outputs: out1, out2, out3
+
+Component Count (Total = 7):
+- Splitters (mmi1x2):
+  - splitter1
+  - splitter2
+  - splitter3
+- Spirals (spiral):
+  - spiral_short
+  - spiral_medium
+  - spiral_long
+- Straight waveguide:
+  - input_wg
+
+Component Type Requirements:
+- All splitters use component type: mmi1x2
+- All spirals use component type: spiral
+- Input waveguide uses component type: straight
+
+Spiral Settings:
+- spiral_short:
+  - length: 1000.0
+  - spacing: 3.0
+  - n_loops: 4
+
+- spiral_medium:
+  - length: 5000.0
+  - spacing: 3.0
+  - n_loops: 6
+
+- spiral_long:
+  - length: 10000.0
+  - spacing: 3.0
+  - n_loops: 8
+
+Input Waveguide:
+- input_wg length: 20.0
+
+Topology & Port Usage:
+1. input_wg feeds splitter1
+2. splitter1 splits into:
+   - Branch 1 → spiral_short
+   - Branch 2 → splitter2
+3. splitter2 splits into:
+   - Branch 1 → spiral_medium
+   - Branch 2 → splitter3
+4. splitter3 sends one output to spiral_long
+5. The other output of splitter3 is unused
+
+Internal Connections:
+- input_wg,o2 → splitter1,o1
+- splitter1,o2 → spiral_short,o1
+- splitter1,o3 → splitter2,o1
+- splitter2,o2 → spiral_medium,o1
+- splitter2,o3 → splitter3,o1
+- splitter3,o2 → spiral_long,o1
+
+Exposed Ports:
+- in → input_wg,o1
+- out1 → spiral_short,o2
+- out2 → spiral_medium,o2
+- out3 → spiral_long,o2
+
+Geometry / Placement Guidelines:
+- Splitters arranged left-to-right in a binary tree
+- Spirals placed to the right of their respective splitters
+- Maintain non-overlapping spacing (~100 µm)
+
+Required YAML Sections:
+- name:
+- instances:
+- placements:
+- connections:
+- ports:
+
+TASK 40 - 4-Channel Ring Resonator Receiver
+
+You are a design-assistant for the GDSFactory framework, writing YAML definitions for photonic circuits.
+
+Below is a *single example* (one-shot) of a small circuit definition, followed by a new task for you to generate.
+
+---
+
+Example:
+
+```yaml
+name: simple_mzi_example
+instances:
+  mmi1:
+    component: mmi1x2
+  mmi2:
+    component: mmi1x2
+  ps1:
+    component: straight_heater_metal
+placements:
+  mmi1:
+    x: 0
+    y: 0
+  mmi2:
+    x: 100
+    y: 0
+  ps1:
+    x: 50
+    y: 0
+connections:
+  mmi1,o2: ps1,o1
+  ps1,o2: mmi2,o1
+ports:
+  in: mmi1,o1
+  out: mmi2,o2
+```
+
+---
+
+Now:
+
+Design a circuit called `ring_resonator_receiver_4ch` using GDSFactory component types.
+
+**Constraints and specification:**
+
+* Must have 1 optical input port named `opt_in`.
+* Use exactly 17 component instances total, with the following breakdown:
+  - mmi1x2 components: 1 instance (`splitter`)
+  - ring_single components: 4 instances (`ring1`...`ring4`)
+  - straight_heater_metal components: 4 instances (`heater1`...`heater4`)
+  - ge_detector_straight_si_contacts components: 4 instances (`detector1`...`detector4`)
+  - straight components: 4 instances (`bus1`...`bus4`)
+* Component type notes:
+  - Use component type `straight_heater_metal` for all heaters.
+  - Use component type `ge_detector_straight_si_contacts` for all photodetectors.
+* Construct a meaningful 4-channel wavelength-division multiplexing (WDM) receiver topology:
+  - Use the single `mmi1x2` as an input distribution/tap element before the bus/channel access waveguides.
+  - The straight waveguides should represent the main optical bus/channel access waveguides.
+  - Use the splitter input as `opt_in`.
+  - Couple each channel in a simple one-to-one way: use one bus segment for one ring (`bus1` with `ring1`, `bus2` with `ring2`, etc.) and connect each ring to its matching detector.
+  - Do not add any splitter, MMI, coupler, fanout tree, or other component beyond the single allowed `splitter`.
+  - Remember that `mmi1x2` has only ports `o1`, `o2`, and `o3`; never reference `splitter,o4`.
+  - Do not route the splitter directly to a ring, detector, or heater. Its optical outputs should only feed bus/channel access waveguide endpoints or be exported if intentionally unused.
+  - Because only one `mmi1x2` is allowed, do not invent a 1-to-4 splitter tree. Any bus input endpoint that is not driven by the splitter must be exposed as a top-level optical channel/helper port rather than left dangling.
+  - Every detector channel must be connected through its matching ring. Do not bypass a ring by routing a bus directly to a detector, and do not leave any ring as a placed-but-unused decoration.
+  - Keep the four channels physically separated and easy to route: a clean solution usually uses roughly parallel horizontal lanes, with one bus, one ring, one nearby heater, and one detector per lane.
+  - Avoid crowded routes into the compact ring area. Leave enough lateral and vertical clearance around every ring so the bus-to-ring and ring-to-detector routes do not run alongside or across ring waveguides at sub-minimum spacing.
+  - Heaters are thermal tuners for the rings, not optical signal branches. Place each heater near its matching ring, but do not route heater optical ports into a ring, detector, bus, or `opt_in`; doing so can create non-physical multi-port overlaps and DRC failures.
+  - Avoid reusing any optical endpoint in multiple routes, and avoid connecting three or more optical ports to the same physical point. A top-level helper port must not point to an internal port that is already used in a route.
+  - Use generous spacing between channels and between routed waveguides so that routes do not overlap or trigger `WG_space_min` DRC violations.
+* Provide a `placements:` section with reasonable (x,y) coordinates for every component.
+* Define a complete `routes:` section using the `component_instance,port_name` convention. Use one-to-one optical routes for the bus-to-ring and ring-to-detector signal paths.
+* Export the following top-level ports:
+  - Optical input: `opt_in`
+  - Electrical ports for each detector:
+    - `top1`, `bot1`
+    - `top2`, `bot2`
+    - `top3`, `bot3`
+    - `top4`, `bot4`
+  - Required helper ports for otherwise-unused bus input or splitter-output optical ports, but only for internal ports that are not used in `routes:`.
+  - Do not export bus output ports such as `bus1,o2`...`bus4,o2` if they are already routed to rings. Exporting a routed endpoint as a helper creates multi-port overlap and can fail optimization/DRC.
+  - Optional helper ports for otherwise-unused heater optical ports are allowed, but heater optical ports may also remain unexported when the heaters are used only as nearby thermal tuners.
+* Do **not** introduce any additional component types beyond those specified.
+* Ensure the YAML is syntactically valid (proper indentation, colons, etc.).
+
+---
+
+Please output the full YAML definition (with `name:`, `instances:`, `placements:`, `ports:`, and `routes:` sections) for the circuit `ring_resonator_receiver_4ch`.
+
+TASK 41 - Butterfly 8x8 Optical Network
+
+You are a design-assistant for the GDSFactory framework, writing YAML definitions for photonic circuits.
+
+Below is a *single example* (one-shot) of a small circuit definition, followed by a new task for you to generate.
+
+---
+
+Example:
+
+```yaml
+name: simple_mzi_example
+instances:
+  mmi1:
+    component: mmi1x2
+  mmi2:
+    component: mmi1x2
+  ps1:
+    component: straight_heater_metal
+placements:
+  mmi1:
+    x: 0
+    y: 0
+  mmi2:
+    x: 100
+    y: 0
+  ps1:
+    x: 50
+    y: 0
+routes:
+  optical:
+    settings:
+      cross_section: strip
+      radius: 20
+    links:
+      mmi1,o2: ps1,o1
+      ps1,o2: mmi2,o1
+ports:
+  in: mmi1,o1
+  out: mmi2,o2
+```
+
+---
+
+Now:
+
+Design a circuit called `butterfly_8x8_network` using GDSFactory component types.
+
+**Constraints and specification:**
+
+* Must have **8 input ports** named `in1`, `in2`, `in3`, `in4`, `in5`, `in6`, `in7`, `in8`.
+* Must have **8 output ports** named `out1`, `out2`, `out3`, `out4`, `out5`, `out6`, `out7`, `out8`.
+* Use **exactly 36 component instances total**, with the following breakdown:
+
+  * **12 mzi** components (2x2 switching elements)
+  * **12 straight_heater_metal** components (phase tuning)
+  * **12 crossing** components
+* Component type notes:
+
+  * Use component type `mzi`.
+  * Use component type `straight_heater_metal` for phase tuning.
+  * Use component type `crossing`.
+* Do **not** introduce any additional component types.
+* Use these exact instance names:
+  * MZIs: `mzi1` through `mzi12`.
+  * phase tuners: `ps1` through `ps12`.
+  * crossings: `crossing1` through `crossing12`.
+* Build a compact 4-row, 3-stage butterfly-style topology. You may choose the permutation between stages, but preserve forward signal flow: MZI output -> phase tuner -> crossing -> next MZI or output-side terminal.
+* Use four horizontal y-levels only: `0`, `200`, `400`, and `600`. Keep stage columns compact but DRC-clean, with all x coordinates preferably <= 1800.
+* Use a `routes:` section with one independent route group per optical link. Route group names such as `r0`, `r1`, ... are preferred because they avoid dense multi-link route-bundle artifacts.
+* Do NOT use a top-level `connections:` section for this task.
+* Every route endpoint must be exactly `instance_name,port_name`, for example `mzi1,o2`.
+* Never use top-level port labels such as `in1` or `out5` inside route links.
+* Never write three-part endpoints such as `out5,mzi9,o2`.
+* Use MZI ports as a simple two-port path: `o1` is the input side and `o2` is the output side.
+* Use phase tuners as two-port paths: `o1` input, `o2` output.
+* Use crossing straight-through paths as `o1` to `o3` and `o4` to `o2`.
+* Build a three-stage butterfly-style routed network. Each active optical path should progress through an MZI, a phase tuner, and a crossing before entering the next MZI stage or final crossing stage.
+* Use three repeated stage groups across the four rows, with MZIs, phase tuners, and crossings represented in each group. You may choose the crossing-to-next-MZI permutation between groups as long as the flow remains forward and every phase tuner and crossing is routed.
+* Each stage should contain a continuous optical chain through an MZI, a phase tuner, and a crossing before the signal advances to the next stage or to an output-side terminal. Do not hard-code one row-preserving solution; preserve the butterfly-style inter-stage structure.
+* Every one of the 12 `crossing` instances and every one of the 12 `ps` instances must be used in optical routing.
+* Do not stop the phase-tuner chain at `ps8`; `ps9`, `ps10`, `ps11`, and `ps12` must also appear as real `straight_heater_metal` instances and be used in optical links.
+* Avoid a common topology mistake: do not connect a later crossing directly to a later MZI while leaving the MZI output, phase tuner, or crossing input in that stage unused. In particular, the middle stage should not leave `mzi5`-`mzi8`, `ps5`-`ps8`, or the input side of `crossing5`-`crossing8` dangling.
+* Avoid a common routing-direction mistake: when an MZI feeds a phase tuner, connect from the MZI output side (`mzi*,o2`) to the phase tuner input (`ps*,o1`). Do not start routed internal paths from `mzi*,o1`.
+* Avoid a crossing-port mistake: do not use the crossing `o2`/`o4` side as the main forward path between MZI stages. The main routed progression should not chain through `crossing*,o2` or `crossing*,o4` and then back into another MZI.
+* Use compact phase tuners. A short `straight_heater_metal` length such as 20-60 is preferred; do not rely on the long default heater length if it makes the layout sparse.
+* Provide `placements:` with non-overlapping coordinates. Use four horizontal rows for the 8-channel network and keep each stage roughly aligned in columns. Use the same four y-levels consistently across MZIs, phase tuners, and crossings.
+* Use DRC-clean stage columns. Leave enough horizontal spacing between MZIs, phase tuners, and crossings for routed bends to clear, but keep the design compact. Equivalent compact spacing is fine if it avoids overlapping bends, waveguides, and device ports.
+* Avoid common placement mistakes: do not use negative y coordinates; do not place crossings halfway between rows; do not use intermediate y-levels such as 50, 100, 150, 250, 300, 350, 500, 700, or 750; do not create a diagonal staircase where each channel is shifted far to the right of the previous one; avoid extra vertical bands far above the main four rows.
+* Keep the layout reasonably compact; do not spread instances across many millimeters of empty x-range, but prefer slightly wider spacing over creating DRC overlaps.
+* Put each optical link under a `routes.r*.links` mapping with one link per group.
+* Do not output a top-level `connections:` key, even an empty `connections: {}`.
+* At the end, expose exactly 16 top-level ports: all eight inputs and all eight outputs. Top-level ports must expose terminal circuit endpoints only; do not map a top-level port to a component port that is already used as one side of a route link.
+* The `ports:` section must contain all names `in1` through `in8` and `out1` through `out8`. Choose component ports that are true external terminals of your topology and that do not appear in any route link.
+* Ensure the YAML is syntactically valid with proper indentation.
+
+Common errors to avoid:
+
+* Do not skip the middle phase-tuner/crossing stage.
+* Do not omit `ps9`-`ps12` or replace the last phase-tuner stage with direct crossing-to-crossing routes.
+* Do not leave required optical ports dangling while still exporting unrelated top-level ports.
+* Do not close a path back into an earlier MZI or route a final crossing back to the same row's first MZI; in particular, avoid routes from `crossing9`-`crossing12` back into `mzi1`-`mzi4`.
+* Do not expose `out*` ports on early-stage MZI ports if those MZI ports are already routed internally.
+* Do not expose `in*` ports on middle-stage MZI ports if those MZI ports are already fed by previous routes.
+* Do not expose `in5`-`in8` or `out5`-`out8` on `mzi5`-`mzi8` ports when those ports are part of the internal butterfly routing.
+* Do not put a top-level port on any component port already connected by a route link; that creates overlapping/internal-node ports instead of true circuit terminals.
+* Do not use `connections:` for this task.
+* Do not use invalid route endpoints or route endpoints involving top-level port labels.
+* Do not make the layout huge just to avoid overlap; use the DRC-clean column pattern above as a starting point and vary the permutation/topology details as needed.
+
+---
+
+Please output the complete YAML definition containing:
+
+* `name`
+* `instances`
+* `placements`
+* `routes`
+* `ports`
+
+for the circuit `butterfly_8x8_network`.
+
+TASK 42 - Polarization Diversity Receiver Front-End
+
+You are a design-assistant for the GDSFactory framework, writing YAML definitions for photonic circuits.
+
+Below is a *single example* (one-shot) of a small circuit definition, followed by a new task for you to generate.
+
+---
+
+Example:
+
+```yaml
+name: simple_mzi_example
+instances:
+  mmi1:
+    component: mmi1x2
+  mmi2:
+    component: mmi1x2
+  ps1:
+    component: straight_heater_metal
+placements:
+  mmi1:
+    x: 0
+    y: 0
+  mmi2:
+    x: 100
+    y: 0
+  ps1:
+    x: 50
+    y: 0
+routes:
+  optical:
+    settings:
+      cross_section: strip
+      radius: 20.0
+    links:
+      mmi1,o2: ps1,o1
+      ps1,o2: mmi2,o1
+ports:
+  in: mmi1,o1
+  out: mmi2,o2
+```
+
+---
+
+Now:
+
+Design a circuit called `polarization_diversity_receiver` using GDSFactory component types.
+
+**Constraints and specification:**
+
+* Must have 2 input ports named `signal_in` and `local_oscillator`.
+* Must have 2 output ports named `te_out` and `tm_out`.
+* Use between 8 and 12 component instances total.
+* Use only these component types:
+  - `straight`
+  - `straight_heater_metal`
+* Include at least 2 `straight_heater_metal` instances total so both receiver branches have tunable phase control.
+* Include at least 4 `straight` instances total for passive input/output/delay sections.
+* Component type notes:
+  - Use `straight_heater_metal` for tunable phase/trim sections.
+  - Use `straight` for passive input, output, and delay sections.
+  - Do not use multiport components in this benchmark. Avoid `mmi1x2`, `mmi2x2`, `coupler`, and `polarization_splitter_rotator`; their closely spaced ports often trigger generic DRC spacing failures in this workflow.
+* Define a `routes:` section with optical links that creates two independent left-to-right receiver branches:
+  - One branch represents the TE/signal path from `signal_in` to `te_out`.
+  - One branch represents the TM/local-oscillator path from `local_oscillator` to `tm_out`.
+  - Each branch must contain at least one `straight_heater_metal`.
+  - Each branch must contain at least one passive `straight` before or after its heater section.
+  - The two branches must not connect to each other internally.
+  - For every two-port component in a branch, route left-to-right: connect the previous component's `o2` port to the next component's `o1` port.
+  - The first component in each branch must export its `o1` port as a top-level input, and its internal route must leave from `o2`.
+  - The last component in each branch must receive its internal route at `o1`, and export `o2` as the top-level output.
+* DRC-oriented routing requirements:
+  - Put the requested links under `routes.optical.links`. The framework may later normalize these links into one route group per link before building.
+  - In route settings, use `cross_section: strip`, `radius` between `25.0` and `40.0`, and `separation` at least `30.0`.
+  - Keep every optical link monotonic left-to-right. Avoid U-turns and routes that cross between the two branches.
+  - Do not place a route directly on top of another route or through the middle of another component body.
+  - Keep the two branches on different y rows with at least 150 um vertical separation.
+  - Use compact device lengths: set each `straight.length` between 20.0 and 80.0, and each `straight_heater_metal.length` between 40.0 and 80.0.
+  - Keep all x coordinates between 0 and 650 um, and keep all y coordinates between -250 and 250 um.
+* Map top-level ports only to route endpoints:
+  - `signal_in` must expose the leftmost input port of the TE/signal branch.
+  - `local_oscillator` must expose the leftmost input port of the TM/local-oscillator branch.
+  - `te_out` must expose the rightmost output port of the TE/signal branch.
+  - `tm_out` must expose the rightmost output port of the TM/local-oscillator branch.
+* Do NOT use any top-level exported endpoint in an internal route.
+* Hard endpoint rule:
+  - After choosing the four `ports:` mappings, none of those four exact `instance,port` values may appear anywhere as a key or value inside `routes.*.links`.
+  - If an input port maps to `some_input,o1`, the first internal route in that branch must start from `some_input,o2`, not `some_input,o1`.
+  - If an output port maps to `some_output,o2`, the last internal route in that branch must end at `some_output,o1`, not `some_output,o2`.
+  - Violating this creates an internal probe/overlapping-port condition and should be considered invalid even if DRC happens to pass.
+* Avoid this common invalid pattern:
+  - WRONG: `ports: {signal_in: te_input,o1}` and `routes: {te_input,o1: next,o1}`.
+  - CORRECT: `ports: {signal_in: te_input,o1}` and internal routing begins with `te_input,o2: next,o1`.
+  - WRONG: `ports: {local_oscillator: tm_input,o1}` and `routes: {tm_input,o1: next,o1}`.
+  - CORRECT: `ports: {local_oscillator: tm_input,o1}` and internal routing begins with `tm_input,o2: next,o1`.
+  - WRONG: route out of an output endpoint such as `last_te,o2` if `te_out` maps to `last_te,o2`.
+* Provide `placements:` with (x,y) coordinates for all instances.
+* Choose your own instance names and coordinates, but the layout should be recognizable as two separated left-to-right rows.
+* Use the same port naming convention as the example (component_instance,port_name).
+* Do **not** introduce any new component types beyond those specified.
+* Ensure the YAML is syntactically valid (proper indentation, colons, etc.).
+
+---
+
+Please output the full YAML definition (with `name:`, `instances:`, `placements:`, `routes:`, and `ports:` sections) for the circuit `polarization_diversity_receiver`.
+
+
+
+

@@ -14,6 +14,8 @@ import gdsfactory as gf
 from pathlib import Path
 import sys
 
+gf.gpdk.PDK.activate()
+
 # Add parent directory to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 

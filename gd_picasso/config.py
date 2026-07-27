@@ -102,6 +102,8 @@ ports:
 Rules:
 - ports is a DICTIONARY (not a list).
 - Format: "port_name: instance,port"
+- Exported top-level ports must be endpoint ports.
+- Do NOT also use an exported port in routes.optical.links.
 
 ------------------------------------------
 ALLOWED COMPONENTS (generic_tech PDK)
@@ -119,8 +121,10 @@ ALLOWED COMPONENTS (generic_tech PDK)
 - straight_heater_metal (NOT 'phase_shifter' or 'heater')
 - taper
 - spiral
+- ge_detector_straight_si_contacts
 - grating_coupler_elliptical
 - crossing
+- polarization_splitter_rotator
 - bend_s
 - bend_circular
 
@@ -134,6 +138,7 @@ ALLOWED COMPONENTS (generic_tech PDK)
 - waveguide → Use straight
 - star_coupler → Use coupler or mmi2x2
 - photodiode → Not available in generic_tech PDK
+- ge_detector → Use ge_detector_straight_si_contacts
 
 ------------------------------------------
 VALID PORT NAMES (gdsfactory standard)
@@ -141,11 +146,14 @@ VALID PORT NAMES (gdsfactory standard)
 straight: o1, o2
 bend_euler: o1, o2
 mmi1x2: o1, o2, o3 (o1=input, o2/o3=outputs)
-mmi2x2: o1, o2, o3, o4
+mmi2x2: o1, o2, o3, o4 (o1/o2 left-side inputs, o3/o4 right-side outputs)
 mzi: o1, o2
 coupler: o1, o2, o3, o4
 ring_single: o1, o2
 straight_heater_metal: o1, o2
+ge_detector_straight_si_contacts: o1, bot, top
+crossing: o1, o2, o3, o4 (o1 west, o3 east, o2 north, o4 south; through paths o1-o3 and o2-o4)
+polarization_splitter_rotator: o1, o2, o3 (o1=input, o2/o3=outputs)
 
 ===================================================
 ### CANONICAL YAML TEMPLATE (REFERENCE)
@@ -297,6 +305,13 @@ CRITICAL RULES (READ CAREFULLY):
    - Routes section is REQUIRED if you have multiple components.
    - Route format: 'source_instance,port: target_instance,port'
    - Use 'routes.optical.links' for optical connections.
+   - A port listed in top-level ports is an external endpoint. Do NOT also route that same instance,port internally.
+     WRONG: ports: {{in: psr1,o1}} and routes: {{psr1,o1: splitter,o1}}
+     CORRECT: ports: {{in: psr1,o1}}; route from psr1,o2/o3 onward.
+   - For output waveguides, route INTO wg,o1 and export wg,o2. Do NOT route from wg,o2 after exporting it.
+   - For mmi2x2 optical hybrids/couplers, route inputs into o1/o2 and route outputs from o3/o4.
+   - Two-port optical components (mzi, straight, taper, bends, ring_single, heater when used optically) must have BOTH optical ports either connected or exported.
+   - For crossing, if you use o1 you must also connect/export o3; if you use o3 you must also connect/export o1. Do not leave half of the o1-o3 through path floating.
    - For MZI combiners with mirror: true, the INPUT port is o1.
      Route TO combiner,o2 and combiner,o3 (NOT combiner,o1).
 
@@ -510,6 +525,7 @@ DEVICE_OPTIMIZATION_TARGETS = {
     'mmi1x2': 0.3,  # dB
     'bend_euler': 0.086,  # dB
     'straight_heater_metal': 0.23,  # dB
+    'ge_detector_straight_si_contacts': 0.5,  # dB
     'y_branch': 0.28,  # dB
 }
 
@@ -526,4 +542,3 @@ ROBUSTNESS_WEIGHTS = {
 
 # Retry settings
 MAX_RETRY_ATTEMPTS = 2  # Reduced to force better first attempts
-

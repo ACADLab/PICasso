@@ -247,5 +247,292 @@
     "port_count": 2,
     "parameters": {},
     "settings": {}
+  },
+  "dbr": {
+    "component_type": "dbr",
+    "ports": [
+      "o1",
+      "o2"
+    ],
+    "port_details": {
+      "o1": {
+        "name": "o1",
+        "orientation": 180.0,
+        "width": 500
+      },
+      "o2": {
+        "name": "o2",
+        "orientation": 0.0,
+        "width": 500
+      }
+    },
+    "port_count": 2,
+    "settings": {}
+  },
+  "spiral": {
+    "component_type": "spiral",
+    "ports": [
+      "o1",
+      "o2"
+    ],
+    "port_details": {
+      "o1": {
+        "name": "o1",
+        "orientation": 0.0,
+        "width": 0.5
+      },
+      "o2": {
+        "name": "o2",
+        "orientation": 0.0,
+        "width": 0.5
+      }
+    },
+    "port_count": 2,
+    "parameters": {
+      "length": {
+        "name": "length",
+        "default": 100,
+        "annotation": "float",
+        "kind": "POSITIONAL_OR_KEYWORD"
+      },
+      "bend": {
+        "name": "bend",
+        "default": "bend_euler",
+        "annotation": "ComponentSpec",
+        "kind": "POSITIONAL_OR_KEYWORD"
+      },
+      "straight": {
+        "name": "straight",
+        "default": "straight",
+        "annotation": "ComponentSpec",
+        "kind": "POSITIONAL_OR_KEYWORD"
+      },
+      "cross_section": {
+        "name": "cross_section",
+        "default": "strip",
+        "annotation": "CrossSectionSpec",
+        "kind": "POSITIONAL_OR_KEYWORD"
+      },
+      "spacing": {
+        "name": "spacing",
+        "default": 3.0,
+        "annotation": "float",
+        "kind": "POSITIONAL_OR_KEYWORD"
+      },
+      "n_loops": {
+        "name": "n_loops",
+        "default": 6,
+        "annotation": "int",
+        "kind": "POSITIONAL_OR_KEYWORD"
+      }
+    },
+    "settings": {}
+  },
+  "ge_detector_straight_si_contacts": {
+    "component_type": "ge_detector_straight_si_contacts",
+    "ports": [
+      "o1",
+      "bot",
+      "top"
+    ],
+    "port_details": {
+      "o1": {
+        "name": "o1",
+        "orientation": 180.0,
+        "width": 0.5
+      },
+      "bot": {
+        "name": "bot",
+        "orientation": 0.0,
+        "width": 10.0
+      },
+      "top": {
+        "name": "top",
+        "orientation": 0.0,
+        "width": 10.0
+      }
+    },
+    "port_count": 3,
+    "parameters": {
+      "length": {
+        "name": "length",
+        "default": 40.0,
+        "annotation": "float",
+        "kind": "POSITIONAL_OR_KEYWORD"
+      },
+      "cross_section": {
+        "name": "cross_section",
+        "default": "pn_ge_detector_si_contacts",
+        "annotation": "CrossSectionSpec",
+        "kind": "POSITIONAL_OR_KEYWORD"
+      },
+      "via_stack": {
+        "name": "via_stack",
+        "default": "via_stack_slab_m3",
+        "annotation": "ComponentSpec",
+        "kind": "POSITIONAL_OR_KEYWORD"
+      },
+      "via_stack_width": {
+        "name": "via_stack_width",
+        "default": 10.0,
+        "annotation": "float",
+        "kind": "POSITIONAL_OR_KEYWORD"
+      },
+      "via_stack_spacing": {
+        "name": "via_stack_spacing",
+        "default": 5.0,
+        "annotation": "float",
+        "kind": "POSITIONAL_OR_KEYWORD"
+      },
+      "via_stack_offset": {
+        "name": "via_stack_offset",
+        "default": 0.0,
+        "annotation": "float",
+        "kind": "POSITIONAL_OR_KEYWORD"
+      },
+      "taper_length": {
+        "name": "taper_length",
+        "default": 20.0,
+        "annotation": "float",
+        "kind": "POSITIONAL_OR_KEYWORD"
+      },
+      "taper_width": {
+        "name": "taper_width",
+        "default": 0.8,
+        "annotation": "float",
+        "kind": "POSITIONAL_OR_KEYWORD"
+      },
+      "taper_cros_section": {
+        "name": "taper_cros_section",
+        "default": "strip",
+        "annotation": "CrossSectionSpec",
+        "kind": "POSITIONAL_OR_KEYWORD"
+      }
+    },
+    "settings": {}
+  },
+  "crossing": {
+    "component_type": "crossing",
+    "ports": [
+      "o3",
+      "o2",
+      "o1",
+      "o4"
+    ],
+    "port_details": {
+      "o3": {
+        "name": "o3",
+        "orientation": 0.0,
+        "width": 0.5
+      },
+      "o2": {
+        "name": "o2",
+        "orientation": 90.0,
+        "width": 0.5
+      },
+      "o1": {
+        "name": "o1",
+        "orientation": 180.0,
+        "width": 0.5
+      },
+      "o4": {
+        "name": "o4",
+        "orientation": 270.0,
+        "width": 0.5
+      }
+    },
+    "port_count": 4,
+    "parameters": {
+      "arm": {
+        "name": "arm",
+        "default": "<function crossing_arm at 0x79e7fcd87060>",
+        "annotation": "ComponentSpec",
+        "kind": "POSITIONAL_OR_KEYWORD"
+      }
+    },
+    "settings": {}
+  },
+  "polarization_splitter_rotator": {
+    "component_type": "polarization_splitter_rotator",
+    "ports": [
+      "o1",
+      "o2",
+      "o3"
+    ],
+    "port_details": {
+      "o1": {
+        "name": "o1",
+        "orientation": 180.0,
+        "width": 0.54
+      },
+      "o2": {
+        "name": "o2",
+        "orientation": 0.0,
+        "width": 0.54
+      },
+      "o3": {
+        "name": "o3",
+        "orientation": 0.0,
+        "width": 0.54
+      }
+    },
+    "port_count": 3,
+    "parameters": {
+      "width_taper_in": {
+        "name": "width_taper_in",
+        "default": "(0.54, 0.69, 0.83)",
+        "annotation": "Float3",
+        "kind": "POSITIONAL_OR_KEYWORD"
+      },
+      "length_taper_in": {
+        "name": "length_taper_in",
+        "default": "(4.0, 44.0)",
+        "annotation": "Float2 | Float3",
+        "kind": "POSITIONAL_OR_KEYWORD"
+      },
+      "width_coupler": {
+        "name": "width_coupler",
+        "default": "(0.9, 0.404)",
+        "annotation": "Float2",
+        "kind": "POSITIONAL_OR_KEYWORD"
+      },
+      "length_coupler": {
+        "name": "length_coupler",
+        "default": 7.0,
+        "annotation": "float",
+        "kind": "POSITIONAL_OR_KEYWORD"
+      },
+      "gap": {
+        "name": "gap",
+        "default": 0.15,
+        "annotation": "float",
+        "kind": "POSITIONAL_OR_KEYWORD"
+      },
+      "width_out": {
+        "name": "width_out",
+        "default": 0.54,
+        "annotation": "float",
+        "kind": "POSITIONAL_OR_KEYWORD"
+      },
+      "length_out": {
+        "name": "length_out",
+        "default": 14.33,
+        "annotation": "float",
+        "kind": "POSITIONAL_OR_KEYWORD"
+      },
+      "dy": {
+        "name": "dy",
+        "default": 5.0,
+        "annotation": "Delta",
+        "kind": "POSITIONAL_OR_KEYWORD"
+      },
+      "cross_section": {
+        "name": "cross_section",
+        "default": "strip",
+        "annotation": "CrossSectionSpec",
+        "kind": "POSITIONAL_OR_KEYWORD"
+      }
+    },
+    "settings": {}
   }
 }
