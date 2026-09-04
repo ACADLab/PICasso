@@ -2,7 +2,7 @@
 
 # Core dependencies
 huggingface-hub>=0.20.0        # HF Inference API client
-gdsfactory>=9.9.4               # Photonic circuit design
+gdsfactory==9.23.0               # Photonic circuit design (pinned to gate baseline)
 pandas>=2.0.0                   # Data handling
 tqdm>=4.65.0                    # Progress bars
 
