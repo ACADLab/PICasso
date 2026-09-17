@@ -16,10 +16,16 @@ Generated from `gd_picasso.pcg.sax_models.SAX_PARAM_AUDIT`.
 | ring_single | S-model | compound / may fall back to bend | gs.models.ring_single if present else bend | gplugins hasattr fallback | stub |
 | via_stack_heater_mtop | S-model | missing | lossy straight stub | electrical cell appearing in get_netlist() | stub |
 
-## Open correctness debt
+## What the audit actually found
 
-1. **Heater re-baseline** against `cspdk.si220.cband` (Cornerstone L≈320 µm) — still open.
-2. Bend / MMI excess-loss overrides once PDK numbers are chosen.
-3. Ring S-model: prefer expanded coupler+loop over black-box fallback.
+Besides the known `straight.loss_dB_cm=0.0`:
 
-Use `build_lossy_models()` for any FoM path; call `ensure_jax_x64()` at import (done in `gd_picasso` / `gd_picasso.pcg`).
+| finding | status |
+|---|---|
+| MMI excess loss often ideal/0 | **silent_null class** — not overridden yet |
+| Heater `length` defaults (~10 µm generic_tech vs ~320 µm Cornerstone) | **silent_null class** — FoM scale error; re-baseline still open |
+| Bend loss unspecified / often 0 | **unknown** — needs PDK numbers, not just a flag |
+| `ring_single` → bend fallback | **stub** — wrong physics if hasattr fails |
+| Via stacks mapped to lossy straight | **stub** — electrical cell in optical FoM |
+
+Honest scope note: this pass was a *surface catalogue* of the models the gate already imports, not an automated signature crawl of all gplugins defaults. It did surface risk beyond `loss_dB_cm`, but the only *measured* silent-null we have forced to a non-zero value so far is waveguide loss. MMI/bend/heater still need the same treatment once numbers are chosen.
