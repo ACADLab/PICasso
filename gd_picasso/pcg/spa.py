@@ -133,7 +133,10 @@ def accumulate_path(
         unused = [e for e in candidates if id(e) not in used]
         pool = unused if unused else candidates
         if not pool:
-            continue
+            raise ValueError(
+                f"No optical edge between '{a}' and '{b}' in path "
+                f"{list(node_sequence)}; path is incomplete"
+            )
         if len(pool) > 1:
             raise ValueError(
                 f"Ambiguous optical edges between '{a}' and '{b}' "

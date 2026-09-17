@@ -99,6 +99,62 @@ ports:
     assert "placements:" not in out
 
 
+def test_batch_keyerror_rolls_back() -> None:
+    a1 = SchematicAgent()
+    store = PCGStore()
+    a1.add_component(store, "a", "mmi1x2")
+    a1.add_component(store, "b", "straight")
+    raised = False
+    try:
+        a1.apply_mutations(
+            store,
+            [
+                {"op": "connect", "src": "a", "src_port": "o2", "dst": "b", "dst_port": "o1"},
+                {"op": "connect", "src": "a"},  # missing keys → KeyError
+            ],
+        )
+    except KeyError:
+        raised = True
+    assert raised
+    assert len(store.edges) == 0
+
+
+def test_accumulate_path_missing_hop_raises() -> None:
+    from gd_picasso.pcg.spa import accumulate_path
+
+    store = PCGStore()
+    store.add_node(
+        PCGNode(id="a", component="straight", level=RefLevel.L1_CIRCUIT),
+        skip_component_check=True,
+    )
+    store.add_node(
+        PCGNode(id="b", component="straight", level=RefLevel.L1_CIRCUIT),
+        skip_component_check=True,
+    )
+    # no edge a—b
+    raised = False
+    try:
+        accumulate_path(store, ["a", "b"])
+    except ValueError as e:
+        raised = True
+        assert "No optical edge" in str(e)
+    assert raised
+
+
+def test_exact_critic_second_pass_still_flags_dangling() -> None:
+    store = PCGStore()
+    store.add_node(
+        PCGNode(id="a", component="mmi1x2", level=RefLevel.L1_CIRCUIT),
+        skip_component_check=True,
+    )
+    store.set_exported_ports({"in": "a,o1"})
+    c1 = ExactCritic().review(store)
+    assert c1.ok is False
+    c2 = ExactCritic().review(store)
+    assert c2.ok is False
+    assert any("Dangling" in p for p in c2.problems)
+
+
 def test_exact_critic_flags_unknown_component() -> None:
     store = PCGStore()
     store.add_node(
@@ -190,6 +246,9 @@ def run_all() -> int:
         test_malformed_yaml_rejected_before_partial_graph,
         test_connect_rejects_unknown_port,
         test_l1_yaml_omits_spurious_placements,
+        test_batch_keyerror_rolls_back,
+        test_accumulate_path_missing_hop_raises,
+        test_exact_critic_second_pass_still_flags_dangling,
     ]
     passed = failed = 0
     for t in tests:

@@ -64,7 +64,7 @@ class SchematicAgent:
         store: PCGStore,
         mutations: List[Dict[str, Any]],
     ) -> ExactCritique:
-        """Apply a batch atomically — roll back the store on first hard error."""
+        """Apply a batch atomically — roll back the store on any failure."""
         snap = store.snapshot()
         try:
             for m in mutations:
@@ -82,7 +82,7 @@ class SchematicAgent:
                     self.set_param(store, m["node"], m["key"], m["value"])
                 else:
                     raise PCGMutationError("A1", f"Unknown op {op!r}")
-        except PCGMutationError:
+        except Exception:
             store.restore(snap)
             raise
         return self.critique(store)

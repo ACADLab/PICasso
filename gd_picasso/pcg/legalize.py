@@ -9,7 +9,7 @@ Photonic Circuit Graph — Legalization.
 from __future__ import annotations
 
 import uuid
-from typing import List, Optional, Set, Tuple
+from typing import Dict, List, Optional, Set, Tuple
 
 from .store import PCGStore
 from .types import (
@@ -51,33 +51,36 @@ def detect_dangling_ports(
 ) -> List[ConstraintEntry]:
     """Scan optical ports for degree-0 and return constraint entries.
 
-    Each dangling port produces a ``ConstraintEntry(kind=DANGLING_PORT)``.
-    When ``record`` is True, new entries are added to the ledger (idempotent
-    on ``(node, port)``). No nodes are inserted — that is ``insert_terminators``.
+    Always returns an entry for every currently dangling port so repeated
+    critic scans cannot miss unresolved dangles. When ``record`` is True,
+    only *new* ``(node, port)`` keys are appended to the ledger (no dupes).
     """
     connected = _connected_optical(store)
-    already = {
-        (c.elements[0], c.elements[1])
-        for c in store.constraints
-        if c.kind == ConstraintKind.DANGLING_PORT and len(c.elements) >= 2
-    }
+    existing: Dict[Tuple[str, str], ConstraintEntry] = {}
+    for c in store.constraints:
+        if c.kind == ConstraintKind.DANGLING_PORT and len(c.elements) >= 2:
+            existing[(c.elements[0], c.elements[1])] = c
+
     entries: List[ConstraintEntry] = []
     for nid, node in store.nodes.items():
         for pname in node.ports:
-            if (nid, pname) not in connected:
-                if (nid, pname) in already:
-                    continue
-                entry = ConstraintEntry(
-                    id=f"dangling_{uuid.uuid4().hex[:8]}",
-                    kind=ConstraintKind.DANGLING_PORT,
-                    elements=[nid, pname],
-                    status=ConstraintStatus.OPEN,
-                    evidence={"component": node.component},
-                )
-                entries.append(entry)
-                if record:
-                    store.add_constraint(entry, agent="legalize")
-                    already.add((nid, pname))
+            if (nid, pname) in connected:
+                continue
+            key = (nid, pname)
+            if key in existing:
+                entries.append(existing[key])
+                continue
+            entry = ConstraintEntry(
+                id=f"dangling_{uuid.uuid4().hex[:8]}",
+                kind=ConstraintKind.DANGLING_PORT,
+                elements=[nid, pname],
+                status=ConstraintStatus.OPEN,
+                evidence={"component": node.component},
+            )
+            entries.append(entry)
+            if record:
+                store.add_constraint(entry, agent="legalize")
+                existing[key] = entry
 
     return entries
 

@@ -90,13 +90,21 @@ def test_dangling_and_terminators() -> None:
     )
     store.set_exported_ports({"in": "a,o1"})
     dangling = detect_dangling_ports(store)
-    # o1 exported; o2,o3 dangling
+    # o1 exported; o2,o3 dangling — all three are degree-0
     assert len(dangling) >= 2
+    # Second scan must still report dangling ports (not silently empty)
+    again = detect_dangling_ports(store)
+    assert len(again) == len(dangling)
     inserted = insert_terminators(store, skip_exported=True)
     assert len(inserted) >= 2
-    # second detect should not duplicate
     more = detect_dangling_ports(store)
-    assert more == []
+    # Non-exported dangles resolved; exported o1 may remain
+    non_exported = [
+        e for e in more
+        if not (e.elements[0] == "a" and e.elements[1] == "o1")
+    ]
+    assert non_exported == []
+    assert any(e.elements[:2] == ["a", "o1"] for e in more)
 
 
 def test_ring_bus_edge_counts() -> None:
