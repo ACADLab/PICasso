@@ -94,11 +94,18 @@ def _validate_param(component: str, key: str) -> None:
     except ImportError:
         pass
     allowed = _STATIC_PARAMS.get(component)
-    if allowed is not None and key not in allowed:
-        raise PCGMutationError(
-            "set_param",
-            f"Parameter '{key}' not in signature of '{component}'",
-        )
+    if allowed is not None:
+        if key not in allowed:
+            raise PCGMutationError(
+                "set_param",
+                f"Parameter '{key}' not in signature of '{component}'",
+            )
+        return
+    # Unknown component / no signature source — do not silently accept keys.
+    raise PCGMutationError(
+        "set_param",
+        f"Cannot validate parameter '{key}' for unknown component '{component}'",
+    )
 
 
 def _validate_component(component: str) -> None:
@@ -207,6 +214,22 @@ class PCGStore:
             raise PCGMutationError("connect", f"Source node '{src_node}' not found")
         if dst_node not in self._nodes:
             raise PCGMutationError("connect", f"Destination node '{dst_node}' not found")
+
+        src = self._nodes[src_node]
+        dst = self._nodes[dst_node]
+        # Port-name membership when the node has a populated port map
+        if src.ports and src_port not in src.ports:
+            raise PCGMutationError(
+                "connect",
+                f"Port '{src_port}' not on node '{src_node}' "
+                f"(have {sorted(src.ports)})",
+            )
+        if dst.ports and dst_port not in dst.ports:
+            raise PCGMutationError(
+                "connect",
+                f"Port '{dst_port}' not on node '{dst_node}' "
+                f"(have {sorted(dst.ports)})",
+            )
 
         # No self-loop on same port
         if src_node == dst_node and src_port == dst_port:
@@ -373,6 +396,35 @@ class PCGStore:
     ) -> None:
         self._exported_ports = dict(ports)
         self._record("set_exported_ports", {"ports": dict(ports)}, agent)
+
+    # -- snapshot / restore (atomic agent batches) ---------------------------
+
+    def snapshot(self) -> Dict[str, Any]:
+        """Deep-ish snapshot of graph state + journal length for rollback."""
+        return {
+            "nodes": {k: v.model_copy(deep=True) for k, v in self._nodes.items()},
+            "edges": [e.model_copy(deep=True) for e in self._edges],
+            "bundles": {k: v.model_copy(deep=True) for k, v in self._bundles.items()},
+            "constraints": [c.model_copy(deep=True) for c in self._constraints],
+            "exported_ports": dict(self._exported_ports),
+            "journal_len": len(self.journal),
+        }
+
+    def restore(self, snap: Dict[str, Any]) -> None:
+        """Restore a snapshot from ``snapshot()``; truncates journal."""
+        self._nodes = {k: v.model_copy(deep=True) for k, v in snap["nodes"].items()}
+        self._edges = [e.model_copy(deep=True) for e in snap["edges"]]
+        self._bundles = {k: v.model_copy(deep=True) for k, v in snap["bundles"].items()}
+        self._constraints = [c.model_copy(deep=True) for c in snap["constraints"]]
+        self._exported_ports = dict(snap["exported_ports"])
+        self._graph = nx.MultiDiGraph()
+        for nid in self._nodes:
+            self._graph.add_node(nid)
+        for e in self._edges:
+            self._graph.add_edge(e.src_node, e.dst_node)
+        # Truncate journal in place
+        keep = int(snap["journal_len"])
+        self.journal._entries = self.journal._entries[:keep]
 
     # -- hashing ------------------------------------------------------------
 

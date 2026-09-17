@@ -64,10 +64,11 @@ class SchematicAgent:
         store: PCGStore,
         mutations: List[Dict[str, Any]],
     ) -> ExactCritique:
-        """Apply a batch of dict mutations; stop and report on first hard error."""
-        for m in mutations:
-            op = m.get("op")
-            try:
+        """Apply a batch atomically — roll back the store on first hard error."""
+        snap = store.snapshot()
+        try:
+            for m in mutations:
+                op = m.get("op")
                 if op == "add_node":
                     self.add_component(
                         store, m["id"], m["component"], m.get("params")
@@ -81,6 +82,7 @@ class SchematicAgent:
                     self.set_param(store, m["node"], m["key"], m["value"])
                 else:
                     raise PCGMutationError("A1", f"Unknown op {op!r}")
-            except PCGMutationError:
-                raise
+        except PCGMutationError:
+            store.restore(snap)
+            raise
         return self.critique(store)

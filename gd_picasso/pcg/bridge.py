@@ -145,22 +145,28 @@ def to_gf_yaml(store: PCGStore) -> str:
     data["instances"] = instances
 
     # --- placements ---
+    # L1 schematics with no geometry must not grow a spurious placements block
+    # ({mirror: false} alone changes round-trip behavior).
     placements: Dict[str, Any] = {}
     for nid in sorted(store.nodes):
         n = store.nodes[nid]
         if n.raw_placement is not None and not n._placement_dirty:
             placements[nid] = dict(n.raw_placement)
-        else:
-            p: Dict[str, Any] = {}
-            if n.x is not None:
-                p["x"] = n.x
-            if n.y is not None:
-                p["y"] = n.y
-            if n.rotation is not None:
-                p["rotation"] = n.rotation
-            p["mirror"] = n.mirror
-            placements[nid] = p
-    data["placements"] = placements
+            continue
+        has_geom = n.x is not None or n.y is not None or n.rotation is not None
+        if not has_geom and not n._placement_dirty:
+            continue
+        p: Dict[str, Any] = {}
+        if n.x is not None:
+            p["x"] = n.x
+        if n.y is not None:
+            p["y"] = n.y
+        if n.rotation is not None:
+            p["rotation"] = n.rotation
+        p["mirror"] = n.mirror
+        placements[nid] = p
+    if placements:
+        data["placements"] = placements
 
     # --- routes (ROUTED edges grouped by bundle) ---
     bundle_edges: Dict[str, List[PCGEdge]] = defaultdict(list)
@@ -234,6 +240,8 @@ def to_sax_netlist(store: PCGStore) -> Dict[str, Any]:
     # SAX / gdsfactory expect connections as a dict of port refs, not a list
     connections: Dict[str, str] = {}
     for e in store.edges:
+        if e.layer != EdgeLayer.OPTICAL:
+            continue
         connections[f"{e.src_node},{e.src_port}"] = f"{e.dst_node},{e.dst_port}"
 
     ports: Dict[str, str] = dict(store.exported_ports)

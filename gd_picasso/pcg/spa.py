@@ -70,18 +70,27 @@ def accumulate_path(
         return metrics
 
     edges = store.edges
+    used: set[int] = set()
     for a, b in zip(node_sequence, node_sequence[1:]):
-        matched = None
-        for e in edges:
-            if e.layer != EdgeLayer.OPTICAL:
-                continue
-            if (e.src_node == a and e.dst_node == b) or (
-                e.src_node == b and e.dst_node == a
-            ):
-                matched = e
-                break
-        if matched is None:
+        candidates = [
+            e for e in edges
+            if e.layer == EdgeLayer.OPTICAL
+            and (
+                (e.src_node == a and e.dst_node == b)
+                or (e.src_node == b and e.dst_node == a)
+            )
+        ]
+        unused = [e for e in candidates if id(e) not in used]
+        pool = unused if unused else candidates
+        if not pool:
             continue
+        if len(pool) > 1:
+            raise ValueError(
+                f"Ambiguous optical edges between '{a}' and '{b}' "
+                f"({len(pool)} candidates); qualify the path by port"
+            )
+        matched = pool[0]
+        used.add(id(matched))
         L = matched.length_um or 0.0
         metrics.length_um += L
         metrics.n_crossings += matched.n_crossings or 0

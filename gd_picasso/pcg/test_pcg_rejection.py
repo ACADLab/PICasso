@@ -20,6 +20,7 @@ from gd_picasso.pcg import (
     PCGStore,
     RefLevel,
     from_gf_yaml,
+    to_gf_yaml,
 )
 from gd_picasso.pcg.types import PortKind, PCGPort
 
@@ -58,7 +59,44 @@ def test_a1_batch_stops_on_illegal_mutation() -> None:
     except PCGMutationError:
         raised = True
     assert raised
-    assert len(store.edges) == 1
+    # Atomic batch: first connect must not stick after rollback
+    assert len(store.edges) == 0
+    assert not any(e.op == "connect" for e in store.journal.entries)
+
+
+def test_connect_rejects_unknown_port() -> None:
+    store = PCGStore()
+    store.add_node(
+        PCGNode(id="a", component="mmi1x2", level=RefLevel.L1_CIRCUIT),
+        skip_component_check=True,
+    )
+    store.add_node(
+        PCGNode(id="b", component="straight", level=RefLevel.L1_CIRCUIT),
+        skip_component_check=True,
+    )
+    raised = False
+    try:
+        store.connect("a", "o99", "b", "o1")
+    except PCGMutationError as e:
+        raised = True
+        assert "o99" in str(e)
+    assert raised
+
+
+def test_l1_yaml_omits_spurious_placements() -> None:
+    yaml_in = """\
+instances:
+  wg:
+    component: straight
+    settings: {length: 10}
+routes: {}
+ports:
+  in: wg,o1
+  out: wg,o2
+"""
+    store = from_gf_yaml(yaml_in)
+    out = to_gf_yaml(store)
+    assert "placements:" not in out
 
 
 def test_exact_critic_flags_unknown_component() -> None:
@@ -150,6 +188,8 @@ def run_all() -> int:
         test_set_param_rejects_bogus_key_via_agent,
         test_triage_routes_dangling_to_a1,
         test_malformed_yaml_rejected_before_partial_graph,
+        test_connect_rejects_unknown_port,
+        test_l1_yaml_omits_spurious_placements,
     ]
     passed = failed = 0
     for t in tests:
