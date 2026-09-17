@@ -211,6 +211,44 @@ Not wall-clock alone. Report **candidates evaluated per second** and the **runti
 7. Close the loop: differentiable optimizer over L3 params; A2/A3 as controllers.
 8. GNN surrogate, then RL for discrete decisions — Thrust 2 territory.
 
+### 5.1 Status on `dev/picplus` (Sep 2026)
+
+| Build-order / board item | Status |
+|---|---|
+| PCG store, dual hash, journal, YAML bridge gate | **Done** (invariants + rejection suite) |
+| Legalize dangling detect + terminators; A0–A4 stubs; ExactCritic | **Done** (ledger dedupe with A4) |
+| SPA N-path WNS (reconvergent pairs); hybrid 4-path targets | **Done** — comparator only; not layout evidence |
+| SAX silent-default audit table | **Partial** — `loss_dB_cm` forced; MMI/bend/heater still open |
+| Heater / Cornerstone re-baseline (`L≈320 µm`, lossy strip) | **Probed in `gd_picasso/probes/lowering/`** — not yet wired into FoM path |
+| Spec→unitary→Clements lowering (math half of NL→PCG) | **Probed in `gd_picasso/probes/lowering/`** — needs lambda-lambda on path |
+| PIC-Set 36 committed fixture freeze | **Open** (4 builtins + `pcg/fixtures/`; not 36/36) |
+| Route Task 6 & 9 → back-annotate → SPA WNS | **Open** (the real N3 experiment) |
+| Placement / GPU router kernels | **Open** — different scale; do not bucket with heater/PIC-Set |
+
+### 5.2 Immediate ordered plan (do not reorder casually)
+
+1. **Land Cornerstone numbers into the FoM path** — promote `gd_picasso/probes/lowering/` findings (`ARM_L=320`, `loss_dB_cm=0.7`, loss-balancing dummy arm, grade = `‖T−αU‖` + IL) into `sax_models` / gate harness. Without this, any routed SPA number is poisoned.
+2. **Wire lowering → PCG** — probe cells → typed mutations (A1), not free YAML. Keep PSD gate (`psd_gate.py`) in front of Clements.
+3. **Route + back-annotate Tasks 6 & 9** — consume N-path SPA; report WNS. That is N3 evidence.
+4. **Freeze PIC-Set 36 fixtures** in `gd_picasso/pcg/fixtures/`.
+5. **P&R kernels** only after 1–3; they inherit FoM + SPA contracts.
+
+### 5.3 Probe tree: `gd_picasso/probes/lowering/`
+
+Canonical uncommitted → committed probe for spec→layout math + Cornerstone FoM.
+(Older root `files/` / `files-2/` trees were removed; this directory replaces them.)
+
+**Math (numpy/scipy/sympy + lambda-lambda)**
+- `recon_check.py` — pins Clements rebuild (`G1ᴴ…Gkᴴ @ D`)
+- `mzi_conventions.py` / `mzi_extract.py` — SU(2) convention + closed-form `(θ,φ,a,b)`
+- `lower.py` — spec → U → Clements cells → rebuild (~1e-15)
+- `psd_gate.py` — Algorithm-1 feasibility (`I−AAᴴ` ≱ 0 ⇒ reject gain specs)
+- `picset_specs.py` — which PIC-Set tasks are linear-spec expressible (incl. 90° hybrid 4×4)
+
+**Cornerstone (`gdsfactory` + `cspdk`)**
+- `cs_mzi.py` / `cs_full.py` — heater re-baseline: `L=320 µm`, `loss_dB_cm=0.7`; `mmi2x2` 50:50 cell; loss-balancing dummy; sub-unitary `T=αU`
+- `merge_phases.py` / `heater_count.py` — adjacent-layer merge barely helps (~0–20%); budget ≈ **4 heaters per MZI**
+
 ## 6. Claim discipline
 
 **Claim**: typed graph IR as shared agent/solver state; layout-faithful back-annotated simulation; phase as a first-class routing constraint and the static-phase-analysis framing; GPU-native curvy routing via orientation-augmented min-plus sweeps; soft/hard router duality giving gradients through routing; the whole loop on one device.
