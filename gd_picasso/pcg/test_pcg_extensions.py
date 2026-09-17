@@ -139,8 +139,41 @@ def test_spa_phase_slack() -> None:
         tolerance_rad=0.01,
     )
     assert len(report.groups) == 1
-    # unequal arm lengths → likely negative slack
     assert report.groups[0].delta_phi_rad != 0.0
+    assert report.wns_rad == report.groups[0].wns_rad
+    assert report.groups[0].wns_rad < 0  # unequal arms → negative WNS
+
+
+def test_spa_hybrid_four_path_wns() -> None:
+    """Equal-length four-path group vs quadrature targets → WNS < 0."""
+    import math
+    from gd_picasso.pcg.spa import HYBRID_90_TARGETS_RAD, spa_analyze
+    from gd_picasso.pcg.spa_table_v import _hybrid_four_path
+
+    store, groups = _hybrid_four_path([200.0, 200.0, 200.0, 200.0])
+    report = spa_analyze(
+        store,
+        groups,
+        tolerance_rad=0.01,
+        group_targets={"quadrature": HYBRID_90_TARGETS_RAD},
+    )
+    g = report.groups[0]
+    assert len(g.paths) == 4
+    assert len(g.pair_slacks) == 6  # C(4,2)
+    assert g.wns_rad < 0
+    # Correct geometry realizing targets → WNS >= 0
+    from gd_picasso.pcg.spa_table_v import _L_for_phase
+
+    L0 = 200.0
+    lengths = [L0 + _L_for_phase(t) for t in HYBRID_90_TARGETS_RAD]
+    store_ok, groups_ok = _hybrid_four_path(lengths, prefix="ok_")
+    report_ok = spa_analyze(
+        store_ok,
+        groups_ok,
+        tolerance_rad=0.01,
+        group_targets={"quadrature": HYBRID_90_TARGETS_RAD},
+    )
+    assert report_ok.wns_rad >= 0.0, report_ok.wns_rad
 
 
 def test_ports_populated_on_import() -> None:
@@ -160,6 +193,7 @@ def run_all() -> int:
         test_dangling_and_terminators,
         test_ring_bus_edge_counts,
         test_spa_phase_slack,
+        test_spa_hybrid_four_path_wns,
         test_ports_populated_on_import,
     ]
     passed = failed = 0
