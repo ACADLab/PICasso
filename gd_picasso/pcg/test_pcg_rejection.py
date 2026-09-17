@@ -155,6 +155,35 @@ def test_exact_critic_second_pass_still_flags_dangling() -> None:
     assert any("Dangling" in p for p in c2.problems)
 
 
+def test_critic_then_triage_no_duplicate_dangling() -> None:
+    """ExactCritic records DANGLING_PORT; A4 must reuse, not duplicate."""
+    from gd_picasso.pcg.types import ConstraintKind
+
+    store = PCGStore()
+    store.add_node(
+        PCGNode(id="a", component="mmi1x2", level=RefLevel.L1_CIRCUIT),
+        skip_component_check=True,
+    )
+    store.set_exported_ports({"in": "a,o1"})
+    critique = ExactCritic().review(store)
+    assert critique.ok is False
+    before = sum(
+        1 for c in store.constraints if c.kind == ConstraintKind.DANGLING_PORT
+    )
+    assert before >= 1
+    decision = TriageAgent().triage(
+        store,
+        [{"kind": "dangling", "elements": ["a", "o2"], "evidence": {"from": "test"}}],
+    )
+    after = [
+        c for c in store.constraints
+        if c.kind == ConstraintKind.DANGLING_PORT and c.elements[:2] == ["a", "o2"]
+    ]
+    assert len(after) == 1, f"expected 1 ledger row for a.o2, got {len(after)}"
+    assert decision.added_constraints == []  # reused, not newly added
+    assert after[0].evidence.get("triage_reused") is True
+
+
 def test_exact_critic_flags_unknown_component() -> None:
     store = PCGStore()
     store.add_node(
@@ -249,6 +278,7 @@ def run_all() -> int:
         test_batch_keyerror_rolls_back,
         test_accumulate_path_missing_hop_raises,
         test_exact_critic_second_pass_still_flags_dangling,
+        test_critic_then_triage_no_duplicate_dangling,
     ]
     passed = failed = 0
     for t in tests:

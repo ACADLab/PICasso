@@ -38,12 +38,30 @@ class TriageAgent:
         "thermal": ConstraintKind.THERMAL_KEEPAWAY,
     }
 
+    @staticmethod
+    def _find_open(
+        store: PCGStore,
+        kind: ConstraintKind,
+        elements: List[str],
+    ) -> Optional[ConstraintEntry]:
+        """Return an existing OPEN constraint with the same kind+elements."""
+        key = list(elements)
+        for c in store.constraints:
+            if (
+                c.kind == kind
+                and c.status == ConstraintStatus.OPEN
+                and list(c.elements) == key
+            ):
+                return c
+        return None
+
     def triage(
         self,
         store: PCGStore,
         failures: List[Dict[str, Any]],
     ) -> TriageDecision:
         added: List[str] = []
+        reused: List[str] = []
         needs_schematic = False
         needs_pnr = False
         needs_opt = False
@@ -51,17 +69,28 @@ class TriageAgent:
         for f in failures:
             kind_key = str(f.get("kind", "custom")).lower()
             kind = self.KIND_MAP.get(kind_key, ConstraintKind.CUSTOM)
-            cid = f.get("id") or f"c_{uuid.uuid4().hex[:8]}"
             elements = list(f.get("elements") or [])
-            entry = ConstraintEntry(
-                id=cid,
-                kind=kind,
-                elements=elements,
-                status=ConstraintStatus.OPEN,
-                evidence=dict(f.get("evidence") or {"raw": f}),
-            )
-            store.add_constraint(entry, agent="A4")
-            added.append(cid)
+            existing = self._find_open(store, kind, elements)
+            if existing is not None:
+                # Merge evidence; do not duplicate the ledger row
+                if f.get("evidence"):
+                    existing.evidence = {
+                        **dict(existing.evidence or {}),
+                        **dict(f["evidence"]),
+                        "triage_reused": True,
+                    }
+                reused.append(existing.id)
+            else:
+                cid = f.get("id") or f"c_{uuid.uuid4().hex[:8]}"
+                entry = ConstraintEntry(
+                    id=cid,
+                    kind=kind,
+                    elements=elements,
+                    status=ConstraintStatus.OPEN,
+                    evidence=dict(f.get("evidence") or {"raw": f}),
+                )
+                store.add_constraint(entry, agent="A4")
+                added.append(cid)
 
             if kind in (ConstraintKind.DANGLING_PORT, ConstraintKind.PORT_DEGREE):
                 needs_schematic = True
@@ -83,11 +112,13 @@ class TriageAgent:
         decision = TriageDecision(
             reinvoke=reinvoke,
             added_constraints=added,
-            summary=f"{len(added)} constraint(s); next={reinvoke}",
+            summary=(
+                f"{len(added)} new, {len(reused)} reused; next={reinvoke}"
+            ),
         )
         store.journal.append(
             "A4_triage",
-            decision.model_dump(),
+            {**decision.model_dump(), "reused_constraints": reused},
             agent="A4",
         )
         return decision
