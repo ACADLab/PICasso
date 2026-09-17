@@ -215,28 +215,35 @@ Not wall-clock alone. Report **candidates evaluated per second** and the **runti
 
 | Build-order / board item | Status |
 |---|---|
-| PCG store, dual hash, journal, YAML bridge gate | **Done** (invariants + rejection suite) |
+| PCG store, dual hash, journal | **Done** (invariants 8/8, rejection 13/13, extensions 8/8) |
+| gdsfactory YAML round-trip gate | **Code done, unrun** — `pcg_roundtrip_test.py` dies at `import gdsfactory`; the `picasso` env in `environment.yml` is not created locally |
+| **LiDAR PIC IR round-trip (build-order step 2)** | **Not started** — zero `lidar` references in the tree; §2.4's "superset of LiDAR PIC IR ∪ SAX netlist" has no code |
 | Legalize dangling detect + terminators; A0–A4 stubs; ExactCritic | **Done** (ledger dedupe with A4) |
 | SPA N-path WNS (reconvergent pairs); hybrid 4-path targets | **Done** — comparator only; not layout evidence |
-| SAX silent-default audit table | **Partial** — `loss_dB_cm` forced; MMI/bend/heater still open |
-| Heater / Cornerstone re-baseline (`L≈320 µm`, lossy strip) | **Probed in `gd_picasso/probes/lowering/`** — not yet wired into FoM path |
-| Spec→unitary→Clements lowering (math half of NL→PCG) | **Probed in `gd_picasso/probes/lowering/`** — needs lambda-lambda on path |
+| SAX silent-default audit table | **Partial** — `loss_dB_cm` forced in `pcg/sax_models.py` only; MMI/bend/heater open |
+| **FoM path is split-brain** | **Open, blocking** — `validators/sax_validator.py:169` still builds `gs.models.straight` at `loss_dB_cm=0.0` while the PCG gate uses 0.7. Two simulation paths, two physics; any quoted IL/WNS depends on which ran |
+| Heater / Cornerstone re-baseline (`L≈320 µm`, lossy strip) | **Probed in `gd_picasso/probes/lowering/`**, numbers in `FINDINGS.md` — unverified (gf 9.45.0 vs pinned 9.23.0; `cspdk` in no dep file); not wired into FoM path |
+| Spec→unitary→Clements lowering (math half of NL→PCG) | **Probed, unrunnable** — 6 of 10 probes import `unitary_inference`; lambda-lambda is not vendored, not installed, not on disk |
 | PIC-Set 36 committed fixture freeze | **Open** (4 builtins + `pcg/fixtures/`; not 36/36) |
 | Route Task 6 & 9 → back-annotate → SPA WNS | **Open** (the real N3 experiment) |
 | Placement / GPU router kernels | **Open** — different scale; do not bucket with heater/PIC-Set |
 
 ### 5.2 Immediate ordered plan (do not reorder casually)
 
-1. **Land Cornerstone numbers into the FoM path** — promote `gd_picasso/probes/lowering/` findings (`ARM_L=320`, `loss_dB_cm=0.7`, loss-balancing dummy arm, grade = `‖T−αU‖` + IL) into `sax_models` / gate harness. Without this, any routed SPA number is poisoned.
+0. **Make the gate runnable and vendor lambda-lambda** — create the `picasso` env; pin λλ (`unitary_inference.py`, `optical_compiler/ast.py`) by SHA or vendor it; add `cspdk`; resolve gf 9.23.0 vs 9.45.0. Then **re-run all probes and re-derive `FINDINGS.md`**. Nothing below is trustworthy until its inputs are reproducible.
+1. **Unify the FoM path, then land Cornerstone numbers** — first make `validators/sax_validator.py` and `pcg/sax_models.py` one model map (lossless production validator is the live bug); then promote re-derived findings (`ARM_L=320`, `loss_dB_cm=0.7`, loss-balancing dummy arm, grade = `‖T−αU‖` + IL). Without both halves, any routed SPA number is poisoned.
 2. **Wire lowering → PCG** — probe cells → typed mutations (A1), not free YAML. Keep PSD gate (`psd_gate.py`) in front of Clements.
 3. **Route + back-annotate Tasks 6 & 9** — consume N-path SPA; report WNS. That is N3 evidence.
 4. **Freeze PIC-Set 36 fixtures** in `gd_picasso/pcg/fixtures/`.
-5. **P&R kernels** only after 1–3; they inherit FoM + SPA contracts.
+5. **P&R kernels** only after 0–3; they inherit FoM + SPA contracts.
 
 ### 5.3 Probe tree: `gd_picasso/probes/lowering/`
 
-Canonical uncommitted → committed probe for spec→layout math + Cornerstone FoM.
-(Older root `files/` / `files-2/` trees were removed; this directory replaces them.)
+Committed probe tree for spec→layout math + Cornerstone FoM.
+(Older root `files/` / `files-2/` trees were removed; this directory replaces them. They were
+byte-identical to each other for all six shared math files.)
+
+`FINDINGS.md` holds the measured results (restored from the deleted `files-2/README.md`, which was never committed — `git log -S` finds those numbers nowhere in history).
 
 **Math (numpy/scipy/sympy + lambda-lambda)**
 - `recon_check.py` — pins Clements rebuild (`G1ᴴ…Gkᴴ @ D`)
