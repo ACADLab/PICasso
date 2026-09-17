@@ -1,0 +1,50 @@
+instances:
+  splitter:
+    component: mmi1x2
+    settings: {}
+  ps_upper:
+    component: straight_heater_metal
+    settings: {length: 100}
+  ps_lower:
+    component: straight
+    settings: {length: 100}
+  combiner:
+    component: mmi1x2
+    settings: {}
+
+placements:
+  splitter:
+    x: 0
+    y: 0
+    rotation: 0
+    mirror: false
+  ps_upper:
+    x: 150
+    y: 50
+    rotation: 0
+    mirror: false
+  ps_lower:
+    x: 150
+    y: -50
+    rotation: 0
+    mirror: false
+  combiner:
+    x: 300
+    y: 0
+    rotation: 180
+    mirror: false
+
+routes:
+  optical:
+    settings:
+      cross_section: strip
+      radius: 10.0
+    links:
+      splitter,o2: ps_upper,o1
+      splitter,o3: ps_lower,o1
+      ps_upper,o2: combiner,o2
+      ps_lower,o2: combiner,o3
+
+ports:
+  in: splitter,o1
+  out: combiner,o1

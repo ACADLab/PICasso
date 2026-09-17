@@ -28,9 +28,12 @@ instances:
   splitter:
     component: mmi1x2
     settings: {}
-  phase:
+  ps_upper:
     component: straight_heater_metal
-    settings: {length: 20}
+    settings: {length: 100}
+  ps_lower:
+    component: straight
+    settings: {length: 100}
   combiner:
     component: mmi1x2
     settings: {}
@@ -41,30 +44,32 @@ placements:
     y: 0
     rotation: 0
     mirror: false
-  phase:
-    x: 100
-    y: 0.625
+  ps_upper:
+    x: 150
+    y: 50
+    rotation: 0
+    mirror: false
+  ps_lower:
+    x: 150
+    y: -50
     rotation: 0
     mirror: false
   combiner:
-    x: 200
+    x: 300
     y: 0
-    rotation: 0
-    mirror: true
+    rotation: 180
+    mirror: false
 
 routes:
-  arm_in:
+  optical:
     settings:
       cross_section: strip
-      radius: 5.0
+      radius: 10.0
     links:
-      splitter,o2: phase,o1
-  arm_out:
-    settings:
-      cross_section: strip
-      radius: 5.0
-    links:
-      phase,o2: combiner,o2
+      splitter,o2: ps_upper,o1
+      splitter,o3: ps_lower,o1
+      ps_upper,o2: combiner,o2
+      ps_lower,o2: combiner,o3
 
 ports:
   in: splitter,o1
@@ -78,10 +83,10 @@ instances:
     settings: {}
   ps_upper:
     component: straight_heater_metal
-    settings: {length: 10}
+    settings: {length: 100}
   ps_lower:
     component: straight_heater_metal
-    settings: {length: 10}
+    settings: {length: 100}
   combiner:
     component: mmi2x2
     settings: {}
@@ -93,46 +98,31 @@ placements:
     rotation: 0
     mirror: false
   ps_upper:
-    x: 100
-    y: 0.625
+    x: 150
+    y: 40
     rotation: 0
     mirror: false
   ps_lower:
-    x: 100
-    y: -0.625
+    x: 150
+    y: -40
     rotation: 0
     mirror: false
   combiner:
-    x: 200
+    x: 300
     y: 0
-    rotation: 0
+    rotation: 180
     mirror: false
 
 routes:
-  arm_u_in:
+  optical:
     settings:
       cross_section: strip
-      radius: 5.0
+      radius: 10.0
     links:
       splitter,o2: ps_upper,o1
-  arm_l_in:
-    settings:
-      cross_section: strip
-      radius: 5.0
-    links:
       splitter,o3: ps_lower,o1
-  arm_u_out:
-    settings:
-      cross_section: strip
-      radius: 5.0
-    links:
-      ps_upper,o2: combiner,o2
-  arm_l_out:
-    settings:
-      cross_section: strip
-      radius: 5.0
-    links:
-      ps_lower,o2: combiner,o1
+      ps_upper,o2: combiner,o1
+      ps_lower,o2: combiner,o2
 
 ports:
   in: splitter,o1
@@ -140,24 +130,52 @@ ports:
   out2: combiner,o4
 """
 
+# Ring-bus probe: coupler with same-instance feedback (o3→o4) + bus through.
+# Stresses same-node different-port edges (allowed) vs same-port self-loop (rejected).
 FIXTURE_RING = """\
 instances:
-  ring:
-    component: ring_single
-    settings: {length_x: 4, gap: 0.2}
+  dc:
+    component: coupler
+    settings: {gap: 0.2, length: 10}
+  bus_in:
+    component: straight
+    settings: {length: 20}
+  bus_out:
+    component: straight
+    settings: {length: 20}
 
 placements:
-  ring:
+  bus_in:
     x: 0
     y: 0
     rotation: 0
     mirror: false
+  dc:
+    x: 80
+    y: 0
+    rotation: 0
+    mirror: false
+  bus_out:
+    x: 200
+    y: 0
+    rotation: 0
+    mirror: false
 
-routes: {}
+routes:
+  optical:
+    settings:
+      cross_section: strip
+      radius: 10.0
+    links:
+      bus_in,o2: dc,o1
+      dc,o4: bus_out,o1
+
+connections:
+  dc,o3: dc,o2
 
 ports:
-  in: ring,o1
-  out: ring,o2
+  in: bus_in,o1
+  out: bus_out,o2
 """
 
 # Linear waveguide — guaranteed routeable; meaningful length for ΔIL
@@ -211,19 +229,25 @@ THESIS_STEPS = {"5_sax", "6_delta_il"}
 # ---------------------------------------------------------------------------
 
 def discover_corpus() -> Dict[str, str]:
-    """Glob for stored circuit.yaml files under gd_picasso/output/."""
-    root = Path(__file__).resolve().parents[1] / "output"
+    """Load committed fixtures/ plus optional gd_picasso/output/**/circuit.yaml."""
     found: Dict[str, str] = {}
-    if not root.is_dir():
-        return found
-    for path in sorted(root.glob("**/*/circuit.yaml")):
-        # Name: model/phase/problem_N/sample_M
-        rel = path.relative_to(root)
-        key = str(rel.parent).replace("\\", "/")
-        try:
-            found[key] = path.read_text(encoding="utf-8")
-        except OSError:
-            continue
+    root = Path(__file__).resolve().parent
+    fixtures_dir = root / "fixtures"
+    if fixtures_dir.is_dir():
+        for path in sorted(fixtures_dir.glob("*.yaml")):
+            try:
+                found[f"fixture:{path.stem}"] = path.read_text(encoding="utf-8")
+            except OSError:
+                continue
+    out = root.parent / "output"
+    if out.is_dir():
+        for path in sorted(out.glob("**/*/circuit.yaml")):
+            rel = path.relative_to(out)
+            key = str(rel.parent).replace("\\", "/")
+            try:
+                found[f"corpus:{key}"] = path.read_text(encoding="utf-8")
+            except OSError:
+                continue
     return found
 
 
@@ -511,15 +535,16 @@ def _run_delta_il(store, comp_orig, name: str, result: Dict[str, str]) -> None:
     try:
         import sax
         import jax.numpy as jnp
-        from functools import partial
     except ImportError:
         result["6_delta_il"] = "SKIP: sax/jax not installed"
         print(f"  [6] Delta: SKIP — sax/jax not installed")
         return
 
     from gd_picasso.pcg import to_sax_netlist
+    from gd_picasso.pcg.sax_models import DEFAULT_LOSS_DB_CM, build_lossy_models, ensure_jax_x64
 
-    LOSS_DB_CM = 0.7  # PIC-Set / Table II waveguide target
+    ensure_jax_x64()
+    LOSS_DB_CM = DEFAULT_LOSS_DB_CM
 
     sax_nl = to_sax_netlist(store)
     try:
@@ -530,21 +555,7 @@ def _run_delta_il(store, comp_orig, name: str, result: Dict[str, str]) -> None:
         return
 
     try:
-        from gplugins import sax as gs
-        straight = partial(gs.models.straight, loss_dB_cm=LOSS_DB_CM)
-        models = {
-            "straight": straight,
-            "bend_euler": gs.models.bend,
-            "bend_circular": gs.models.bend,
-            "mmi1x2": gs.models.mmi1x2,
-            "mmi2x2": gs.models.mmi2x2 if hasattr(gs.models, "mmi2x2") else gs.models.mmi1x2,
-            "coupler": gs.models.coupler if hasattr(gs.models, "coupler") else gs.models.mmi1x2,
-            "ring_single": gs.models.ring_single if hasattr(gs.models, "ring_single") else gs.models.bend,
-            "straight_heater_metal": straight,
-            "straight_heater_metal_undercut": straight,
-            "via_stack_heater_mtop": straight,  # electrical; stub if appears in netlist
-            "taper": straight,
-        }
+        models = build_lossy_models(LOSS_DB_CM)
     except Exception as exc:
         result["6_delta_il"] = f"SKIP: cannot load SAX models ({exc})"
         print(f"  [6] Delta: SKIP — cannot load SAX models ({exc})")
@@ -558,6 +569,10 @@ def _run_delta_il(store, comp_orig, name: str, result: Dict[str, str]) -> None:
             # Router-inserted / PDK cells (vias, heater metal) may lack S-models;
             # map any "Missing Models" names to lossy straight and retry once.
             import re
+            from functools import partial
+            from gplugins import sax as gs
+
+            straight = partial(gs.models.straight, loss_dB_cm=LOSS_DB_CM)
             m = re.search(r'"Missing Models":\s*\[(.*?)\]', str(miss_exc), re.S)
             if not m:
                 raise

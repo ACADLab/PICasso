@@ -9,19 +9,18 @@ from __future__ import annotations
 
 import logging
 from collections import defaultdict
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 import yaml
 
-from .store import PCGStore
+from .pdk_ports import COMPONENT_PORT_MAP
+from .store import PCGMutationError, PCGStore, default_ports_for
 from .types import (
     AttachmentKind,
     BundleSettings,
     EdgeLayer,
     PCGEdge,
     PCGNode,
-    PCGPort,
-    PortKind,
     RefLevel,
 )
 
@@ -42,7 +41,7 @@ def from_gf_yaml(yaml_str: str) -> PCGStore:
     if not isinstance(data, dict):
         raise ValueError("YAML root must be a mapping")
 
-    store = PCGStore()
+    store = PCGStore(default_agent="from_gf_yaml")
 
     instances: Dict[str, Any] = data.get("instances", {}) or {}
     placements: Dict[str, Any] = data.get("placements", {}) or {}
@@ -66,6 +65,7 @@ def from_gf_yaml(yaml_str: str) -> PCGStore:
             component=comp_name,
             params=settings,
             level=RefLevel.L2_PLACED if placement else RefLevel.L1_CIRCUIT,
+            ports=default_ports_for(comp_name),
             x=_to_float(placement.get("x")),
             y=_to_float(placement.get("y")),
             rotation=_to_int(placement.get("rotation")),
@@ -92,28 +92,26 @@ def from_gf_yaml(yaml_str: str) -> PCGStore:
 
         links: Dict[str, str] = bundle_spec.get("links", {}) or {}
         for src_str, dst_str in links.items():
-            sn, sp = _parse_port_ref(src_str)
-            dn, dp = _parse_port_ref(dst_str)
-            if sn and dn:
-                store.connect(
-                    sn, sp, dn, dp,
-                    layer=EdgeLayer.OPTICAL,
-                    bundle=bundle_name,
-                    attachment=AttachmentKind.ROUTED,
-                )
+            sn, sp = _require_port_ref(src_str, context=f"routes.{bundle_name}")
+            dn, dp = _require_port_ref(dst_str, context=f"routes.{bundle_name}")
+            store.connect(
+                sn, sp, dn, dp,
+                layer=EdgeLayer.OPTICAL,
+                bundle=bundle_name,
+                attachment=AttachmentKind.ROUTED,
+            )
 
     # --- connections (BUTT_JOINT edges) ---
     if isinstance(connections, dict):
         for src_str, dst_str in connections.items():
-            sn, sp = _parse_port_ref(src_str)
-            dn, dp = _parse_port_ref(dst_str)
-            if sn and dn:
-                store.connect(
-                    sn, sp, dn, dp,
-                    layer=EdgeLayer.OPTICAL,
-                    bundle=None,
-                    attachment=AttachmentKind.BUTT_JOINT,
-                )
+            sn, sp = _require_port_ref(src_str, context="connections")
+            dn, dp = _require_port_ref(dst_str, context="connections")
+            store.connect(
+                sn, sp, dn, dp,
+                layer=EdgeLayer.OPTICAL,
+                bundle=None,
+                attachment=AttachmentKind.BUTT_JOINT,
+            )
 
     # --- exported ports ---
     if isinstance(ports, dict):
@@ -224,7 +222,7 @@ def to_sax_netlist(store: PCGStore) -> Dict[str, Any]:
     Edges are zero-length ideal connections — no router-inserted
     bends/straights. This is the "before" side of the delta-IL comparison;
     the "after" side comes from ``component.get_netlist()`` on a built
-    GDSFactory component.
+    GDSFactory component, or from back-annotated edges via SPA.
     """
     instances: Dict[str, Any] = {}
     for nid, n in store.nodes.items():
@@ -253,10 +251,23 @@ def to_sax_netlist(store: PCGStore) -> Dict[str, Any]:
 
 def _parse_port_ref(ref: str) -> Tuple[str, str]:
     """Parse 'instance,port' into (instance, port). Returns ('','') on failure."""
+    if not isinstance(ref, str):
+        return "", ""
     parts = ref.split(",", 1)
-    if len(parts) == 2:
+    if len(parts) == 2 and parts[0].strip() and parts[1].strip():
         return parts[0].strip(), parts[1].strip()
     return "", ""
+
+
+def _require_port_ref(ref: str, *, context: str) -> Tuple[str, str]:
+    """Parse port ref or raise — never silently drop connectivity."""
+    sn, sp = _parse_port_ref(ref)
+    if not sn or not sp:
+        raise PCGMutationError(
+            "from_gf_yaml",
+            f"Malformed port ref {ref!r} in {context} (expected 'instance,port')",
+        )
+    return sn, sp
 
 
 def _to_float(v: Any) -> Optional[float]:

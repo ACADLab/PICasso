@@ -1,0 +1,43 @@
+instances:
+  dc:
+    component: coupler
+    settings: {gap: 0.2, length: 10}
+  bus_in:
+    component: straight
+    settings: {length: 20}
+  bus_out:
+    component: straight
+    settings: {length: 20}
+
+placements:
+  bus_in:
+    x: 0
+    y: 0
+    rotation: 0
+    mirror: false
+  dc:
+    x: 80
+    y: 0
+    rotation: 0
+    mirror: false
+  bus_out:
+    x: 200
+    y: 0
+    rotation: 0
+    mirror: false
+
+routes:
+  optical:
+    settings:
+      cross_section: strip
+      radius: 10.0
+    links:
+      bus_in,o2: dc,o1
+      dc,o4: bus_out,o1
+
+connections:
+  dc,o3: dc,o2
+
+ports:
+  in: bus_in,o1
+  out: bus_out,o2
