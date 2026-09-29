@@ -7,6 +7,7 @@ does not shrink to built-ins-only on a clean clone.
 |---|---|
 | `linear.yaml` | guaranteed-routeable waveguide pair; ΔIL thesis |
 | `mzi.yaml` | dual-arm MZI; combiner rot 180°; **west/east split bundles** (gf 9.23 angle rule) |
+| `mzi_unbalanced.yaml` | Place-spike append-only: same MZI topology, **skewed arm placements** so λ_φ ablation is meaningful (stock `mzi.yaml` is too symmetric) |
 | `mzm.yaml` | dual-drive MZM; combiner rot 0; **west/east split bundles** |
 | `ring_bus.yaml` | coupler + bus; same-instance feedback under `info.pcg_ir_connections` (GF rejects cyclical `connections:`) |
 
@@ -17,3 +18,11 @@ does not shrink to built-ins-only on a clean clone.
 
 PIC-Set 36 freeze: add `task_XX.yaml` here as they are curated; `discover_corpus()`
 loads every `*.yaml` in this directory automatically.
+
+## Formal / Place coordination (append-only)
+
+- **Owner:** Lane SPA/IR for YAML contents; Lane Formal does **not** rewrite
+  `mzi.yaml` / `mzm.yaml` / `ring_bus.yaml` / `linear.yaml`.
+- New Formal or Place needs (e.g. asymmetric arm seeds) → **append** a new
+  file (e.g. `mzi_asymmetric.yaml`) and note it here; do not edit goldens
+  in place unless FoM gate breakage forces a coordinated fix.
