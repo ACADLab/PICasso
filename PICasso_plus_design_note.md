@@ -213,20 +213,22 @@ Not wall-clock alone. Report **candidates evaluated per second** and the **runti
 
 ### 5.1 Status on `dev/picplus` (Sep 2026)
 
+Strategy lock (decisions, lanes, pass commands, pins): [`PICasso_plus_strategy.md`](PICasso_plus_strategy.md). Parallel lanes **GO** after gate GREEN.
+
 | Build-order / board item | Status |
 |---|---|
 | PCG store, dual hash, journal | **Done** (invariants 8/8, rejection 13/13, extensions 8/8) |
-| gdsfactory YAML round-trip gate | **Code done, unrun** — `pcg_roundtrip_test.py` dies at `import gdsfactory`; the `picasso` env in `environment.yml` is not created locally |
-| **LiDAR PIC IR round-trip (build-order step 2)** | **Not started** — zero `lidar` references in the tree; §2.4's "superset of LiDAR PIC IR ∪ SAX netlist" has no code |
+| gdsfactory YAML round-trip gate | **GREEN** under gf **9.23.0** (Linear/MZI/MZM PASS incl. SAX/ΔIL; Ring build+route+SAX PASS, ΔIL soft-SKIP — singular KLU / IR feedback). See strategy §1 |
+| **LiDAR PIC IR round-trip (build-order step 2)** | **Not started** — Lane SPA/IR; wrap-LiDAR decision locked in strategy §2 |
 | Legalize dangling detect + terminators; A0–A4 stubs; ExactCritic | **Done** (ledger dedupe with A4) |
-| SPA N-path WNS (reconvergent pairs); hybrid 4-path targets | **Done** — comparator only; not layout evidence |
-| SAX silent-default audit table | **Partial** — `loss_dB_cm` forced in `pcg/sax_models.py` only; MMI/bend/heater open |
-| **FoM path is split-brain** | **Open, blocking** — `validators/sax_validator.py:169` still builds `gs.models.straight` at `loss_dB_cm=0.0` while the PCG gate uses 0.7. Two simulation paths, two physics; any quoted IL/WNS depends on which ran |
-| Heater / Cornerstone re-baseline (`L≈320 µm`, lossy strip) | **Probed in `gd_picasso/probes/lowering/`**, numbers in `FINDINGS.md` — unverified (gf 9.45.0 vs pinned 9.23.0; `cspdk` in no dep file); not wired into FoM path |
-| Spec→unitary→Clements lowering (math half of NL→PCG) | **Probed, unrunnable** — 6 of 10 probes import `unitary_inference`; lambda-lambda is not vendored, not installed, not on disk |
-| PIC-Set 36 committed fixture freeze | **Open** (4 builtins + `pcg/fixtures/`; not 36/36) |
+| SPA N-path WNS (reconvergent pairs); hybrid 4-path targets | **Done** — comparator only; not layout evidence (`SYNTHETIC_NOT_LAYOUT` until N3) |
+| SAX silent-default audit table | **Partial** — Lane FoM unifying validator → `build_lossy_models`; MMI/bend/heater open |
+| **FoM path is split-brain** | **In flight (Lane FoM)** — gate GREEN; behavioral IL / shared factory are FoM leftover before quoting IL/WNS |
+| Heater / Cornerstone re-baseline (`L≈320 µm`, lossy strip) | **Probed** in `gd_picasso/probes/lowering/` — **blocked on promotion** until `cspdk==1.3.2` re-measure (strategy §4) |
+| Spec→unitary→Clements lowering (math half of NL→PCG) | **Probed, unrunnable** — λλ = SHA+patch (Lane λλ/Env); Formal owns Paper A partition |
+| PIC-Set 36 committed fixture freeze | **Open** (4 builtins + `pcg/fixtures/`; not 36/36) — Formal + SPA/IR append-only |
 | Route Task 6 & 9 → back-annotate → SPA WNS | **Open** (the real N3 experiment) |
-| Placement / GPU router kernels | **Open** — different scale; do not bucket with heater/PIC-Set |
+| Placement / GPU router kernels | **Open** — Place = timeboxed `ESTIMATOR_ONLY` spike; Apollo via DREAMPlace locked for Tier-2 (strategy §2) |
 
 ### 5.2 Immediate ordered plan (do not reorder casually)
 
@@ -263,6 +265,8 @@ byte-identical to each other for all six shared math files.)
 **Do not claim**: GPU placement for PICs (Apollo), curvy detailed routing (LiDAR), NL→layout agentic synthesis (PhIDO), agent-driven router selection (Flexcompute), GPU maze routing as a technique (GAMER/FastGR/InstantGR).
 
 ## 7. Open questions for you
+
+**Locked** in [`PICasso_plus_strategy.md`](PICasso_plus_strategy.md) §2: (1) wrap LiDAR; (2) Apollo-style via DREAMPlace; (3) PIC-Set then Clements; (4) two-paper sequence (IR+agents, then GPU P&R+SPA). Historical wording retained below for context.
 
 1. Router baseline: wrap LiDAR (open source, gives an honest apples-to-apples CPU baseline and instant credibility) or reimplement the A* core to keep everything in one framework?
 2. Do we take Apollo as the placement baseline *and* the starting codebase (it is DREAMPlace-based, so the PyTorch↔JAX bridge already fits), or keep placement in-house to avoid a dependency on a competing group's tool?
