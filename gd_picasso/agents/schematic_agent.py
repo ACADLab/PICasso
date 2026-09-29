@@ -1,5 +1,9 @@
 """
 A1 — Schematic agent: propose typed graph mutations; exact critic gates them.
+
+Batch ops follow ``gd_picasso/pcg/A1_MUTATION_CONTRACT.md`` (v1):
+``add_node``, ``connect``, ``set_param`` only. Store-direct helpers such as
+``set_exported_ports`` stay off the batch vocabulary.
 """
 
 from __future__ import annotations
@@ -9,6 +13,10 @@ from typing import Any, Dict, List, Optional
 from gd_picasso.agents.exact_critic import ExactCritic, ExactCritique
 from gd_picasso.pcg.store import PCGMutationError, PCGStore
 from gd_picasso.pcg.types import AttachmentKind, EdgeLayer, PCGNode, RefLevel
+
+# Keep in sync with A1_MUTATION_CONTRACT.md
+A1_CONTRACT_VERSION = 1
+A1_BATCH_OPS = frozenset({"add_node", "connect", "set_param"})
 
 
 class SchematicAgent:
@@ -59,16 +67,26 @@ class SchematicAgent:
     def critique(self, store: PCGStore) -> ExactCritique:
         return self.critic.review(store)
 
-    def apply_mutations(
+    def commit_mutations(
         self,
         store: PCGStore,
         mutations: List[Dict[str, Any]],
-    ) -> ExactCritique:
-        """Apply a batch atomically — roll back the store on any failure."""
+    ) -> None:
+        """Apply a batch atomically without running ExactCritic.
+
+        Use when the caller must set store-direct state (e.g. exported ports)
+        before the first critic pass.
+        """
         snap = store.snapshot()
         try:
             for m in mutations:
                 op = m.get("op")
+                if op not in A1_BATCH_OPS:
+                    raise PCGMutationError(
+                        "A1",
+                        f"Unknown op {op!r} (frozen v{A1_CONTRACT_VERSION} "
+                        f"allows {sorted(A1_BATCH_OPS)})",
+                    )
                 if op == "add_node":
                     self.add_component(
                         store, m["id"], m["component"], m.get("params")
@@ -80,8 +98,38 @@ class SchematicAgent:
                     )
                 elif op == "set_param":
                     self.set_param(store, m["node"], m["key"], m["value"])
-                else:
-                    raise PCGMutationError("A1", f"Unknown op {op!r}")
+        except Exception:
+            store.restore(snap)
+            raise
+
+    def apply_mutations(
+        self,
+        store: PCGStore,
+        mutations: List[Dict[str, Any]],
+    ) -> ExactCritique:
+        """Apply a batch atomically, then ExactCritic.review."""
+        self.commit_mutations(store, mutations)
+        return self.critique(store)
+
+    def apply_elaboration(
+        self,
+        store: PCGStore,
+        mutations: List[Dict[str, Any]],
+        exported_ports: Optional[Dict[str, str]] = None,
+        *,
+        export_agent: str = "A0_elaborator",
+    ) -> ExactCritique:
+        """Commit A1 batch ops, set boundary ports (store-direct), then critique.
+
+        Exports are intentionally outside the v1 batch vocabulary per Formal
+        contract; they must be set before ExactCritic so boundary ports are
+        not flagged as dangling.
+        """
+        snap = store.snapshot()
+        try:
+            self.commit_mutations(store, mutations)
+            if exported_ports:
+                store.set_exported_ports(exported_ports, agent=export_agent)
         except Exception:
             store.restore(snap)
             raise

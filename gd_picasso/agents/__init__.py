@@ -1,6 +1,12 @@
 """Agent classes for LLM providers and PICasso+ A0–A4 controllers."""
 
 from gd_picasso.agents.critic_agent import CriticAgent
+from gd_picasso.agents.elaborator import (
+    ElaboratorError,
+    ElaborationResult,
+    TopologyElaborator,
+    parse_topology_program,
+)
 from gd_picasso.agents.exact_critic import ExactCritic, ExactCritique
 from gd_picasso.agents.intent_agent import IntentAgent, TypedIntent
 from gd_picasso.agents.optimization_agent import OptimizationAgent, OptControl
@@ -16,6 +22,10 @@ from gd_picasso.agents.triage_agent import TriageAgent, TriageDecision
 __all__ = [
     "CriticAgent",
     "MultiAgentOrchestrator",
+    "ElaboratorError",
+    "ElaborationResult",
+    "TopologyElaborator",
+    "parse_topology_program",
     "ExactCritic",
     "ExactCritique",
     "IntentAgent",
