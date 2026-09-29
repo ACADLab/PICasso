@@ -3,8 +3,8 @@ Back-annotation contract — write routed geometry onto PCG edges.
 
 N2 claim: simulate the *routed* circuit. The router (or a harness that
 reads ``component.get_netlist()``) calls ``apply_route_metrics`` so
-``length_um`` / ``phase_rad`` / ``n_crossings`` land on edges before SPA
-or SAX.
+``length_um`` / ``phase_rad`` / ``loss_dB`` / ``n_crossings`` land on edges
+before SPA or SAX.
 """
 
 from __future__ import annotations
@@ -21,6 +21,7 @@ from .types import EdgeLayer
 class RouteMetrics:
     length_um: float = 0.0
     phase_rad: Optional[float] = None
+    loss_dB: Optional[float] = None
     n_crossings: int = 0
     bend_angle_rad: float = 0.0
 
@@ -53,6 +54,8 @@ def apply_route_metrics(
             e.phase_rad = m.phase_rad
         elif m.length_um:
             e.phase_rad = 2.0 * math.pi * neff * m.length_um / wavelength_um
+        if m.loss_dB is not None:
+            e.loss_dB = m.loss_dB
         updated += 1
         store.journal.append(
             "backannotate_edge",
@@ -61,6 +64,7 @@ def apply_route_metrics(
                 "dst": f"{e.dst_node},{e.dst_port}",
                 "length_um": e.length_um,
                 "phase_rad": e.phase_rad,
+                "loss_dB": e.loss_dB,
                 "n_crossings": e.n_crossings,
             },
             agent=agent,

@@ -3,12 +3,16 @@ Photonic Circuit Graph — Type definitions.
 
 Pydantic models for the PCG intermediate representation:
 nodes (device instances), edges (nets), ports, constraints, bundles.
+
+Lane Formal owns graded annotation extensions (``loss_dB`` / ``phase_rad``)
+and the A1 mutation contract freeze — see ``A1_MUTATION_CONTRACT.md``.
+Additive fields only; do not thrash signatures without a Formal re-freeze.
 """
 
 from __future__ import annotations
 
 import enum
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 from pydantic import BaseModel, Field
 
@@ -109,8 +113,9 @@ class PCGEdge(BaseModel):
     bundle: Optional[str] = None
     layer: EdgeLayer = EdgeLayer.OPTICAL
 
-    # Back-annotation fields — populated at L3
+    # Back-annotation / graded fields — populated at L3 (or intent pre-route)
     phase_rad: Optional[float] = None
+    loss_dB: Optional[float] = None  # Formal graded pair with phase_rad
     length_um: Optional[float] = None
     n_crossings: int = 0
 
@@ -142,3 +147,52 @@ class ConstraintEntry(BaseModel):
     elements: List[str] = Field(default_factory=list)
     status: ConstraintStatus = ConstraintStatus.OPEN
     evidence: Dict[str, Any] = Field(default_factory=dict)
+
+
+# ---------------------------------------------------------------------------
+# Graded annotations (Lane Formal — Paper A)
+# ---------------------------------------------------------------------------
+
+class GradedQuantities(BaseModel):
+    """First-class ``(loss_dB, phase_rad)`` pair for intent or measurement.
+
+    Additive sidecar for Formal / SPA / FoM. Does not replace edge geometry
+    fields; ``PCGEdge.loss_dB`` / ``PCGEdge.phase_rad`` mirror the measured
+    half after back-annotation.
+    """
+
+    loss_dB: Optional[float] = None
+    phase_rad: Optional[float] = None
+
+
+class SpecAnnotation(BaseModel):
+    """λλ linear-spec annotation for a PIC-Set task or ad-hoc probe.
+
+    ``partition`` must match ``PICSET_PARTITION.md`` tags. Only
+    ``expressible`` / ``expressible_trivial`` enter PSD→Clements this cycle.
+    """
+
+    task_id: Optional[int] = None
+    n_inputs: int
+    spec_lines: List[str] = Field(default_factory=list)
+    partition: str = "expressible"
+    ancillas: Optional[int] = None
+    notes: str = ""
+    grade: GradedQuantities = Field(default_factory=GradedQuantities)
+
+
+class LoweredMZIAnnotation(BaseModel):
+    """One Clements MZI cell ready for A1 emission (sidecar grades).
+
+    Phases are radians, wrapped to a conventional principal range by the
+    extractor. Topology expansion into ``add_node``/``connect``/``set_param``
+    is ``probes.lowering.to_a1`` (stub until patched λλ lands).
+    """
+
+    modes: Tuple[int, int]
+    theta_rad: float
+    phi_rad: float
+    out_a_rad: float
+    out_b_rad: float
+    grade: GradedQuantities = Field(default_factory=GradedQuantities)
+    cell_id: Optional[str] = None

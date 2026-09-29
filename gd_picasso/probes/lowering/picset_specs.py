@@ -1,4 +1,9 @@
-"""Step 1 probe: which PIC-Set tasks are expressible as lambda-lambda linear specs?"""
+"""Step 1 probe: which PIC-Set tasks are expressible as lambda-lambda linear specs?
+
+Full 36-row partition (honest rings/AWG/WDM out-of-path): see
+``PICSET_PARTITION.md``. This script only exercises a linear-spec subset and
+requires patched lambda-lambda on ``PYTHONPATH``.
+"""
 from psd_gate import infer_guarded as infer_unitary_from_spec
 import traceback
 

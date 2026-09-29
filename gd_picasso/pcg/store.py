@@ -480,6 +480,7 @@ class PCGStore:
                 "bundle": e.bundle,
                 "length_um": e.length_um,
                 "phase_rad": e.phase_rad,
+                "loss_dB": e.loss_dB,
                 "n_crossings": e.n_crossings,
             })
         blob = _canonical_json({"nodes": node_data, "edges": edge_data})

@@ -1,4 +1,9 @@
-"""The feasibility guard from Algorithm 1 lines 4-6, which the code omits."""
+"""The feasibility guard from Algorithm 1 lines 4-6, which the code omits.
+
+Requires patched lambda-lambda (``unitary_inference``) on ``PYTHONPATH``.
+For a λλ-free matrix check see ``psd_numpy.is_transfer_psd_feasible``.
+Docs: ``LL_ANNOTATION_WORKFLOW.md``; acceptance stubs wait on Lane λλ/Env.
+"""
 import sympy as sp
 from unitary_inference import parse_spec_sympy_eval, infer_unitary_from_spec
 

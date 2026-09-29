@@ -15,11 +15,14 @@ from .types import (
     ConstraintKind,
     ConstraintStatus,
     EdgeLayer,
+    GradedQuantities,
+    LoweredMZIAnnotation,
     PCGEdge,
     PCGNode,
     PCGPort,
     PortKind,
     RefLevel,
+    SpecAnnotation,
 )
 from .store import PCGMutationError, PCGStore
 from .bridge import from_gf_yaml, to_gf_yaml, to_sax_netlist
@@ -46,11 +49,14 @@ __all__ = [
     "ConstraintKind",
     "ConstraintStatus",
     "EdgeLayer",
+    "GradedQuantities",
+    "LoweredMZIAnnotation",
     "PCGEdge",
     "PCGNode",
     "PCGPort",
     "PortKind",
     "RefLevel",
+    "SpecAnnotation",
     # store / journal
     "PCGMutationError",
     "PCGStore",
