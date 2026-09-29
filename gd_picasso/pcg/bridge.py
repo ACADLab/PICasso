@@ -3,6 +3,11 @@ Photonic Circuit Graph — Bridge to/from GDSFactory YAML and SAX.
 
 Lossless round-trip: from_gf_yaml(to_gf_yaml(store)) preserves topology
 and layout, including bundles, raw_placement stash, mirror, and attachment.
+
+Same-instance feedback edges (e.g. ring coupler o3→o2) are IR-only: GF
+rejects cyclical ``connections:`` refs, so they live under
+``info.pcg_ir_connections`` (GF ``info`` is permitted; top-level extra
+keys are not) and are never emitted as GF connections/routes.
 """
 
 from __future__ import annotations
@@ -26,6 +31,9 @@ from .types import (
 
 logger = logging.getLogger(__name__)
 
+# Nested under GF Netlist.info (extra top-level keys are pydantic-forbidden).
+PCG_IR_CONNECTIONS_KEY = "pcg_ir_connections"
+
 
 # ---------------------------------------------------------------------------
 # GDSFactory YAML → PCGStore
@@ -35,7 +43,9 @@ def from_gf_yaml(yaml_str: str) -> PCGStore:
     """Parse a GDSFactory-compatible YAML netlist into a PCGStore.
 
     Handles both ``routes:<bundle>:links`` (ROUTED) and ``connections:``
-    dict (BUTT_JOINT) connectivity syntaxes.
+    dict (BUTT_JOINT) connectivity syntaxes. Same-instance feedback under
+    ``connections:`` or ``info.pcg_ir_connections`` is kept in the IR (GF
+    cannot place cyclical refs).
     """
     data = yaml.safe_load(yaml_str)
     if not isinstance(data, dict):
@@ -47,6 +57,15 @@ def from_gf_yaml(yaml_str: str) -> PCGStore:
     placements: Dict[str, Any] = data.get("placements", {}) or {}
     routes: Dict[str, Any] = data.get("routes", {}) or {}
     connections: Dict[str, str] = data.get("connections", {}) or {}
+    info_block: Dict[str, Any] = data.get("info", {}) or {}
+    if not isinstance(info_block, dict):
+        info_block = {}
+    # Prefer info.<key>; accept legacy top-level key if present.
+    ir_connections: Dict[str, str] = (
+        info_block.get(PCG_IR_CONNECTIONS_KEY)
+        or data.get(PCG_IR_CONNECTIONS_KEY)
+        or {}
+    )
     ports: Dict[str, str] = data.get("ports", {}) or {}
 
     # --- nodes ---
@@ -94,6 +113,19 @@ def from_gf_yaml(yaml_str: str) -> PCGStore:
         for src_str, dst_str in links.items():
             sn, sp = _require_port_ref(src_str, context=f"routes.{bundle_name}")
             dn, dp = _require_port_ref(dst_str, context=f"routes.{bundle_name}")
+            if sn == dn:
+                # Same-instance route links are IR-only (GF would cycle).
+                logger.warning(
+                    "Treating same-instance route link %s→%s as IR-only feedback",
+                    src_str, dst_str,
+                )
+                store.connect(
+                    sn, sp, dn, dp,
+                    layer=EdgeLayer.OPTICAL,
+                    bundle=None,
+                    attachment=AttachmentKind.BUTT_JOINT,
+                )
+                continue
             store.connect(
                 sn, sp, dn, dp,
                 layer=EdgeLayer.OPTICAL,
@@ -106,6 +138,24 @@ def from_gf_yaml(yaml_str: str) -> PCGStore:
         for src_str, dst_str in connections.items():
             sn, sp = _require_port_ref(src_str, context="connections")
             dn, dp = _require_port_ref(dst_str, context="connections")
+            if sn == dn:
+                logger.warning(
+                    "Same-instance connection %s→%s kept as IR-only "
+                    "(GF rejects cyclical connections)",
+                    src_str, dst_str,
+                )
+            store.connect(
+                sn, sp, dn, dp,
+                layer=EdgeLayer.OPTICAL,
+                bundle=None,
+                attachment=AttachmentKind.BUTT_JOINT,
+            )
+
+    # --- IR-only connections (same-instance feedback, etc.) ---
+    if isinstance(ir_connections, dict):
+        for src_str, dst_str in ir_connections.items():
+            sn, sp = _require_port_ref(src_str, context=PCG_IR_CONNECTIONS_KEY)
+            dn, dp = _require_port_ref(dst_str, context=PCG_IR_CONNECTIONS_KEY)
             store.connect(
                 sn, sp, dn, dp,
                 layer=EdgeLayer.OPTICAL,
@@ -128,7 +178,9 @@ def to_gf_yaml(store: PCGStore) -> str:
     """Serialize a PCGStore back to GDSFactory-compatible YAML.
 
     Preserves raw_placement verbatim when untouched, regroups edges by
-    bundle, and emits BUTT_JOINT edges under ``connections:``.
+    bundle, and emits BUTT_JOINT edges under ``connections:``. Same-instance
+    edges are emitted under ``info.pcg_ir_connections`` only — never as GF
+    ``connections:`` / ``routes:`` (cyclical refs crash gf.read.from_yaml).
     """
     data: Dict[str, Any] = {}
 
@@ -169,9 +221,14 @@ def to_gf_yaml(store: PCGStore) -> str:
         data["placements"] = placements
 
     # --- routes (ROUTED edges grouped by bundle) ---
+    # Same-instance edges never go into GF routes/connections.
     bundle_edges: Dict[str, List[PCGEdge]] = defaultdict(list)
     butt_edges: List[PCGEdge] = []
+    ir_edges: List[PCGEdge] = []
     for e in store.edges:
+        if _is_same_instance(e):
+            ir_edges.append(e)
+            continue
         if e.attachment == AttachmentKind.BUTT_JOINT:
             butt_edges.append(e)
         else:
@@ -204,12 +261,19 @@ def to_gf_yaml(store: PCGStore) -> str:
             routes[bname] = bundle_spec
         data["routes"] = routes
 
-    # --- connections (BUTT_JOINT) ---
+    # --- connections (BUTT_JOINT, inter-instance only) ---
     if butt_edges:
         conns: Dict[str, str] = {}
         for e in butt_edges:
             conns[f"{e.src_node},{e.src_port}"] = f"{e.dst_node},{e.dst_port}"
         data["connections"] = conns
+
+    # --- IR-only (same-instance feedback etc.) under info ---
+    if ir_edges:
+        ir_conns: Dict[str, str] = {}
+        for e in ir_edges:
+            ir_conns[f"{e.src_node},{e.src_port}"] = f"{e.dst_node},{e.dst_port}"
+        data["info"] = {PCG_IR_CONNECTIONS_KEY: ir_conns}
 
     # --- ports ---
     if store.exported_ports:
@@ -256,6 +320,11 @@ def to_sax_netlist(store: PCGStore) -> Dict[str, Any]:
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
+
+def _is_same_instance(e: PCGEdge) -> bool:
+    """True for same-node different-port feedback (ring coupler loop, etc.)."""
+    return e.src_node == e.dst_node
+
 
 def _parse_port_ref(ref: str) -> Tuple[str, str]:
     """Parse 'instance,port' into (instance, port). Returns ('','') on failure."""

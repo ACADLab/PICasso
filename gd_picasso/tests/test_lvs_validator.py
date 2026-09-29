@@ -1,55 +1,55 @@
 """
 Unit tests for LVS validator.
 
-Test Cases:
-1. Layout matches schematic → PASS
-2. Missing instances → FAIL
-3. Port mismatch → FAIL
-4. Net mismatch → FAIL
-5. Extra connections → FAIL
+Under gdsfactory 9.23, ``gdsfactory.utils.lvs`` is missing (soft-break).
+Real layout-vs-schematic cases importorskip until a real LVS backend returns.
 """
 
-import unittest
-import gdsfactory as gf
-from pathlib import Path
-import sys
+from __future__ import annotations
 
-# Add parent directory to path
-sys.path.insert(0, str(Path(__file__).parent.parent))
+import pytest
+
+from gd_picasso.validators.lvs_validator import LVS_AVAILABLE, LVSValidator
 
 
-class TestLVSValidator(unittest.TestCase):
-    """Test LVS validator."""
+def test_lvs_soft_skip_when_gf9_helper_missing() -> None:
+    """Without gdsfactory.utils.lvs, validator must soft-skip — not fake LVS."""
+    if LVS_AVAILABLE:
+        pytest.skip("gdsfactory.utils.lvs is present; soft-skip path N/A")
 
-    def setUp(self):
-        """Set up test fixtures."""
-        # TODO: Import and initialize LVS validator
-        # from gd_picasso.validators.lvs_validator import LVSValidator
-        # self.validator = LVSValidator()
-        pass
+    validator = LVSValidator(enabled=True)
+    assert validator.enabled is False
 
-    def test_layout_matches_schematic(self):
-        """Test that matching layout and schematic pass LVS."""
-        # Create matching layout and schematic
-        layout = gf.components.mmi1x2()
-        schematic = gf.components.mmi1x2()
-        
-        # TODO: Implement LVS validation
-        # result = self.validator.validate(layout, schematic)
-        # self.assertTrue(result['passed'])
-        self.skipTest("LVS validator not yet implemented")
+    import gdsfactory as gf
 
-    def test_missing_instances_fails(self):
-        """Test that missing instances fail LVS."""
-        # TODO: Implement test
-        self.skipTest("LVS validator not yet implemented")
-
-    def test_port_mismatch_fails(self):
-        """Test that port mismatch fails LVS."""
-        # TODO: Implement test
-        self.skipTest("LVS validator not yet implemented")
+    passed, report = validator.validate(gf.components.mmi1x2())
+    assert passed is True  # skipped, not a fabricated match claim
+    assert report.get("lvs_skipped_gf9") is True
+    assert any("soft-skip" in w.lower() or "missing" in w.lower() for w in report["warnings"])
+    assert report["errors"] == []
 
 
-if __name__ == '__main__':
-    unittest.main()
+@pytest.mark.skipif(not LVS_AVAILABLE, reason="gdsfactory.utils.lvs missing (gf 9 soft-break)")
+def test_layout_matches_schematic() -> None:
+    """Matching layout/schematic — requires real gf LVS helper."""
+    pytest.importorskip("gdsfactory.utils.lvs")
+    import gdsfactory as gf
 
+    validator = LVSValidator(enabled=True)
+    layout = gf.components.mmi1x2()
+    schematic = gf.components.mmi1x2()
+    passed, report = validator.validate(layout, schematic)
+    assert passed is True
+    assert report.get("matched") is True
+
+
+@pytest.mark.skipif(not LVS_AVAILABLE, reason="gdsfactory.utils.lvs missing (gf 9 soft-break)")
+def test_missing_instances_fails() -> None:
+    pytest.importorskip("gdsfactory.utils.lvs")
+    pytest.skip("Needs a controlled schematic/layout mismatch fixture once LVS returns")
+
+
+@pytest.mark.skipif(not LVS_AVAILABLE, reason="gdsfactory.utils.lvs missing (gf 9 soft-break)")
+def test_port_mismatch_fails() -> None:
+    pytest.importorskip("gdsfactory.utils.lvs")
+    pytest.skip("Needs a controlled schematic/layout mismatch fixture once LVS returns")

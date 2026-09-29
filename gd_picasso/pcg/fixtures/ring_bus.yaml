@@ -1,3 +1,7 @@
+# Ring-bus probe: bus through a DC coupler + IR-only same-instance feedback.
+# GF rejects cyclical connections (dc→dc), so feedback lives under
+# info.pcg_ir_connections (GF Netlist.info is permitted; top-level extras are not).
+# Bus Y aligned to coupler o1/o4 (y≈-1.65 for gap=0.2) so route_bundle clears.
 instances:
   dc:
     component: coupler
@@ -12,7 +16,7 @@ instances:
 placements:
   bus_in:
     x: 0
-    y: 0
+    y: -1.65
     rotation: 0
     mirror: false
   dc:
@@ -22,7 +26,7 @@ placements:
     mirror: false
   bus_out:
     x: 200
-    y: 0
+    y: -1.65
     rotation: 0
     mirror: false
 
@@ -35,8 +39,9 @@ routes:
       bus_in,o2: dc,o1
       dc,o4: bus_out,o1
 
-connections:
-  dc,o3: dc,o2
+info:
+  pcg_ir_connections:
+    dc,o3: dc,o2
 
 ports:
   in: bus_in,o1

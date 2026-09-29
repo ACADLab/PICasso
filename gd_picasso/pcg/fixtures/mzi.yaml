@@ -1,3 +1,6 @@
+# Dual-arm MZI. Combiner rotated 180° so o2/o3 face the arms.
+# West/east split bundles: route_bundle requires uniform target port angles
+# within a single links dict (mixing splitter→arm and arm→combiner fails).
 instances:
   splitter:
     component: mmi1x2
@@ -29,19 +32,24 @@ placements:
     rotation: 0
     mirror: false
   combiner:
-    x: 300
+    x: 350
     y: 0
     rotation: 180
     mirror: false
 
 routes:
-  optical:
+  west:
     settings:
       cross_section: strip
       radius: 10.0
     links:
       splitter,o2: ps_upper,o1
       splitter,o3: ps_lower,o1
+  east:
+    settings:
+      cross_section: strip
+      radius: 10.0
+    links:
       ps_upper,o2: combiner,o2
       ps_lower,o2: combiner,o3
 

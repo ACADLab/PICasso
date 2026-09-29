@@ -51,7 +51,8 @@ SAX_PARAM_AUDIT: List[SaxParamAuditRow] = [
         "straight_heater_metal", "length / loss",
         "generic_tech length often 10 µm; loss via straight stub",
         f"mapped to lossy straight (loss_dB_cm={DEFAULT_LOSS_DB_CM})",
-        "gate harness; Cornerstone default heater L≈320 µm — re-baseline open",
+        "TODO(cspdk==1.3.2 join): re-measure Cornerstone heater L≈320 µm under "
+        "gf 9.23 before promoting CS FINDINGS; do not promote 9.45-era numbers",
         "silent_null",
     ),
     SaxParamAuditRow(

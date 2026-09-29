@@ -55,19 +55,24 @@ placements:
     rotation: 0
     mirror: false
   combiner:
-    x: 300
+    x: 350
     y: 0
     rotation: 180
     mirror: false
 
 routes:
-  optical:
+  west:
     settings:
       cross_section: strip
       radius: 10.0
     links:
       splitter,o2: ps_upper,o1
       splitter,o3: ps_lower,o1
+  east:
+    settings:
+      cross_section: strip
+      radius: 10.0
+    links:
       ps_upper,o2: combiner,o2
       ps_lower,o2: combiner,o3
 
@@ -110,17 +115,22 @@ placements:
   combiner:
     x: 300
     y: 0
-    rotation: 180
+    rotation: 0
     mirror: false
 
 routes:
-  optical:
+  west:
     settings:
       cross_section: strip
       radius: 10.0
     links:
       splitter,o2: ps_upper,o1
       splitter,o3: ps_lower,o1
+  east:
+    settings:
+      cross_section: strip
+      radius: 10.0
+    links:
       ps_upper,o2: combiner,o1
       ps_lower,o2: combiner,o2
 
@@ -130,8 +140,9 @@ ports:
   out2: combiner,o4
 """
 
-# Ring-bus probe: coupler with same-instance feedback (o3→o4) + bus through.
-# Stresses same-node different-port edges (allowed) vs same-port self-loop (rejected).
+# Ring-bus probe: coupler + bus; same-instance feedback is IR-only
+# (pcg_ir_connections). Stresses same-node different-port edges (allowed)
+# vs same-port self-loop (rejected). Bus Y aligned to coupler o1/o4.
 FIXTURE_RING = """\
 instances:
   dc:
@@ -147,7 +158,7 @@ instances:
 placements:
   bus_in:
     x: 0
-    y: 0
+    y: -1.65
     rotation: 0
     mirror: false
   dc:
@@ -157,7 +168,7 @@ placements:
     mirror: false
   bus_out:
     x: 200
-    y: 0
+    y: -1.65
     rotation: 0
     mirror: false
 
@@ -170,14 +181,14 @@ routes:
       bus_in,o2: dc,o1
       dc,o4: bus_out,o1
 
-connections:
-  dc,o3: dc,o2
+info:
+  pcg_ir_connections:
+    dc,o3: dc,o2
 
 ports:
   in: bus_in,o1
   out: bus_out,o2
 """
-
 # Linear waveguide — guaranteed routeable; meaningful length for ΔIL
 FIXTURE_LINEAR = """\
 instances:

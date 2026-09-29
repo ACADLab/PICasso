@@ -1,3 +1,6 @@
+# Dual-drive MZM. Combiner at rotation 0 so o1/o2 face the arms (west).
+# West/east split bundles: single-bundle mixed facing fails under gf 9.23
+# ("All ports at the target must have the same angle").
 instances:
   splitter:
     component: mmi1x2
@@ -31,17 +34,22 @@ placements:
   combiner:
     x: 300
     y: 0
-    rotation: 180
+    rotation: 0
     mirror: false
 
 routes:
-  optical:
+  west:
     settings:
       cross_section: strip
       radius: 10.0
     links:
       splitter,o2: ps_upper,o1
       splitter,o3: ps_lower,o1
+  east:
+    settings:
+      cross_section: strip
+      radius: 10.0
+    links:
       ps_upper,o2: combiner,o1
       ps_lower,o2: combiner,o2
 

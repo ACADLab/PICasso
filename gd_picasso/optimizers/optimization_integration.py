@@ -8,12 +8,6 @@ Circuit-level optimization uses σ₁²(T) approach (drive="svd").
 import logging
 from typing import Dict, Tuple, Optional
 import gdsfactory as gf
-import sys
-from pathlib import Path
-
-# Add parent directory to path for netlist_optimize
-project_root = Path(__file__).parent.parent.parent
-sys.path.insert(0, str(project_root))
 
 logger = logging.getLogger(__name__)
 
@@ -26,7 +20,7 @@ except ImportError:
     DeviceOptimizer = None
 
 try:
-    from netlist_optimize import optimize_netlist, Tunable, svd_bound
+    from .netlist_optimize import optimize_netlist, Tunable, svd_bound
     NETLIST_OPTIMIZE_AVAILABLE = True
 except ImportError:
     NETLIST_OPTIMIZE_AVAILABLE = False

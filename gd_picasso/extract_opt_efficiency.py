@@ -255,7 +255,7 @@ def run_optimization_on_sample(sample_info: Dict, optimizer: OptimizationStage) 
                     }
                     
                     # Extract tunables directly from YAML instances
-                    from netlist_optimize import Tunable
+                    from gd_picasso.optimizers.netlist_optimize import Tunable
                     import numpy as np
                     tunables_list = []
                     for inst_name, inst_data in yaml_data['instances'].items():

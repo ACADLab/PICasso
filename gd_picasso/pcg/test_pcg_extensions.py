@@ -109,6 +109,8 @@ def test_dangling_and_terminators() -> None:
 
 def test_ring_bus_edge_counts() -> None:
     from gd_picasso.pcg.pcg_roundtrip_test import FIXTURE_RING
+    from gd_picasso.pcg.bridge import PCG_IR_CONNECTIONS_KEY
+    import yaml
 
     store = from_gf_yaml(FIXTURE_RING)
     assert len(store.nodes) == 3
@@ -119,6 +121,13 @@ def test_ring_bus_edge_counts() -> None:
         if e.src_node == "dc" and e.dst_node == "dc"
     ]
     assert len(feedback) == 1
+    # Round-trip must keep feedback under info.pcg_ir_connections, never GF connections
+    out = yaml.safe_load(to_gf_yaml(store))
+    assert "connections" not in out or "dc,o3" not in (out.get("connections") or {})
+    ir = (out.get("info") or {}).get(PCG_IR_CONNECTIONS_KEY) or {}
+    assert ir.get("dc,o3") == "dc,o2"
+    store2 = from_gf_yaml(to_gf_yaml(store))
+    assert store.topology_hash() == store2.topology_hash()
 
 
 def test_spa_phase_slack() -> None:

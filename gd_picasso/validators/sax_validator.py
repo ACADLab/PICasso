@@ -161,75 +161,87 @@ class SAXValidator:
             if 'connections' not in netlist or not netlist.get('connections'):
                 report["warnings"].append("Netlist has no connections (might be single component)")
 
-            # Try to build SAX circuit with models
+            # Try to build SAX circuit with shared lossy models (FoM factory).
+            # Never use raw gs.models.straight (library default loss_dB_cm=0.0).
+            models = {}
             try:
-                # Try with gplugins models first
                 try:
-                    from gplugins import sax as gs
-                    models = {
-                        "straight": gs.models.straight,
-                        "bend_euler": gs.models.bend,
-                        "mmi1x2": gs.models.mmi1x2,
-                        "mmi": gs.models.mmi1x2,
-                        "mmi2x2": gs.models.mmi2x2 if hasattr(gs.models, 'mmi2x2') else gs.models.mmi1x2,
-                        "coupler": gs.models.coupler if hasattr(gs.models, 'coupler') else gs.models.mmi1x2,
-                        "ring_single": gs.models.ring_single if hasattr(gs.models, 'ring_single') else gs.models.bend,
-                    }
-                    # Add phase shifter models - map all variants to phase_shifter
-                    try:
-                        phase_model = sax.models.phase_shifter if hasattr(sax.models, 'phase_shifter') else gs.models.straight
-                        models["straight_heater_metal"] = phase_model
-                        models["straight_heater_metal_undercut"] = phase_model
-                        models["phase_shifter"] = phase_model
-                        models["heater"] = phase_model
-                    except:
-                        # Fallback: use straight model for phase shifters
-                        models["straight_heater_metal"] = gs.models.straight
-                        models["straight_heater_metal_undercut"] = gs.models.straight
-                        models["phase_shifter"] = gs.models.straight
-                        models["heater"] = gs.models.straight
-                    
+                    from gd_picasso.pcg.sax_models import (
+                        DEFAULT_LOSS_DB_CM,
+                        build_lossy_models,
+                        ensure_jax_x64,
+                    )
+
+                    ensure_jax_x64()
+                    models = build_lossy_models(DEFAULT_LOSS_DB_CM)
+                    # Aliases used by some netlists / older YAML
+                    models.setdefault("mmi", models["mmi1x2"])
+                    models.setdefault("phase_shifter", models["straight"])
+                    models.setdefault("heater", models["straight"])
+
                     # Try to compile with models
                     circuit, _ = sax.circuit(netlist, models=models)
                     report["sax_compiled"] = True
-                    logger.debug("SAX compilation successful with gplugins models")
+                    report["loss_dB_cm"] = DEFAULT_LOSS_DB_CM
+                    logger.debug(
+                        "SAX compilation successful with build_lossy_models "
+                        f"(loss_dB_cm={DEFAULT_LOSS_DB_CM})"
+                    )
                     return True
                 except Exception as e1:
                     # Fallback 1: Try to auto-create missing models
                     try:
                         # Extract missing component types from error
                         missing_models = []
-                        if "Missing models" in str(e1):
+                        if "Missing models" in str(e1) or "Missing Models" in str(e1):
                             # Try to parse missing models from error message
                             import re
-                            missing_match = re.search(r'"Missing Models":\s*\[(.*?)\]', str(e1))
+                            from functools import partial
+                            from gplugins import sax as gs
+                            from gd_picasso.pcg.sax_models import DEFAULT_LOSS_DB_CM
+
+                            missing_match = re.search(
+                                r'"Missing Models":\s*\[(.*?)\]', str(e1), re.S
+                            )
                             if missing_match:
                                 missing_str = missing_match.group(1)
-                                missing_models = [m.strip().strip('"') for m in missing_str.split(',')]
-                        
-                        # For each missing model, try to create or map it
-                        from gplugins import sax as gs
-                        if not models:
-                            models = {}
-                        
-                        # Default model mappings for common missing components
-                        default_mappings = {
-                            "straight_heater_metal_undercut": gs.models.straight,
-                            "straight_heater_metal": gs.models.straight,
-                            "phase_shifter": gs.models.straight,
-                            "heater": gs.models.straight,
-                            "mzi": gs.models.mmi1x2,  # MZI can use MMI model as approximation
-                            "y_branch": gs.models.mmi1x2,
-                            "y_splitter": gs.models.mmi1x2,
-                            "y_junction": gs.models.mmi1x2,
-                        }
-                        
-                        # Add missing models using mappings
-                        for missing in missing_models:
-                            if missing in default_mappings:
-                                models[missing] = default_mappings[missing]
-                                logger.debug(f"Mapped missing model '{missing}' to default")
-                        
+                                missing_models = [
+                                    m.strip().strip('"').strip("'")
+                                    for m in missing_str.split(',')
+                                ]
+
+                            straight = partial(
+                                gs.models.straight, loss_dB_cm=DEFAULT_LOSS_DB_CM
+                            )
+                            if not models:
+                                models = {}
+
+                            # Default model mappings for common missing components
+                            default_mappings = {
+                                "straight_heater_metal_undercut": straight,
+                                "straight_heater_metal": straight,
+                                "phase_shifter": straight,
+                                "heater": straight,
+                                "via_stack_heater_mtop": straight,
+                                "mzi": models.get("mmi1x2", gs.models.mmi1x2),
+                                "y_branch": models.get("mmi1x2", gs.models.mmi1x2),
+                                "y_splitter": models.get("mmi1x2", gs.models.mmi1x2),
+                                "y_junction": models.get("mmi1x2", gs.models.mmi1x2),
+                            }
+
+                            # Add missing models using mappings (lossy straight, not 0.0)
+                            for missing in missing_models:
+                                if missing in default_mappings:
+                                    models[missing] = default_mappings[missing]
+                                    logger.debug(
+                                        f"Mapped missing model '{missing}' to lossy default"
+                                    )
+                                elif missing and missing not in models:
+                                    models[missing] = straight
+                                    logger.debug(
+                                        f"Stubbed missing model '{missing}' as lossy straight"
+                                    )
+
                         # Try again with extended models
                         if models:
                             circuit, _ = sax.circuit(netlist, models=models)
@@ -243,6 +255,10 @@ class SAXValidator:
                     try:
                         circuit, _ = sax.circuit(netlist)
                         report["sax_compiled"] = True
+                        report["warnings"].append(
+                            "SAX compiled with library defaults "
+                            "(lossy factory failed; IL may be structurally zero)"
+                        )
                         logger.debug("SAX compilation successful with default models")
                         return True
                     except Exception as e3:

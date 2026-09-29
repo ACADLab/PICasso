@@ -538,11 +538,19 @@ SUGGESTIONS FOR FIXING:
 
 LVS (Layout Versus Schematic) validates that the layout matches the schematic netlist.
 
+### gf 9 soft-break (Lane FoM)
+
+Under **gdsfactory 9.23.x**, `gdsfactory.utils.lvs` is **missing**
+(`gdsfactory.utils` is not a package exposing `lvs`). The validator soft-skips
+with `lvs_skipped_gf9=True` and does **not** invent a fake layout-vs-schematic
+pass. Tests use `pytest.importorskip("gdsfactory.utils.lvs")` / `skipif` for
+real LVS cases until a backend returns.
+
 ### Implementation
 
 **File**: `gd_picasso/validators/lvs_validator.py`
 
-**Process**:
+**Process** (only when `LVS_AVAILABLE`):
 1. **Extract Netlists**:
    ```python
    layout_netlist = layout_component.get_netlist()
@@ -559,6 +567,7 @@ LVS (Layout Versus Schematic) validates that the layout matches the schematic ne
 3. **Check Result**:
    - `matched = True` → PASS
    - `matched = False` → FAIL (mismatches reported)
+   - helper missing → soft-skip (warning only; not a fabricated match)
 
 ### LVS Comparison
 

@@ -1,18 +1,34 @@
 """
 LVS (Layout vs Schematic) Validator
 
-Compares layout Component with schematic Component using gdsfactory.utils.lvs.lvs().
+Intended API: ``gdsfactory.utils.lvs.lvs(layout, schematic)``.
+
+## gf 9 soft-break (documented — do not fake LVS)
+
+Under **gdsfactory 9.23.x**, ``gdsfactory.utils`` is not a package that
+exposes ``lvs`` (``gdsfactory.utils.lvs`` is missing). Import fails and
+``LVS_AVAILABLE`` is False. Callers must treat LVS as **soft-skipped**, not
+as a pass from a stub comparator.
+
+This module does **not** invent layout-vs-schematic matching when the PDK
+helper is absent. Without ``lvs``, ``validate()`` returns a skip report
+(warning + ``lvs_skipped_gf9``) and ``passed=True`` only in the sense of
+"check not run" — same contract as ``enabled=False``.
 """
 
+from __future__ import annotations
+
 import logging
-from typing import Dict, Tuple, Optional
+from typing import Dict, Optional, Tuple
+
 import gdsfactory as gf
 
 logger = logging.getLogger(__name__)
 
-# Try to import LVS function
+# Soft-break under gf 9.23: do not stub a fake LVS implementation.
 try:
     from gdsfactory.utils.lvs import lvs
+
     LVS_AVAILABLE = True
 except ImportError:
     LVS_AVAILABLE = False
@@ -20,98 +36,93 @@ except ImportError:
 
 
 class LVSValidator:
-    """Validates layout matches schematic using LVS."""
+    """Validates layout matches schematic using LVS when the gf helper exists."""
 
     def __init__(self, enabled: bool = True):
         """
         Initialize LVS validator.
 
         Args:
-            enabled: Whether LVS checking is enabled (may be slow for large circuits)
+            enabled: Whether LVS checking is enabled (may be slow for large circuits).
+                     Ignored when ``gdsfactory.utils.lvs`` is unavailable.
         """
         self.enabled = enabled and LVS_AVAILABLE
         if not LVS_AVAILABLE:
-            logger.warning("gdsfactory.utils.lvs not available - LVS checking disabled")
+            logger.warning(
+                "gdsfactory.utils.lvs missing (gf 9 soft-break) — LVS disabled; "
+                "not faking layout-vs-schematic"
+            )
 
     def validate(
         self,
         component: gf.Component,
-        schematic: Optional[gf.Component] = None
+        schematic: Optional[gf.Component] = None,
     ) -> Tuple[bool, Dict]:
         """
-        Run LVS validation.
-
-        Args:
-            component: Layout Component (from YAML or Python)
-            schematic: Optional schematic Component (if None, uses component's netlist)
+        Run LVS validation, or soft-skip when LVS is unavailable/disabled.
 
         Returns:
-            (is_valid, report) where report contains:
-                - passed: bool
-                - matched: bool
-                - errors: List[str]
-                - warnings: List[str]
-                - mismatches: Dict (if any)
+            (is_valid, report). When LVS is skipped, ``passed`` is True with
+            warnings documenting the skip (not a fabricated LVS match).
         """
-        report = {
+        report: Dict = {
             "passed": True,
             "matched": True,
             "errors": [],
             "warnings": [],
-            "mismatches": {}
+            "mismatches": {},
+            "lvs_skipped_gf9": not LVS_AVAILABLE,
         }
+
+        if not LVS_AVAILABLE:
+            report["warnings"].append(
+                "LVS soft-skip: gdsfactory.utils.lvs missing under gf 9 "
+                "(no fake LVS)"
+            )
+            logger.info("LVS soft-skipped (gf 9) — not claiming layout==schematic")
+            return True, report
 
         if not self.enabled:
             report["warnings"].append("LVS checking is disabled")
+            report["lvs_skipped_gf9"] = False
             logger.info("LVS checking is disabled - skipping")
             return True, report
 
         try:
-            # For now, LVS requires comparing layout with schematic
-            # Since we're building from YAML, we can compare component with its own netlist
-            # This is a simplified LVS check - full LVS would require a reference schematic
             if schematic is None:
-                # Use component's netlist as reference
-                # For YAML-built components, we can't easily get a separate schematic
-                # So we'll do a basic check: verify component has valid structure
-                report["warnings"].append("LVS: No reference schematic provided - performing basic structure check")
-                # Basic check: component should have instances and ports
-                if not hasattr(component, 'references') and not hasattr(component, 'insts'):
+                report["warnings"].append(
+                    "LVS: No reference schematic provided — basic structure check only"
+                )
+                if not hasattr(component, "references") and not hasattr(component, "insts"):
                     report["errors"].append("Component has no instances")
                     report["passed"] = False
                     report["matched"] = False
                     return False, report
-                
-                # If we have a netlist, we can verify structure matches
+
                 try:
                     netlist = component.get_netlist()
-                    if not netlist or 'instances' not in netlist:
+                    if not netlist or "instances" not in netlist:
                         report["errors"].append("Component netlist is invalid")
                         report["passed"] = False
                         report["matched"] = False
                         return False, report
                 except Exception as e:
                     report["warnings"].append(f"Could not extract netlist for LVS: {e}")
-                    # Don't fail on this - it's just a warning
-                
-                # Basic structure check passed
+
                 report["matched"] = True
                 report["passed"] = True
                 return True, report
-            
-            # If schematic is provided, run full LVS
+
             lvs_result = lvs(component, schematic)
-            
-            # Check result
-            if hasattr(lvs_result, 'matched'):
+
+            if hasattr(lvs_result, "matched"):
                 report["matched"] = lvs_result.matched
                 report["passed"] = lvs_result.matched
             elif isinstance(lvs_result, dict):
-                report["matched"] = lvs_result.get('matched', False)
+                report["matched"] = lvs_result.get("matched", False)
                 report["passed"] = report["matched"]
-                report["mismatches"] = lvs_result.get('mismatches', {})
+                report["mismatches"] = lvs_result.get("mismatches", {})
             else:
-                # Assume boolean result
                 report["matched"] = bool(lvs_result)
                 report["passed"] = report["matched"]
 
@@ -135,20 +146,25 @@ class LVSValidator:
 
     def generate_feedback(self, report: Dict) -> str:
         """Generate human-readable feedback for LLM retry."""
+        if report.get("lvs_skipped_gf9"):
+            return (
+                "LVS soft-skip (gf 9): gdsfactory.utils.lvs is missing. "
+                "Do not treat this as a layout-vs-schematic pass."
+            )
+
         feedback_parts = []
 
-        if not report["matched"]:
+        if not report.get("matched", True):
             feedback_parts.append("LVS MISMATCH: Layout does not match schematic")
-            
-            if report["mismatches"]:
+
+            if report.get("mismatches"):
                 feedback_parts.append("\nMismatch details:")
                 for mismatch_type, details in report["mismatches"].items():
                     feedback_parts.append(f"  - {mismatch_type}: {details}")
-            
+
             feedback_parts.append("\nSUGGESTIONS FOR FIXING:")
             feedback_parts.append("  - Check that all instances are present")
             feedback_parts.append("  - Verify port names match between layout and schematic")
             feedback_parts.append("  - Ensure all connections are correct")
 
         return "\n".join(feedback_parts)
-

@@ -188,7 +188,8 @@ demo_mzi.py
 demo_netlist.py
 gf_optimize.py
 monitor_test.py
-netlist_optimize.py
+# Root-only legacy copy (package path: gd_picasso/optimizers/netlist_optimize.py)
+/netlist_optimize.py
 optical_optimize.py
 optimizie_circuit_loss.py
 run_9_problem_test.py
