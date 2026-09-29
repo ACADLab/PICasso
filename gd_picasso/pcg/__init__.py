@@ -40,6 +40,15 @@ from .spa import (
 )
 from .backannotate import RouteMetrics, apply_route_metrics
 from .sax_models import SAX_PARAM_AUDIT, audit_table_markdown, build_lossy_models
+from .lidar_ir import (
+    LIDAR_GITHUB_REPO,
+    LIDAR_SCHEMA_COMMIT,
+    DroppedField,
+    LidarExportResult,
+    from_lidar_yaml,
+    lidar_docs_equal,
+    to_lidar_yaml,
+)
 
 __all__ = [
     # types / enums
@@ -85,4 +94,12 @@ __all__ = [
     "audit_table_markdown",
     "build_lossy_models",
     "ensure_jax_x64",
+    # LiDAR PIC IR
+    "LIDAR_GITHUB_REPO",
+    "LIDAR_SCHEMA_COMMIT",
+    "DroppedField",
+    "LidarExportResult",
+    "from_lidar_yaml",
+    "to_lidar_yaml",
+    "lidar_docs_equal",
 ]

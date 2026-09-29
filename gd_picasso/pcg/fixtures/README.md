@@ -19,6 +19,17 @@ does not shrink to built-ins-only on a clean clone.
 PIC-Set 36 freeze: add `task_XX.yaml` here as they are curated; `discover_corpus()`
 loads every `*.yaml` in this directory automatically.
 
+## Append-only SPA/IR stubs (do not rewrite rows above)
+
+LiDAR / PIC-Set IR stubs live under ``fixtures/lidar/`` so
+``discover_corpus()`` (top-level ``*.yaml`` only) does not feed them into
+the GF roundtrip gate.
+
+| file | intent |
+|---|---|
+| `lidar/lidar_mzi_stub.yaml` | LiDAR PIC IR shaped MZI; identity round-trip (`lidar_ir.py`); schema pin ScopeX-ASU/LiDAR `@4e7004d3…` |
+| `lidar/picset_task06_stub.yaml` | PIC-Set Task-6 topology stub; SPA goldens plant `RouteMetrics` in tests (`SYNTHETIC_NOT_LAYOUT`) |
+
 ## Formal / Place coordination (append-only)
 
 - **Owner:** Lane SPA/IR for YAML contents; Lane Formal does **not** rewrite

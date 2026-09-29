@@ -1,0 +1,47 @@
+# PIC-Set Task-6 shaped stub (append-only).
+# Optical dual-arm MZI proxy for 64-QAM / Task-6 SPA work — topology only.
+# SYNTHETIC_NOT_LAYOUT: no routed lengths; SPA goldens plant RouteMetrics in tests.
+schema: null
+instances:
+  split:
+    component: mmi1x2
+    settings:
+      macro_type: m_mmi1x2_t6
+      placement: [UNPLACED, [0, 0], N, [0, 0, 0, 0]]
+  arm_i:
+    component: straight
+    settings:
+      length: 200.0
+      macro_type: m_straight_t6a
+      placement: [UNPLACED, [30, 10], N, [0, 0, 0, 0]]
+  arm_q:
+    component: straight
+    settings:
+      length: 200.0
+      macro_type: m_straight_t6b
+      placement: [UNPLACED, [30, -10], N, [0, 0, 0, 0]]
+  comb:
+    component: mmi1x2
+    settings:
+      macro_type: m_mmi1x2_t6c
+      placement: [UNPLACED, [60, 0], N, [0, 0, 0, 0]]
+schematic_placements: {}
+nets:
+  n_0: ['split,o2', 'arm_i,o1']
+  n_1: ['split,o3', 'arm_q,o1']
+  n_2: ['arm_i,o2', 'comb,o2']
+  n_3: ['arm_q,o2', 'comb,o3']
+ports:
+  in: split,o1
+  out: comb,o1
+schema_version: 1
+settings:
+  version: '1.0'
+  design: picset_task06_stub
+  units_distance_microns: 1
+  die_area: [[0, 0], [100, 40]]
+  num_instances: 4
+  num_nets: 4
+  num_ports: 2
+  wg_radius: 5
+library: {}
