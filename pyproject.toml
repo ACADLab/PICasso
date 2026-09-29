@@ -53,6 +53,9 @@ full = [
     "transformers>=4.30.0",
     "requests>=2.28.0",
     "xmltodict>=0.13.0",
+    # Pin protects gdsfactory==9.23.0. Never bare `uv pip install cspdk`
+    # (1.4.5 pulls gf≈9.45 / gplugins≈2.1 and breaks the gate venv).
+    "cspdk==1.3.2",
 ]
 
 [project.urls]

@@ -1,0 +1,3 @@
+# Placeholder — fill with full git SHA once a working λλ tree is located.
+# Format: one SHA line, then optional "remote <url>" line.
+UNAVAILABLE

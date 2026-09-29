@@ -14,8 +14,9 @@ re-baseline scripts.
 **Dependencies**
 - Math stack: `numpy`, `scipy`, `sympy`, plus lambda-lambda
   (`unitary_inference.py`, `optical_compiler/ast.py`) on `PYTHONPATH`
-- Cornerstone stage (`cs_*.py`): `gdsfactory` + `cspdk` (tested w/ gf 9.45.0;
-  re-pin to `cspdk==1.3.2` is Lane λλ/Env)
+- Cornerstone stage (`cs_*.py`): `gdsfactory==9.23.0` + **`cspdk==1.3.2`**
+  (re-measured 2026-09-29; see FINDINGS header). λλ vendor still missing —
+  `gd_picasso/vendor/lambda_lambda/SEARCH_LOG.md`
 
 **Run order (math)**
 1. `recon_check.py` — pin Clements reconstruction convention
@@ -31,9 +32,10 @@ re-baseline scripts.
 - `cs_mzi.py`, `cs_full.py` — `ARM_L=320 µm`, `loss_dB_cm=0.7`, loss-balancing dummy
 - `merge_phases.py`, `heater_count.py` — phase-layer merge (little savings; ~4 heaters/MZI)
 
-**Measured results** — `FINDINGS.md`. Every number in it is currently
-UNVERIFIED: the math probes need lambda-lambda on `PYTHONPATH`, and the
-Cornerstone numbers were taken on gf 9.45.0 while the repo pins 9.23.0.
+**Measured results** — `FINDINGS.md`. Cornerstone rows (5–8) + heater L /
+mmi2x2 loss **re-confirmed** under gf 9.23.0 + cspdk 1.3.2 (`‖T−αU‖~1e-13`).
+Math rows (1–4) still need λλ on `PYTHONPATH`. PSD matrix reject:
+`tests/test_psd_reject.py`.
 
 **Running** — either `python gd_picasso/probes/lowering/<script>.py` or
 `python -m gd_picasso.probes.lowering.<script>`; `__init__.py` makes the flat

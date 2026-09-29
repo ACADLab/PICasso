@@ -1,22 +1,49 @@
 # Probe findings — measured results
 
-Provenance: this is the content of the original `files-2/README.md`, which was
-the only record of these measurements. That file was untracked and was deleted
-when the tree moved to `gd_picasso/probes/lowering/` (commit `e9c984c`); it
-appears nowhere in git history. Restored verbatim below.
+## Environment pins (Lane λλ/Env, 2026-09-29)
 
-**Status of every number here: UNVERIFIED in the current environment.**
-- Math findings (1–4) need lambda-lambda (`unitary_inference.py`) on `PYTHONPATH` — not installed, not vendored.
-- Cornerstone findings (5–8) and the heater table were measured on **gdsfactory 9.45.0**;
-  `pyproject.toml` pins **9.23.0** and `cspdk` is in no dependency file. S-model values
-  (notably 0.6831) are version-dependent.
+| Package | Version |
+|---|---|
+| `gdsfactory` | **9.23.0** (unchanged; do not upgrade) |
+| `cspdk` | **1.3.2** (`[full]` extra; never bare-install latest) |
+| `gplugins` | 2.0.1 (pre-existing) |
+| `unitary_inference` (λλ) | **NOT VENDORED** — working copy not on disk; see `gd_picasso/vendor/lambda_lambda/SEARCH_LOG.md` |
 
-Do not promote these into `sax_models` / the FoM path until re-run under a pinned
-environment. See `PICasso_plus_design_note.md` §5.2 item 1.
+**Promotion:** numbers below are re-measured under the pins above. Do **not**
+promote heater / MMI constants into `sax_models` / FoM until FoM consumes this
+re-baseline explicitly. Heater audit is **not** finalized here.
+
+## Re-measured Cornerstone (cspdk 1.3.2 + gf 9.23.0)
+
+Scripts: `cs_mzi.py`, `cs_full.py`, plus a direct `mmi2x2` S-probe.
+
+| # | Claim | Result under 1.3.2 |
+|---|---|---|
+| 5 | `mmi2x2` 50:50 cell; `\|S\|≈0.6831` → **0.3 dB** loss, Bᵢ convention | **Confirmed** — element `\|S\|=0.683101`, IL vs lossless `1/√2` = **0.3000 dB** |
+| 6 | MZI (`mmi2x2`–heater–`mmi2x2`) IL ≈ **0.622 dB** at `loss_dB_cm=0.7`, `L=320 µm`; flat across states | **Confirmed** — IL=**0.622 dB**, col-norm=0.93085 for vT∈{0,0.5,1,2} |
+| 7 | Loss-balancing dummy on parallel path; with dummy `‖T−αU‖~1e-13` | **Confirmed** — Hadamard/cross/bar/AllReduce: `‖T−αU‖` = **1.52e-13 / 6.71e-14 / 1.88e-13 / 1.52e-13**; full-stage IL **0.667 dB** |
+| 8 | Realized blocks sub-unitary `T=αU` | **Confirmed** (same fits) |
+| — | Heater default length | **`straight_heater_metal` length=320.0 µm** |
+
+**SAX-half 1e-13 slice:** recovered under these pins (`cs_full.py`).  
+**Full spec→unitary→Clements→SAX 1e-13 vertical slice:** still blocked on λλ vendor
+(math half cannot run). Delta vs prior claim: CS/SAX half matches; math half
+unverifiable until `unitary_inference` lands.
+
+## Math findings (1–4) — still blocked on λλ
+
+Need `unitary_inference` + `optical_compiler/ast.py` on `PYTHONPATH`. Locate
+pass failed (SEARCH_LOG). Prior unverified claims retained below for continuity;
+do not treat as re-confirmed.
+
+## Heater merge table — not re-run
+
+`heater_count.py` / `merge_phases.py` import λλ via `psd_gate`. Table below is
+historical only.
 
 ---
 
-## Original text (verbatim)
+## Original text (verbatim from files-2/README.md restoration)
 
 ```
 # Spec-to-layout lowering probe
