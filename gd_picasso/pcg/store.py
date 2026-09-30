@@ -11,6 +11,7 @@ import hashlib
 import inspect
 import json
 import math
+import warnings
 from typing import Any, Dict, List, Optional, Tuple
 
 import networkx as nx
@@ -493,6 +494,12 @@ class PCGStore:
         Name historically said "topology" but the digest includes settings.
         New code must call ``circuit_hash`` or ``connectivity_hash`` explicitly.
         """
+        warnings.warn(
+            "topology_hash() is deprecated; use circuit_hash() (wiring+params) "
+            "or connectivity_hash() (wiring only, no settings).",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         return self.circuit_hash()
 
     def layout_hash(self) -> Optional[str]:

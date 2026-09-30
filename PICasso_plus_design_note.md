@@ -82,7 +82,7 @@ Converts DRC/LVS/SAX failures into *constraint-ledger entries attached to specif
 ### 2.2 How (settled design)
 Heterogeneous, **ported**, hierarchical. Instances are vertices, nets are typed edges. (Devices-on-edges was refuted early: an edge joins exactly two endpoints, so MMIs and other multi-port devices are unrepresentable.) Three edge layers — optical, electrical, and a **derived thermal** layer whose coupling coefficients are emitted by the placer from achieved separations. Four-level refinement lattice: **L0 intent → L1 circuit → L2 placed → L3 routed**, with a constraint ledger carrying status and evidence at every level, and a canonical hash per subgraph enabling reuse and caching.
 
-Phase is an edge attribute, which makes phase-matching a *correctness* property of routing rather than a post-hoc optimization. Constraint tension becomes explicit: `MATCHED_LENGTH` (arms equal to 0.01 rad) versus `THERMAL_KEEPAWAY` (heaters ≥ 25 µm apart) are in direct conflict, and the placer resolves them under a stated cost instead of the conflict surfacing later as an unexplained functional failure.
+Phase is an edge attribute, which makes phase-matching a *correctness* property of routing rather than a post-hoc optimization. Constraint tension becomes explicit: `MATCHED_LENGTH` (schematic intent: arms equal to **0.01 rad**) versus `THERMAL_KEEPAWAY` (heaters ≥ 25 µm apart) are in direct conflict, and the placer resolves them under a stated cost instead of the conflict surfacing later as an unexplained functional failure. Layout SPA after tag `protocol-freeze-n1-spa` uses **primary** `SPA_TOL_RAD = 0.05` (≈ π/64 = one LSB of an *assumed* 6-bit code over `[0, π]` — not ½-LSB quantization error; justifications written after the choice, disclose). Sweep `{0.01,0.02,0.05,0.1}` is sensitivity only; misclassification of any confirmatory task at 0.05 counts against N3. Pre-tag routed/layout runs are **exploratory**; a fresh post-tag campaign is **confirmatory**. Tasks 6 & 9 are known-failure checks, not blind predictions. See `PROTOCOL_FREEZE.md`.
 
 ### 2.3 When to use which level
 
@@ -213,17 +213,17 @@ Strategy lock (decisions, lanes, pass commands, pins): [`PICasso_plus_strategy.m
 
 | Build-order / board item | Status |
 |---|---|
-| PCG store, dual hash, journal | **Done** — hashes renamed for honesty: ``connectivity_hash`` (topology claim), ``circuit_hash`` (wiring+**params**; ``topology_hash`` deprecated alias), ``layout_hash`` (geometry). Invariants updated |
-| gdsfactory YAML round-trip gate | **Mostly GREEN** under gf **9.23.0** (Linear/MZI/MZM PASS incl. SAX/ΔIL). **Ring ΔIL = soft-SKIP** — singular KLU on IR-only ``dc,o3↔dc,o2`` feedback (**not** a silent ΔIL≈0 bridge bug). Tracked open; solvable ring netlist still needed for thesis ΔIL |
+| PCG store, dual hash, journal | **Done** — hashes renamed for honesty: ``connectivity_hash`` = SHA-256 of sorted component types + port edges (**no** settings/geometry — wiring-only “topology preserved”); ``circuit_hash`` = wiring+**params** (``topology_hash`` deprecated alias emits ``DeprecationWarning``); ``layout_hash`` (geometry). Paper uses new names only |
+| gdsfactory YAML round-trip gate | **Mostly GREEN** under gf **9.23.0** (Linear/MZI/MZM PASS incl. SAX/ΔIL). **Ring ΔIL = soft-SKIP** — singular KLU on IR-only ``dc,o3↔dc,o2`` feedback (**not** a silent ΔIL≈0 bridge bug). Unverified N2 path for resonant topologies; fix via regularization / ``ring_single``-style solver to drop SKIP |
 | **LiDAR PIC IR round-trip (build-order step 2)** | **Done** (stub corpus) |
 | Legalize dangling detect + terminators; A0–A4 stubs; ExactCritic | **Done** (ledger dedupe with A4) |
-| **N1 ablation (three arms)** | **Protocol frozen, not run.** Arms A (YAML+pilot), B (YAML+ExactCritic), C (typed+ExactCritic); taxonomy fixed a priori; n=5×12. See `spa_protocol.py` / `PROTOCOL_FREEZE.md`. **Blocker for Paper A** |
-| SPA N-path WNS | **Comparator + layout-N3 smoke Done.** **`SPA_TOL_RAD = 0.05` frozen a priori** (tag `protocol-freeze-n1-spa`); do not retune after routed WNS. Two known failures on the 12-task set stay tracked |
+| **N1 ablation (three arms)** | **Protocol frozen, not run.** Subset `1,2,9,10,11,19,20,26,29,30,34,36`; holdout `11,26`; dry-run ceiling `34,36` (logging only, excluded from data). Equal budgets; B/C feedback parity; unparseable YAML ∈ denom; Wilson; tip-vs-tag guard (`test_spa_protocol_freeze.py`). Campaign blocked until `N1_LLM_MODEL_ID` pinned. **Blocker for Paper A** |
+| SPA N-path WNS | **Exploratory** pre-tag layout/routed Task-6/9. **Primary** post-tag confirmatory at `SPA_TOL_RAD=0.05` (one assumed 6-bit LSB over `[0,π]`; justifications post-hoc — disclose). Sweep = sensitivity only; **N3 fails if any of 12 misclassified at 0.05**. Tasks 6&9 = known-failure checks, not blind |
 | SAX silent-default audit / FoM split-brain | **Closed** (validator); emit split-brain gated in CS MZI smoke |
 | Heater / Cornerstone re-baseline | **Promoted**; IL 0.622 = **`CS_MODEL_SAX`** (not `MEASURED_CS`) |
 | Spec→unitary→Clements / PIC-Set 36 / Route Tasks 6&9 | **Done** (as before) |
 | Placement / router | Place cosWA green; **N5 cut** — LiDAR wrap primary |
-| GNN / RL | **Smoke only** — drop GNN MAE from Paper A until topology-held-out. RL = `SYNTHETIC_ENV`; reward `−(IL̂+0.5|Δφ̂|+0.1·density)` **not** `−|WNS|` |
+| GNN / RL | **Smoke only** — drop GNN MAE from Paper A until topology-held-out. RL = `SYNTHETIC_ENV`; reward `−(IL̂+0.5|Δφ̂|+0.1·density)` **not** `−|WNS|`; weights **chosen** (not tuned); `ESTIMATOR_ONLY` until `fidelity_vs_routed` |
 | DRC/LVS / PDK probes / N6 | DRC+connectivity LVS honest; SiEPIC SKIP; sky130 dropped; **N6 = NO EVIDENCE** |
 | **`PDKBackend` Cornerstone emit** | **MZI + MZM + Ring-bus maps landed.** Smoke: `connectivity_hash` stable; `circuit_hash` + `layout_hash` move on heater adapt; WG (3,0)/not (1,0); `to_gf_yaml` path. **Not yet:** second foundry; CS DRC deck; gate off `generic_tech` |
 
@@ -233,9 +233,11 @@ Strategy lock (decisions, lanes, pass commands, pins): [`PICasso_plus_strategy.m
 
 **Next:**
 
-1. **Run three-arm N1 ablation** under the frozen protocol (same LLM, 12 tasks, n=5). Do not start LLM sampling before citing the freeze tag.
-2. **Second foundry emit** — only then can N6 leave `NO EVIDENCE`.
-3. **Ring ΔIL** — replace IR-feedback singular netlist with a SAX-solvable ring (e.g. `ring_single`) so thesis ΔIL is PASS or honest FAIL, not SKIP-as-GREEN.
+1. **Commit tip** (honesty + tip-vs-tag guard) — leave freeze commit `3dd1fe4` / tag `protocol-freeze-n1-spa` untouched (incl. trailers). Optionally SSH-sign a *new* budgets tag; archive at tag on Software Heritage / Zenodo.
+2. **Pin `N1_LLM_MODEL_ID`** → dry-run A/B/C on ceiling tasks `34,36` (logging only; prompts/critic already frozen; samples excluded) → then campaign on the 12 with holdout `11,26` reported separately.
+3. **Confirmatory routed-SPA** after the tag (exploratory 6/9 stay labeled); primary verdict at 0.05 only.
+4. **Second foundry emit** — only then can N6 leave `NO EVIDENCE`.
+5. **Ring ΔIL** — keep in limitations until `ring_single` / regularization yields real ΔIL.
 4. **Independent CS validation** (optional) — published loss figures / closed-form budget.
 5. **Gate migration** to CS emit when fixture-complete.
 6. **Paper B depth** — Apollo baseline; LiDAR at scale. No N5 reopen. GNN only with topology-held-out split.

@@ -12,6 +12,8 @@ from __future__ import annotations
 
 import sys
 
+import pytest
+
 from gd_picasso.pcg import (
     EdgeLayer,
     PCGMutationError,
@@ -117,8 +119,9 @@ def test_circuit_hash_invariant_to_insertion_order() -> None:
 
     assert s1.circuit_hash() == s2.circuit_hash(), \
         "circuit_hash must be invariant to insertion order"
-    # Deprecated alias still matches
-    assert s1.topology_hash() == s1.circuit_hash()
+    # Deprecated alias still matches (and emits DeprecationWarning)
+    with pytest.warns(DeprecationWarning, match="topology_hash"):
+        assert s1.topology_hash() == s1.circuit_hash()
 
 
 def test_circuit_hash_invariant_to_placement() -> None:

@@ -13,7 +13,7 @@
 |---|---|
 | PCG round-trip gate (`pcg_roundtrip_test.py`) | **GREEN** under gf **9.23.0** |
 | Linear / MZI / MZM | PASS incl. SAX / ΔIL |
-| Ring bus | build + route + SAX PASS; ΔIL soft-SKIP (singular KLU when ideal SAX includes IR feedback absent from layout) — plan-aligned, non-blocking |
+| Ring bus | build + route + SAX PASS; ΔIL soft-SKIP (singular KLU on IR feedback) — **limitations** until `ring_single` / regularization; unverified N2 resonant path |
 | Parallel lanes | **GO** |
 
 Activate env before any lane pass command:
@@ -64,7 +64,7 @@ RL = Thrust 2 **after** GNN + hard router; discrete actions ≠ router picking.
 |---|---|
 | **`cspdk==1.3.2`** | Only. Pins `gdsfactory~=9.23.0`, `gplugins[sax,tidy3d]~=2.0.0`. Add to `[full]` extra in `pyproject.toml`. **Never** bare `uv pip install cspdk` (1.4.5 pulls gf≈9.45). |
 | **λλ (`unitary_inference`)** | Vendor as **upstream SHA + explicit patch**, not bare SHA. Preserve Algorithm-1 PSD fix (`psd_gate.py`) and `embedding.py` workaround. Acceptance: PSD reject regression + recover **1e-13** spec→SAX slice. |
-| Cornerstone FINDINGS | Measured under 9.45-era stack → **re-confirm under cspdk==1.3.2** before promoting heater L / `mmi2x2` loss into FoM constants. |
+| Cornerstone FINDINGS | **Re-confirmed** under `cspdk==1.3.2` + gf 9.23; **promoted** into `sax_models` / `to_a1` (`CS_ARM_L_UM=320`, mmi2x2 0.3 dB, MZI IL 0.622 dB). |
 
 ---
 
@@ -114,8 +114,8 @@ Run from repo root with `.venv` active (or `uv run`). Gate is green; lanes may p
 
 1. Gate GREEN before Place / SPA-IR / Formal fixture branching — **met**.
 2. FoM behavioral IL test green before quoting validator IL/WNS.
-3. `cspdk==1.3.2` + re-measure before promoting Cornerstone numbers / heater audit finalization.
-4. Patched λλ + PSD reject + 1e-13 before lowering→A1 and Formal Clements claims.
+3. `cspdk==1.3.2` + re-measure before promoting Cornerstone numbers / heater audit finalization — **met** (promoted 2026-09-30).
+4. Patched λλ + PSD reject + 1e-13 before lowering→A1 and Formal Clements claims — **met** (vendor @ `08d1a215` + L929 patch).
 5. Place spike stays `ESTIMATOR_ONLY` until routed N3 exists.
 6. RL / GNN / GPU router remain later (Paper B / Tier-2).
 
