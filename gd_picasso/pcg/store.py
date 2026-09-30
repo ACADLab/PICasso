@@ -171,7 +171,8 @@ class PCGStore:
             op,
             payload,
             agent=agent if agent is not None else self.default_agent,
-            topology_hash_after=self.topology_hash() if self._nodes else None,
+            # Journal field name kept for compat; value is circuit_hash (params+wiring).
+            topology_hash_after=self.circuit_hash() if self._nodes else None,
         )
 
     # -- mutations ----------------------------------------------------------
@@ -428,9 +429,44 @@ class PCGStore:
 
     # -- hashing ------------------------------------------------------------
 
-    def topology_hash(self) -> str:
-        """SHA-256 over nodes (id, component, params) + edges (topology only).
-        Geometry excluded — L1 and L2 of the same circuit share this hash."""
+    def connectivity_hash(self) -> str:
+        """Param-free structural hash: node ids + roles + optical edge endpoints.
+
+        **Claim this carries:** "lowering preserves topology" — settings and
+        cell remaps must not change connectivity. Geometry excluded.
+        Role = ``node.role or node.component``.
+        """
+        nodes = []
+        for nid in sorted(self._nodes):
+            n = self._nodes[nid]
+            role = (n.role or n.component).strip()
+            nodes.append({"id": nid, "role": role})
+        edges = []
+        for e in sorted(
+            self._edges,
+            key=lambda e: (e.src_node, e.src_port, e.dst_node, e.dst_port),
+        ):
+            if e.layer != EdgeLayer.OPTICAL:
+                continue
+            edges.append(
+                {
+                    "src": f"{e.src_node},{e.src_port}",
+                    "dst": f"{e.dst_node},{e.dst_port}",
+                    "attachment": e.attachment.value,
+                }
+            )
+        blob = _canonical_json({"nodes": nodes, "edges": edges})
+        return hashlib.sha256(blob.encode()).hexdigest()
+
+    def circuit_hash(self) -> str:
+        """SHA-256 over nodes (id, component, **params**) + edge wiring.
+
+        Includes device settings — so heater length 10→320 **changes** this
+        hash. Geometry excluded (L1 and L2 of the same circuit+params share it).
+
+        **Claim this carries:** circuit identity including PCell settings, not
+        bare topology. Prefer ``connectivity_hash`` for "topology preserved."
+        """
         node_data = []
         for nid in sorted(self._nodes):
             n = self._nodes[nid]
@@ -451,9 +487,20 @@ class PCGStore:
         blob = _canonical_json({"nodes": node_data, "edges": edge_data})
         return hashlib.sha256(blob.encode()).hexdigest()
 
+    def topology_hash(self) -> str:
+        """Deprecated alias of ``circuit_hash`` (includes params).
+
+        Name historically said "topology" but the digest includes settings.
+        New code must call ``circuit_hash`` or ``connectivity_hash`` explicitly.
+        """
+        return self.circuit_hash()
+
     def layout_hash(self) -> Optional[str]:
         """SHA-256 including placement geometry + back-annotated edge fields.
-        Returns None if any node lacks geometry (i.e. store is L1)."""
+
+        **Claim this carries:** "lowering / place / route changed the layout."
+        Returns None if any node lacks geometry (i.e. store is L1).
+        """
         for n in self._nodes.values():
             if n.x is None or n.y is None:
                 return None

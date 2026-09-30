@@ -82,6 +82,8 @@ class PCGNode(BaseModel):
     """A device instance in the photonic circuit graph."""
     id: str
     component: str
+    # Neutral role (phased): None → treat ``component`` as GF default encoding.
+    role: Optional[str] = None
     params: Dict[str, Any] = Field(default_factory=dict)
     level: RefLevel = RefLevel.L1_CIRCUIT
     ports: Dict[str, PCGPort] = Field(default_factory=dict)

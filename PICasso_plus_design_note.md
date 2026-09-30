@@ -21,16 +21,16 @@ So the non-conflict is structural, not cosmetic:
 |---|---|---|
 | Agent output | YAML/DOT **text** | **typed graph mutations** through an API; text is only a view |
 | Critic | second LLM + crossing detector | exact checkers (port-degree, planarity, DRC/LVS) + differentiable FoM |
-| Placement | Graphviz `dot` (aesthetic hierarchical drawing) | analytical, constraint-projected, **function-aware**, GPU |
-| Routing | gdsfactory river router (crossing-free bundles) | curvy-aware search with priced crossings + **phase-matched groups** |
+| Placement | Graphviz `dot` (aesthetic hierarchical drawing) | analytical, constraint-projected, **function-aware**, **phase-constrained** |
+| Routing | gdsfactory river router (crossing-free bundles) | curvy-aware search (LiDAR wrap primary) with priced crossings + **phase-matched groups** |
 | Simulation | SAX on the schematic-ideal netlist | SAX on the **routed** netlist (back-annotated L, Σ\|θ\|, n_cross) |
 | Endpoint | structural validity | functional Spec@k + IL/ER closure |
 | Autonomy | user inspects each stage | closed loop; agents consume machine-actionable constraint entries |
 
 Two newer papers matter more for positioning than PhIDO does, and both post-date the PICasso submission:
 
-1. **Gu/ScopeX (ASU) line — this is the real overlap risk on Thrust 3/4.** Apollo (ICCAD'25, arXiv:2504.18813) is already *"the first GPU-accelerated, routing-informed placement framework"* for PICs, built on DREAMPlace, with an asymmetric bending-aware wirelength (cosWA) capturing port orientation, a routing-informed net-spacing model, constraint handling via conditional projection and cell inflation, and >1000 components in ~100 s. LiDAR 1.0/2.0 (ISPD'25, TCAD'25, arXiv:2505.17239) is a curvy-aware **A\* CPU** detailed router with adaptive crossing insertion, group-based net ordering, critical-path IL minimization, hierarchical reuse, and an open YAML **PIC IR**. LiDAR 3.0 (ISPD'26) adds photonics-aware electrical routing. PoLaRIS = Apollo + LiDAR + inverse design. **Consequence: "GPU placement for PICs" is taken.** Do not claim it. What is not taken: (a) any *functional/spectral* term in the placement objective — theirs are geometric and loss-proxy; (b) differential **phase** as a first-class constrained objective; (c) a GPU router (LiDAR is sequential A*); (d) any LLM/agent layer; (e) simulation and layout in one autodiff graph.
-2. **Flexcompute (arXiv:2606.00915, 30 May 2026).** Agentic loops for passives, MRM junctions, RF electrodes, and — relevant here — **chip-level electrical routing**: they gave an agent 12 routing algorithms plus bondpad freedom and it drove 192 DRC violations to 0 in 27 iterations. This is the strongest existing evidence that an LLM belongs *above* the P&R engine as a controller, and also a warning: the "agent picks a router" move is now published. Our version has to be distinguished by *what the agent controls* (weights on a differentiable objective, net grouping, hierarchy cuts) and *what signal closes the loop* (IL/Δφ/spectrum, not DRV count alone).
+1. **Gu/ScopeX (ASU) line — this is the real overlap risk on Thrust 3/4.** Apollo (ICCAD'25, arXiv:2504.18813) is already *"the first GPU-accelerated, routing-informed placement framework"* for PICs, built on DREAMPlace, with an asymmetric bending-aware wirelength (cosWA) capturing port orientation, a routing-informed net-spacing model, constraint handling via conditional projection and cell inflation, and >1000 components in ~100 s. LiDAR 1.0/2.0 (ISPD'25, TCAD'25, arXiv:2505.17239) is a curvy-aware **A\* CPU** detailed router with adaptive crossing insertion, group-based net ordering, critical-path IL minimization, hierarchical reuse, and an open YAML **PIC IR**. LiDAR 3.0 (ISPD'26) adds photonics-aware electrical routing. PoLaRIS = Apollo + LiDAR + inverse design. **Consequence: "GPU placement for PICs" is taken.** Do not claim it. What is not taken: (a) any *functional/spectral* term in the placement objective — theirs are geometric and loss-proxy; (b) differential **phase** as a first-class constrained objective; (c) ~~a GPU router~~ *(N5 demoted — see §4.2 / §6; LiDAR wrap is the shipped router)*; (d) any LLM/agent layer; (e) simulation and layout in one autodiff graph. **Citation check:** Apollo/LiDAR detail numbers above must be re-verified against the source PDFs before camera-ready — they post-date casual verification.
+2. **Flexcompute (arXiv:2606.00915, 30 May 2026).** Agentic loops for passives, MRM junctions, RF electrodes, and — relevant here — **chip-level electrical routing**: the draft cites an agent driving **192 DRC violations → 0 in 27 iterations** with 12 routing algorithms + bondpad freedom. **Unverified here** — confirm against the paper before §0 ships. This is still the strongest *class* of evidence that an LLM belongs *above* the P&R engine as a controller, and a warning that "agent picks a router" is published. Our version has to be distinguished by *what the agent controls* (weights on a differentiable objective, net grouping, hierarchy cuts) and *what signal closes the loop* (IL/Δφ/spectrum, not DRV count alone).
 
 **Net framing for the paper.** PICasso+ is not "another agentic PIC flow." It is: *the intermediate representation and the solver formulation that let agents, physical design, and circuit simulation share one differentiable state on one device.* PhIDO gave agents a text DSL; ScopeX gave PIC physical design real solvers; nobody has connected the two, and nobody has closed the loop on function rather than structure.
 
@@ -103,7 +103,7 @@ Phase is an edge attribute, which makes phase-matching a *correctness* property 
 - **Analog EDA precedent** (this is the methodological cover story): ParaGraph (DAC'20) for layout parasitics via GNN, GANA for netlist annotation, parasitic-aware sizing with GNN+BO. Graph-IR-plus-GNN is standard practice in analog physical design; photonics simply has no equivalent. Say it that way — it is both true and reviewer-friendly.
 - **Design decision**: make the PCG a strict **superset of LiDAR's PIC IR ∪ SAX netlist**, so round-trip serialization is free in both directions. This is the cheapest possible credibility gate: if the IR loses nothing relative to the two existing representations, the "why a new IR" question answers itself, and PICasso+ can run against the existing PIC-Set harness unchanged.
 
-**Ablation that carries the thrust**: agents emit YAML text instead of typed mutations → the representational error classes reappear. That is the headline row.
+**Ablation that carries the thrust**: agents emit YAML text instead of typed mutations → the representational error classes reappear. That is the headline row. **Status: protocol frozen, not yet run** — three arms A/B/C in [`PROTOCOL_FREEZE.md`](gd_picasso/pcg/PROTOCOL_FREEZE.md) / tag `protocol-freeze-n1-spa` (see §5.1 N1).
 
 ---
 
@@ -159,8 +159,11 @@ Principle: **one tensor program, one device, one autodiff graph.** The reason th
 ### 4.1 Placement — already solved, adopt it
 DREAMPlace/Apollo territory: wirelength and density kernels + FFT-based Poisson solve, Nesterov/BNAG optimization in PyTorch. Free extra parallelism: batch over **multi-start restarts** and over **candidate topologies** in the population dimension. No novelty claim here; cite Apollo and move on.
 
-### 4.2 Routing — the real formulation contribution
-LiDAR is sequential A* on CPU. No GPU router exists for curvy waveguides. Reformulate.
+### 4.2 Routing — formulation sketch (N5 demoted → appendix / future work)
+
+**Status (locked with `ROUTER_STATUS.md`):** Paper B ships a **LiDAR wrap** as the primary detailed router. Hard/soft GPU min-plus kernels exist as CPU smoke (`pcg/route/minplus.py`) but are **not** a novelty claim — GAMER-as-technique is taken; do not claim "GPU-native curvy routing" or soft/hard duality as delivered evidence.
+
+Historical formulation (kept for Paper B appendix / future work only):
 
 **State tensor.** Bend-radius and port-orientation constraints mean the state is not just position. Use
 
@@ -168,21 +171,11 @@ LiDAR is sequential A* on CPU. No GPU router exists for curvy waveguides. Reform
 C ∈ R^{N × H × W × Θ × K}        (nets × grid × orientation × curvature class)
 ```
 
-Feasible transitions are a sparse stencil in (Θ, K) encoding minimum bend radius, Euler-transition legality, and cross-section change rules. Shortest path over this state space is a **min-plus (tropical) fixed point**:
+Feasible transitions are a sparse stencil in (Θ, K). Shortest path over this state space is a **min-plus (tropical) fixed point** with sweep structure related to GAMER's Manhattan maze routing. Generalizing that sweep to an orientation-and-curvature-augmented lattice was the *intended* technical claim; it is **demoted** pending a real LiDAR IL/WL match and an explicit decision to reopen N5.
 
-```
-C ← min( C ,  min_plus(C, A) )        A = transition-cost stencil
-```
+**Multi-net / soft-hard duality.** Negotiated congestion and soft (`−τ·logsumexp`) vs hard (`min`) twins remain interesting for ∂F̂/∂x through the router — but **no implementation backs the soft path in the shipped loop**. Soft/hard duality belongs under future work until a kernel is wired into placement.
 
-which is exactly the structure GAMER exploits for Manhattan maze routing (decompose into alternating directional sweeps, each a prefix-min / scan, `O(n²) → O(log² n)` per sweep). Generalizing GAMER's sweep decomposition from 4-direction Manhattan to an orientation-and-curvature-augmented lattice is the technical claim: same scan primitive, richer stencil.
-
-**Multi-net.** Batch all nets in the `N` dimension and replace sequential net ordering with **negotiated congestion** (PathFinder-style history cost) updated as a tensor once per outer iteration: rip up and reroute *everything* simultaneously each round. This removes the ordering-dependence that LiDAR spends real machinery on (group-based ordering, intragroup ordering, order refinement) and converts the router into a fixed number of dense/sparse tensor iterations. Keep costs non-negative so the sweep's monotonicity holds.
-
-**Gradients through routing.** Two versions of the same kernel:
-- **hard** — `min` → the legal route, used for the final layout and for exact evaluation;
-- **soft** — `min` → `−τ·logsumexp(−·/τ)` → a differentiable shortest path (differentiable-DP / soft-Bellman), giving ∂(route length, bends, crossings)/∂x and hence ∂F̂/∂x **through the router**, not merely through a hand-written estimator.
-
-That soft/hard pair is the clean answer to "how can placement possibly be function-aware before routing exists," and it is a defensible formulation contribution independent of the speedup.
+Shipped path today: LiDAR wrap (or GF-routed metrics) → back-annotation → SPA.
 
 ### 4.3 Simulation — batch the axes that are already independent
 SAX/JAX circuit solve batches naturally over (a) wavelength — embarrassingly parallel, (b) design candidates, (c) restarts, (d) corner/Monte-Carlo samples for yield. `jit` + `vmap`, x64 enabled. S-matrix assembly is a block-sparse solve; at PIC-Set scale, batched dense on GPU beats sparse-on-CPU comfortably, and the λ axis is what makes spectral objectives (FSR, ER, bandwidth) affordable inside the loop rather than after it.
@@ -196,7 +189,7 @@ Other pitfalls to pre-empt:
 - PyTorch (placement) ↔ JAX (SAX) bridge: keep the interface tensor small — per-net geometry `G ∈ R^{|E|×3}` plus the actuation vector — and move it via DLPack with a `torch.autograd.Function` wrapping `jax.value_and_grad`. Already prototyped and gradient-checked.
 
 ### 4.5 The metric that connects Thrust 4 back to Thrust 1
-Not wall-clock alone. Report **candidates evaluated per second** and the **runtime scaling exponent vs component count**. The agentic argument depends on it: an agent with 1000 evaluations per design problem beats one with 10, and Flexcompute's results lean on precisely that (an in-house GPU cluster letting the agent run hundreds of simulations per problem). GPU-native P&R + simulation is what makes the agent layer's search budget non-trivial. That is the sentence that makes the four thrusts one paper instead of four.
+Not wall-clock alone. Report **candidates evaluated per second** and the **runtime scaling exponent vs component count**. The agentic argument depends on it: an agent with 1000 evaluations per design problem beats one with 10, and Flexcompute-class results lean on precisely that (GPU cluster budget). **Batched SAX + fast detailed routing** (LiDAR wrap today; GPU kernels only if N5 is reopened) is what makes the agent layer's search budget non-trivial. That is the sentence that makes the thrusts one paper instead of four.
 
 ---
 
@@ -207,37 +200,45 @@ Not wall-clock alone. Report **candidates evaluated per second** and the **runti
 3. `legalize` (terminators, tapers) + `to_sax`; reproduce current PICasso numbers exactly. Steps 1–3 give a drop-in replacement with identical outputs, which de-risks everything after.
 4. Constraint ledger + A4 triage; then A0/A1 with the exact critic.
 5. Placement against the read/write contract; validate the pre-route estimators (their own experiment).
-6. Router: hard min-plus sweep kernel first, phase-critical groups first within it; then the soft variant.
+6. Router: **LiDAR wrap primary** (N5 GPU min-plus demoted to appendix — see §4.2). Soft twin = future work.
 7. Close the loop: differentiable optimizer over L3 params; A2/A3 as controllers.
-8. GNN surrogate, then RL for discrete decisions — Thrust 2 territory.
+8. GNN surrogate, then RL for discrete decisions — Thrust 2 / Paper B territory (smoke only until topology-split eval).
+9. **Headline ablation (N1):** typed mutations vs YAML-text agents on ≥12-task subset — required before Paper A writeup.
 
-### 5.1 Status on `dev/picplus` (Sep 2026)
+### 5.1 Status on `dev/picplus` (30 Sep 2026)
 
 Strategy lock (decisions, lanes, pass commands, pins): [`PICasso_plus_strategy.md`](PICasso_plus_strategy.md). Parallel lanes **GO** after gate GREEN.
 
+**How far vs the four thrusts / build order (§5).** The IR spine is real: build-order steps **1–4 are largely landed**. Thrust-3/4 are **honest preview** (place spike + LiDAR wrap; **N5 cut**). **Paper A blockers, in order:** (1) run the **three-arm** N1 ablation under the frozen protocol; (2) finish foundry emit (MZM/Ring maps landed; second foundry still open). GNN ~0.12 dB stays **out of Paper A** until a topology-held-out split. Cite tag `protocol-freeze-n1-spa` for a-priori SPA tol + ablation protocol.
+
 | Build-order / board item | Status |
 |---|---|
-| PCG store, dual hash, journal | **Done** (invariants 8/8, rejection 13/13, extensions 8/8) |
-| gdsfactory YAML round-trip gate | **GREEN** under gf **9.23.0** (Linear/MZI/MZM PASS incl. SAX/ΔIL; Ring build+route+SAX PASS, ΔIL soft-SKIP — singular KLU / IR feedback). See strategy §1 |
-| **LiDAR PIC IR round-trip (build-order step 2)** | **Not started** — Lane SPA/IR; wrap-LiDAR decision locked in strategy §2 |
+| PCG store, dual hash, journal | **Done** — hashes renamed for honesty: ``connectivity_hash`` (topology claim), ``circuit_hash`` (wiring+**params**; ``topology_hash`` deprecated alias), ``layout_hash`` (geometry). Invariants updated |
+| gdsfactory YAML round-trip gate | **Mostly GREEN** under gf **9.23.0** (Linear/MZI/MZM PASS incl. SAX/ΔIL). **Ring ΔIL = soft-SKIP** — singular KLU on IR-only ``dc,o3↔dc,o2`` feedback (**not** a silent ΔIL≈0 bridge bug). Tracked open; solvable ring netlist still needed for thesis ΔIL |
+| **LiDAR PIC IR round-trip (build-order step 2)** | **Done** (stub corpus) |
 | Legalize dangling detect + terminators; A0–A4 stubs; ExactCritic | **Done** (ledger dedupe with A4) |
-| SPA N-path WNS (reconvergent pairs); hybrid 4-path targets | **Done** — comparator only; not layout evidence (`SYNTHETIC_NOT_LAYOUT` until N3) |
-| SAX silent-default audit table | **Partial** — Lane FoM unifying validator → `build_lossy_models`; MMI/bend/heater open |
-| **FoM path is split-brain** | **In flight (Lane FoM)** — gate GREEN; behavioral IL / shared factory are FoM leftover before quoting IL/WNS |
-| Heater / Cornerstone re-baseline (`L≈320 µm`, lossy strip) | **Probed** in `gd_picasso/probes/lowering/` — **blocked on promotion** until `cspdk==1.3.2` re-measure (strategy §4) |
-| Spec→unitary→Clements lowering (math half of NL→PCG) | **Probed, unrunnable** — λλ = SHA+patch (Lane λλ/Env); Formal owns Paper A partition |
-| PIC-Set 36 committed fixture freeze | **Open** (4 builtins + `pcg/fixtures/`; not 36/36) — Formal + SPA/IR append-only |
-| Route Task 6 & 9 → back-annotate → SPA WNS | **Open** (the real N3 experiment) |
-| Placement / GPU router kernels | **Open** — Place = timeboxed `ESTIMATOR_ONLY` spike; Apollo via DREAMPlace locked for Tier-2 (strategy §2) |
+| **N1 ablation (three arms)** | **Protocol frozen, not run.** Arms A (YAML+pilot), B (YAML+ExactCritic), C (typed+ExactCritic); taxonomy fixed a priori; n=5×12. See `spa_protocol.py` / `PROTOCOL_FREEZE.md`. **Blocker for Paper A** |
+| SPA N-path WNS | **Comparator + layout-N3 smoke Done.** **`SPA_TOL_RAD = 0.05` frozen a priori** (tag `protocol-freeze-n1-spa`); do not retune after routed WNS. Two known failures on the 12-task set stay tracked |
+| SAX silent-default audit / FoM split-brain | **Closed** (validator); emit split-brain gated in CS MZI smoke |
+| Heater / Cornerstone re-baseline | **Promoted**; IL 0.622 = **`CS_MODEL_SAX`** (not `MEASURED_CS`) |
+| Spec→unitary→Clements / PIC-Set 36 / Route Tasks 6&9 | **Done** (as before) |
+| Placement / router | Place cosWA green; **N5 cut** — LiDAR wrap primary |
+| GNN / RL | **Smoke only** — drop GNN MAE from Paper A until topology-held-out. RL = `SYNTHETIC_ENV`; reward `−(IL̂+0.5|Δφ̂|+0.1·density)` **not** `−|WNS|` |
+| DRC/LVS / PDK probes / N6 | DRC+connectivity LVS honest; SiEPIC SKIP; sky130 dropped; **N6 = NO EVIDENCE** |
+| **`PDKBackend` Cornerstone emit** | **MZI + MZM + Ring-bus maps landed.** Smoke: `connectivity_hash` stable; `circuit_hash` + `layout_hash` move on heater adapt; WG (3,0)/not (1,0); `to_gf_yaml` path. **Not yet:** second foundry; CS DRC deck; gate off `generic_tech` |
 
 ### 5.2 Immediate ordered plan (do not reorder casually)
 
-0. **Make the gate runnable and vendor lambda-lambda** — create the `picasso` env; pin λλ (`unitary_inference.py`, `optical_compiler/ast.py`) by SHA or vendor it; add `cspdk`; resolve gf 9.23.0 vs 9.45.0. Then **re-run all probes and re-derive `FINDINGS.md`**. Nothing below is trustworthy until its inputs are reproducible.
-1. **Unify the FoM path, then land Cornerstone numbers** — first make `validators/sax_validator.py` and `pcg/sax_models.py` one model map (lossless production validator is the live bug); then promote re-derived findings (`ARM_L=320`, `loss_dB_cm=0.7`, loss-balancing dummy arm, grade = `‖T−αU‖` + IL). Without both halves, any routed SPA number is poisoned.
-2. **Wire lowering → PCG** — probe cells → typed mutations (A1), not free YAML. Keep PSD gate (`psd_gate.py`) in front of Clements.
-3. **Route + back-annotate Tasks 6 & 9** — consume N-path SPA; report WNS. That is N3 evidence.
-4. **Freeze PIC-Set 36 fixtures** in `gd_picasso/pcg/fixtures/`.
-5. **P&R kernels** only after 0–3; they inherit FoM + SPA contracts.
+**Done recently:** hash rename (`circuit_hash` / `connectivity_hash`); Cornerstone MZM + Ring-bus `component_map`; protocol freeze (`SPA_TOL_RAD`, three-arm N1) under tag `protocol-freeze-n1-spa`.
+
+**Next:**
+
+1. **Run three-arm N1 ablation** under the frozen protocol (same LLM, 12 tasks, n=5). Do not start LLM sampling before citing the freeze tag.
+2. **Second foundry emit** — only then can N6 leave `NO EVIDENCE`.
+3. **Ring ΔIL** — replace IR-feedback singular netlist with a SAX-solvable ring (e.g. `ring_single`) so thesis ΔIL is PASS or honest FAIL, not SKIP-as-GREEN.
+4. **Independent CS validation** (optional) — published loss figures / closed-form budget.
+5. **Gate migration** to CS emit when fixture-complete.
+6. **Paper B depth** — Apollo baseline; LiDAR at scale. No N5 reopen. GNN only with topology-held-out split.
 
 ### 5.3 Probe tree: `gd_picasso/probes/lowering/`
 
@@ -257,12 +258,17 @@ byte-identical to each other for all six shared math files.)
 **Cornerstone (`gdsfactory` + `cspdk`)**
 - `cs_mzi.py` / `cs_full.py` — heater re-baseline: `L=320 µm`, `loss_dB_cm=0.7`; `mmi2x2` 50:50 cell; loss-balancing dummy; sub-unitary `T=αU`
 - `merge_phases.py` / `heater_count.py` — adjacent-layer merge barely helps (~0–20%); budget ≈ **4 heaters per MZI**
+- Emit path (not a hand netlist): `pcg/backends/cornerstone.py` — PCG → `to_gf_yaml` under `cspdk.si220.cband`; MZI smoke green. MZI IL 0.622 dB = **`CS_MODEL_SAX`** (model-derived; not foundry-measured)
 
 ## 6. Claim discipline
 
-**Claim**: typed graph IR as shared agent/solver state; layout-faithful back-annotated simulation; phase as a first-class routing constraint and the static-phase-analysis framing; GPU-native curvy routing via orientation-augmented min-plus sweeps; soft/hard router duality giving gradients through routing; the whole loop on one device.
+**Claim (Paper A / shipped evidence bar):** typed graph IR as shared agent/solver state; layout-faithful back-annotated simulation; phase as a first-class routing constraint and the static-phase-analysis framing; ExactCritic + typed mutation API (ablation pending — see §5.1 N1).
 
-**Do not claim**: GPU placement for PICs (Apollo), curvy detailed routing (LiDAR), NL→layout agentic synthesis (PhIDO), agent-driven router selection (Flexcompute), GPU maze routing as a technique (GAMER/FastGR/InstantGR).
+**Claim (Paper B / only with evidence):** LiDAR-wrap detailed routing + SPA on routed geometry; function-aware / phase-constrained placement spike (cite Apollo for GPU placement — do not claim GPU placement ourselves).
+
+**Future work / demoted (N5 — do not claim until reopened):** GPU-native curvy routing via orientation-augmented min-plus sweeps; soft/hard router duality giving gradients through routing; “the whole loop on one device” as a delivered system claim.
+
+**Do not claim:** GPU placement for PICs (Apollo), curvy detailed routing as our invention (LiDAR), NL→layout agentic synthesis (PhIDO), agent-driven router selection (Flexcompute), GPU maze routing as a technique (GAMER/FastGR/InstantGR), GNN/RL layout gains from `SYNTHETIC_ENV` / random-split smoke, `CS_MODEL_SAX` IL as foundry measurement.
 
 ## 7. Open questions for you
 

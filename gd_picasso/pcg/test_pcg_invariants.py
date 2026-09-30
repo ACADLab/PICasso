@@ -2,7 +2,8 @@
 PCG invariant tests — mutation negatives and hash invariance.
 
 These are the direct evidence for the claim that illegal states are
-unrepresentable, and that topology_hash / layout_hash behave as advertised.
+unrepresentable, and that ``circuit_hash`` / ``connectivity_hash`` /
+``layout_hash`` behave as advertised.
 
 Run:  python -m gd_picasso.pcg.test_pcg_invariants
 """
@@ -102,8 +103,8 @@ def test_duplicate_node_id_raises() -> None:
     assert raised, "duplicate node id should raise"
 
 
-def test_topology_hash_invariant_to_insertion_order() -> None:
-    """Same nodes/edges inserted in different order → same topology_hash."""
+def test_circuit_hash_invariant_to_insertion_order() -> None:
+    """Same nodes/edges inserted in different order → same circuit_hash."""
     s1 = PCGStore()
     s1.add_node(PCGNode(id="a", component="mmi1x2", params={"x": 1}), skip_component_check=True)
     s1.add_node(PCGNode(id="b", component="straight", params={"length": 10}), skip_component_check=True)
@@ -114,26 +115,38 @@ def test_topology_hash_invariant_to_insertion_order() -> None:
     s2.add_node(PCGNode(id="a", component="mmi1x2", params={"x": 1}), skip_component_check=True)
     s2.connect("a", "o2", "b", "o1")
 
-    assert s1.topology_hash() == s2.topology_hash(), \
-        "topology_hash must be invariant to insertion order"
+    assert s1.circuit_hash() == s2.circuit_hash(), \
+        "circuit_hash must be invariant to insertion order"
+    # Deprecated alias still matches
+    assert s1.topology_hash() == s1.circuit_hash()
 
 
-def test_topology_hash_invariant_to_placement() -> None:
-    """Moving a node must not change topology_hash."""
+def test_circuit_hash_invariant_to_placement() -> None:
+    """Moving a node must not change circuit_hash."""
     store = _two_node_store()
     store.connect("a", "o2", "b", "o1")
-    h_before = store.topology_hash()
+    h_before = store.circuit_hash()
 
     node = store.nodes["a"]
-    # mutate placement via model_copy / direct field set
     node.x = 100.0
     node.y = 50.0
     node.rotation = 90
     node.mirror = True
 
-    h_after = store.topology_hash()
+    h_after = store.circuit_hash()
     assert h_before == h_after, \
-        "topology_hash must be invariant to placement edits"
+        "circuit_hash must be invariant to placement edits"
+
+
+def test_connectivity_hash_ignores_params_circuit_hash_moves() -> None:
+    """connectivity_hash = topology claim; circuit_hash includes settings."""
+    store = _two_node_store()
+    store.connect("a", "o2", "b", "o1")
+    c0 = store.connectivity_hash()
+    h0 = store.circuit_hash()
+    store.set_param("b", "length", 99.0)
+    assert store.connectivity_hash() == c0, "param edit must not change connectivity"
+    assert store.circuit_hash() != h0, "param edit must change circuit_hash"
 
 
 def test_layout_hash_changes_on_move() -> None:
@@ -155,6 +168,11 @@ def test_layout_hash_changes_on_move() -> None:
     assert h1 != h2, "layout_hash must change when a node moves"
 
 
+# Back-compat names for older runners / docs
+test_topology_hash_invariant_to_insertion_order = test_circuit_hash_invariant_to_insertion_order
+test_topology_hash_invariant_to_placement = test_circuit_hash_invariant_to_placement
+
+
 def run_all() -> int:
     tests = [
         test_double_connect_raises,
@@ -162,8 +180,9 @@ def run_all() -> int:
         test_self_loop_raises,
         test_out_of_signature_param_raises,
         test_duplicate_node_id_raises,
-        test_topology_hash_invariant_to_insertion_order,
-        test_topology_hash_invariant_to_placement,
+        test_circuit_hash_invariant_to_insertion_order,
+        test_circuit_hash_invariant_to_placement,
+        test_connectivity_hash_ignores_params_circuit_hash_moves,
         test_layout_hash_changes_on_move,
     ]
     passed = 0

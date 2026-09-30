@@ -1,55 +1,57 @@
-"""
-Unit tests for LVS validator.
-
-Under gdsfactory 9.23, ``gdsfactory.utils.lvs`` is missing (soft-break).
-Real layout-vs-schematic cases importorskip until a real LVS backend returns.
-"""
+"""Unit tests for layout-vs-schematic connectivity check."""
 
 from __future__ import annotations
 
-import pytest
+import gdsfactory as gf
 
-from gd_picasso.validators.lvs_validator import LVS_AVAILABLE, LVSValidator
+from gd_picasso.pcg.store import PCGStore
+from gd_picasso.pcg.types import EdgeLayer, PCGEdge, PCGNode
+from gd_picasso.validators.lvs_validator import LVSValidator
 
 
-def test_lvs_soft_skip_when_gf9_helper_missing() -> None:
-    """Without gdsfactory.utils.lvs, validator must soft-skip — not fake LVS."""
-    if LVS_AVAILABLE:
-        pytest.skip("gdsfactory.utils.lvs is present; soft-skip path N/A")
-
-    validator = LVSValidator(enabled=True)
-    assert validator.enabled is False
-
-    import gdsfactory as gf
-
+def test_validate_disabled_skips() -> None:
+    validator = LVSValidator(enabled=False)
     passed, report = validator.validate(gf.components.mmi1x2())
-    assert passed is True  # skipped, not a fabricated match claim
-    assert report.get("lvs_skipped_gf9") is True
-    assert any("soft-skip" in w.lower() or "missing" in w.lower() for w in report["warnings"])
+    assert passed is True
+    assert report["lvs_mode"] == "disabled"
     assert report["errors"] == []
 
 
-@pytest.mark.skipif(not LVS_AVAILABLE, reason="gdsfactory.utils.lvs missing (gf 9 soft-break)")
-def test_layout_matches_schematic() -> None:
-    """Matching layout/schematic — requires real gf LVS helper."""
-    pytest.importorskip("gdsfactory.utils.lvs")
-    import gdsfactory as gf
-
+def test_validate_structure_smoke() -> None:
     validator = LVSValidator(enabled=True)
-    layout = gf.components.mmi1x2()
-    schematic = gf.components.mmi1x2()
-    passed, report = validator.validate(layout, schematic)
+    passed, report = validator.validate(gf.components.mmi1x2())
     assert passed is True
-    assert report.get("matched") is True
+    assert report["lvs_mode"] == "structure"
+    assert report.get("check") == "structure"
+    assert "lvs_skipped_gf9" not in report
 
 
-@pytest.mark.skipif(not LVS_AVAILABLE, reason="gdsfactory.utils.lvs missing (gf 9 soft-break)")
-def test_missing_instances_fails() -> None:
-    pytest.importorskip("gdsfactory.utils.lvs")
-    pytest.skip("Needs a controlled schematic/layout mismatch fixture once LVS returns")
+def test_validate_connectivity_store_only() -> None:
+    store = PCGStore()
+    store.add_node(PCGNode(id="a", component="mmi1x2"), skip_component_check=True)
+    store.add_node(PCGNode(id="b", component="mmi1x2"), skip_component_check=True)
+    store.connect("a", "o1", "b", "o1")
+    validator = LVSValidator(enabled=True)
+    passed, report = validator.validate_connectivity(store, component=None)
+    assert passed is True
+    assert report["lvs_mode"] == "connectivity"
+    assert report["errors"] == []
 
 
-@pytest.mark.skipif(not LVS_AVAILABLE, reason="gdsfactory.utils.lvs missing (gf 9 soft-break)")
-def test_port_mismatch_fails() -> None:
-    pytest.importorskip("gdsfactory.utils.lvs")
-    pytest.skip("Needs a controlled schematic/layout mismatch fixture once LVS returns")
+def test_validate_connectivity_missing_node_fails() -> None:
+    store = PCGStore()
+    store.add_node(PCGNode(id="a", component="mmi1x2"), skip_component_check=True)
+    # Bypass connect() so we can plant a dangling endpoint
+    store._edges.append(
+        PCGEdge(
+            src_node="a",
+            src_port="o1",
+            dst_node="missing",
+            dst_port="o1",
+            layer=EdgeLayer.OPTICAL,
+        )
+    )
+    validator = LVSValidator(enabled=True)
+    passed, report = validator.validate_connectivity(store, component=None)
+    assert passed is False
+    assert report["errors"]

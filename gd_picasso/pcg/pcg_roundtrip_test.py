@@ -492,20 +492,20 @@ def run_fixture(name: str, yaml_str: str) -> Dict[str, str]:
         )
         print(f"  [3] SKIP — netlist diff unavailable (routing failed on fixture)")
 
-    # --- Step 4: topology_hash ---
+    # --- Step 4: circuit_hash (wiring+params; topology_hash is deprecated alias) ---
     try:
         store2 = from_gf_yaml(rt_yaml)
-        h1 = store.topology_hash()
-        h2 = store2.topology_hash()
+        h1 = store.circuit_hash()
+        h2 = store2.circuit_hash()
         if h1 == h2:
             result["4_topo_hash"] = "PASS"
-            print(f"  [4] topology_hash stable: PASS ({h1[:12]}...)")
+            print(f"  [4] circuit_hash stable: PASS ({h1[:12]}...)")
         else:
             result["4_topo_hash"] = f"FAIL: {h1[:12]} != {h2[:12]}"
-            print(f"  [4] topology_hash: FAIL")
+            print(f"  [4] circuit_hash: FAIL")
     except Exception as exc:
         result["4_topo_hash"] = f"FAIL: {exc}"
-        print(f"  [4] topology_hash: FAIL — {exc}")
+        print(f"  [4] circuit_hash: FAIL — {exc}")
 
     # --- Step 5: SAX (thesis) ---
     if not result["rt_route_ok"].startswith("PASS"):

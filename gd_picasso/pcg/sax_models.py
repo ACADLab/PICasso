@@ -12,8 +12,16 @@ from functools import partial
 from typing import Any, Callable, Dict, List, Optional
 
 
-# Waveguide target from PIC-Set / Table II
+# Waveguide target from PIC-Set / Table II (provenance: TARGET_TABLE_II — not fab CS)
 DEFAULT_LOSS_DB_CM = 0.7
+DEFAULT_LOSS_PROVENANCE = "TARGET_TABLE_II"
+
+# Cornerstone FINDINGS promoted under cspdk==1.3.2 + gf 9.23.0 (2026-09-29).
+CS_ARM_L_UM = 320.0
+CS_MMI2X2_EXCESS_LOSS_DB = 0.3
+CS_MZI_IL_DB = 0.622
+# Model-derived (cspdk SAX + Table II 0.7 dB/cm) — not a foundry measurement
+CS_MZI_IL_PROVENANCE = "CS_MODEL_SAX"
 
 
 @dataclass(frozen=True)
@@ -39,8 +47,9 @@ SAX_PARAM_AUDIT: List[SaxParamAuditRow] = [
     ),
     SaxParamAuditRow(
         "mmi1x2 / mmi2x2", "excess_loss", "often ideal / 0",
-        "library default (no override)",
-        "gplugins; excess loss not forced", "silent_null",
+        f"CS grade sidecar {CS_MMI2X2_EXCESS_LOSS_DB} dB (mmi2x2); "
+        "gplugins model still ideal — FoM quotes FINDINGS IL",
+        "FINDINGS cspdk==1.3.2 + gf 9.23.0 (promoted)", "ok",
     ),
     SaxParamAuditRow(
         "coupler", "loss / coupling", "ideal splitter common",
@@ -50,10 +59,9 @@ SAX_PARAM_AUDIT: List[SaxParamAuditRow] = [
     SaxParamAuditRow(
         "straight_heater_metal", "length / loss",
         "generic_tech length often 10 µm; loss via straight stub",
-        f"mapped to lossy straight (loss_dB_cm={DEFAULT_LOSS_DB_CM})",
-        "TODO(cspdk==1.3.2 join): re-measure Cornerstone heater L≈320 µm under "
-        "gf 9.23 before promoting CS FINDINGS; do not promote 9.45-era numbers",
-        "silent_null",
+        f"CS ARM_L={CS_ARM_L_UM} µm; lossy straight "
+        f"(loss_dB_cm={DEFAULT_LOSS_DB_CM}); MZI IL grade={CS_MZI_IL_DB} dB",
+        "FINDINGS cspdk==1.3.2 + gf 9.23.0 (promoted)", "ok",
     ),
     SaxParamAuditRow(
         "ring_single", "S-model", "compound / may fall back to bend",

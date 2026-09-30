@@ -127,7 +127,8 @@ def test_ring_bus_edge_counts() -> None:
     ir = (out.get("info") or {}).get(PCG_IR_CONNECTIONS_KEY) or {}
     assert ir.get("dc,o3") == "dc,o2"
     store2 = from_gf_yaml(to_gf_yaml(store))
-    assert store.topology_hash() == store2.topology_hash()
+    assert store.circuit_hash() == store2.circuit_hash()
+    assert store.connectivity_hash() == store2.connectivity_hash()
 
 
 def test_spa_phase_slack() -> None:
