@@ -217,7 +217,7 @@ Strategy lock (decisions, lanes, pass commands, pins): [`PICasso_plus_strategy.m
 | gdsfactory YAML round-trip gate | **Mostly GREEN** under gf **9.23.0** (Linear/MZI/MZM PASS incl. SAX/ΔIL). **Ring ΔIL = soft-SKIP** — singular KLU on IR-only ``dc,o3↔dc,o2`` feedback (**not** a silent ΔIL≈0 bridge bug). Unverified N2 path for resonant topologies; fix via regularization / ``ring_single``-style solver to drop SKIP |
 | **LiDAR PIC IR round-trip (build-order step 2)** | **Done** (stub corpus) |
 | Legalize dangling detect + terminators; A0–A4 stubs; ExactCritic | **Done** (ledger dedupe with A4) |
-| **N1 ablation (three arms)** | **Protocol frozen, not run.** Subset `1,2,9,10,11,19,20,26,29,30,34,36`; holdout `11,26`; dry-run ceiling `34,36` (logging only, excluded from data). Equal budgets; B/C feedback parity; unparseable YAML ∈ denom; Wilson; tip-vs-tag guard (`test_spa_protocol_freeze.py`). Campaign blocked until `N1_LLM_MODEL_ID` pinned. **Blocker for Paper A** |
+| **N1 ablation (three arms)** | **Protocol frozen, not run.** Subset ≠ Table V (Task 6 absent). Leakage check `11,26` = **weak_unproven_holdout** (descriptive only). Dry-run `34,36` cited from `BENCHMARK_FINAL_RESULTS.md` 100% Pass@k. Prompt/critic tag `protocol-freeze-n1-prompts`; dirty worktree refused; model pin → `protocol-freeze-n1-campaign`. **Blocker for Paper A** |
 | SPA N-path WNS | **Exploratory** pre-tag layout/routed Task-6/9. **Primary** post-tag confirmatory at `SPA_TOL_RAD=0.05` (one assumed 6-bit LSB over `[0,π]`; justifications post-hoc — disclose). Sweep = sensitivity only; **N3 fails if any of 12 misclassified at 0.05**. Tasks 6&9 = known-failure checks, not blind |
 | SAX silent-default audit / FoM split-brain | **Closed** (validator); emit split-brain gated in CS MZI smoke |
 | Heater / Cornerstone re-baseline | **Promoted**; IL 0.622 = **`CS_MODEL_SAX`** (not `MEASURED_CS`) |
@@ -233,11 +233,11 @@ Strategy lock (decisions, lanes, pass commands, pins): [`PICasso_plus_strategy.m
 
 **Next:**
 
-1. **Commit tip** (honesty + tip-vs-tag guard) — leave freeze commit `3dd1fe4` / tag `protocol-freeze-n1-spa` untouched (incl. trailers). Optionally SSH-sign a *new* budgets tag; archive at tag on Software Heritage / Zenodo.
-2. **Pin `N1_LLM_MODEL_ID`** → dry-run A/B/C on ceiling tasks `34,36` (logging only; prompts/critic already frozen; samples excluded) → then campaign on the 12 with holdout `11,26` reported separately.
-3. **Confirmatory routed-SPA** after the tag (exploratory 6/9 stay labeled); primary verdict at 0.05 only.
+1. **Prompt/critic tag** `protocol-freeze-n1-prompts` (artifact hashes in `run_manifest`; clean worktree) → dry-run logging only on `34,36` → record prompts untouched.
+2. **Pin dated `N1_LLM_MODEL_ID`** + update tip golden → cut `protocol-freeze-n1-campaign` → archive (SWH/Zenodo) → campaign (abort on API model mismatch).
+3. **Confirmatory routed-SPA** after spa tag (exploratory 6/9 stay labeled); primary verdict at 0.05 only.
 4. **Second foundry emit** — only then can N6 leave `NO EVIDENCE`.
-5. **Ring ΔIL** — keep in limitations until `ring_single` / regularization yields real ΔIL.
+5. **Ring ΔIL** — limitations until `ring_single` / regularization yields real ΔIL.
 4. **Independent CS validation** (optional) — published loss figures / closed-form budget.
 5. **Gate migration** to CS emit when fixture-complete.
 6. **Paper B depth** — Apollo baseline; LiDAR at scale. No N5 reopen. GNN only with topology-held-out split.

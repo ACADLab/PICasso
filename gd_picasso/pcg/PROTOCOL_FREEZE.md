@@ -1,23 +1,39 @@
 # Protocol freeze — SPA Δφ + N1 three-arm ablation
 
 **Status:** frozen in code (`gd_picasso/pcg/spa_protocol.py`).
-**Git tag (cite in paper):** `protocol-freeze-n1-spa` (annotated; on `origin`).
-**Do not rewrite** commit `3dd1fe4` or move this tag (including to strip
-trailers). Tip honesty amendments are separate; tag-era constants are guarded
-by `test_spa_protocol_freeze.py` via `git show protocol-freeze-n1-spa:…`.
 
-**What this freeze covers.** Future SPA campaigns and the N1 three-arm ablation.
-Pre-tag synthetic / layout-N3 / routed Task-6/9 runs are **exploratory** only.
-Do not retune tolerances or reshape the error taxonomy after seeing LLM sample
-tallies or post-freeze confirmatory WNS.
+| Tag | Covers | Notes |
+|---|---|---|
+| `protocol-freeze-n1-spa` | SPA_TOL + N1 arms/taxonomy/budgets | Annotated; on `origin`; **do not move** (incl. trailers on `3dd1fe4`) |
+| `protocol-freeze-n1-prompts` | ExactCritic + pilot prompt artifact hashes | Cut **before** dry-run; after tip locks `N1_FROZEN_ARTIFACT_PATHS` |
+| `protocol-freeze-n1-campaign` | Dated `N1_LLM_MODEL_ID` pin | Cut **after** model pin, **before** first campaign call |
+
+Tag-era constants are guarded by `test_spa_protocol_freeze.py` via
+`git show protocol-freeze-n1-spa:…`. Post-tag pins use an explicit golden in
+that test. **`run_manifest(require_clean=True)` refuses a dirty worktree.**
 
 **Verifiability.** Prefer SSH-signed annotated tags (`git config gpg.format ssh`
-then `git tag -s`) if GPG is unavailable. For an independent timestamp, archive
-the repo **at the tag** on [Software Heritage](https://www.softwareheritage.org/)
-or Zenodo — stronger than a local clock.
+then `git tag -s`) if GPG is unavailable. `protocol-freeze-n1-spa` may remain
+unsigned — say so in the paper. Before the campaign, archive the repo **at the
+prompts (and then campaign) tag** on [Software Heritage](https://www.softwareheritage.org/)
+or Zenodo for an independent timestamp.
 
-Every run log (dry-run and campaign) must record `tip_commit_sha` and
-`protocol_freeze_tag_sha` via `spa_protocol.run_manifest(...)`.
+Every run log must include tip SHA, spa/prompts/(campaign) tag SHAs, and
+`frozen_artifact_hashes` via `spa_protocol.run_manifest(...)`.
+
+---
+
+## Order of operations
+
+1. Tip honesty commit pushed (done: tip-vs-tag guard).
+2. Commit prompt/critic freeze helpers → cut **`protocol-freeze-n1-prompts`** → push tag.
+3. Dry-run A/B/C on logging only (ceiling tasks; clean worktree; prompts tag present).
+4. Record `prompts_untouched_after_dry_run=true` (artifact hashes still match).
+5. Pin `N1_LLM_MODEL_ID` to a **dated snapshot** (not a floating alias); update tip golden in the same commit → cut **`protocol-freeze-n1-campaign`** → push.
+6. Archive at campaign tag (SWH / Zenodo).
+7. Campaign — abort any call if API-reported model ID ≠ pin (`assert_api_model_matches_pin`).
+
+Ring ΔIL SKIP stays in **limitations** until `ring_single` / regularization yields a real ΔIL.
 
 ---
 
@@ -35,8 +51,7 @@ Every run log (dry-run and campaign) must record `tip_commit_sha` and
 - Sweep points other than 0.05 are sensitivity; report them, but **do not**
   choose whichever tolerance yields 12/12 after the fact.
 - **Counts against N3:** misclassification of **any** of the 12 confirmatory
-  tasks at primary `0.05` rad (wrong pass/fail vs the pre-registered expected
-  verdict for that task). Sensitivity flips at 0.01/0.02/0.1 are discussed,
+  tasks at primary `0.05` rad. Sensitivity flips at 0.01/0.02/0.1 are discussed,
   not used to rescue the primary claim.
 
 ### Honesty — why 0.01 → 0.05 (word carefully)
@@ -60,21 +75,31 @@ written afterward — say so in the paper.**
 | Status | What | Paper treatment |
 |---|---|---|
 | **Exploratory** | Pre-tag synthetic; layout-N3 @ 0.01; pre-tag routed Tasks 6 & 9 | Label exploratory; **not** confirmatory evidence |
-| **Confirmatory** | Fresh routed-SPA campaign **after** the tag | Primary claim; report alongside exploratory and state the status difference |
+| **Confirmatory** | Fresh routed-SPA campaign **after** the tag | Primary claim; report alongside exploratory |
 
-Tasks **6 and 9** motivated the method → present as **known-failure checks**,
-not blind predictions (`SPA_KNOWN_FAILURE_CHECK_TASK_IDS`).
-
-Planted-φ / comparator unit tests may keep `0.01` and stay
-`SYNTHETIC_NOT_LAYOUT` unless migrated to `SPA_TOL_RAD`.
+Tasks **6 and 9** motivated the method → **known-failure checks**, not blind
+predictions (`SPA_KNOWN_FAILURE_CHECK_TASK_IDS`).
 
 ---
 
-## N1 ablation — three arms (not two)
+## Prompt / critic freeze (second anchor)
 
-Same LLM, named 12-task subset, **n = 5** → 60 samples/arm.
-**Holdout named before any run. Campaign waits until holdout is named (done)
-and tip-vs-tag test is green. Dry-run only after prompts/critic are frozen.**
+`protocol-freeze-n1-spa` covers **constants only**. Prompts and ExactCritic need
+their own anchor:
+
+| Path | Role |
+|---|---|
+| `gd_picasso/agents/exact_critic.py` | Arms B/C critic |
+| `gd_picasso/pilot/base_pilot_generator.py` | Arm A pilot prompt |
+| `gd_picasso/pcg/spa_protocol.py` | Protocol pins + this list |
+
+`run_manifest()` embeds per-file SHA-256 and `frozen_artifacts_combined_sha256`.
+After dry-run, campaign logs must set `prompts_untouched_after_dry_run=true`
+only if those hashes still match the prompts-tag tree.
+
+---
+
+## N1 ablation — three arms
 
 | Arm | Representation | Feedback |
 |---|---|---|
@@ -82,89 +107,81 @@ and tip-vs-tag test is green. Dry-run only after prompts/critic are frozen.**
 | **B** | YAML text | ExactCritic on the **parsed** result |
 | **C** | Typed mutations | ExactCritic |
 
-- **A vs B** → critic alone  
-- **B vs C** → representation with critic held fixed (**N1 claim**)  
-- If **B ≈ C**, honest claim is about the critic; reword N1.
+### Campaign set ≠ parent Table V
 
-### Named task sets (a priori)
+`N1_TASK_SUBSET = (1, 2, 9, 10, 11, 19, 20, 26, 29, 30, 34, 36)`.
 
-| Set | Task IDs | Rule |
-|---|---|---|
-| **Campaign 12** | `1, 2, 9, 10, 11, 19, 20, 26, 29, 30, 34, 36` | `N1_TASK_SUBSET` |
-| **Critic holdout** | `11, 26` | Within the 12; ExactCritic rules **not** developed on these; report separately |
-| **Dry-run (ceiling)** | `34, 36` | Logging only; **excluded** from campaign data; do not burn A-fail signal |
+This is **not** ICLAD / parent Table V’s 12. **Task 6 (64-QAM) is absent** by
+design. Parent Table V rates are **not directly comparable** to this campaign —
+state that in the paper.
 
-### Equal budgets (mandatory)
+### Critic leakage check (weak — not a proven holdout)
+
+| IDs | Status |
+|---|---|
+| `11, 26` | `weak_unproven_holdout` |
+
+**Provenance check (`git log`):** ExactCritic landed in `d852424` with only
+`linear` / `mzi` / `mzm` / `ring_bus` fixtures — **no** `task_11` / `task_26`.
+The critic is task-agnostic. That still does **not** prove those two were unseen
+during later rejection/e2e work on the 36-task corpus (fixtures may be local /
+uncommitted). **Do not call this a clean holdout.** Report the subset
+**descriptively** (2×5 = 10 samples/arm); **no significance claim**. Prefer
+parametric variants (arm lengths / stage counts) the critic never saw for a
+stronger leakage check.
+
+### Dry-run ceiling tasks (justified before N1)
+
+| IDs | Prior evidence (not from N1 dry-run) |
+|---|---|
+| `34, 36` | `BENCHMARK_FINAL_RESULTS.md` §Successful Circuits: **3/3 (100%) Pass@k** |
+
+Rules:
+
+1. Prompts/critic frozen (`protocol-freeze-n1-prompts`) **before** dry-run.
+2. Dry-run = **logging only** (`error_class`, `repair_round`, tokens, model ID, SHAs, artifact hashes).
+3. Any prompt/critic change afterward → new annotated tag or disclosed deviation.
+4. Dry-run samples **excluded** from campaign data.
+5. Because 34/36 remain in the campaign set, also record that prompts/critic
+   were **untouched after** the dry-run (hash match).
+
+### Equal budgets
 
 | Knob | Rule |
 |---|---|
-| Model | Exact `N1_LLM_MODEL_ID` string (pinned before campaign); log **API-reported** model ID per call |
-| Temperature | `N1_TEMPERATURE = 0.3` |
-| Max repair rounds | `N1_MAX_REPAIR_ROUNDS = 3` |
-| Token / context cap | `N1_MAX_TOKENS = 2048` |
+| Model | Dated snapshot in `N1_LLM_MODEL_ID` (campaign tag); log API-reported ID; **abort on mismatch** |
+| Temperature | `0.3` |
+| Max repair rounds | `3` |
+| Token cap | `2048` |
 
-### Comparable feedback (B vs C)
+Pinning the model ID **is** a frozen-constant change: update the tip golden in
+the same commit, then cut `protocol-freeze-n1-campaign` before the first call.
 
-ExactCritic’s message to the model must carry the **same typed problem fields**
-in B and C (code, elements, evidence). No richer rejection text for arm C.
+### Denominator / power
 
-### Denominator rules
+- Unparseable YAML in arm B = failure (in denominator).
+- Wilson 95% intervals; overlapping → no win claim.
+- Per-task + A-fail subset.
 
-- **Unparseable YAML in arm B counts as failure** (stay in the denominator).
-- Report success over all `n × |tasks|` attempts per arm.
-- Wilson 95% intervals; if intervals overlap, do not claim a win.
-- Per-task rates + subset where arm A fails (signal). Ceiling tasks carry little signal — still report them.
+### Error taxonomy
 
-### Dry run — logging only (anti-contamination)
-
-1. **Prompts and ExactCritic are frozen before the dry run starts.**
-2. Dry run checks **logging only** (`error_class`, `repair_round`, tokens,
-   model ID, tip/tag SHAs).
-3. Any change to prompts/critic afterward → **new annotated tag** or a
-   **disclosed deviation** (do not silently move `protocol-freeze-n1-spa`).
-4. Dry-run samples are **excluded** from campaign data.
-5. Dry-run tasks = ceiling only (`34`, `36`).
-
-Start dry run only when tip-vs-tag constants test passes. Start campaign only
-when holdout is named (**yes**), model ID is pinned (`n1_campaign_ready()`),
-and dry-run logging is verified.
-
-### Error taxonomy (fixed a priori)
-
-1. `illegal_port`
-2. `fanout`
-3. `out_of_bounds_param`
-4. `non_ascii`
-5. `unit_mismatch`
-6. `wrong_connectivity`
-
-Plus denominator-only: `unparseable_yaml` (arm B).
+`illegal_port`, `fanout`, `out_of_bounds_param`, `non_ascii`, `unit_mismatch`,
+`wrong_connectivity`, plus `unparseable_yaml` (arm B).
 
 ---
 
-## Hash naming (related honesty)
+## Hash naming
 
-| Hash | Includes settings? | Claim |
-|---|---|---|
-| `connectivity_hash` | no | **Wiring-only digest** (component types + port-to-port edges; no PCell params, no geometry) — “topology preserved under lowering” |
-| `circuit_hash` | **yes** | circuit identity incl. PCell params (`topology_hash` deprecated alias → `DeprecationWarning`) |
-| `layout_hash` | yes + geometry | layout changed under lowering / P&R |
+| Hash | Claim |
+|---|---|
+| `connectivity_hash` | Wiring-only (types + ports; no settings/geometry) |
+| `circuit_hash` | Wiring + PCell params (`topology_hash` → `DeprecationWarning`) |
+| `layout_hash` | + geometry |
 
-Paper text uses only the new names. One-sentence definition: *connectivity_hash
-is the SHA-256 of sorted node component types and optical/electrical edges with
-ports, excluding all device settings and placement.*
+## RL reward
 
----
-
-## RL reward (sanity)
-
-`SYNTHETIC_ENV` reward is `−(IL̂ + 0.5|Δφ̂| + 0.1·density)` — **not** `−|WNS|`.
-
-- Estimator-built → **`ESTIMATOR_ONLY`** until `fidelity_vs_routed` drops the banner.
-- Weights `0.5` / `0.1` are **chosen**, not tuned.
+`−(IL̂ + 0.5|Δφ̂| + 0.1·density)` — chosen weights; `ESTIMATOR_ONLY` until fidelity gate.
 
 ## Ring ΔIL SKIP (limitations)
 
-Singular KLU on IR-only `dc,o3↔dc,o2` feedback. Keep in **limitations** until
-`ring_single` or regularization produces a real ΔIL (PASS or honest FAIL).
-Unverified N2 path for resonant topologies.
+Singular KLU on IR feedback. Keep in limitations until `ring_single` / regularization produces a real ΔIL.
