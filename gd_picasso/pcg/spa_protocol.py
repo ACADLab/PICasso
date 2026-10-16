@@ -115,7 +115,7 @@ N1_MAX_TOKENS: int = 4096
 # Dated snapshot string (e.g. "gpt-4o-2024-08-06"), never a floating alias.
 # PIN_BEFORE_CAMPAIGN until campaign tag; changing this requires updating the
 # tip-vs-tag golden and cutting protocol-freeze-n1-campaign.
-N1_LLM_MODEL_ID: str = "claude-haiku-4-5-20251001"
+N1_LLM_MODEL_ID: str = "claude-sonnet-5-5"
 
 N1_ERROR_TAXONOMY = (
     "illegal_port",

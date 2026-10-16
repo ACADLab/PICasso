@@ -81,7 +81,7 @@ TIP_LOCKED: Dict[str, Any] = {
         "gd_picasso/pilot/base_pilot_generator.py",
         "gd_picasso/pcg/spa_protocol.py",
     ),
-    "N1_LLM_MODEL_ID": "claude-haiku-4-5-20251001",
+    "N1_LLM_MODEL_ID": "claude-sonnet-5-5",
 }
 
 
@@ -226,9 +226,9 @@ def test_require_clean_worktree_detects_dirt() -> None:
 
 
 def test_campaign_ready_requires_model_pin() -> None:
-    assert N1_LLM_MODEL_ID == "claude-haiku-4-5-20251001"
+    assert N1_LLM_MODEL_ID == "claude-sonnet-5-5"
     assert n1_campaign_ready() is True
-    assert_api_model_matches_pin("claude-haiku-4-5-20251001")
+    assert_api_model_matches_pin("claude-sonnet-5-5")
     with pytest.raises(ModelIdMismatchError):
         assert_api_model_matches_pin("gpt-4o-2024-08-06")
 
