@@ -63,7 +63,7 @@ TIP_LOCKED: Dict[str, Any] = {
     "SPA_TOL_SWEEP_RAD": (0.01, 0.02, 0.05, 0.1),
     "SPA_TOL_PRIMARY_RAD": 0.05,
     "N1_TEMPERATURE": 0.3,
-    "N1_MAX_TOKENS": 2048,
+    "N1_MAX_TOKENS": 4096,
     "N1_MAX_REPAIR_ROUNDS": 3,
     "N1_TASK_SUBSET": (1, 2, 9, 10, 11, 19, 20, 26, 29, 30, 34, 36),
     "N1_CRITIC_HOLDOUT_TASK_IDS": (11, 26),
@@ -186,7 +186,7 @@ def test_task_subset_invariants() -> None:
 
 def test_budget_pins() -> None:
     assert N1_TEMPERATURE == 0.3
-    assert N1_MAX_TOKENS == 2048
+    assert N1_MAX_TOKENS == 4096
     assert N1_MAX_REPAIR_ROUNDS == 3
 
 

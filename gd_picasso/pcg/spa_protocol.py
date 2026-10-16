@@ -111,7 +111,7 @@ N1_DRY_RUN_CEILING_CITATION: str = (
 
 N1_MAX_REPAIR_ROUNDS: int = 3
 N1_TEMPERATURE: float = 0.3
-N1_MAX_TOKENS: int = 2048
+N1_MAX_TOKENS: int = 4096
 # Dated snapshot string (e.g. "gpt-4o-2024-08-06"), never a floating alias.
 # PIN_BEFORE_CAMPAIGN until campaign tag; changing this requires updating the
 # tip-vs-tag golden and cutting protocol-freeze-n1-campaign.
