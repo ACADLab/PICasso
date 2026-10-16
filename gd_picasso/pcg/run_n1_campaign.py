@@ -137,6 +137,47 @@ def _fixture_to_arm_c_json(path: Path) -> str:
     return json.dumps({"mutations": mutations, "ports": ports})
 
 
+@dataclass
+class TokenUsage:
+    """Cumulative token counters for dry-run cost accounting."""
+
+    input_tokens: int = 0
+    output_tokens: int = 0
+    calls: int = 0
+
+    @property
+    def total_tokens(self) -> int:
+        return self.input_tokens + self.output_tokens
+
+
+# Approximate USD / 1M tokens (list prices; update when pinning campaign model).
+# Sources: provider public pricing pages — treat as estimate, not invoice.
+_MODEL_PRICE_PER_MTOT: Dict[str, Tuple[float, float]] = {
+    # (input_usd_per_mtok, output_usd_per_mtok)
+    "claude-3-5-haiku-20241022": (0.80, 4.00),
+    "claude-3-5-haiku-latest": (0.80, 4.00),
+    "claude-haiku-4-5-20251001": (1.00, 5.00),
+    "claude-sonnet-4-20250514": (3.00, 15.00),
+    "gpt-4o-mini": (0.15, 0.60),
+    "gpt-4o": (2.50, 10.00),
+}
+
+
+def estimate_cost_usd(model_id: str, usage: TokenUsage) -> float:
+    """Best-effort USD estimate from cumulative usage (not a billing guarantee)."""
+    prices = _MODEL_PRICE_PER_MTOT.get(model_id)
+    if prices is None:
+        # prefix match (e.g. dated snapshots)
+        for key, val in _MODEL_PRICE_PER_MTOT.items():
+            if model_id.startswith(key.split("-20")[0]) or key in model_id:
+                prices = val
+                break
+    if prices is None:
+        return float("nan")
+    inp, out = prices
+    return (usage.input_tokens / 1e6) * inp + (usage.output_tokens / 1e6) * out
+
+
 class AsyncOpenAILLM:
     """Minimal async OpenAI-compatible chat client with exponential backoff."""
 
@@ -147,6 +188,7 @@ class AsyncOpenAILLM:
         )
         if not self.api_key:
             raise RuntimeError("OPENAI_API_KEY / OPENROUTER_API not set")
+        self.usage = TokenUsage()
 
     async def complete(
         self,
@@ -175,7 +217,12 @@ class AsyncOpenAILLM:
                 text = (resp.choices[0].message.content or "").strip()
                 reported = getattr(resp, "model", None) or self.model_id
                 usage = getattr(resp, "usage", None)
-                tokens = int(getattr(usage, "total_tokens", 0) or 0)
+                in_tok = int(getattr(usage, "prompt_tokens", 0) or 0)
+                out_tok = int(getattr(usage, "completion_tokens", 0) or 0)
+                tokens = int(getattr(usage, "total_tokens", 0) or (in_tok + out_tok))
+                self.usage.input_tokens += in_tok
+                self.usage.output_tokens += out_tok
+                self.usage.calls += 1
                 return text, str(reported), tokens
             except Exception as e:  # noqa: BLE001 — classify below
                 last_err = e
@@ -186,6 +233,74 @@ class AsyncOpenAILLM:
                     continue
                 raise
         raise RuntimeError(f"LLM retries exhausted: {last_err}")
+
+
+class AsyncAnthropicLLM:
+    """Async Anthropic Messages API client with exponential backoff + usage."""
+
+    def __init__(self, model_id: str, api_key: Optional[str] = None) -> None:
+        self.model_id = model_id
+        self.api_key = api_key or os.environ.get("ANTHROPIC_API_KEY")
+        if not self.api_key:
+            raise RuntimeError("ANTHROPIC_API_KEY not set")
+        self.usage = TokenUsage()
+
+    async def complete(
+        self,
+        *,
+        system: str,
+        user: str,
+        temperature: float = N1_TEMPERATURE,
+        max_tokens: int = N1_MAX_TOKENS,
+    ) -> Tuple[str, str, int]:
+        from anthropic import AsyncAnthropic
+
+        client = AsyncAnthropic(api_key=self.api_key)
+        delay = 1.0
+        last_err: Optional[Exception] = None
+        for attempt in range(6):
+            try:
+                # Note: current anthropic SDK Messages.create has no
+                # ``temperature`` kwarg — protocol temp is logged in manifest
+                # only for Anthropic path.
+                _ = temperature
+                resp = await client.messages.create(
+                    model=self.model_id,
+                    max_tokens=max_tokens,
+                    system=system,
+                    messages=[{"role": "user", "content": user}],
+                )
+                parts = []
+                for block in resp.content or []:
+                    t = getattr(block, "text", None)
+                    if t:
+                        parts.append(t)
+                text = "\n".join(parts).strip()
+                reported = getattr(resp, "model", None) or self.model_id
+                usage = getattr(resp, "usage", None)
+                in_tok = int(getattr(usage, "input_tokens", 0) or 0)
+                out_tok = int(getattr(usage, "output_tokens", 0) or 0)
+                self.usage.input_tokens += in_tok
+                self.usage.output_tokens += out_tok
+                self.usage.calls += 1
+                return text, str(reported), in_tok + out_tok
+            except Exception as e:  # noqa: BLE001
+                last_err = e
+                msg = str(e).lower()
+                if "429" in msg or "rate" in msg or "timeout" in msg or "529" in msg or "overloaded" in msg:
+                    await asyncio.sleep(delay)
+                    delay = min(60.0, delay * 2)
+                    continue
+                raise
+        raise RuntimeError(f"LLM retries exhausted: {last_err}")
+
+
+def build_live_llm(model_id: str) -> Any:
+    """Dispatch to Anthropic or OpenAI from model id / env."""
+    mid = model_id.lower()
+    if mid.startswith("claude") or os.environ.get("N1_LLM_PROVIDER") == "anthropic":
+        return AsyncAnthropicLLM(model_id=model_id)
+    return AsyncOpenAILLM(model_id=model_id)
 
 
 # ---------------------------------------------------------------------------
@@ -760,6 +875,12 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         help="Skip clean-worktree gate (dev only)",
     )
     p.add_argument("--samples", type=int, default=None, help="Override samples/task")
+    p.add_argument(
+        "--model",
+        type=str,
+        default=None,
+        help="Live model id (default: N1_LIVE_MODEL env or claude-haiku-4-5-20251001)",
+    )
     args = p.parse_args(argv)
 
     if args.campaign and args.dry_run:
@@ -777,16 +898,21 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     else:
         if not n1_campaign_ready() and args.campaign:
             raise SystemExit("Refuse --campaign while N1_LLM_MODEL_ID unpinned")
-        model = N1_LLM_MODEL_ID if n1_campaign_ready() else os.environ.get(
-            "N1_LIVE_MODEL", "gpt-4o"
-        )
+        if n1_campaign_ready():
+            model = N1_LLM_MODEL_ID
+        else:
+            model = (
+                args.model
+                or os.environ.get("N1_LIVE_MODEL")
+                or "claude-haiku-4-5-20251001"
+            )
         print(
-            f"WARNING: live dry-run using model={model!r} "
+            f"WARNING: live run using model={model!r} "
             f"(protocol pin still {N1_LLM_MODEL_ID!r})"
         )
-        llm = AsyncOpenAILLM(model_id=model)
+        llm = build_live_llm(model)
 
-    asyncio.run(
+    results = asyncio.run(
         run_campaign(
             task_ids=task_ids,
             samples_per_task=samples,
@@ -798,6 +924,37 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             dry_run=bool(args.dry_run),
         )
     )
+    usage = getattr(llm, "usage", None)
+    if usage is not None and not args.mock:
+        mid = getattr(llm, "model_id", "unknown")
+        cost = estimate_cost_usd(mid, usage)
+        print("=== Token / cost estimate (list prices; not an invoice) ===")
+        print(
+            f"  model={mid} calls={usage.calls} "
+            f"input_tok={usage.input_tokens} output_tok={usage.output_tokens} "
+            f"total_tok={usage.total_tokens}"
+        )
+        if cost == cost:  # not NaN
+            print(f"  estimated_usd≈${cost:.4f}")
+        else:
+            print("  estimated_usd=unknown (no price table entry for model)")
+        cost_path = args.out_dir / "n1_cost_estimate.json"
+        cost_path.parent.mkdir(parents=True, exist_ok=True)
+        cost_path.write_text(
+            json.dumps(
+                {
+                    "model_id": mid,
+                    "calls": usage.calls,
+                    "input_tokens": usage.input_tokens,
+                    "output_tokens": usage.output_tokens,
+                    "estimated_usd": None if cost != cost else round(cost, 6),
+                    "n_results": len(results),
+                },
+                indent=2,
+            ),
+            encoding="utf-8",
+        )
+        print(f"  wrote {cost_path}")
     return 0
 
 
