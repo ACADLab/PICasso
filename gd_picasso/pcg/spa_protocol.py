@@ -32,6 +32,7 @@ PROTOCOL_FREEZE_PATH: str = "gd_picasso/pcg/spa_protocol.py"
 # without a new annotated tag or disclosed deviation.
 N1_FROZEN_ARTIFACT_PATHS: Tuple[str, ...] = (
     "gd_picasso/agents/exact_critic.py",
+    "gd_picasso/agents/n1_arm_c_mutation_prompt.py",
     "gd_picasso/pilot/base_pilot_generator.py",
     "gd_picasso/pcg/spa_protocol.py",
 )

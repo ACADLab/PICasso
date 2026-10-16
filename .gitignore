@@ -14,11 +14,14 @@ venv/
 env/
 ENV/
 .venv
+.lidar_env/
 
 # IDE
 .vscode/
 .idea/
 .cursor/rules/
+cursor.md
+.cursorrules
 *.swp
 *.swo
 *~
@@ -38,6 +41,9 @@ ENV/
 # Build artifacts
 build/
 *.o
+
+# N1 campaign run artifacts (CSV / JSONL / manifests)
+gd_picasso/pcg/n1_runs/
 
 # gd_picasso output directories (results, metrics, plots)
 gd_picasso/output/**/*

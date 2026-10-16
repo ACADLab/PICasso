@@ -78,8 +78,44 @@ _STATIC_PARAMS = {
     "terminator": set(),
 }
 
+# Numeric bounds enforced at set_param + ExactCritic (out_of_bounds_param).
+# Format: component -> key -> (min_exclusive_or_inclusive, op)
+# op: "gt" means value > lo; "ge" means value >= lo.
+_PARAM_BOUNDS: Dict[str, Dict[str, Tuple[float, str]]] = {
+    "straight": {"length": (0.0, "gt")},
+    "straight_heater_metal": {"length": (0.0, "gt")},
+    "straight_heater_metal_undercut": {"length": (0.0, "gt")},
+    "bend_euler": {"radius": (5.0, "ge")},
+    "bend_circular": {"radius": (5.0, "ge")},
+}
 
-def _validate_param(component: str, key: str) -> None:
+
+def _validate_param_bounds(component: str, key: str, value: Any) -> None:
+    """Raise if ``value`` violates ``_PARAM_BOUNDS`` for ``component.key``."""
+    bounds = _PARAM_BOUNDS.get(component, {}).get(key)
+    if bounds is None:
+        return
+    lo, op = bounds
+    try:
+        num = float(value)
+    except (TypeError, ValueError):
+        raise PCGMutationError(
+            "set_param",
+            f"Parameter '{key}' on '{component}' must be numeric (got {value!r})",
+        )
+    if op == "gt" and not (num > lo):
+        raise PCGMutationError(
+            "set_param",
+            f"out_of_bounds_param: {component}.{key}={num} requires > {lo}",
+        )
+    if op == "ge" and not (num >= lo):
+        raise PCGMutationError(
+            "set_param",
+            f"out_of_bounds_param: {component}.{key}={num} requires >= {lo}",
+        )
+
+
+def _validate_param(component: str, key: str, value: Any = None) -> None:
     try:
         import gdsfactory as gf
         comp_func = getattr(gf.components, component, None)
@@ -91,6 +127,8 @@ def _validate_param(component: str, key: str) -> None:
                     "set_param",
                     f"Parameter '{key}' not in signature of '{component}'",
                 )
+            if value is not None:
+                _validate_param_bounds(component, key, value)
             return
     except ImportError:
         pass
@@ -101,6 +139,8 @@ def _validate_param(component: str, key: str) -> None:
                 "set_param",
                 f"Parameter '{key}' not in signature of '{component}'",
             )
+        if value is not None:
+            _validate_param_bounds(component, key, value)
         return
     # Unknown component / no signature source — do not silently accept keys.
     raise PCGMutationError(
@@ -123,9 +163,12 @@ def _validate_component(component: str) -> None:
 
 
 def default_ports_for(component: str) -> Dict[str, PCGPort]:
-    """Build optical PCGPort map from the static PDK port table."""
+    """Build optical PCGPort map from the static PDK port table (TE default)."""
     names = COMPONENT_PORT_MAP.get(component, [])
-    return {n: PCGPort(name=n, kind=PortKind.OPTICAL) for n in names}
+    return {
+        n: PCGPort(name=n, kind=PortKind.OPTICAL, polarization="TE")
+        for n in names
+    }
 
 
 # ---------------------------------------------------------------------------
@@ -237,6 +280,24 @@ class PCGStore:
         if src_node == dst_node and src_port == dst_port:
             raise PCGMutationError("connect", "Self-loop on same port")
 
+        # Kind + polarization compatibility when both ports are populated
+        if layer == EdgeLayer.OPTICAL and src.ports and dst.ports:
+            sp = src.ports.get(src_port)
+            dp = dst.ports.get(dst_port)
+            if sp is not None and dp is not None:
+                if sp.kind != dp.kind:
+                    raise PCGMutationError(
+                        "connect",
+                        f"PortKind mismatch: {src_node}.{src_port}={sp.kind.value} "
+                        f"vs {dst_node}.{dst_port}={dp.kind.value}",
+                    )
+                if sp.polarization and dp.polarization and sp.polarization != dp.polarization:
+                    raise PCGMutationError(
+                        "connect",
+                        f"polarization mismatch: {src_node}.{src_port}={sp.polarization} "
+                        f"vs {dst_node}.{dst_port}={dp.polarization}",
+                    )
+
         # Port-degree <= 1 on optical ports
         if layer == EdgeLayer.OPTICAL:
             for e in self._edges:
@@ -322,7 +383,7 @@ class PCGStore:
         if node_id not in self._nodes:
             raise PCGMutationError("set_param", f"Node '{node_id}' not found")
         node = self._nodes[node_id]
-        _validate_param(node.component, key)
+        _validate_param(node.component, key, value)
         node.params[key] = value
         self._record(
             "set_param",

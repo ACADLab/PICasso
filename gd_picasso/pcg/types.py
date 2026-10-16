@@ -72,6 +72,8 @@ class PCGPort(BaseModel):
     kind: PortKind = PortKind.OPTICAL
     width_um: float = 0.5
     layer: str = "strip"
+    # generic_tech optical ports default TE; no per-PDK TE/TM table yet.
+    polarization: str = "TE"
 
 
 # ---------------------------------------------------------------------------

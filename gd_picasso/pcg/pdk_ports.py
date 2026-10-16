@@ -36,3 +36,8 @@ def ports_for_component(component: str) -> Dict[str, str]:
 
     names = COMPONENT_PORT_MAP.get(component, [])
     return {n: PortKind.OPTICAL.value for n in names}
+
+
+def default_polarization_for(_component: str, _port: str) -> str:
+    """generic_tech optical ports are TE-assumed (no per-port TE/TM table)."""
+    return "TE"
