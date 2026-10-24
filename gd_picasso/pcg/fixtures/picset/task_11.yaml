@@ -1,0 +1,366 @@
+# PIC-Bench-48 Task-11: Crossbar 4x4
+# authentic crossbar_grid builder (N=4, nodes=72, io=8); de-aliased from Clements proxies. Serialized by build_formal_benchmarks via to_gf_yaml.
+instances:
+  sw0_0_comb:
+    component: mmi2x2
+    settings: {}
+  sw0_0_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw0_0_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw0_0_split:
+    component: mmi2x2
+    settings: {}
+  sw0_1_comb:
+    component: mmi2x2
+    settings: {}
+  sw0_1_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw0_1_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw0_1_split:
+    component: mmi2x2
+    settings: {}
+  sw0_2_comb:
+    component: mmi2x2
+    settings: {}
+  sw0_2_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw0_2_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw0_2_split:
+    component: mmi2x2
+    settings: {}
+  sw0_3_comb:
+    component: mmi2x2
+    settings: {}
+  sw0_3_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw0_3_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw0_3_split:
+    component: mmi2x2
+    settings: {}
+  sw1_0_comb:
+    component: mmi2x2
+    settings: {}
+  sw1_0_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw1_0_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw1_0_split:
+    component: mmi2x2
+    settings: {}
+  sw1_1_comb:
+    component: mmi2x2
+    settings: {}
+  sw1_1_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw1_1_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw1_1_split:
+    component: mmi2x2
+    settings: {}
+  sw1_2_comb:
+    component: mmi2x2
+    settings: {}
+  sw1_2_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw1_2_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw1_2_split:
+    component: mmi2x2
+    settings: {}
+  sw1_3_comb:
+    component: mmi2x2
+    settings: {}
+  sw1_3_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw1_3_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw1_3_split:
+    component: mmi2x2
+    settings: {}
+  sw2_0_comb:
+    component: mmi2x2
+    settings: {}
+  sw2_0_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw2_0_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw2_0_split:
+    component: mmi2x2
+    settings: {}
+  sw2_1_comb:
+    component: mmi2x2
+    settings: {}
+  sw2_1_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw2_1_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw2_1_split:
+    component: mmi2x2
+    settings: {}
+  sw2_2_comb:
+    component: mmi2x2
+    settings: {}
+  sw2_2_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw2_2_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw2_2_split:
+    component: mmi2x2
+    settings: {}
+  sw2_3_comb:
+    component: mmi2x2
+    settings: {}
+  sw2_3_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw2_3_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw2_3_split:
+    component: mmi2x2
+    settings: {}
+  sw3_0_comb:
+    component: mmi2x2
+    settings: {}
+  sw3_0_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw3_0_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw3_0_split:
+    component: mmi2x2
+    settings: {}
+  sw3_1_comb:
+    component: mmi2x2
+    settings: {}
+  sw3_1_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw3_1_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw3_1_split:
+    component: mmi2x2
+    settings: {}
+  sw3_2_comb:
+    component: mmi2x2
+    settings: {}
+  sw3_2_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw3_2_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw3_2_split:
+    component: mmi2x2
+    settings: {}
+  sw3_3_comb:
+    component: mmi2x2
+    settings: {}
+  sw3_3_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw3_3_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw3_3_split:
+    component: mmi2x2
+    settings: {}
+  term_e_0_3:
+    component: terminator
+    settings: {}
+  term_e_1_3:
+    component: terminator
+    settings: {}
+  term_e_2_3:
+    component: terminator
+    settings: {}
+  term_e_3_3:
+    component: terminator
+    settings: {}
+  term_n_0_0:
+    component: terminator
+    settings: {}
+  term_n_0_1:
+    component: terminator
+    settings: {}
+  term_n_0_2:
+    component: terminator
+    settings: {}
+  term_n_0_3:
+    component: terminator
+    settings: {}
+routes:
+  optical:
+    settings: {}
+    links:
+      sw0_0_split,o3: sw0_0_ps,o1
+      sw0_0_split,o4: sw0_0_dummy,o1
+      sw0_0_ps,o2: sw0_0_comb,o1
+      sw0_0_dummy,o2: sw0_0_comb,o2
+      sw0_1_split,o3: sw0_1_ps,o1
+      sw0_1_split,o4: sw0_1_dummy,o1
+      sw0_1_ps,o2: sw0_1_comb,o1
+      sw0_1_dummy,o2: sw0_1_comb,o2
+      sw0_2_split,o3: sw0_2_ps,o1
+      sw0_2_split,o4: sw0_2_dummy,o1
+      sw0_2_ps,o2: sw0_2_comb,o1
+      sw0_2_dummy,o2: sw0_2_comb,o2
+      sw0_3_split,o3: sw0_3_ps,o1
+      sw0_3_split,o4: sw0_3_dummy,o1
+      sw0_3_ps,o2: sw0_3_comb,o1
+      sw0_3_dummy,o2: sw0_3_comb,o2
+      sw1_0_split,o3: sw1_0_ps,o1
+      sw1_0_split,o4: sw1_0_dummy,o1
+      sw1_0_ps,o2: sw1_0_comb,o1
+      sw1_0_dummy,o2: sw1_0_comb,o2
+      sw1_1_split,o3: sw1_1_ps,o1
+      sw1_1_split,o4: sw1_1_dummy,o1
+      sw1_1_ps,o2: sw1_1_comb,o1
+      sw1_1_dummy,o2: sw1_1_comb,o2
+      sw1_2_split,o3: sw1_2_ps,o1
+      sw1_2_split,o4: sw1_2_dummy,o1
+      sw1_2_ps,o2: sw1_2_comb,o1
+      sw1_2_dummy,o2: sw1_2_comb,o2
+      sw1_3_split,o3: sw1_3_ps,o1
+      sw1_3_split,o4: sw1_3_dummy,o1
+      sw1_3_ps,o2: sw1_3_comb,o1
+      sw1_3_dummy,o2: sw1_3_comb,o2
+      sw2_0_split,o3: sw2_0_ps,o1
+      sw2_0_split,o4: sw2_0_dummy,o1
+      sw2_0_ps,o2: sw2_0_comb,o1
+      sw2_0_dummy,o2: sw2_0_comb,o2
+      sw2_1_split,o3: sw2_1_ps,o1
+      sw2_1_split,o4: sw2_1_dummy,o1
+      sw2_1_ps,o2: sw2_1_comb,o1
+      sw2_1_dummy,o2: sw2_1_comb,o2
+      sw2_2_split,o3: sw2_2_ps,o1
+      sw2_2_split,o4: sw2_2_dummy,o1
+      sw2_2_ps,o2: sw2_2_comb,o1
+      sw2_2_dummy,o2: sw2_2_comb,o2
+      sw2_3_split,o3: sw2_3_ps,o1
+      sw2_3_split,o4: sw2_3_dummy,o1
+      sw2_3_ps,o2: sw2_3_comb,o1
+      sw2_3_dummy,o2: sw2_3_comb,o2
+      sw3_0_split,o3: sw3_0_ps,o1
+      sw3_0_split,o4: sw3_0_dummy,o1
+      sw3_0_ps,o2: sw3_0_comb,o1
+      sw3_0_dummy,o2: sw3_0_comb,o2
+      sw3_1_split,o3: sw3_1_ps,o1
+      sw3_1_split,o4: sw3_1_dummy,o1
+      sw3_1_ps,o2: sw3_1_comb,o1
+      sw3_1_dummy,o2: sw3_1_comb,o2
+      sw3_2_split,o3: sw3_2_ps,o1
+      sw3_2_split,o4: sw3_2_dummy,o1
+      sw3_2_ps,o2: sw3_2_comb,o1
+      sw3_2_dummy,o2: sw3_2_comb,o2
+      sw3_3_split,o3: sw3_3_ps,o1
+      sw3_3_split,o4: sw3_3_dummy,o1
+      sw3_3_ps,o2: sw3_3_comb,o1
+      sw3_3_dummy,o2: sw3_3_comb,o2
+      sw0_0_split,o2: term_n_0_0,o1
+      sw0_0_comb,o3: sw0_1_split,o1
+      sw0_1_split,o2: term_n_0_1,o1
+      sw0_1_comb,o3: sw0_2_split,o1
+      sw0_2_split,o2: term_n_0_2,o1
+      sw0_2_comb,o3: sw0_3_split,o1
+      sw0_3_split,o2: term_n_0_3,o1
+      sw0_3_comb,o3: term_e_0_3,o1
+      sw0_0_comb,o4: sw1_0_split,o2
+      sw1_0_comb,o3: sw1_1_split,o1
+      sw0_1_comb,o4: sw1_1_split,o2
+      sw1_1_comb,o3: sw1_2_split,o1
+      sw0_2_comb,o4: sw1_2_split,o2
+      sw1_2_comb,o3: sw1_3_split,o1
+      sw0_3_comb,o4: sw1_3_split,o2
+      sw1_3_comb,o3: term_e_1_3,o1
+      sw1_0_comb,o4: sw2_0_split,o2
+      sw2_0_comb,o3: sw2_1_split,o1
+      sw1_1_comb,o4: sw2_1_split,o2
+      sw2_1_comb,o3: sw2_2_split,o1
+      sw1_2_comb,o4: sw2_2_split,o2
+      sw2_2_comb,o3: sw2_3_split,o1
+      sw1_3_comb,o4: sw2_3_split,o2
+      sw2_3_comb,o3: term_e_2_3,o1
+      sw2_0_comb,o4: sw3_0_split,o2
+      sw3_0_comb,o3: sw3_1_split,o1
+      sw2_1_comb,o4: sw3_1_split,o2
+      sw3_1_comb,o3: sw3_2_split,o1
+      sw2_2_comb,o4: sw3_2_split,o2
+      sw3_2_comb,o3: sw3_3_split,o1
+      sw2_3_comb,o4: sw3_3_split,o2
+      sw3_3_comb,o3: term_e_3_3,o1
+ports:
+  in0: sw0_0_split,o1
+  in1: sw1_0_split,o1
+  in2: sw2_0_split,o1
+  in3: sw3_0_split,o1
+  out0: sw3_0_comb,o4
+  out1: sw3_1_comb,o4
+  out2: sw3_2_comb,o4
+  out3: sw3_3_comb,o4
+info:
+  picset_task_id: 11
+  picset_name: Crossbar 4x4
+  picbench: PIC-Bench-48
+  topology_kind: authentic crossbar_grid builder (N=4, nodes=72, io=8); de-aliased
+    from Clements proxies

@@ -26,7 +26,18 @@ from .types import (
 )
 from .store import PCGMutationError, PCGStore
 from .bridge import from_gf_yaml, to_gf_yaml, to_sax_netlist
-from .legalize import detect_dangling_ports, insert_terminators
+from .legalize import (
+    add_tapers,
+    detect_dangling_ports,
+    insert_terminators,
+    legalize_taper_placements,
+)
+from .io_legalize import (
+    FIBER_ARRAY_PITCH_UM,
+    IOLegalizeResult,
+    legalize_io_pads,
+    resolve_gc_component,
+)
 from .journal import MutationJournal, MutationRecord
 from .spa import (
     SPAReport,
@@ -76,8 +87,14 @@ __all__ = [
     "to_gf_yaml",
     "to_sax_netlist",
     # legalize
+    "add_tapers",
     "detect_dangling_ports",
     "insert_terminators",
+    "legalize_taper_placements",
+    "FIBER_ARRAY_PITCH_UM",
+    "IOLegalizeResult",
+    "legalize_io_pads",
+    "resolve_gc_component",
     # spa / back-annot
     "SPAReport",
     "PhaseSlackResult",

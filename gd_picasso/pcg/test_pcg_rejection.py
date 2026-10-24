@@ -110,10 +110,10 @@ def test_batch_keyerror_rolls_back() -> None:
             store,
             [
                 {"op": "connect", "src": "a", "src_port": "o2", "dst": "b", "dst_port": "o1"},
-                {"op": "connect", "src": "a"},  # missing keys → KeyError
+                {"op": "connect", "src": "a"},  # missing keys → PCGMutationError
             ],
         )
-    except KeyError:
+    except PCGMutationError:
         raised = True
     assert raised
     assert len(store.edges) == 0

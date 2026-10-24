@@ -1,0 +1,53 @@
+# PIC-Set Task-26: Tunable 1x4 Optical Switch — 1x4 tree (append-only freeze).
+instances:
+  s0:
+    component: mmi1x2
+    settings: {}
+  s1:
+    component: mmi1x2
+    settings: {}
+  s2:
+    component: mmi1x2
+    settings: {}
+  o0:
+    component: straight
+    settings: {length: 100}
+  o1:
+    component: straight
+    settings: {length: 100}
+  o2:
+    component: straight
+    settings: {length: 100}
+  o3:
+    component: straight
+    settings: {length: 100}
+placements:
+  s0: {x: 0, y: 0, rotation: 0, mirror: false}
+  s1: {x: 80, y: 40, rotation: 0, mirror: false}
+  s2: {x: 80, y: -40, rotation: 0, mirror: false}
+  o0: {x: 180, y: 60, rotation: 0, mirror: false}
+  o1: {x: 180, y: 20, rotation: 0, mirror: false}
+  o2: {x: 180, y: -20, rotation: 0, mirror: false}
+  o3: {x: 180, y: -60, rotation: 0, mirror: false}
+routes:
+  west:
+    settings: {cross_section: strip, radius: 10.0}
+    links:
+      s0,o2: s1,o1
+      s0,o3: s2,o1
+  east:
+    settings: {cross_section: strip, radius: 10.0}
+    links:
+      s1,o2: o0,o1
+      s1,o3: o1,o1
+      s2,o2: o2,o1
+      s2,o3: o3,o1
+ports:
+  in: s0,o1
+  out0: o0,o2
+  out1: o1,o2
+  out2: o2,o2
+  out3: o3,o2
+info:
+  picset_task_id: 26
+  picset_name: 'Tunable 1x4 Optical Switch'

@@ -1,0 +1,14 @@
+# PIC-Set Task-33: Optical Delay Line (append-only freeze).
+instances:
+  delay:
+    component: straight
+    settings: {length: 1000}
+placements:
+  delay: {x: 0, y: 0, rotation: 0, mirror: false}
+routes: {}
+ports:
+  in: delay,o1
+  out: delay,o2
+info:
+  picset_task_id: 33
+  picset_name: 'Optical Delay Line'

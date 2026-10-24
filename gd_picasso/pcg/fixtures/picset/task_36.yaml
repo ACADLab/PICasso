@@ -1,0 +1,14 @@
+# PIC-Set Task-36: Straight + Phase Shifter (append-only freeze).
+instances:
+  wg:
+    component: straight_heater_metal
+    settings: {length: 320}
+placements:
+  wg: {x: 0, y: 0, rotation: 0, mirror: false}
+routes: {}
+ports:
+  in: wg,o1
+  out: wg,o2
+info:
+  picset_task_id: 36
+  picset_name: 'Straight + Phase Shifter'

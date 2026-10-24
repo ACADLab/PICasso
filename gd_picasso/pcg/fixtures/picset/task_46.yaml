@@ -1,0 +1,53 @@
+# PIC-Bench-48 Task-46: Multi-PDK Clements 2x2 plus ebeam_y_adiabatic
+# Cornerstone 500nm mixed with SiEPIC non-500nm ports; add_tapers. Serialized by build_formal_benchmarks via to_gf_yaml.
+instances:
+  mzi0_comb:
+    component: mmi2x2
+    settings: {}
+  mzi0_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  mzi0_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  mzi0_split:
+    component: mmi2x2
+    settings: {}
+  sie:
+    component: ebeam_y_adiabatic
+    settings: {}
+  taper_mzi0_comb_o3_sie_o1:
+    component: taper
+    settings:
+      length: 10.0
+      width1: 0.5
+      width2: 0.45
+routes:
+  east:
+    settings: {}
+    links:
+      mzi0_ps,o2: mzi0_comb,o1
+      mzi0_dummy,o2: mzi0_comb,o2
+  optical:
+    settings: {}
+    links:
+      mzi0_comb,o3: taper_mzi0_comb_o3_sie_o1,o1
+      taper_mzi0_comb_o3_sie_o1,o2: sie,o1
+  west:
+    settings: {}
+    links:
+      mzi0_split,o3: mzi0_ps,o1
+      mzi0_split,o4: mzi0_dummy,o1
+ports:
+  io0: mzi0_split,o1
+  io1: mzi0_split,o2
+  io2: mzi0_comb,o4
+  io3: sie,o2
+  io4: sie,o3
+info:
+  picset_task_id: 46
+  picset_name: Multi-PDK Clements 2x2 plus ebeam_y_adiabatic
+  picbench: PIC-Bench-48
+  topology_kind: Cornerstone 500nm mixed with SiEPIC non-500nm ports; add_tapers

@@ -1,0 +1,143 @@
+# PIC-Bench-48 Task-38: 4x4 DFT
+# lambda_lambda 4-point DFT spec -> clements -> cells_to_a1. Serialized by build_formal_benchmarks via to_gf_yaml.
+instances:
+  mzi0_comb:
+    component: mmi2x2
+    settings: {}
+  mzi0_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  mzi0_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  mzi0_split:
+    component: mmi2x2
+    settings: {}
+  mzi1_comb:
+    component: mmi2x2
+    settings: {}
+  mzi1_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  mzi1_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  mzi1_split:
+    component: mmi2x2
+    settings: {}
+  mzi2_comb:
+    component: mmi2x2
+    settings: {}
+  mzi2_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  mzi2_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  mzi2_split:
+    component: mmi2x2
+    settings: {}
+  mzi3_comb:
+    component: mmi2x2
+    settings: {}
+  mzi3_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  mzi3_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  mzi3_split:
+    component: mmi2x2
+    settings: {}
+  mzi4_comb:
+    component: mmi2x2
+    settings: {}
+  mzi4_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  mzi4_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  mzi4_split:
+    component: mmi2x2
+    settings: {}
+  mzi5_comb:
+    component: mmi2x2
+    settings: {}
+  mzi5_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  mzi5_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  mzi5_split:
+    component: mmi2x2
+    settings: {}
+routes:
+  east:
+    settings: {}
+    links:
+      mzi0_ps,o2: mzi0_comb,o1
+      mzi0_dummy,o2: mzi0_comb,o2
+      mzi1_ps,o2: mzi1_comb,o1
+      mzi1_dummy,o2: mzi1_comb,o2
+      mzi2_ps,o2: mzi2_comb,o1
+      mzi2_dummy,o2: mzi2_comb,o2
+      mzi3_ps,o2: mzi3_comb,o1
+      mzi3_dummy,o2: mzi3_comb,o2
+      mzi4_ps,o2: mzi4_comb,o1
+      mzi4_dummy,o2: mzi4_comb,o2
+      mzi5_ps,o2: mzi5_comb,o1
+      mzi5_dummy,o2: mzi5_comb,o2
+  rail:
+    settings: {}
+    links:
+      mzi0_comb,o3: mzi1_split,o2
+      mzi1_comb,o3: mzi2_split,o2
+      mzi1_comb,o4: mzi3_split,o1
+      mzi0_comb,o4: mzi3_split,o2
+      mzi2_comb,o4: mzi4_split,o1
+      mzi3_comb,o3: mzi4_split,o2
+      mzi4_comb,o4: mzi5_split,o1
+      mzi3_comb,o4: mzi5_split,o2
+  west:
+    settings: {}
+    links:
+      mzi0_split,o3: mzi0_ps,o1
+      mzi0_split,o4: mzi0_dummy,o1
+      mzi1_split,o3: mzi1_ps,o1
+      mzi1_split,o4: mzi1_dummy,o1
+      mzi2_split,o3: mzi2_ps,o1
+      mzi2_split,o4: mzi2_dummy,o1
+      mzi3_split,o3: mzi3_ps,o1
+      mzi3_split,o4: mzi3_dummy,o1
+      mzi4_split,o3: mzi4_ps,o1
+      mzi4_split,o4: mzi4_dummy,o1
+      mzi5_split,o3: mzi5_ps,o1
+      mzi5_split,o4: mzi5_dummy,o1
+ports:
+  in2: mzi0_split,o1
+  in3: mzi0_split,o2
+  in1: mzi1_split,o1
+  in0: mzi2_split,o1
+  out0: mzi2_comb,o3
+  out1: mzi4_comb,o3
+  out2: mzi5_comb,o3
+  out3: mzi5_comb,o4
+info:
+  picset_task_id: 38
+  picset_name: 4x4 DFT
+  picbench: PIC-Bench-48
+  topology_kind: lambda_lambda 4-point DFT spec -> clements -> cells_to_a1

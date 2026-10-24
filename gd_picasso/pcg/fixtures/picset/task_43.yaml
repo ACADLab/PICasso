@@ -1,0 +1,55 @@
+# PIC-Bench-48 Task-43: Multi-PDK straights to ANT_MMI_1x2
+# Cornerstone 500nm mixed with SiEPIC non-500nm ports; add_tapers. Serialized by build_formal_benchmarks via to_gf_yaml.
+instances:
+  cs_a:
+    component: straight
+    settings:
+      length: 10.0
+  cs_b:
+    component: straight
+    settings:
+      length: 10.0
+  cs_in:
+    component: straight
+    settings:
+      length: 10.0
+  sie:
+    component: ANT_MMI_1x2_te1550_3dB_BB
+    settings: {}
+  taper_cs_in_o2_sie_o1:
+    component: taper
+    settings:
+      length: 10.0
+      width1: 0.5
+      width2: 0.75
+  taper_sie_o2_cs_a_o1:
+    component: taper
+    settings:
+      length: 10.0
+      width1: 0.75
+      width2: 0.5
+  taper_sie_o3_cs_b_o1:
+    component: taper
+    settings:
+      length: 10.0
+      width1: 0.75
+      width2: 0.5
+routes:
+  optical:
+    settings: {}
+    links:
+      cs_in,o2: taper_cs_in_o2_sie_o1,o1
+      taper_cs_in_o2_sie_o1,o2: sie,o1
+      sie,o2: taper_sie_o2_cs_a_o1,o1
+      taper_sie_o2_cs_a_o1,o2: cs_a,o1
+      sie,o3: taper_sie_o3_cs_b_o1,o1
+      taper_sie_o3_cs_b_o1,o2: cs_b,o1
+ports:
+  io0: cs_in,o1
+  io1: cs_a,o2
+  io2: cs_b,o2
+info:
+  picset_task_id: 43
+  picset_name: Multi-PDK straights to ANT_MMI_1x2
+  picbench: PIC-Bench-48
+  topology_kind: Cornerstone 500nm mixed with SiEPIC non-500nm ports; add_tapers

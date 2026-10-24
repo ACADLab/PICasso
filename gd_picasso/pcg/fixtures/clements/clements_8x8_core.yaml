@@ -1,0 +1,515 @@
+# Clements 8x8 expanded CS-MZI mesh (n_mzi=28, core_nodes=112).
+# Generated via cells_to_a1_mutations(expand_instances=True); seed=8.
+# rebuild_err=5.381e-15. Replaces 4-node mesh proxies for Paper B scaling.
+instances:
+  mzi0_comb:
+    component: mmi2x2
+    settings: {}
+  mzi0_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  mzi0_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  mzi0_split:
+    component: mmi2x2
+    settings: {}
+  mzi10_comb:
+    component: mmi2x2
+    settings: {}
+  mzi10_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  mzi10_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  mzi10_split:
+    component: mmi2x2
+    settings: {}
+  mzi11_comb:
+    component: mmi2x2
+    settings: {}
+  mzi11_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  mzi11_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  mzi11_split:
+    component: mmi2x2
+    settings: {}
+  mzi12_comb:
+    component: mmi2x2
+    settings: {}
+  mzi12_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  mzi12_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  mzi12_split:
+    component: mmi2x2
+    settings: {}
+  mzi13_comb:
+    component: mmi2x2
+    settings: {}
+  mzi13_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  mzi13_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  mzi13_split:
+    component: mmi2x2
+    settings: {}
+  mzi14_comb:
+    component: mmi2x2
+    settings: {}
+  mzi14_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  mzi14_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  mzi14_split:
+    component: mmi2x2
+    settings: {}
+  mzi15_comb:
+    component: mmi2x2
+    settings: {}
+  mzi15_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  mzi15_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  mzi15_split:
+    component: mmi2x2
+    settings: {}
+  mzi16_comb:
+    component: mmi2x2
+    settings: {}
+  mzi16_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  mzi16_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  mzi16_split:
+    component: mmi2x2
+    settings: {}
+  mzi17_comb:
+    component: mmi2x2
+    settings: {}
+  mzi17_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  mzi17_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  mzi17_split:
+    component: mmi2x2
+    settings: {}
+  mzi18_comb:
+    component: mmi2x2
+    settings: {}
+  mzi18_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  mzi18_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  mzi18_split:
+    component: mmi2x2
+    settings: {}
+  mzi19_comb:
+    component: mmi2x2
+    settings: {}
+  mzi19_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  mzi19_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  mzi19_split:
+    component: mmi2x2
+    settings: {}
+  mzi1_comb:
+    component: mmi2x2
+    settings: {}
+  mzi1_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  mzi1_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  mzi1_split:
+    component: mmi2x2
+    settings: {}
+  mzi20_comb:
+    component: mmi2x2
+    settings: {}
+  mzi20_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  mzi20_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  mzi20_split:
+    component: mmi2x2
+    settings: {}
+  mzi21_comb:
+    component: mmi2x2
+    settings: {}
+  mzi21_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  mzi21_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  mzi21_split:
+    component: mmi2x2
+    settings: {}
+  mzi22_comb:
+    component: mmi2x2
+    settings: {}
+  mzi22_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  mzi22_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  mzi22_split:
+    component: mmi2x2
+    settings: {}
+  mzi23_comb:
+    component: mmi2x2
+    settings: {}
+  mzi23_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  mzi23_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  mzi23_split:
+    component: mmi2x2
+    settings: {}
+  mzi24_comb:
+    component: mmi2x2
+    settings: {}
+  mzi24_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  mzi24_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  mzi24_split:
+    component: mmi2x2
+    settings: {}
+  mzi25_comb:
+    component: mmi2x2
+    settings: {}
+  mzi25_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  mzi25_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  mzi25_split:
+    component: mmi2x2
+    settings: {}
+  mzi26_comb:
+    component: mmi2x2
+    settings: {}
+  mzi26_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  mzi26_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  mzi26_split:
+    component: mmi2x2
+    settings: {}
+  mzi27_comb:
+    component: mmi2x2
+    settings: {}
+  mzi27_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  mzi27_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  mzi27_split:
+    component: mmi2x2
+    settings: {}
+  mzi2_comb:
+    component: mmi2x2
+    settings: {}
+  mzi2_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  mzi2_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  mzi2_split:
+    component: mmi2x2
+    settings: {}
+  mzi3_comb:
+    component: mmi2x2
+    settings: {}
+  mzi3_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  mzi3_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  mzi3_split:
+    component: mmi2x2
+    settings: {}
+  mzi4_comb:
+    component: mmi2x2
+    settings: {}
+  mzi4_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  mzi4_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  mzi4_split:
+    component: mmi2x2
+    settings: {}
+  mzi5_comb:
+    component: mmi2x2
+    settings: {}
+  mzi5_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  mzi5_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  mzi5_split:
+    component: mmi2x2
+    settings: {}
+  mzi6_comb:
+    component: mmi2x2
+    settings: {}
+  mzi6_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  mzi6_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  mzi6_split:
+    component: mmi2x2
+    settings: {}
+  mzi7_comb:
+    component: mmi2x2
+    settings: {}
+  mzi7_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  mzi7_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  mzi7_split:
+    component: mmi2x2
+    settings: {}
+  mzi8_comb:
+    component: mmi2x2
+    settings: {}
+  mzi8_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  mzi8_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  mzi8_split:
+    component: mmi2x2
+    settings: {}
+  mzi9_comb:
+    component: mmi2x2
+    settings: {}
+  mzi9_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  mzi9_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  mzi9_split:
+    component: mmi2x2
+    settings: {}
+routes:
+  east:
+    settings: {}
+    links:
+      mzi0_ps,o2: mzi0_comb,o1
+      mzi0_dummy,o2: mzi0_comb,o2
+      mzi1_ps,o2: mzi1_comb,o1
+      mzi1_dummy,o2: mzi1_comb,o2
+      mzi2_ps,o2: mzi2_comb,o1
+      mzi2_dummy,o2: mzi2_comb,o2
+      mzi3_ps,o2: mzi3_comb,o1
+      mzi3_dummy,o2: mzi3_comb,o2
+      mzi4_ps,o2: mzi4_comb,o1
+      mzi4_dummy,o2: mzi4_comb,o2
+      mzi5_ps,o2: mzi5_comb,o1
+      mzi5_dummy,o2: mzi5_comb,o2
+      mzi6_ps,o2: mzi6_comb,o1
+      mzi6_dummy,o2: mzi6_comb,o2
+      mzi7_ps,o2: mzi7_comb,o1
+      mzi7_dummy,o2: mzi7_comb,o2
+      mzi8_ps,o2: mzi8_comb,o1
+      mzi8_dummy,o2: mzi8_comb,o2
+      mzi9_ps,o2: mzi9_comb,o1
+      mzi9_dummy,o2: mzi9_comb,o2
+      mzi10_ps,o2: mzi10_comb,o1
+      mzi10_dummy,o2: mzi10_comb,o2
+      mzi11_ps,o2: mzi11_comb,o1
+      mzi11_dummy,o2: mzi11_comb,o2
+      mzi12_ps,o2: mzi12_comb,o1
+      mzi12_dummy,o2: mzi12_comb,o2
+      mzi13_ps,o2: mzi13_comb,o1
+      mzi13_dummy,o2: mzi13_comb,o2
+      mzi14_ps,o2: mzi14_comb,o1
+      mzi14_dummy,o2: mzi14_comb,o2
+      mzi15_ps,o2: mzi15_comb,o1
+      mzi15_dummy,o2: mzi15_comb,o2
+      mzi16_ps,o2: mzi16_comb,o1
+      mzi16_dummy,o2: mzi16_comb,o2
+      mzi17_ps,o2: mzi17_comb,o1
+      mzi17_dummy,o2: mzi17_comb,o2
+      mzi18_ps,o2: mzi18_comb,o1
+      mzi18_dummy,o2: mzi18_comb,o2
+      mzi19_ps,o2: mzi19_comb,o1
+      mzi19_dummy,o2: mzi19_comb,o2
+      mzi20_ps,o2: mzi20_comb,o1
+      mzi20_dummy,o2: mzi20_comb,o2
+      mzi21_ps,o2: mzi21_comb,o1
+      mzi21_dummy,o2: mzi21_comb,o2
+      mzi22_ps,o2: mzi22_comb,o1
+      mzi22_dummy,o2: mzi22_comb,o2
+      mzi23_ps,o2: mzi23_comb,o1
+      mzi23_dummy,o2: mzi23_comb,o2
+      mzi24_ps,o2: mzi24_comb,o1
+      mzi24_dummy,o2: mzi24_comb,o2
+      mzi25_ps,o2: mzi25_comb,o1
+      mzi25_dummy,o2: mzi25_comb,o2
+      mzi26_ps,o2: mzi26_comb,o1
+      mzi26_dummy,o2: mzi26_comb,o2
+      mzi27_ps,o2: mzi27_comb,o1
+      mzi27_dummy,o2: mzi27_comb,o2
+  west:
+    settings: {}
+    links:
+      mzi0_split,o3: mzi0_ps,o1
+      mzi0_split,o4: mzi0_dummy,o1
+      mzi1_split,o3: mzi1_ps,o1
+      mzi1_split,o4: mzi1_dummy,o1
+      mzi2_split,o3: mzi2_ps,o1
+      mzi2_split,o4: mzi2_dummy,o1
+      mzi3_split,o3: mzi3_ps,o1
+      mzi3_split,o4: mzi3_dummy,o1
+      mzi4_split,o3: mzi4_ps,o1
+      mzi4_split,o4: mzi4_dummy,o1
+      mzi5_split,o3: mzi5_ps,o1
+      mzi5_split,o4: mzi5_dummy,o1
+      mzi6_split,o3: mzi6_ps,o1
+      mzi6_split,o4: mzi6_dummy,o1
+      mzi7_split,o3: mzi7_ps,o1
+      mzi7_split,o4: mzi7_dummy,o1
+      mzi8_split,o3: mzi8_ps,o1
+      mzi8_split,o4: mzi8_dummy,o1
+      mzi9_split,o3: mzi9_ps,o1
+      mzi9_split,o4: mzi9_dummy,o1
+      mzi10_split,o3: mzi10_ps,o1
+      mzi10_split,o4: mzi10_dummy,o1
+      mzi11_split,o3: mzi11_ps,o1
+      mzi11_split,o4: mzi11_dummy,o1
+      mzi12_split,o3: mzi12_ps,o1
+      mzi12_split,o4: mzi12_dummy,o1
+      mzi13_split,o3: mzi13_ps,o1
+      mzi13_split,o4: mzi13_dummy,o1
+      mzi14_split,o3: mzi14_ps,o1
+      mzi14_split,o4: mzi14_dummy,o1
+      mzi15_split,o3: mzi15_ps,o1
+      mzi15_split,o4: mzi15_dummy,o1
+      mzi16_split,o3: mzi16_ps,o1
+      mzi16_split,o4: mzi16_dummy,o1
+      mzi17_split,o3: mzi17_ps,o1
+      mzi17_split,o4: mzi17_dummy,o1
+      mzi18_split,o3: mzi18_ps,o1
+      mzi18_split,o4: mzi18_dummy,o1
+      mzi19_split,o3: mzi19_ps,o1
+      mzi19_split,o4: mzi19_dummy,o1
+      mzi20_split,o3: mzi20_ps,o1
+      mzi20_split,o4: mzi20_dummy,o1
+      mzi21_split,o3: mzi21_ps,o1
+      mzi21_split,o4: mzi21_dummy,o1
+      mzi22_split,o3: mzi22_ps,o1
+      mzi22_split,o4: mzi22_dummy,o1
+      mzi23_split,o3: mzi23_ps,o1
+      mzi23_split,o4: mzi23_dummy,o1
+      mzi24_split,o3: mzi24_ps,o1
+      mzi24_split,o4: mzi24_dummy,o1
+      mzi25_split,o3: mzi25_ps,o1
+      mzi25_split,o4: mzi25_dummy,o1
+      mzi26_split,o3: mzi26_ps,o1
+      mzi26_split,o4: mzi26_dummy,o1
+      mzi27_split,o3: mzi27_ps,o1
+      mzi27_split,o4: mzi27_dummy,o1

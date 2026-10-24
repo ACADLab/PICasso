@@ -1,0 +1,43 @@
+# PIC-Bench-48 Task-40: Multi-PDK mmi1x2 to ebeam_YBranch_895
+# Cornerstone 500nm mixed with SiEPIC non-500nm ports; add_tapers. Serialized by build_formal_benchmarks via to_gf_yaml.
+instances:
+  cs_mmi:
+    component: mmi1x2
+    settings: {}
+  sie_a:
+    component: ebeam_YBranch_895
+    settings: {}
+  sie_b:
+    component: ebeam_YBranch_895
+    settings: {}
+  taper_cs_mmi_o2_sie_a_o1:
+    component: taper
+    settings:
+      length: 10.0
+      width1: 0.5
+      width2: 0.45
+  taper_cs_mmi_o3_sie_b_o1:
+    component: taper
+    settings:
+      length: 10.0
+      width1: 0.5
+      width2: 0.45
+routes:
+  optical:
+    settings: {}
+    links:
+      cs_mmi,o2: taper_cs_mmi_o2_sie_a_o1,o1
+      taper_cs_mmi_o2_sie_a_o1,o2: sie_a,o1
+      cs_mmi,o3: taper_cs_mmi_o3_sie_b_o1,o1
+      taper_cs_mmi_o3_sie_b_o1,o2: sie_b,o1
+ports:
+  io0: cs_mmi,o1
+  io1: sie_a,o2
+  io2: sie_a,o3
+  io3: sie_b,o2
+  io4: sie_b,o3
+info:
+  picset_task_id: 40
+  picset_name: Multi-PDK mmi1x2 to ebeam_YBranch_895
+  picbench: PIC-Bench-48
+  topology_kind: Cornerstone 500nm mixed with SiEPIC non-500nm ports; add_tapers

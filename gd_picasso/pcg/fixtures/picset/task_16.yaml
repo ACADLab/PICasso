@@ -1,0 +1,602 @@
+# PIC-Bench-48 Task-16: Benes 8x8
+# authentic benes_odd_even builder (N=8, nodes=116, io=16); de-aliased from Clements proxies. Serialized by build_formal_benchmarks via to_gf_yaml.
+instances:
+  bn0_0_comb:
+    component: mmi2x2
+    settings: {}
+  bn0_0_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  bn0_0_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  bn0_0_split:
+    component: mmi2x2
+    settings: {}
+  bn0_1_comb:
+    component: mmi2x2
+    settings: {}
+  bn0_1_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  bn0_1_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  bn0_1_split:
+    component: mmi2x2
+    settings: {}
+  bn0_2_comb:
+    component: mmi2x2
+    settings: {}
+  bn0_2_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  bn0_2_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  bn0_2_split:
+    component: mmi2x2
+    settings: {}
+  bn0_3_comb:
+    component: mmi2x2
+    settings: {}
+  bn0_3_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  bn0_3_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  bn0_3_split:
+    component: mmi2x2
+    settings: {}
+  bn1_0_comb:
+    component: mmi2x2
+    settings: {}
+  bn1_0_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  bn1_0_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  bn1_0_split:
+    component: mmi2x2
+    settings: {}
+  bn1_1_comb:
+    component: mmi2x2
+    settings: {}
+  bn1_1_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  bn1_1_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  bn1_1_split:
+    component: mmi2x2
+    settings: {}
+  bn1_2_comb:
+    component: mmi2x2
+    settings: {}
+  bn1_2_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  bn1_2_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  bn1_2_split:
+    component: mmi2x2
+    settings: {}
+  bn2_0_comb:
+    component: mmi2x2
+    settings: {}
+  bn2_0_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  bn2_0_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  bn2_0_split:
+    component: mmi2x2
+    settings: {}
+  bn2_1_comb:
+    component: mmi2x2
+    settings: {}
+  bn2_1_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  bn2_1_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  bn2_1_split:
+    component: mmi2x2
+    settings: {}
+  bn2_2_comb:
+    component: mmi2x2
+    settings: {}
+  bn2_2_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  bn2_2_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  bn2_2_split:
+    component: mmi2x2
+    settings: {}
+  bn2_3_comb:
+    component: mmi2x2
+    settings: {}
+  bn2_3_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  bn2_3_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  bn2_3_split:
+    component: mmi2x2
+    settings: {}
+  bn3_0_comb:
+    component: mmi2x2
+    settings: {}
+  bn3_0_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  bn3_0_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  bn3_0_split:
+    component: mmi2x2
+    settings: {}
+  bn3_1_comb:
+    component: mmi2x2
+    settings: {}
+  bn3_1_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  bn3_1_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  bn3_1_split:
+    component: mmi2x2
+    settings: {}
+  bn3_2_comb:
+    component: mmi2x2
+    settings: {}
+  bn3_2_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  bn3_2_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  bn3_2_split:
+    component: mmi2x2
+    settings: {}
+  bn4_0_comb:
+    component: mmi2x2
+    settings: {}
+  bn4_0_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  bn4_0_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  bn4_0_split:
+    component: mmi2x2
+    settings: {}
+  bn4_1_comb:
+    component: mmi2x2
+    settings: {}
+  bn4_1_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  bn4_1_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  bn4_1_split:
+    component: mmi2x2
+    settings: {}
+  bn4_2_comb:
+    component: mmi2x2
+    settings: {}
+  bn4_2_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  bn4_2_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  bn4_2_split:
+    component: mmi2x2
+    settings: {}
+  bn4_3_comb:
+    component: mmi2x2
+    settings: {}
+  bn4_3_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  bn4_3_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  bn4_3_split:
+    component: mmi2x2
+    settings: {}
+  bx0_0:
+    component: crossing
+    settings: {}
+  bx0_2:
+    component: crossing
+    settings: {}
+  bx0_4:
+    component: crossing
+    settings: {}
+  bx0_6:
+    component: crossing
+    settings: {}
+  bx1_2:
+    component: crossing
+    settings: {}
+  bx1_4:
+    component: crossing
+    settings: {}
+  bx2_0:
+    component: crossing
+    settings: {}
+  bx2_2:
+    component: crossing
+    settings: {}
+  bx2_4:
+    component: crossing
+    settings: {}
+  bx2_6:
+    component: crossing
+    settings: {}
+  bx3_2:
+    component: crossing
+    settings: {}
+  bx3_4:
+    component: crossing
+    settings: {}
+  in_0:
+    component: straight
+    settings:
+      length: 10.0
+  in_1:
+    component: straight
+    settings:
+      length: 10.0
+  in_2:
+    component: straight
+    settings:
+      length: 10.0
+  in_3:
+    component: straight
+    settings:
+      length: 10.0
+  in_4:
+    component: straight
+    settings:
+      length: 10.0
+  in_5:
+    component: straight
+    settings:
+      length: 10.0
+  in_6:
+    component: straight
+    settings:
+      length: 10.0
+  in_7:
+    component: straight
+    settings:
+      length: 10.0
+  t0_0:
+    component: straight
+    settings:
+      length: 5.0
+  t0_1:
+    component: straight
+    settings:
+      length: 5.0
+  t0_2:
+    component: straight
+    settings:
+      length: 5.0
+  t0_3:
+    component: straight
+    settings:
+      length: 5.0
+  t0_4:
+    component: straight
+    settings:
+      length: 5.0
+  t0_5:
+    component: straight
+    settings:
+      length: 5.0
+  t0_6:
+    component: straight
+    settings:
+      length: 5.0
+  t0_7:
+    component: straight
+    settings:
+      length: 5.0
+  t1_2:
+    component: straight
+    settings:
+      length: 5.0
+  t1_3:
+    component: straight
+    settings:
+      length: 5.0
+  t1_4:
+    component: straight
+    settings:
+      length: 5.0
+  t1_5:
+    component: straight
+    settings:
+      length: 5.0
+  t2_0:
+    component: straight
+    settings:
+      length: 5.0
+  t2_1:
+    component: straight
+    settings:
+      length: 5.0
+  t2_2:
+    component: straight
+    settings:
+      length: 5.0
+  t2_3:
+    component: straight
+    settings:
+      length: 5.0
+  t2_4:
+    component: straight
+    settings:
+      length: 5.0
+  t2_5:
+    component: straight
+    settings:
+      length: 5.0
+  t2_6:
+    component: straight
+    settings:
+      length: 5.0
+  t2_7:
+    component: straight
+    settings:
+      length: 5.0
+  t3_2:
+    component: straight
+    settings:
+      length: 5.0
+  t3_3:
+    component: straight
+    settings:
+      length: 5.0
+  t3_4:
+    component: straight
+    settings:
+      length: 5.0
+  t3_5:
+    component: straight
+    settings:
+      length: 5.0
+routes:
+  optical:
+    settings: {}
+    links:
+      bn0_0_split,o3: bn0_0_ps,o1
+      bn0_0_split,o4: bn0_0_dummy,o1
+      bn0_0_ps,o2: bn0_0_comb,o1
+      bn0_0_dummy,o2: bn0_0_comb,o2
+      in_0,o2: bn0_0_split,o1
+      in_1,o2: bn0_0_split,o2
+      bn0_1_split,o3: bn0_1_ps,o1
+      bn0_1_split,o4: bn0_1_dummy,o1
+      bn0_1_ps,o2: bn0_1_comb,o1
+      bn0_1_dummy,o2: bn0_1_comb,o2
+      in_2,o2: bn0_1_split,o1
+      in_3,o2: bn0_1_split,o2
+      bn0_2_split,o3: bn0_2_ps,o1
+      bn0_2_split,o4: bn0_2_dummy,o1
+      bn0_2_ps,o2: bn0_2_comb,o1
+      bn0_2_dummy,o2: bn0_2_comb,o2
+      in_4,o2: bn0_2_split,o1
+      in_5,o2: bn0_2_split,o2
+      bn0_3_split,o3: bn0_3_ps,o1
+      bn0_3_split,o4: bn0_3_dummy,o1
+      bn0_3_ps,o2: bn0_3_comb,o1
+      bn0_3_dummy,o2: bn0_3_comb,o2
+      in_6,o2: bn0_3_split,o1
+      in_7,o2: bn0_3_split,o2
+      bn0_0_comb,o3: bx0_0,o1
+      bx0_0,o2: t0_0,o1
+      bn0_0_comb,o4: bx0_0,o3
+      bx0_0,o4: t0_1,o1
+      bn0_1_comb,o3: bx0_2,o1
+      bx0_2,o2: t0_2,o1
+      bn0_1_comb,o4: bx0_2,o3
+      bx0_2,o4: t0_3,o1
+      bn0_2_comb,o3: bx0_4,o1
+      bx0_4,o2: t0_4,o1
+      bn0_2_comb,o4: bx0_4,o3
+      bx0_4,o4: t0_5,o1
+      bn0_3_comb,o3: bx0_6,o1
+      bx0_6,o2: t0_6,o1
+      bn0_3_comb,o4: bx0_6,o3
+      bx0_6,o4: t0_7,o1
+      bn1_0_split,o3: bn1_0_ps,o1
+      bn1_0_split,o4: bn1_0_dummy,o1
+      bn1_0_ps,o2: bn1_0_comb,o1
+      bn1_0_dummy,o2: bn1_0_comb,o2
+      t0_1,o2: bn1_0_split,o1
+      t0_2,o2: bn1_0_split,o2
+      bn1_1_split,o3: bn1_1_ps,o1
+      bn1_1_split,o4: bn1_1_dummy,o1
+      bn1_1_ps,o2: bn1_1_comb,o1
+      bn1_1_dummy,o2: bn1_1_comb,o2
+      t0_3,o2: bn1_1_split,o1
+      t0_4,o2: bn1_1_split,o2
+      bn1_2_split,o3: bn1_2_ps,o1
+      bn1_2_split,o4: bn1_2_dummy,o1
+      bn1_2_ps,o2: bn1_2_comb,o1
+      bn1_2_dummy,o2: bn1_2_comb,o2
+      t0_5,o2: bn1_2_split,o1
+      t0_6,o2: bn1_2_split,o2
+      bn1_0_comb,o4: bx1_2,o1
+      bx1_2,o2: t1_2,o1
+      bn1_1_comb,o3: bx1_2,o3
+      bx1_2,o4: t1_3,o1
+      bn1_1_comb,o4: bx1_4,o1
+      bx1_4,o2: t1_4,o1
+      bn1_2_comb,o3: bx1_4,o3
+      bx1_4,o4: t1_5,o1
+      bn2_0_split,o3: bn2_0_ps,o1
+      bn2_0_split,o4: bn2_0_dummy,o1
+      bn2_0_ps,o2: bn2_0_comb,o1
+      bn2_0_dummy,o2: bn2_0_comb,o2
+      t0_0,o2: bn2_0_split,o1
+      bn1_0_comb,o3: bn2_0_split,o2
+      bn2_1_split,o3: bn2_1_ps,o1
+      bn2_1_split,o4: bn2_1_dummy,o1
+      bn2_1_ps,o2: bn2_1_comb,o1
+      bn2_1_dummy,o2: bn2_1_comb,o2
+      t1_2,o2: bn2_1_split,o1
+      t1_3,o2: bn2_1_split,o2
+      bn2_2_split,o3: bn2_2_ps,o1
+      bn2_2_split,o4: bn2_2_dummy,o1
+      bn2_2_ps,o2: bn2_2_comb,o1
+      bn2_2_dummy,o2: bn2_2_comb,o2
+      t1_4,o2: bn2_2_split,o1
+      t1_5,o2: bn2_2_split,o2
+      bn2_3_split,o3: bn2_3_ps,o1
+      bn2_3_split,o4: bn2_3_dummy,o1
+      bn2_3_ps,o2: bn2_3_comb,o1
+      bn2_3_dummy,o2: bn2_3_comb,o2
+      bn1_2_comb,o4: bn2_3_split,o1
+      t0_7,o2: bn2_3_split,o2
+      bn2_0_comb,o3: bx2_0,o1
+      bx2_0,o2: t2_0,o1
+      bn2_0_comb,o4: bx2_0,o3
+      bx2_0,o4: t2_1,o1
+      bn2_1_comb,o3: bx2_2,o1
+      bx2_2,o2: t2_2,o1
+      bn2_1_comb,o4: bx2_2,o3
+      bx2_2,o4: t2_3,o1
+      bn2_2_comb,o3: bx2_4,o1
+      bx2_4,o2: t2_4,o1
+      bn2_2_comb,o4: bx2_4,o3
+      bx2_4,o4: t2_5,o1
+      bn2_3_comb,o3: bx2_6,o1
+      bx2_6,o2: t2_6,o1
+      bn2_3_comb,o4: bx2_6,o3
+      bx2_6,o4: t2_7,o1
+      bn3_0_split,o3: bn3_0_ps,o1
+      bn3_0_split,o4: bn3_0_dummy,o1
+      bn3_0_ps,o2: bn3_0_comb,o1
+      bn3_0_dummy,o2: bn3_0_comb,o2
+      t2_1,o2: bn3_0_split,o1
+      t2_2,o2: bn3_0_split,o2
+      bn3_1_split,o3: bn3_1_ps,o1
+      bn3_1_split,o4: bn3_1_dummy,o1
+      bn3_1_ps,o2: bn3_1_comb,o1
+      bn3_1_dummy,o2: bn3_1_comb,o2
+      t2_3,o2: bn3_1_split,o1
+      t2_4,o2: bn3_1_split,o2
+      bn3_2_split,o3: bn3_2_ps,o1
+      bn3_2_split,o4: bn3_2_dummy,o1
+      bn3_2_ps,o2: bn3_2_comb,o1
+      bn3_2_dummy,o2: bn3_2_comb,o2
+      t2_5,o2: bn3_2_split,o1
+      t2_6,o2: bn3_2_split,o2
+      bn3_0_comb,o4: bx3_2,o1
+      bx3_2,o2: t3_2,o1
+      bn3_1_comb,o3: bx3_2,o3
+      bx3_2,o4: t3_3,o1
+      bn3_1_comb,o4: bx3_4,o1
+      bx3_4,o2: t3_4,o1
+      bn3_2_comb,o3: bx3_4,o3
+      bx3_4,o4: t3_5,o1
+      bn4_0_split,o3: bn4_0_ps,o1
+      bn4_0_split,o4: bn4_0_dummy,o1
+      bn4_0_ps,o2: bn4_0_comb,o1
+      bn4_0_dummy,o2: bn4_0_comb,o2
+      t2_0,o2: bn4_0_split,o1
+      bn3_0_comb,o3: bn4_0_split,o2
+      bn4_1_split,o3: bn4_1_ps,o1
+      bn4_1_split,o4: bn4_1_dummy,o1
+      bn4_1_ps,o2: bn4_1_comb,o1
+      bn4_1_dummy,o2: bn4_1_comb,o2
+      t3_2,o2: bn4_1_split,o1
+      t3_3,o2: bn4_1_split,o2
+      bn4_2_split,o3: bn4_2_ps,o1
+      bn4_2_split,o4: bn4_2_dummy,o1
+      bn4_2_ps,o2: bn4_2_comb,o1
+      bn4_2_dummy,o2: bn4_2_comb,o2
+      t3_4,o2: bn4_2_split,o1
+      t3_5,o2: bn4_2_split,o2
+      bn4_3_split,o3: bn4_3_ps,o1
+      bn4_3_split,o4: bn4_3_dummy,o1
+      bn4_3_ps,o2: bn4_3_comb,o1
+      bn4_3_dummy,o2: bn4_3_comb,o2
+      bn3_2_comb,o4: bn4_3_split,o1
+      t2_7,o2: bn4_3_split,o2
+ports:
+  in0: in_0,o1
+  in1: in_1,o1
+  in2: in_2,o1
+  in3: in_3,o1
+  in4: in_4,o1
+  in5: in_5,o1
+  in6: in_6,o1
+  in7: in_7,o1
+  out0: bn4_0_comb,o3
+  out1: bn4_0_comb,o4
+  out2: bn4_1_comb,o3
+  out3: bn4_1_comb,o4
+  out4: bn4_2_comb,o3
+  out5: bn4_2_comb,o4
+  out6: bn4_3_comb,o3
+  out7: bn4_3_comb,o4
+info:
+  picset_task_id: 16
+  picset_name: Benes 8x8
+  picbench: PIC-Bench-48
+  topology_kind: authentic benes_odd_even builder (N=8, nodes=116, io=16); de-aliased
+    from Clements proxies

@@ -1,0 +1,182 @@
+# PIC-Bench-48 Task-31: WSS 1x8
+# upgraded LiDAR stub → deterministic GF PCGStore topology proxy. Serialized by build_formal_benchmarks via to_gf_yaml.
+instances:
+  term_wss1_0:
+    component: terminator
+    settings: {}
+  term_wss1_1:
+    component: terminator
+    settings: {}
+  term_wss2_0:
+    component: terminator
+    settings: {}
+  term_wss2_1:
+    component: terminator
+    settings: {}
+  term_wss2_2:
+    component: terminator
+    settings: {}
+  term_wss2_3:
+    component: terminator
+    settings: {}
+  wss0_comb:
+    component: mmi2x2
+    settings: {}
+  wss0_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  wss0_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  wss0_split:
+    component: mmi2x2
+    settings: {}
+  wss1_0_comb:
+    component: mmi2x2
+    settings: {}
+  wss1_0_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  wss1_0_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  wss1_0_split:
+    component: mmi2x2
+    settings: {}
+  wss1_1_comb:
+    component: mmi2x2
+    settings: {}
+  wss1_1_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  wss1_1_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  wss1_1_split:
+    component: mmi2x2
+    settings: {}
+  wss2_0_comb:
+    component: mmi2x2
+    settings: {}
+  wss2_0_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  wss2_0_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  wss2_0_split:
+    component: mmi2x2
+    settings: {}
+  wss2_1_comb:
+    component: mmi2x2
+    settings: {}
+  wss2_1_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  wss2_1_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  wss2_1_split:
+    component: mmi2x2
+    settings: {}
+  wss2_2_comb:
+    component: mmi2x2
+    settings: {}
+  wss2_2_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  wss2_2_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  wss2_2_split:
+    component: mmi2x2
+    settings: {}
+  wss2_3_comb:
+    component: mmi2x2
+    settings: {}
+  wss2_3_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  wss2_3_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  wss2_3_split:
+    component: mmi2x2
+    settings: {}
+  wss_term_root:
+    component: terminator
+    settings: {}
+routes:
+  optical:
+    settings: {}
+    links:
+      wss0_split,o3: wss0_ps,o1
+      wss0_split,o4: wss0_dummy,o1
+      wss0_ps,o2: wss0_comb,o1
+      wss0_dummy,o2: wss0_comb,o2
+      wss0_split,o2: wss_term_root,o1
+      wss1_0_split,o3: wss1_0_ps,o1
+      wss1_0_split,o4: wss1_0_dummy,o1
+      wss1_0_ps,o2: wss1_0_comb,o1
+      wss1_0_dummy,o2: wss1_0_comb,o2
+      wss0_comb,o3: wss1_0_split,o1
+      wss1_0_split,o2: term_wss1_0,o1
+      wss1_1_split,o3: wss1_1_ps,o1
+      wss1_1_split,o4: wss1_1_dummy,o1
+      wss1_1_ps,o2: wss1_1_comb,o1
+      wss1_1_dummy,o2: wss1_1_comb,o2
+      wss0_comb,o4: wss1_1_split,o1
+      wss1_1_split,o2: term_wss1_1,o1
+      wss2_0_split,o3: wss2_0_ps,o1
+      wss2_0_split,o4: wss2_0_dummy,o1
+      wss2_0_ps,o2: wss2_0_comb,o1
+      wss2_0_dummy,o2: wss2_0_comb,o2
+      wss1_0_comb,o3: wss2_0_split,o1
+      wss2_0_split,o2: term_wss2_0,o1
+      wss2_1_split,o3: wss2_1_ps,o1
+      wss2_1_split,o4: wss2_1_dummy,o1
+      wss2_1_ps,o2: wss2_1_comb,o1
+      wss2_1_dummy,o2: wss2_1_comb,o2
+      wss1_0_comb,o4: wss2_1_split,o1
+      wss2_1_split,o2: term_wss2_1,o1
+      wss2_2_split,o3: wss2_2_ps,o1
+      wss2_2_split,o4: wss2_2_dummy,o1
+      wss2_2_ps,o2: wss2_2_comb,o1
+      wss2_2_dummy,o2: wss2_2_comb,o2
+      wss1_1_comb,o3: wss2_2_split,o1
+      wss2_2_split,o2: term_wss2_2,o1
+      wss2_3_split,o3: wss2_3_ps,o1
+      wss2_3_split,o4: wss2_3_dummy,o1
+      wss2_3_ps,o2: wss2_3_comb,o1
+      wss2_3_dummy,o2: wss2_3_comb,o2
+      wss1_1_comb,o4: wss2_3_split,o1
+      wss2_3_split,o2: term_wss2_3,o1
+ports:
+  in: wss0_split,o1
+  out0: wss2_0_comb,o3
+  out1: wss2_0_comb,o4
+  out2: wss2_1_comb,o3
+  out3: wss2_1_comb,o4
+  out4: wss2_2_comb,o3
+  out5: wss2_2_comb,o4
+  out6: wss2_3_comb,o3
+  out7: wss2_3_comb,o4
+info:
+  picset_task_id: 31
+  picset_name: WSS 1x8
+  picbench: PIC-Bench-48
+  topology_kind: "upgraded LiDAR stub \u2192 deterministic GF PCGStore topology proxy"

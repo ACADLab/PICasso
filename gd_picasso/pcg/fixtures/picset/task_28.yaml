@@ -1,0 +1,312 @@
+# PIC-Bench-48 Task-28: 16-Channel AWG Demux
+# upgraded LiDAR stub → deterministic GF PCGStore topology proxy. Serialized by build_formal_benchmarks via to_gf_yaml.
+instances:
+  awg_in_s0:
+    component: mmi1x2
+    settings: {}
+  awg_in_s1_0:
+    component: mmi1x2
+    settings: {}
+  awg_in_s1_1:
+    component: mmi1x2
+    settings: {}
+  awg_in_s2_0:
+    component: mmi1x2
+    settings: {}
+  awg_in_s2_1:
+    component: mmi1x2
+    settings: {}
+  awg_in_s2_2:
+    component: mmi1x2
+    settings: {}
+  awg_in_s2_3:
+    component: mmi1x2
+    settings: {}
+  awg_in_s3_0:
+    component: mmi1x2
+    settings: {}
+  awg_in_s3_1:
+    component: mmi1x2
+    settings: {}
+  awg_in_s3_2:
+    component: mmi1x2
+    settings: {}
+  awg_in_s3_3:
+    component: mmi1x2
+    settings: {}
+  awg_in_s3_4:
+    component: mmi1x2
+    settings: {}
+  awg_in_s3_5:
+    component: mmi1x2
+    settings: {}
+  awg_in_s3_6:
+    component: mmi1x2
+    settings: {}
+  awg_in_s3_7:
+    component: mmi1x2
+    settings: {}
+  awg_out_c0_0:
+    component: mmi1x2
+    settings: {}
+  awg_out_c1_0:
+    component: mmi1x2
+    settings: {}
+  awg_out_c1_1:
+    component: mmi1x2
+    settings: {}
+  awg_out_c2_0:
+    component: mmi1x2
+    settings: {}
+  awg_out_c2_1:
+    component: mmi1x2
+    settings: {}
+  awg_out_c2_2:
+    component: mmi1x2
+    settings: {}
+  awg_out_c2_3:
+    component: mmi1x2
+    settings: {}
+  awg_out_c3_0:
+    component: mmi1x2
+    settings: {}
+  awg_out_c3_1:
+    component: mmi1x2
+    settings: {}
+  awg_out_c3_2:
+    component: mmi1x2
+    settings: {}
+  awg_out_c3_3:
+    component: mmi1x2
+    settings: {}
+  awg_out_c3_4:
+    component: mmi1x2
+    settings: {}
+  awg_out_c3_5:
+    component: mmi1x2
+    settings: {}
+  awg_out_c3_6:
+    component: mmi1x2
+    settings: {}
+  awg_out_c3_7:
+    component: mmi1x2
+    settings: {}
+  awg_out_term:
+    component: terminator
+    settings: {}
+  awg_tap_0:
+    component: mmi1x2
+    settings: {}
+  awg_tap_1:
+    component: mmi1x2
+    settings: {}
+  awg_tap_10:
+    component: mmi1x2
+    settings: {}
+  awg_tap_11:
+    component: mmi1x2
+    settings: {}
+  awg_tap_12:
+    component: mmi1x2
+    settings: {}
+  awg_tap_13:
+    component: mmi1x2
+    settings: {}
+  awg_tap_14:
+    component: mmi1x2
+    settings: {}
+  awg_tap_15:
+    component: mmi1x2
+    settings: {}
+  awg_tap_2:
+    component: mmi1x2
+    settings: {}
+  awg_tap_3:
+    component: mmi1x2
+    settings: {}
+  awg_tap_4:
+    component: mmi1x2
+    settings: {}
+  awg_tap_5:
+    component: mmi1x2
+    settings: {}
+  awg_tap_6:
+    component: mmi1x2
+    settings: {}
+  awg_tap_7:
+    component: mmi1x2
+    settings: {}
+  awg_tap_8:
+    component: mmi1x2
+    settings: {}
+  awg_tap_9:
+    component: mmi1x2
+    settings: {}
+  awg_wg_0:
+    component: straight
+    settings:
+      length: 100.0
+  awg_wg_1:
+    component: straight
+    settings:
+      length: 110.0
+  awg_wg_10:
+    component: straight
+    settings:
+      length: 200.0
+  awg_wg_11:
+    component: straight
+    settings:
+      length: 210.0
+  awg_wg_12:
+    component: straight
+    settings:
+      length: 220.0
+  awg_wg_13:
+    component: straight
+    settings:
+      length: 230.0
+  awg_wg_14:
+    component: straight
+    settings:
+      length: 240.0
+  awg_wg_15:
+    component: straight
+    settings:
+      length: 250.0
+  awg_wg_2:
+    component: straight
+    settings:
+      length: 120.0
+  awg_wg_3:
+    component: straight
+    settings:
+      length: 130.0
+  awg_wg_4:
+    component: straight
+    settings:
+      length: 140.0
+  awg_wg_5:
+    component: straight
+    settings:
+      length: 150.0
+  awg_wg_6:
+    component: straight
+    settings:
+      length: 160.0
+  awg_wg_7:
+    component: straight
+    settings:
+      length: 170.0
+  awg_wg_8:
+    component: straight
+    settings:
+      length: 180.0
+  awg_wg_9:
+    component: straight
+    settings:
+      length: 190.0
+routes:
+  optical:
+    settings: {}
+    links:
+      awg_in_s0,o2: awg_in_s1_0,o1
+      awg_in_s0,o3: awg_in_s1_1,o1
+      awg_in_s1_0,o2: awg_in_s2_0,o1
+      awg_in_s1_0,o3: awg_in_s2_1,o1
+      awg_in_s1_1,o2: awg_in_s2_2,o1
+      awg_in_s1_1,o3: awg_in_s2_3,o1
+      awg_in_s2_0,o2: awg_in_s3_0,o1
+      awg_in_s2_0,o3: awg_in_s3_1,o1
+      awg_in_s2_1,o2: awg_in_s3_2,o1
+      awg_in_s2_1,o3: awg_in_s3_3,o1
+      awg_in_s2_2,o2: awg_in_s3_4,o1
+      awg_in_s2_2,o3: awg_in_s3_5,o1
+      awg_in_s2_3,o2: awg_in_s3_6,o1
+      awg_in_s2_3,o3: awg_in_s3_7,o1
+      awg_out_c1_0,o1: awg_out_c0_0,o2
+      awg_out_c1_1,o1: awg_out_c0_0,o3
+      awg_out_c2_0,o1: awg_out_c1_0,o2
+      awg_out_c2_1,o1: awg_out_c1_0,o3
+      awg_out_c2_2,o1: awg_out_c1_1,o2
+      awg_out_c2_3,o1: awg_out_c1_1,o3
+      awg_out_c3_0,o1: awg_out_c2_0,o2
+      awg_out_c3_1,o1: awg_out_c2_0,o3
+      awg_out_c3_2,o1: awg_out_c2_1,o2
+      awg_out_c3_3,o1: awg_out_c2_1,o3
+      awg_out_c3_4,o1: awg_out_c2_2,o2
+      awg_out_c3_5,o1: awg_out_c2_2,o3
+      awg_out_c3_6,o1: awg_out_c2_3,o2
+      awg_out_c3_7,o1: awg_out_c2_3,o3
+      awg_out_c0_0,o1: awg_out_term,o1
+      awg_in_s3_0,o2: awg_wg_0,o1
+      awg_wg_0,o2: awg_tap_0,o1
+      awg_tap_0,o3: awg_out_c3_0,o2
+      awg_in_s3_0,o3: awg_wg_1,o1
+      awg_wg_1,o2: awg_tap_1,o1
+      awg_tap_1,o3: awg_out_c3_0,o3
+      awg_in_s3_1,o2: awg_wg_2,o1
+      awg_wg_2,o2: awg_tap_2,o1
+      awg_tap_2,o3: awg_out_c3_1,o2
+      awg_in_s3_1,o3: awg_wg_3,o1
+      awg_wg_3,o2: awg_tap_3,o1
+      awg_tap_3,o3: awg_out_c3_1,o3
+      awg_in_s3_2,o2: awg_wg_4,o1
+      awg_wg_4,o2: awg_tap_4,o1
+      awg_tap_4,o3: awg_out_c3_2,o2
+      awg_in_s3_2,o3: awg_wg_5,o1
+      awg_wg_5,o2: awg_tap_5,o1
+      awg_tap_5,o3: awg_out_c3_2,o3
+      awg_in_s3_3,o2: awg_wg_6,o1
+      awg_wg_6,o2: awg_tap_6,o1
+      awg_tap_6,o3: awg_out_c3_3,o2
+      awg_in_s3_3,o3: awg_wg_7,o1
+      awg_wg_7,o2: awg_tap_7,o1
+      awg_tap_7,o3: awg_out_c3_3,o3
+      awg_in_s3_4,o2: awg_wg_8,o1
+      awg_wg_8,o2: awg_tap_8,o1
+      awg_tap_8,o3: awg_out_c3_4,o2
+      awg_in_s3_4,o3: awg_wg_9,o1
+      awg_wg_9,o2: awg_tap_9,o1
+      awg_tap_9,o3: awg_out_c3_4,o3
+      awg_in_s3_5,o2: awg_wg_10,o1
+      awg_wg_10,o2: awg_tap_10,o1
+      awg_tap_10,o3: awg_out_c3_5,o2
+      awg_in_s3_5,o3: awg_wg_11,o1
+      awg_wg_11,o2: awg_tap_11,o1
+      awg_tap_11,o3: awg_out_c3_5,o3
+      awg_in_s3_6,o2: awg_wg_12,o1
+      awg_wg_12,o2: awg_tap_12,o1
+      awg_tap_12,o3: awg_out_c3_6,o2
+      awg_in_s3_6,o3: awg_wg_13,o1
+      awg_wg_13,o2: awg_tap_13,o1
+      awg_tap_13,o3: awg_out_c3_6,o3
+      awg_in_s3_7,o2: awg_wg_14,o1
+      awg_wg_14,o2: awg_tap_14,o1
+      awg_tap_14,o3: awg_out_c3_7,o2
+      awg_in_s3_7,o3: awg_wg_15,o1
+      awg_wg_15,o2: awg_tap_15,o1
+      awg_tap_15,o3: awg_out_c3_7,o3
+ports:
+  in: awg_in_s0,o1
+  out0: awg_tap_0,o2
+  out1: awg_tap_1,o2
+  out2: awg_tap_2,o2
+  out3: awg_tap_3,o2
+  out4: awg_tap_4,o2
+  out5: awg_tap_5,o2
+  out6: awg_tap_6,o2
+  out7: awg_tap_7,o2
+  out8: awg_tap_8,o2
+  out9: awg_tap_9,o2
+  out10: awg_tap_10,o2
+  out11: awg_tap_11,o2
+  out12: awg_tap_12,o2
+  out13: awg_tap_13,o2
+  out14: awg_tap_14,o2
+  out15: awg_tap_15,o2
+info:
+  picset_task_id: 28
+  picset_name: 16-Channel AWG Demux
+  picbench: PIC-Bench-48
+  topology_kind: "upgraded LiDAR stub \u2192 deterministic GF PCGStore topology proxy"

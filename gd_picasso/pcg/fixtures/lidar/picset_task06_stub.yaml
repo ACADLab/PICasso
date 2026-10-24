@@ -25,7 +25,11 @@ instances:
     settings:
       macro_type: m_mmi1x2_t6c
       placement: [UNPLACED, [60, 0], N, [0, 0, 0, 0]]
-schematic_placements: {}
+schematic_placements:
+  split: {x: 0.0, y: 0.0, port: null, rotation: 0, dx: 0, dy: 0, mirror: false}
+  arm_i: {x: 30.0, y: 10.0, port: null, rotation: 0, dx: 0, dy: 0, mirror: false}
+  arm_q: {x: 30.0, y: -10.0, port: null, rotation: 0, dx: 0, dy: 0, mirror: false}
+  comb: {x: 60.0, y: 0.0, port: null, rotation: 0, dx: 0, dy: 0, mirror: false}
 nets:
   n_0: ['split,o2', 'arm_i,o1']
   n_1: ['split,o3', 'arm_q,o1']

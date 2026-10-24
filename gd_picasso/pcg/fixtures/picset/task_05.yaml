@@ -1,0 +1,93 @@
+# PIC-Bench-48 Task-05: 8-QAM Modulator
+# upgraded LiDAR stub → deterministic GF PCGStore topology proxy. Serialized by build_formal_benchmarks via to_gf_yaml.
+instances:
+  mix0:
+    component: mmi1x2
+    settings: {}
+  mix1:
+    component: mmi1x2
+    settings: {}
+  mzm0_cb:
+    component: mmi2x2
+    settings: {}
+  mzm0_psa:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  mzm0_psb:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  mzm0_sp:
+    component: mmi1x2
+    settings: {}
+  mzm1_cb:
+    component: mmi2x2
+    settings: {}
+  mzm1_psa:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  mzm1_psb:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  mzm1_sp:
+    component: mmi1x2
+    settings: {}
+  mzm2_cb:
+    component: mmi2x2
+    settings: {}
+  mzm2_psa:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  mzm2_psb:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  mzm2_sp:
+    component: mmi1x2
+    settings: {}
+  term_mzm0:
+    component: terminator
+    settings: {}
+  term_mzm1:
+    component: terminator
+    settings: {}
+  term_mzm2:
+    component: terminator
+    settings: {}
+routes:
+  optical:
+    settings: {}
+    links:
+      mzm0_sp,o2: mzm0_psa,o1
+      mzm0_sp,o3: mzm0_psb,o1
+      mzm0_psa,o2: mzm0_cb,o1
+      mzm0_psb,o2: mzm0_cb,o2
+      mzm0_cb,o4: term_mzm0,o1
+      mzm1_sp,o2: mzm1_psa,o1
+      mzm1_sp,o3: mzm1_psb,o1
+      mzm1_psa,o2: mzm1_cb,o1
+      mzm1_psb,o2: mzm1_cb,o2
+      mzm1_cb,o4: term_mzm1,o1
+      mzm2_sp,o2: mzm2_psa,o1
+      mzm2_sp,o3: mzm2_psb,o1
+      mzm2_psa,o2: mzm2_cb,o1
+      mzm2_psb,o2: mzm2_cb,o2
+      mzm2_cb,o4: term_mzm2,o1
+      mzm0_cb,o3: mix0,o2
+      mzm1_cb,o3: mix0,o3
+      mix0,o1: mix1,o2
+      mzm2_cb,o3: mix1,o3
+ports:
+  in0: mzm0_sp,o1
+  in1: mzm1_sp,o1
+  in2: mzm2_sp,o1
+  out: mix1,o1
+info:
+  picset_task_id: 5
+  picset_name: 8-QAM Modulator
+  picbench: PIC-Bench-48
+  topology_kind: "upgraded LiDAR stub \u2192 deterministic GF PCGStore topology proxy"

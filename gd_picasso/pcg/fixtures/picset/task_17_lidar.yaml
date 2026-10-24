@@ -1,0 +1,37 @@
+# PIC-Set Task-17: Spanke-Benes 4x4 — IR stub (not GF gate).
+# partition: expressible; topology_kind: mesh
+schema: null
+instances:
+  n0:
+    component: mmi1x2
+    settings:
+      macro_type: m_t17_0
+      placement: [UNPLACED, [0, 0], N, [0, 0, 0, 0]]
+  n1:
+    component: straight
+    settings:
+      length: 200.0
+      macro_type: m_t17_1
+      placement: [UNPLACED, [40, 0], N, [0, 0, 0, 0]]
+schematic_placements: {}
+nets:
+  n_0: ['n0,o2', 'n1,o1']
+ports:
+  in: n0,o1
+  out: n1,o2
+schema_version: 1
+settings:
+  version: '1.0'
+  design: picset_task17
+  units_distance_microns: 1
+  die_area: [[0, 0], [80, 40]]
+  num_instances: 2
+  num_nets: 1
+  num_ports: 2
+  wg_radius: 5
+library: {}
+info:
+  picset_task_id: 17
+  picset_name: Spanke-Benes 4x4
+  partition: expressible
+  topology_kind: mesh

@@ -1,0 +1,29 @@
+# PIC-Bench-48 Task-44: Multi-PDK straight to ebeam_gc_te895
+# Cornerstone 500nm mixed with SiEPIC non-500nm ports; add_tapers. Serialized by build_formal_benchmarks via to_gf_yaml.
+instances:
+  cs0:
+    component: straight
+    settings:
+      length: 10.0
+  sie:
+    component: ebeam_gc_te895
+    settings: {}
+  taper_cs0_o2_sie_o1:
+    component: taper
+    settings:
+      length: 10.0
+      width1: 0.5
+      width2: 0.45
+routes:
+  optical:
+    settings: {}
+    links:
+      cs0,o2: taper_cs0_o2_sie_o1,o1
+      taper_cs0_o2_sie_o1,o2: sie,o1
+ports:
+  io0: cs0,o1
+info:
+  picset_task_id: 44
+  picset_name: Multi-PDK straight to ebeam_gc_te895
+  picbench: PIC-Bench-48
+  topology_kind: Cornerstone 500nm mixed with SiEPIC non-500nm ports; add_tapers

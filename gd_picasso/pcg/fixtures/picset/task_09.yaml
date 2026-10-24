@@ -1,0 +1,37 @@
+# PIC-Set Task-09: 90 Optical Hybrid (append-only freeze).
+# Gate-shaped GF YAML; formal partition see PICSET_PARTITION.md.
+instances:
+  splitter:
+    component: mmi1x2
+    settings: {}
+  ps_upper:
+    component: straight_heater_metal
+    settings: {length: 200}
+  ps_lower:
+    component: straight
+    settings: {length: 200}
+  combiner:
+    component: mmi1x2
+    settings: {}
+placements:
+  splitter: {x: 0, y: 0, rotation: 0, mirror: false}
+  ps_upper: {x: 180, y: 50, rotation: 0, mirror: false}
+  ps_lower: {x: 180, y: -50, rotation: 0, mirror: false}
+  combiner: {x: 420, y: 0, rotation: 180, mirror: false}
+routes:
+  west:
+    settings: {cross_section: strip, radius: 10.0}
+    links:
+      splitter,o2: ps_upper,o1
+      splitter,o3: ps_lower,o1
+  east:
+    settings: {cross_section: strip, radius: 10.0}
+    links:
+      ps_upper,o2: combiner,o2
+      ps_lower,o2: combiner,o3
+ports:
+  in: splitter,o1
+  out: combiner,o1
+info:
+  picset_task_id: 9
+  picset_name: '90 Optical Hybrid'

@@ -1,0 +1,205 @@
+# PIC-Bench-48 Task-06: 64-QAM Modulator
+# upgraded LiDAR stub → deterministic GF PCGStore topology proxy. Serialized by build_formal_benchmarks via to_gf_yaml.
+instances:
+  mix0_0:
+    component: mmi1x2
+    settings: {}
+  mix0_2:
+    component: mmi1x2
+    settings: {}
+  mix0_4:
+    component: mmi1x2
+    settings: {}
+  mix1_0:
+    component: mmi1x2
+    settings: {}
+  mix1_2:
+    component: mmi1x2
+    settings: {}
+  mix2_0:
+    component: mmi1x2
+    settings: {}
+  mzm0_cb:
+    component: mmi2x2
+    settings: {}
+  mzm0_psa:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  mzm0_psb:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  mzm0_sp:
+    component: mmi1x2
+    settings: {}
+  mzm1_cb:
+    component: mmi2x2
+    settings: {}
+  mzm1_psa:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  mzm1_psb:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  mzm1_sp:
+    component: mmi1x2
+    settings: {}
+  mzm2_cb:
+    component: mmi2x2
+    settings: {}
+  mzm2_psa:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  mzm2_psb:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  mzm2_sp:
+    component: mmi1x2
+    settings: {}
+  mzm3_cb:
+    component: mmi2x2
+    settings: {}
+  mzm3_psa:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  mzm3_psb:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  mzm3_sp:
+    component: mmi1x2
+    settings: {}
+  mzm4_cb:
+    component: mmi2x2
+    settings: {}
+  mzm4_psa:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  mzm4_psb:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  mzm4_sp:
+    component: mmi1x2
+    settings: {}
+  mzm5_cb:
+    component: mmi2x2
+    settings: {}
+  mzm5_psa:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  mzm5_psb:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  mzm5_sp:
+    component: mmi1x2
+    settings: {}
+  mzm6_cb:
+    component: mmi2x2
+    settings: {}
+  mzm6_psa:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  mzm6_psb:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  mzm6_sp:
+    component: mmi1x2
+    settings: {}
+  term_mzm0:
+    component: terminator
+    settings: {}
+  term_mzm1:
+    component: terminator
+    settings: {}
+  term_mzm2:
+    component: terminator
+    settings: {}
+  term_mzm3:
+    component: terminator
+    settings: {}
+  term_mzm4:
+    component: terminator
+    settings: {}
+  term_mzm5:
+    component: terminator
+    settings: {}
+  term_mzm6:
+    component: terminator
+    settings: {}
+routes:
+  optical:
+    settings: {}
+    links:
+      mzm0_sp,o2: mzm0_psa,o1
+      mzm0_sp,o3: mzm0_psb,o1
+      mzm0_psa,o2: mzm0_cb,o1
+      mzm0_psb,o2: mzm0_cb,o2
+      mzm0_cb,o4: term_mzm0,o1
+      mzm1_sp,o2: mzm1_psa,o1
+      mzm1_sp,o3: mzm1_psb,o1
+      mzm1_psa,o2: mzm1_cb,o1
+      mzm1_psb,o2: mzm1_cb,o2
+      mzm1_cb,o4: term_mzm1,o1
+      mzm2_sp,o2: mzm2_psa,o1
+      mzm2_sp,o3: mzm2_psb,o1
+      mzm2_psa,o2: mzm2_cb,o1
+      mzm2_psb,o2: mzm2_cb,o2
+      mzm2_cb,o4: term_mzm2,o1
+      mzm3_sp,o2: mzm3_psa,o1
+      mzm3_sp,o3: mzm3_psb,o1
+      mzm3_psa,o2: mzm3_cb,o1
+      mzm3_psb,o2: mzm3_cb,o2
+      mzm3_cb,o4: term_mzm3,o1
+      mzm4_sp,o2: mzm4_psa,o1
+      mzm4_sp,o3: mzm4_psb,o1
+      mzm4_psa,o2: mzm4_cb,o1
+      mzm4_psb,o2: mzm4_cb,o2
+      mzm4_cb,o4: term_mzm4,o1
+      mzm5_sp,o2: mzm5_psa,o1
+      mzm5_sp,o3: mzm5_psb,o1
+      mzm5_psa,o2: mzm5_cb,o1
+      mzm5_psb,o2: mzm5_cb,o2
+      mzm5_cb,o4: term_mzm5,o1
+      mzm6_sp,o2: mzm6_psa,o1
+      mzm6_sp,o3: mzm6_psb,o1
+      mzm6_psa,o2: mzm6_cb,o1
+      mzm6_psb,o2: mzm6_cb,o2
+      mzm6_cb,o4: term_mzm6,o1
+      mzm0_cb,o3: mix0_0,o2
+      mzm1_cb,o3: mix0_0,o3
+      mzm2_cb,o3: mix0_2,o2
+      mzm3_cb,o3: mix0_2,o3
+      mzm4_cb,o3: mix0_4,o2
+      mzm5_cb,o3: mix0_4,o3
+      mix0_0,o1: mix1_0,o2
+      mix0_2,o1: mix1_0,o3
+      mix0_4,o1: mix1_2,o2
+      mzm6_cb,o3: mix1_2,o3
+      mix1_0,o1: mix2_0,o2
+      mix1_2,o1: mix2_0,o3
+ports:
+  in0: mzm0_sp,o1
+  in1: mzm1_sp,o1
+  in2: mzm2_sp,o1
+  in3: mzm3_sp,o1
+  in4: mzm4_sp,o1
+  in5: mzm5_sp,o1
+  in6: mzm6_sp,o1
+  out: mix2_0,o1
+info:
+  picset_task_id: 6
+  picset_name: 64-QAM Modulator
+  picbench: PIC-Bench-48
+  topology_kind: "upgraded LiDAR stub \u2192 deterministic GF PCGStore topology proxy"

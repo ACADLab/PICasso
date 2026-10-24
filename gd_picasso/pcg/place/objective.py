@@ -24,16 +24,30 @@ from .tensors import (
 DEFAULT_ALPHA = 1.4
 NEFF = 2.34
 WAVELENGTH_UM = 1.55
+# Cornerstone FINDINGS waveguide loss (also used by torch_fom)
+LOSS_DB_PER_CM = 0.7
 
 
 @dataclass
 class ObjectiveWeights:
     lambda_D: float = 1.0
     lambda_phi: float = 1.0
-    lambda_F: float = 0.0  # stub — no SAX FoM in this spike
+    lambda_F: float = 0.0  # weight on analytical F_torch / F_numpy FoM
+    # Soft geometric repulsion (torch_fom.overlap_loss); high → hard separation.
+    # Needs to dominate wirelength on dense meshes (Clements 4×4 ≈ 1e3).
+    lambda_overlap: float = 200.0
+    # Soft Y-channel / parallel-arm pitch (torch_fom.y_pitch_loss).
+    lambda_y_pitch: float = 5.0
+    y_pitch_um: float = 25.0
+    # Soft X-stage runway between consecutive mesh columns (torch_fom.x_stage_loss).
+    # Dense butterfly / crossbar meshes need ≥150 µm of horizontal fan-out room
+    # for LiDAR's 4.0 µm bundle separation.
+    lambda_x_stage: float = 40.0
+    x_stage_gap_um: float = 150.0
     alpha: float = DEFAULT_ALPHA
     neff: float = NEFF
     wavelength_um: float = WAVELENGTH_UM
+    loss_dB_per_cm: float = LOSS_DB_PER_CM
 
 
 @dataclass
@@ -152,7 +166,7 @@ def evaluate_objective(
     theta: Optional[np.ndarray] = None,
     weights: Optional[ObjectiveWeights] = None,
 ) -> ObjectiveTerms:
-    """Evaluate W_cos + λ_D·D + λ_φ·Σ(Δφ̂)² (+ λ_F stub)."""
+    """Evaluate W_cos + λ_D·D + λ_φ·Σ(Δφ̂)² (+ λ_F·F̂ analytical FoM)."""
     w = weights or ObjectiveWeights()
     xy_arr = problem.xy if xy is None else xy
     th_arr = problem.theta_rad if theta is None else theta
@@ -162,7 +176,16 @@ def evaluate_objective(
     phi_sq, dphi = phase_penalty(
         problem, xy_arr, th_arr, neff=w.neff, wavelength_um=w.wavelength_um
     )
-    F = 0.0  # λ_F stub — no pre-route SAX FoM yet
+    F = 0.0
+    if w.lambda_F > 0.0:
+        from .torch_fom import F_numpy
+
+        F = F_numpy(
+            problem,
+            xy_arr,
+            w,
+            loss_dB_per_cm=w.loss_dB_per_cm,
+        )
     total = W + w.lambda_D * D + w.lambda_phi * phi_sq + w.lambda_F * F
     return ObjectiveTerms(
         W_cos=W,

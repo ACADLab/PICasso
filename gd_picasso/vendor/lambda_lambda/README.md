@@ -1,39 +1,50 @@
 # λλ (`unitary_inference`) vendor — Lane λλ/Env
 
-**Status (2026-09-29): working tree NOT FOUND on this machine.**
+**Status (2026-09-30): VENDORED** from
+[vaibhavmehta1/LambdaLambda](https://github.com/vaibhavmehta1/LambdaLambda)
+`main` @ `08d1a215aa48966d34334216acc6bfa38b7fe74f` (no LICENSE — research
+vendor only).
 
-Policy (plan Must-fix §2): vendor as **upstream SHA + explicit patch file**,
-never a fresh bare SHA. Do **not** invent upstream sources.
+Policy: vendor as **upstream SHA + explicit patch file**, never a fresh bare
+SHA. PSD guard stays in-repo as `psd_gate.py` (preferred over patching
+upstream inference).
 
-## Required upstream pieces
+## Layout
 
-- `unitary_inference.py` — `parse_spec_sympy_eval`, `infer_unitary_from_spec`,
-  `clements_decomposition`
-- `optical_compiler/ast.py` (and whatever that package imports)
-- Preserve Algorithm-1 PSD fix (lives in-repo as
-  [`gd_picasso/probes/lowering/psd_gate.py`](../../probes/lowering/psd_gate.py))
-- Preserve any `embedding.py` ~L929 workaround as
-  `patches/0002-embedding-L929.patch` once the upstream file is available
+| Path | Role |
+|---|---|
+| `UPSTREAM_SHA.txt` | Full commit SHA + source URL |
+| `src/unitary_inference.py` | `parse_spec_sympy_eval`, `infer_unitary_from_spec`, `clements_decomposition` |
+| `src/symbolic_executor.py` | Spec interpreter helper |
+| `src/optical_compiler/` | Full package (`ast`, `embedding`, …) |
+| `patches/0002-embedding-L929.patch` | Restores corrupted `src_neighbor == dst_neighbor` |
 
-## Drop-in procedure (when a working copy appears)
+## Import wire
 
-1. Record upstream remote + commit SHA in `UPSTREAM_SHA.txt` (one line: full SHA).
-2. Copy the minimal tree under `src/` (or symlink) so
-   `PYTHONPATH=gd_picasso/vendor/lambda_lambda/src` imports `unitary_inference`.
-3. Export patches against that SHA into `patches/`:
-   - `0001-…` only if PSD must live *inside* upstream; otherwise keep
-     `psd_gate.py` as the in-front wrapper (preferred — already committed).
-   - `0002-embedding-L929.patch` if that workaround is still required.
-4. Apply patches in order; run
-   `pytest gd_picasso/probes/lowering/tests/test_psd_reject.py -q`
-   and the math probes (`recon_check`, `lower`, `picset_specs`).
+```bash
+# Explicit
+PYTHONPATH=gd_picasso/vendor/lambda_lambda/src python -c "import unitary_inference"
 
-## What is already in-repo without λλ
+# Automatic for repo tests / probe package import
+# — conftest.py, [tool.pytest.ini_options] pythonpath, and
+#   gd_picasso.probes.lowering._path_bootstrap
+```
+
+## Acceptance
+
+```bash
+pytest gd_picasso/probes/lowering/tests/test_psd_reject.py -q
+python -m gd_picasso.probes.lowering.test_formal_acceptance_stubs
+```
+
+Pass: `import unitary_inference`; PSD reject (numpy + λλ spec path);
+MZI 2×2 rebuild residual &lt; 1e-12 (1e-13 slice stub).
+
+## What stays outside the vendor
 
 | Artifact | Role |
 |---|---|
 | `probes/lowering/psd_gate.py` | Algorithm-1 PSD wrapper (needs λλ to parse specs) |
-| `probes/lowering/psd_numpy.py` | Matrix-form PSD reject (no λλ) — regression covered |
-| Cornerstone probes + FINDINGS | Re-measured under `cspdk==1.3.2` + gf 9.23.0 |
+| `probes/lowering/psd_numpy.py` | Matrix-form PSD reject (no λλ) |
 
-See `SEARCH_LOG.md` for the locate pass.
+No Gurobi required for inference / PSD / Clements probes.

@@ -1,0 +1,168 @@
+# PIC-Bench-48 Task-15: Benes 4x4
+# authentic benes_odd_even builder (N=4, nodes=30, io=8); de-aliased from Clements proxies. Serialized by build_formal_benchmarks via to_gf_yaml.
+instances:
+  bn0_0_comb:
+    component: mmi2x2
+    settings: {}
+  bn0_0_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  bn0_0_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  bn0_0_split:
+    component: mmi2x2
+    settings: {}
+  bn0_1_comb:
+    component: mmi2x2
+    settings: {}
+  bn0_1_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  bn0_1_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  bn0_1_split:
+    component: mmi2x2
+    settings: {}
+  bn1_0_comb:
+    component: mmi2x2
+    settings: {}
+  bn1_0_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  bn1_0_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  bn1_0_split:
+    component: mmi2x2
+    settings: {}
+  bn2_0_comb:
+    component: mmi2x2
+    settings: {}
+  bn2_0_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  bn2_0_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  bn2_0_split:
+    component: mmi2x2
+    settings: {}
+  bn2_1_comb:
+    component: mmi2x2
+    settings: {}
+  bn2_1_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  bn2_1_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  bn2_1_split:
+    component: mmi2x2
+    settings: {}
+  bx0_0:
+    component: crossing
+    settings: {}
+  bx0_2:
+    component: crossing
+    settings: {}
+  in_0:
+    component: straight
+    settings:
+      length: 10.0
+  in_1:
+    component: straight
+    settings:
+      length: 10.0
+  in_2:
+    component: straight
+    settings:
+      length: 10.0
+  in_3:
+    component: straight
+    settings:
+      length: 10.0
+  t0_0:
+    component: straight
+    settings:
+      length: 5.0
+  t0_1:
+    component: straight
+    settings:
+      length: 5.0
+  t0_2:
+    component: straight
+    settings:
+      length: 5.0
+  t0_3:
+    component: straight
+    settings:
+      length: 5.0
+routes:
+  optical:
+    settings: {}
+    links:
+      bn0_0_split,o3: bn0_0_ps,o1
+      bn0_0_split,o4: bn0_0_dummy,o1
+      bn0_0_ps,o2: bn0_0_comb,o1
+      bn0_0_dummy,o2: bn0_0_comb,o2
+      in_0,o2: bn0_0_split,o1
+      in_1,o2: bn0_0_split,o2
+      bn0_1_split,o3: bn0_1_ps,o1
+      bn0_1_split,o4: bn0_1_dummy,o1
+      bn0_1_ps,o2: bn0_1_comb,o1
+      bn0_1_dummy,o2: bn0_1_comb,o2
+      in_2,o2: bn0_1_split,o1
+      in_3,o2: bn0_1_split,o2
+      bn0_0_comb,o3: bx0_0,o1
+      bx0_0,o2: t0_0,o1
+      bn0_0_comb,o4: bx0_0,o3
+      bx0_0,o4: t0_1,o1
+      bn0_1_comb,o3: bx0_2,o1
+      bx0_2,o2: t0_2,o1
+      bn0_1_comb,o4: bx0_2,o3
+      bx0_2,o4: t0_3,o1
+      bn1_0_split,o3: bn1_0_ps,o1
+      bn1_0_split,o4: bn1_0_dummy,o1
+      bn1_0_ps,o2: bn1_0_comb,o1
+      bn1_0_dummy,o2: bn1_0_comb,o2
+      t0_1,o2: bn1_0_split,o1
+      t0_2,o2: bn1_0_split,o2
+      bn2_0_split,o3: bn2_0_ps,o1
+      bn2_0_split,o4: bn2_0_dummy,o1
+      bn2_0_ps,o2: bn2_0_comb,o1
+      bn2_0_dummy,o2: bn2_0_comb,o2
+      t0_0,o2: bn2_0_split,o1
+      bn1_0_comb,o3: bn2_0_split,o2
+      bn2_1_split,o3: bn2_1_ps,o1
+      bn2_1_split,o4: bn2_1_dummy,o1
+      bn2_1_ps,o2: bn2_1_comb,o1
+      bn2_1_dummy,o2: bn2_1_comb,o2
+      bn1_0_comb,o4: bn2_1_split,o1
+      t0_3,o2: bn2_1_split,o2
+ports:
+  in0: in_0,o1
+  in1: in_1,o1
+  in2: in_2,o1
+  in3: in_3,o1
+  out0: bn2_0_comb,o3
+  out1: bn2_0_comb,o4
+  out2: bn2_1_comb,o3
+  out3: bn2_1_comb,o4
+info:
+  picset_task_id: 15
+  picset_name: Benes 4x4
+  picbench: PIC-Bench-48
+  topology_kind: authentic benes_odd_even builder (N=4, nodes=30, io=8); de-aliased
+    from Clements proxies

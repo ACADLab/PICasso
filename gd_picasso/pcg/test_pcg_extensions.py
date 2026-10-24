@@ -11,8 +11,10 @@ import sys
 from gd_picasso.pcg import (
     PCGMutationError,
     PCGNode,
+    PCGPort,
     PCGStore,
     RefLevel,
+    add_tapers,
     detect_dangling_ports,
     from_gf_yaml,
     insert_terminators,
@@ -194,6 +196,103 @@ def test_spa_hybrid_four_path_wns() -> None:
     assert report_ok.wns_rad >= 0.0, report_ok.wns_rad
 
 
+def test_add_tapers_bridges_500nm_to_450nm() -> None:
+    """Cornerstone/generic 500 nm port to a 450 nm SiEPIC port."""
+    store = PCGStore(default_agent="test")
+    store.add_node(
+        PCGNode(
+            id="cs",
+            component="straight",
+            ports={
+                "o1": PCGPort(name="o1", width_um=0.5),
+                "o2": PCGPort(name="o2", width_um=0.5),
+            },
+        ),
+        skip_component_check=True,
+    )
+    store.add_node(
+        PCGNode(
+            id="y",
+            component="ebeam_y_adiabatic",
+            ports={
+                "o1": PCGPort(name="o1", width_um=0.45),
+                "o2": PCGPort(name="o2", width_um=0.45),
+                "o3": PCGPort(name="o3", width_um=0.45),
+            },
+        ),
+        skip_component_check=True,
+    )
+    store.connect("cs", "o2", "y", "o1", agent="test")
+    before = len(store.journal.entries)
+    inserted = add_tapers(store)
+    assert len(inserted) == 1
+    tid = inserted[0]
+    node = store.nodes[tid]
+    assert node.component == "taper"
+    assert node.params["width1"] == 0.5
+    assert node.params["width2"] == 0.45
+    assert node.ports["o1"].width_um == 0.5
+    assert node.ports["o2"].width_um == 0.45
+    pairs = {
+        (e.src_node, e.src_port, e.dst_node, e.dst_port) for e in store.edges
+    }
+    assert ("cs", "o2", "y", "o1") not in pairs
+    assert ("cs", "o2", tid, "o1") in pairs
+    assert (tid, "o2", "y", "o1") in pairs
+    ops = [e.op for e in store.journal.entries[before:]]
+    assert ops == ["disconnect", "add_node", "connect", "connect", "insert_taper"]
+    rec = store.journal.entries[-1]
+    assert rec.agent == "legalize"
+    assert rec.payload["width1_um"] == 0.5
+    assert rec.payload["width2_um"] == 0.45
+    # Matched edges are left alone.
+    assert add_tapers(store) == []
+
+
+def test_legalize_taper_placements_midpoint() -> None:
+    from gd_picasso.pcg.legalize import legalize_taper_placements
+
+    store = PCGStore(default_agent="test")
+    store.add_node(
+        PCGNode(
+            id="cs",
+            component="straight",
+            x=0.0,
+            y=0.0,
+            ports={
+                "o1": PCGPort(name="o1", width_um=0.5),
+                "o2": PCGPort(name="o2", width_um=0.5),
+            },
+        ),
+        skip_component_check=True,
+    )
+    store.add_node(
+        PCGNode(
+            id="y",
+            component="ebeam_y_adiabatic",
+            x=100.0,
+            y=20.0,
+            ports={
+                "o1": PCGPort(name="o1", width_um=0.45),
+                "o2": PCGPort(name="o2", width_um=0.45),
+                "o3": PCGPort(name="o3", width_um=0.45),
+            },
+        ),
+        skip_component_check=True,
+    )
+    store.connect("cs", "o2", "y", "o1", agent="test")
+    inserted = add_tapers(store)
+    assert len(inserted) == 1
+    tid = inserted[0]
+    # Simulate an unplaced / misplaced taper then snap to midpoint.
+    store.set_placement(tid, x=-999.0, y=-999.0, agent="test")
+    updated = legalize_taper_placements(store, force=True)
+    assert tid in updated
+    node = store.nodes[tid]
+    assert abs(float(node.x) - 50.0) < 1e-6
+    assert abs(float(node.y) - 10.0) < 1e-6
+
+
 def test_ports_populated_on_import() -> None:
     store = from_gf_yaml(
         "instances:\n  r:\n    component: ring_single\n    settings: {}\n"
@@ -212,6 +311,7 @@ def run_all() -> int:
         test_ring_bus_edge_counts,
         test_spa_phase_slack,
         test_spa_hybrid_four_path_wns,
+        test_add_tapers_bridges_500nm_to_450nm,
         test_ports_populated_on_import,
     ]
     passed = failed = 0

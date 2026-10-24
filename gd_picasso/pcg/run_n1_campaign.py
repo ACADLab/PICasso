@@ -1,12 +1,15 @@
-"""N1 three-arm ablation campaign runner (Paper A).
+"""N1 three-arm ablation campaign runner (Paper A / PIC-Bench-48).
 
-Arms A/B/C share budgets from ``spa_protocol``. Repair feedback differs by arm;
-the **final** evaluation oracle is ``ExactCritic.review`` for all arms.
+Arms A/B/C share budgets from ``spa_protocol``. Repair feedback differs by arm.
+
+Final headline ``pass``:
+  - Arm A: ``ExactCritic.review(store).ok``
+  - Arms B/C: ExactCritic **and** ``evaluate_task_contract(store, contract)``
 
 CLI::
 
     python -m gd_picasso.pcg.run_n1_campaign --dry-run --mock
-    python -m gd_picasso.pcg.run_n1_campaign --dry-run   # live API if keys set
+    python -m gd_picasso.pcg.run_n1_campaign --campaign --picbench48 --allow-dirty
 
 Stop before pinning ``N1_LLM_MODEL_ID``; ``--campaign`` requires a pin.
 """
@@ -30,9 +33,14 @@ from gd_picasso.agents.n1_arm_c_mutation_prompt import (
     arm_c_user_prompt,
 )
 from gd_picasso.agents.schematic_agent import SchematicAgent
+from gd_picasso.bench.contracts import (
+    contract_failures,
+    evaluate_task_contract,
+    get_task_contract,
+)
 from gd_picasso.pcg.bridge import from_gf_yaml
-from gd_picasso.pcg.n1_problems import problems_by_id
-from gd_picasso.pcg.n1_stats import format_ci, no_win_claim, summarize_arm_passes, wilson_ci
+from gd_picasso.pcg.n1_problems import load_problems
+from gd_picasso.pcg.n1_stats import format_ci, no_win_claim, summarize_arm_passes
 from gd_picasso.pcg.spa_protocol import (
     N1_ABLATION_ARMS,
     N1_DRY_RUN_TASK_IDS,
@@ -51,6 +59,78 @@ from gd_picasso.pcg.store import PCGMutationError, PCGStore
 from gd_picasso.pilot.base_pilot_generator import BasePilotGenerator
 
 _REPO_ROOT = Path(__file__).resolve().parents[2]
+
+# Full PIC-Bench-48 slot list (46 GF + 2 unrealizable).
+PICBENCH48_TASK_IDS: Tuple[int, ...] = tuple(range(1, 49))
+
+
+def resolve_problems(task_ids: Sequence[int]) -> Dict[int, Dict]:
+    """Load NL problems; synthesize text for formal stress / unrealizable slots."""
+    from gd_picasso.pcg.build_formal_benchmarks import (
+        UNREALIZABLE_SPECS,
+        picbench_catalog,
+    )
+
+    catalog = {t.task_id: t for t in picbench_catalog()}
+    loaded = load_problems()
+    by_id: Dict[int, Dict] = {}
+    for p in loaded:
+        try:
+            by_id[int(p["id"])] = p
+        except (TypeError, ValueError):
+            continue
+    out: Dict[int, Dict] = {}
+    missing: List[int] = []
+    for tid in task_ids:
+        if tid in by_id:
+            out[tid] = by_id[tid]
+            continue
+        task = catalog.get(tid)
+        name = task.name if task else f"task {tid}"
+        if tid in UNREALIZABLE_SPECS:
+            _n, spec = UNREALIZABLE_SPECS[tid]
+            spec_txt = "; ".join(spec)
+            desc = (
+                f"{name}. Formal stress: realize the optical transfer "
+                f"{spec_txt}. "
+                "If the spec is physically unrealizable (gain > 1), refuse."
+            )
+        else:
+            desc = (
+                f"Design a photonic integrated circuit for: {name}. "
+                "Emit a connected, ExactCritic-legal netlist with the "
+                "topology implied by the task name."
+            )
+        out[tid] = {"id": str(tid), "name": name, "description": desc}
+        missing.append(tid)
+    if missing:
+        print(f"resolve_problems: synthesized statements for tasks {missing}")
+    return out
+
+
+def _contract_feedback(store: PCGStore, task_id: int) -> List[str]:
+    contract = get_task_contract(task_id)
+    if contract is None:
+        return [f"no TaskContract for task {task_id} (unrealizable or unknown)"]
+    if evaluate_task_contract(store, contract):
+        return []
+    return contract_failures(store, contract)
+
+
+def _score_store(store: PCGStore, task_id: int, arm: str) -> Tuple[bool, bool, bool, List[str]]:
+    """Return (pass_headline, exact_ok, contract_ok, problems)."""
+    critique = ExactCritic().review(store)
+    exact_ok = bool(critique.ok)
+    problems = list(critique.problems)
+    c_problems = _contract_feedback(store, task_id)
+    contract_ok = len(c_problems) == 0
+    if not contract_ok:
+        problems = problems + [f"task_contract: {p}" for p in c_problems]
+    if arm in ("B_yaml_exact_critic", "C_typed_exact_critic"):
+        headline = exact_ok and contract_ok
+    else:
+        headline = exact_ok
+    return headline, exact_ok, contract_ok, problems
 
 
 # ---------------------------------------------------------------------------
@@ -158,6 +238,8 @@ _MODEL_PRICE_PER_MTOT: Dict[str, Tuple[float, float]] = {
     "claude-3-5-haiku-latest": (0.80, 4.00),
     "claude-haiku-4-5-20251001": (1.00, 5.00),
     "claude-sonnet-4-20250514": (3.00, 15.00),
+    "claude-sonnet-4-5-20250929": (3.00, 15.00),
+    "claude-sonnet-5-5": (2.00, 10.00),
     "gpt-4o-mini": (0.15, 0.60),
     "gpt-4o": (2.50, 10.00),
 }
@@ -255,7 +337,7 @@ class AsyncAnthropicLLM:
     ) -> Tuple[str, str, int]:
         from anthropic import AsyncAnthropic
 
-        client = AsyncAnthropic(api_key=self.api_key)
+        client = AsyncAnthropic(api_key=self.api_key, timeout=180.0)
         delay = 1.0
         last_err: Optional[Exception] = None
         for attempt in range(6):
@@ -287,7 +369,18 @@ class AsyncAnthropicLLM:
             except Exception as e:  # noqa: BLE001
                 last_err = e
                 msg = str(e).lower()
-                if "429" in msg or "rate" in msg or "timeout" in msg or "529" in msg or "overloaded" in msg:
+                name = type(e).__name__.lower()
+                retryable = (
+                    "429" in msg
+                    or "rate" in msg
+                    or "timeout" in msg
+                    or "529" in msg
+                    or "overloaded" in msg
+                    or "connection" in msg
+                    or "connect" in name
+                    or "apiConnectionerror" in name
+                )
+                if retryable:
                     await asyncio.sleep(delay)
                     delay = min(60.0, delay * 2)
                     continue
@@ -449,7 +542,7 @@ class SampleResult:
     task_id: int
     arm: str
     sample: int
-    pass_: bool  # aliases exact_critic_pass (headline)
+    pass_: bool  # headline: ExactCritic (A) or ExactCritic∧TaskContract (B/C)
     pilot_pass: bool
     exact_critic_pass: bool
     error_class: str
@@ -458,6 +551,7 @@ class SampleResult:
     model_id: str
     tip_sha: str
     problems: List[str] = field(default_factory=list)
+    contract_pass: bool = False
 
     def to_csv_row(self) -> Dict[str, Any]:
         return {
@@ -467,6 +561,7 @@ class SampleResult:
             "pass": int(self.pass_),
             "pilot_pass": int(self.pilot_pass),
             "exact_critic_pass": int(self.exact_critic_pass),
+            "contract_pass": int(self.contract_pass),
             "error_class": self.error_class,
             "repair_rounds": self.repair_rounds,
             "tokens": self.tokens,
@@ -596,11 +691,12 @@ async def _run_arm_sample_inner(
                 critique = critic.review(store)
                 critique_problems = list(critique.problems)
                 break
-            else:  # Arm B — ExactCritic feedback for repair
-                critique = critic.review(store)
-                critique_problems = list(critique.problems)
+            else:  # Arm B — ExactCritic + TaskContract feedback for repair
+                _headline, _exact, _contract, critique_problems = _score_store(
+                    store, task_id, arm
+                )
                 pilot_ok = True
-                if not critique.ok and round_i < N1_MAX_REPAIR_ROUNDS:
+                if not _headline and round_i < N1_MAX_REPAIR_ROUNDS:
                     user = build_repair_user(
                         problem_text=marked,
                         previous_attempt=yaml_text,
@@ -623,6 +719,7 @@ async def _run_arm_sample_inner(
                         pass_=False,
                         pilot_pass=False,
                         exact_critic_pass=False,
+                        contract_pass=False,
                         error_class=N1_UNPARSEABLE_YAML,
                         repair_rounds=rounds_used,
                         tokens=total_tokens,
@@ -651,6 +748,7 @@ async def _run_arm_sample_inner(
                         pass_=False,
                         pilot_pass=False,
                         exact_critic_pass=False,
+                        contract_pass=False,
                         error_class=map_error_class([feedback]),
                         repair_rounds=rounds_used,
                         tokens=total_tokens,
@@ -663,11 +761,12 @@ async def _run_arm_sample_inner(
                 )
                 continue
 
-            critique = critic.review(store)
-            critique_problems = list(critique.problems)
+            _headline, _exact, _contract, critique_problems = _score_store(
+                store, task_id, arm
+            )
             final_arm_c_text = text
             pilot_ok = True
-            if not critique.ok and round_i < N1_MAX_REPAIR_ROUNDS:
+            if not _headline and round_i < N1_MAX_REPAIR_ROUNDS:
                 user = arm_c_user_prompt(
                     marked,
                     feedback="\n".join(critique_problems),
@@ -676,29 +775,34 @@ async def _run_arm_sample_inner(
                 continue
             break
 
-    # Final ExactCritic grade for Arms A/B from last YAML
+    # Final grade from last successful parse
     if arm in ("A_yaml_pilot", "B_yaml_exact_critic"):
         assert final_yaml is not None
         store = yaml_to_store(final_yaml)
-        critique = critic.review(store)
-        critique_problems = list(critique.problems)
         if arm == "A_yaml_pilot":
             pilot_ok, _ = pilot_validate(final_yaml)
         else:
             pilot_ok = True
     elif arm == "C_typed_exact_critic" and final_arm_c_text is not None:
-        # Re-apply final payload for a clean grade (store already reviewed)
-        pass
+        # Re-apply final payload for a clean grade
+        mutations, ports = extract_arm_c_payload(final_arm_c_text)
+        store = PCGStore(default_agent="N1_C")
+        SchematicAgent().commit_mutations(store, mutations)
+        if ports:
+            store.set_exported_ports(ports, agent="N1_C")
 
-    exact_ok = len(critique_problems) == 0
-    err = "" if exact_ok else map_error_class(critique_problems)
+    headline, exact_ok, contract_ok, critique_problems = _score_store(
+        store, task_id, arm
+    )
+    err = "" if headline else map_error_class(critique_problems)
     return SampleResult(
         task_id=task_id,
         arm=arm,
         sample=sample,
-        pass_=exact_ok,
+        pass_=headline,
         pilot_pass=pilot_ok,
         exact_critic_pass=exact_ok,
+        contract_pass=contract_ok,
         error_class=err,
         repair_rounds=rounds_used,
         tokens=total_tokens,
@@ -765,6 +869,7 @@ async def run_campaign(
     require_model_pin: bool = False,
     concurrency: int = 4,
     dry_run: bool = False,
+    results_csv_name: str = "n1_results.csv",
 ) -> List[SampleResult]:
     if require_model_pin and not n1_campaign_ready():
         raise RuntimeError(
@@ -775,7 +880,7 @@ async def run_campaign(
         prompts_untouched_after_dry_run=True if dry_run else None,
     )
     tip_sha = manifest["tip_commit_sha"]
-    problems = problems_by_id(task_ids)
+    problems = resolve_problems(task_ids)
 
     ckpt = out_dir / ("n1_dryrun.jsonl" if dry_run else "n1_campaign.jsonl")
     done = load_checkpoint(ckpt)
@@ -797,6 +902,7 @@ async def run_campaign(
                             pass_=bool(row["pass"]),
                             pilot_pass=bool(row["pilot_pass"]),
                             exact_critic_pass=bool(row["exact_critic_pass"]),
+                            contract_pass=bool(row.get("contract_pass", False)),
                             error_class=row.get("error_class", ""),
                             repair_rounds=int(row.get("repair_rounds", 0)),
                             tokens=int(row.get("tokens", 0)),
@@ -813,27 +919,60 @@ async def run_campaign(
                 pending.append((tid, arm, s))
 
     async def _one(tid: int, arm: str, s: int) -> SampleResult:
-        r = await run_arm_sample(
-            arm=arm,
-            task_id=tid,
-            sample=s,
-            problem_text=problems[tid]["description"],
-            llm=llm,
-            tip_sha=tip_sha,
-            require_model_pin=require_model_pin,
-            sem=sem,
-        )
+        try:
+            r = await run_arm_sample(
+                arm=arm,
+                task_id=tid,
+                sample=s,
+                problem_text=problems[tid]["description"],
+                llm=llm,
+                tip_sha=tip_sha,
+                require_model_pin=require_model_pin,
+                sem=sem,
+            )
+        except Exception as e:  # noqa: BLE001 — never abort whole campaign
+            r = SampleResult(
+                task_id=tid,
+                arm=arm,
+                sample=s,
+                pass_=False,
+                pilot_pass=False,
+                exact_critic_pass=False,
+                contract_pass=False,
+                error_class="wrong_connectivity",
+                repair_rounds=0,
+                tokens=0,
+                model_id=getattr(llm, "model_id", ""),
+                tip_sha=tip_sha,
+                problems=[f"uncaught:{type(e).__name__}: {e}"],
+            )
         append_checkpoint(ckpt, r)
         return r
 
     if pending:
-        batch = await asyncio.gather(
-            *[_one(tid, arm, s) for tid, arm, s in pending]
-        )
-        results.extend(batch)
+        # Chunked gather so a hung API call cannot stall the entire campaign;
+        # checkpoint resume skips completed (task, arm, sample) keys.
+        chunk_size = max(concurrency * 4, 16)
+        for i in range(0, len(pending), chunk_size):
+            chunk = pending[i : i + chunk_size]
+            print(
+                f"[n1] launching chunk {i // chunk_size + 1}/"
+                f"{(len(pending) + chunk_size - 1) // chunk_size} "
+                f"({len(chunk)} samples)",
+                flush=True,
+            )
+            batch = await asyncio.gather(
+                *[_one(tid, arm, s) for tid, arm, s in chunk],
+                return_exceptions=False,
+            )
+            results.extend(batch)
 
     rows = [r.to_csv_row() for r in results]
-    write_csv(out_dir / ("n1_dryrun.csv" if dry_run else "n1_results.csv"), rows)
+    csv_name = "n1_dryrun.csv" if dry_run else results_csv_name
+    write_csv(out_dir / csv_name, rows)
+    # Always mirror PIC-Bench-48 headline name when requested.
+    if results_csv_name == "n1_results_picbench48.csv" and not dry_run:
+        write_csv(out_dir / "n1_results_picbench48.csv", rows)
     (out_dir / "n1_manifest.json").write_text(
         json.dumps(manifest, indent=2), encoding="utf-8"
     )
@@ -842,15 +981,20 @@ async def run_campaign(
 
 
 def _print_summary(results: Sequence[SampleResult]) -> None:
-    print("=== N1 ExactCritic oracle (headline) ===")
+    print("=== N1 headline pass (A: ExactCritic; B/C: ExactCritic∧TaskContract) ===")
     cis = []
     for arm in N1_ABLATION_ARMS:
         arm_res = [r for r in results if r.arm == arm]
-        ci = summarize_arm_passes(r.exact_critic_pass for r in arm_res)
+        ci = summarize_arm_passes(r.pass_ for r in arm_res)
         cis.append(ci)
         print(f"  {arm}: {format_ci(ci)}")
     if no_win_claim(cis):
         print("  (Wilson CIs overlap → no win claim)")
+    print("=== ExactCritic-only (diagnostic) ===")
+    for arm in N1_ABLATION_ARMS:
+        arm_res = [r for r in results if r.arm == arm]
+        ci = summarize_arm_passes(r.exact_critic_pass for r in arm_res)
+        print(f"  {arm}: {format_ci(ci)}")
     print("=== N1 pilot_pass (Arm A baseline signal) ===")
     for arm in N1_ABLATION_ARMS:
         arm_res = [r for r in results if r.arm == arm]
@@ -861,7 +1005,12 @@ def _print_summary(results: Sequence[SampleResult]) -> None:
 def main(argv: Optional[Sequence[str]] = None) -> int:
     p = argparse.ArgumentParser(description="N1 three-arm ablation campaign")
     p.add_argument("--dry-run", action="store_true", help="Tasks 34,36 only; allow unpinned model")
-    p.add_argument("--campaign", action="store_true", help="Full N1_TASK_SUBSET; requires model pin")
+    p.add_argument("--campaign", action="store_true", help="Full campaign; requires model pin")
+    p.add_argument(
+        "--picbench48",
+        action="store_true",
+        help="Use all 48 PIC-Bench tasks; write n1_results_picbench48.csv",
+    )
     p.add_argument("--mock", action="store_true", help="Use MockLLM (no API)")
     p.add_argument("--concurrency", type=int, default=4)
     p.add_argument(
@@ -888,7 +1037,15 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     if not args.campaign and not args.dry_run:
         args.dry_run = True  # safe default
 
-    task_ids = list(N1_DRY_RUN_TASK_IDS) if args.dry_run else list(N1_TASK_SUBSET)
+    if args.dry_run:
+        task_ids = list(N1_DRY_RUN_TASK_IDS)
+        results_csv = "n1_dryrun.csv"
+    elif args.picbench48:
+        task_ids = list(PICBENCH48_TASK_IDS)
+        results_csv = "n1_results_picbench48.csv"
+    else:
+        task_ids = list(N1_TASK_SUBSET)
+        results_csv = "n1_results.csv"
     samples = args.samples if args.samples is not None else (
         1 if args.dry_run else N1_SAMPLES_PER_TASK
     )
@@ -922,6 +1079,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             require_model_pin=bool(args.campaign),
             concurrency=args.concurrency,
             dry_run=bool(args.dry_run),
+            results_csv_name=results_csv,
         )
     )
     usage = getattr(llm, "usage", None)

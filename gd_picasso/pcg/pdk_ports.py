@@ -27,6 +27,15 @@ COMPONENT_PORT_MAP: Dict[str, List[str]] = {
     "grating_coupler_elliptical": ["o1", "o2"],
     "crossing": ["o1", "o2", "o3", "o4"],
     "terminator": ["o1"],
+    # SiEPIC EBeam cells (ubcpdk 3.3.2 optical ports) used by PIC-Bench
+    # multi-PDK stress. Widths live on the instance ports, not in this map.
+    "ebeam_y_adiabatic": ["o1", "o2", "o3"],
+    "ebeam_YBranch_895": ["o1", "o2", "o3"],
+    "ebeam_DC_te895": ["o1", "o2", "o3", "o4"],
+    "ebeam_gc_te895": ["o1"],
+    "crossing_horizontal": ["o1", "o2", "o3", "o4"],
+    "ANT_MMI_1x2_te1550_3dB_BB": ["o1", "o2", "o3"],
+    "ebeam_Polarizer_TM_1550_UQAM": ["o1", "o2"],
 }
 
 

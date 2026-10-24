@@ -1,0 +1,3206 @@
+# PIC-Bench-48 Task-14: Spanke 8x8
+# authentic spanke_split_gate_combine builder (N=8, nodes=720, io=16); de-aliased from Clements proxies. Serialized by build_formal_benchmarks via to_gf_yaml.
+instances:
+  cm0_c0_0:
+    component: mmi1x2
+    settings: {}
+  cm0_c1_0:
+    component: mmi1x2
+    settings: {}
+  cm0_c1_1:
+    component: mmi1x2
+    settings: {}
+  cm0_c2_0:
+    component: mmi1x2
+    settings: {}
+  cm0_c2_1:
+    component: mmi1x2
+    settings: {}
+  cm0_c2_2:
+    component: mmi1x2
+    settings: {}
+  cm0_c2_3:
+    component: mmi1x2
+    settings: {}
+  cm1_c0_0:
+    component: mmi1x2
+    settings: {}
+  cm1_c1_0:
+    component: mmi1x2
+    settings: {}
+  cm1_c1_1:
+    component: mmi1x2
+    settings: {}
+  cm1_c2_0:
+    component: mmi1x2
+    settings: {}
+  cm1_c2_1:
+    component: mmi1x2
+    settings: {}
+  cm1_c2_2:
+    component: mmi1x2
+    settings: {}
+  cm1_c2_3:
+    component: mmi1x2
+    settings: {}
+  cm2_c0_0:
+    component: mmi1x2
+    settings: {}
+  cm2_c1_0:
+    component: mmi1x2
+    settings: {}
+  cm2_c1_1:
+    component: mmi1x2
+    settings: {}
+  cm2_c2_0:
+    component: mmi1x2
+    settings: {}
+  cm2_c2_1:
+    component: mmi1x2
+    settings: {}
+  cm2_c2_2:
+    component: mmi1x2
+    settings: {}
+  cm2_c2_3:
+    component: mmi1x2
+    settings: {}
+  cm3_c0_0:
+    component: mmi1x2
+    settings: {}
+  cm3_c1_0:
+    component: mmi1x2
+    settings: {}
+  cm3_c1_1:
+    component: mmi1x2
+    settings: {}
+  cm3_c2_0:
+    component: mmi1x2
+    settings: {}
+  cm3_c2_1:
+    component: mmi1x2
+    settings: {}
+  cm3_c2_2:
+    component: mmi1x2
+    settings: {}
+  cm3_c2_3:
+    component: mmi1x2
+    settings: {}
+  cm4_c0_0:
+    component: mmi1x2
+    settings: {}
+  cm4_c1_0:
+    component: mmi1x2
+    settings: {}
+  cm4_c1_1:
+    component: mmi1x2
+    settings: {}
+  cm4_c2_0:
+    component: mmi1x2
+    settings: {}
+  cm4_c2_1:
+    component: mmi1x2
+    settings: {}
+  cm4_c2_2:
+    component: mmi1x2
+    settings: {}
+  cm4_c2_3:
+    component: mmi1x2
+    settings: {}
+  cm5_c0_0:
+    component: mmi1x2
+    settings: {}
+  cm5_c1_0:
+    component: mmi1x2
+    settings: {}
+  cm5_c1_1:
+    component: mmi1x2
+    settings: {}
+  cm5_c2_0:
+    component: mmi1x2
+    settings: {}
+  cm5_c2_1:
+    component: mmi1x2
+    settings: {}
+  cm5_c2_2:
+    component: mmi1x2
+    settings: {}
+  cm5_c2_3:
+    component: mmi1x2
+    settings: {}
+  cm6_c0_0:
+    component: mmi1x2
+    settings: {}
+  cm6_c1_0:
+    component: mmi1x2
+    settings: {}
+  cm6_c1_1:
+    component: mmi1x2
+    settings: {}
+  cm6_c2_0:
+    component: mmi1x2
+    settings: {}
+  cm6_c2_1:
+    component: mmi1x2
+    settings: {}
+  cm6_c2_2:
+    component: mmi1x2
+    settings: {}
+  cm6_c2_3:
+    component: mmi1x2
+    settings: {}
+  cm7_c0_0:
+    component: mmi1x2
+    settings: {}
+  cm7_c1_0:
+    component: mmi1x2
+    settings: {}
+  cm7_c1_1:
+    component: mmi1x2
+    settings: {}
+  cm7_c2_0:
+    component: mmi1x2
+    settings: {}
+  cm7_c2_1:
+    component: mmi1x2
+    settings: {}
+  cm7_c2_2:
+    component: mmi1x2
+    settings: {}
+  cm7_c2_3:
+    component: mmi1x2
+    settings: {}
+  ps_0_1:
+    component: straight_heater_metal
+    settings:
+      length: 50.0
+  ps_0_2:
+    component: straight_heater_metal
+    settings:
+      length: 50.0
+  ps_0_3:
+    component: straight_heater_metal
+    settings:
+      length: 50.0
+  ps_0_4:
+    component: straight_heater_metal
+    settings:
+      length: 50.0
+  ps_0_5:
+    component: straight_heater_metal
+    settings:
+      length: 50.0
+  ps_0_6:
+    component: straight_heater_metal
+    settings:
+      length: 50.0
+  ps_0_7:
+    component: straight_heater_metal
+    settings:
+      length: 50.0
+  ps_1_1:
+    component: straight_heater_metal
+    settings:
+      length: 50.0
+  ps_1_2:
+    component: straight_heater_metal
+    settings:
+      length: 50.0
+  ps_1_3:
+    component: straight_heater_metal
+    settings:
+      length: 50.0
+  ps_1_4:
+    component: straight_heater_metal
+    settings:
+      length: 50.0
+  ps_1_5:
+    component: straight_heater_metal
+    settings:
+      length: 50.0
+  ps_1_6:
+    component: straight_heater_metal
+    settings:
+      length: 50.0
+  ps_1_7:
+    component: straight_heater_metal
+    settings:
+      length: 50.0
+  ps_2_1:
+    component: straight_heater_metal
+    settings:
+      length: 50.0
+  ps_2_2:
+    component: straight_heater_metal
+    settings:
+      length: 50.0
+  ps_2_3:
+    component: straight_heater_metal
+    settings:
+      length: 50.0
+  ps_2_4:
+    component: straight_heater_metal
+    settings:
+      length: 50.0
+  ps_2_5:
+    component: straight_heater_metal
+    settings:
+      length: 50.0
+  ps_2_6:
+    component: straight_heater_metal
+    settings:
+      length: 50.0
+  ps_2_7:
+    component: straight_heater_metal
+    settings:
+      length: 50.0
+  ps_3_1:
+    component: straight_heater_metal
+    settings:
+      length: 50.0
+  ps_3_2:
+    component: straight_heater_metal
+    settings:
+      length: 50.0
+  ps_3_3:
+    component: straight_heater_metal
+    settings:
+      length: 50.0
+  ps_3_4:
+    component: straight_heater_metal
+    settings:
+      length: 50.0
+  ps_3_5:
+    component: straight_heater_metal
+    settings:
+      length: 50.0
+  ps_3_6:
+    component: straight_heater_metal
+    settings:
+      length: 50.0
+  ps_3_7:
+    component: straight_heater_metal
+    settings:
+      length: 50.0
+  ps_4_1:
+    component: straight_heater_metal
+    settings:
+      length: 50.0
+  ps_4_2:
+    component: straight_heater_metal
+    settings:
+      length: 50.0
+  ps_4_3:
+    component: straight_heater_metal
+    settings:
+      length: 50.0
+  ps_4_4:
+    component: straight_heater_metal
+    settings:
+      length: 50.0
+  ps_4_5:
+    component: straight_heater_metal
+    settings:
+      length: 50.0
+  ps_4_6:
+    component: straight_heater_metal
+    settings:
+      length: 50.0
+  ps_4_7:
+    component: straight_heater_metal
+    settings:
+      length: 50.0
+  ps_5_1:
+    component: straight_heater_metal
+    settings:
+      length: 50.0
+  ps_5_2:
+    component: straight_heater_metal
+    settings:
+      length: 50.0
+  ps_5_3:
+    component: straight_heater_metal
+    settings:
+      length: 50.0
+  ps_5_4:
+    component: straight_heater_metal
+    settings:
+      length: 50.0
+  ps_5_5:
+    component: straight_heater_metal
+    settings:
+      length: 50.0
+  ps_5_6:
+    component: straight_heater_metal
+    settings:
+      length: 50.0
+  ps_5_7:
+    component: straight_heater_metal
+    settings:
+      length: 50.0
+  ps_6_1:
+    component: straight_heater_metal
+    settings:
+      length: 50.0
+  ps_6_2:
+    component: straight_heater_metal
+    settings:
+      length: 50.0
+  ps_6_3:
+    component: straight_heater_metal
+    settings:
+      length: 50.0
+  ps_6_4:
+    component: straight_heater_metal
+    settings:
+      length: 50.0
+  ps_6_5:
+    component: straight_heater_metal
+    settings:
+      length: 50.0
+  ps_6_6:
+    component: straight_heater_metal
+    settings:
+      length: 50.0
+  ps_6_7:
+    component: straight_heater_metal
+    settings:
+      length: 50.0
+  ps_7_1:
+    component: straight_heater_metal
+    settings:
+      length: 50.0
+  ps_7_2:
+    component: straight_heater_metal
+    settings:
+      length: 50.0
+  ps_7_3:
+    component: straight_heater_metal
+    settings:
+      length: 50.0
+  ps_7_4:
+    component: straight_heater_metal
+    settings:
+      length: 50.0
+  ps_7_5:
+    component: straight_heater_metal
+    settings:
+      length: 50.0
+  ps_7_6:
+    component: straight_heater_metal
+    settings:
+      length: 50.0
+  ps_7_7:
+    component: straight_heater_metal
+    settings:
+      length: 50.0
+  sp0_s0:
+    component: mmi1x2
+    settings: {}
+  sp0_s1_0:
+    component: mmi1x2
+    settings: {}
+  sp0_s1_1:
+    component: mmi1x2
+    settings: {}
+  sp0_s2_0:
+    component: mmi1x2
+    settings: {}
+  sp0_s2_1:
+    component: mmi1x2
+    settings: {}
+  sp0_s2_2:
+    component: mmi1x2
+    settings: {}
+  sp0_s2_3:
+    component: mmi1x2
+    settings: {}
+  sp1_s0:
+    component: mmi1x2
+    settings: {}
+  sp1_s1_0:
+    component: mmi1x2
+    settings: {}
+  sp1_s1_1:
+    component: mmi1x2
+    settings: {}
+  sp1_s2_0:
+    component: mmi1x2
+    settings: {}
+  sp1_s2_1:
+    component: mmi1x2
+    settings: {}
+  sp1_s2_2:
+    component: mmi1x2
+    settings: {}
+  sp1_s2_3:
+    component: mmi1x2
+    settings: {}
+  sp2_s0:
+    component: mmi1x2
+    settings: {}
+  sp2_s1_0:
+    component: mmi1x2
+    settings: {}
+  sp2_s1_1:
+    component: mmi1x2
+    settings: {}
+  sp2_s2_0:
+    component: mmi1x2
+    settings: {}
+  sp2_s2_1:
+    component: mmi1x2
+    settings: {}
+  sp2_s2_2:
+    component: mmi1x2
+    settings: {}
+  sp2_s2_3:
+    component: mmi1x2
+    settings: {}
+  sp3_s0:
+    component: mmi1x2
+    settings: {}
+  sp3_s1_0:
+    component: mmi1x2
+    settings: {}
+  sp3_s1_1:
+    component: mmi1x2
+    settings: {}
+  sp3_s2_0:
+    component: mmi1x2
+    settings: {}
+  sp3_s2_1:
+    component: mmi1x2
+    settings: {}
+  sp3_s2_2:
+    component: mmi1x2
+    settings: {}
+  sp3_s2_3:
+    component: mmi1x2
+    settings: {}
+  sp4_s0:
+    component: mmi1x2
+    settings: {}
+  sp4_s1_0:
+    component: mmi1x2
+    settings: {}
+  sp4_s1_1:
+    component: mmi1x2
+    settings: {}
+  sp4_s2_0:
+    component: mmi1x2
+    settings: {}
+  sp4_s2_1:
+    component: mmi1x2
+    settings: {}
+  sp4_s2_2:
+    component: mmi1x2
+    settings: {}
+  sp4_s2_3:
+    component: mmi1x2
+    settings: {}
+  sp5_s0:
+    component: mmi1x2
+    settings: {}
+  sp5_s1_0:
+    component: mmi1x2
+    settings: {}
+  sp5_s1_1:
+    component: mmi1x2
+    settings: {}
+  sp5_s2_0:
+    component: mmi1x2
+    settings: {}
+  sp5_s2_1:
+    component: mmi1x2
+    settings: {}
+  sp5_s2_2:
+    component: mmi1x2
+    settings: {}
+  sp5_s2_3:
+    component: mmi1x2
+    settings: {}
+  sp6_s0:
+    component: mmi1x2
+    settings: {}
+  sp6_s1_0:
+    component: mmi1x2
+    settings: {}
+  sp6_s1_1:
+    component: mmi1x2
+    settings: {}
+  sp6_s2_0:
+    component: mmi1x2
+    settings: {}
+  sp6_s2_1:
+    component: mmi1x2
+    settings: {}
+  sp6_s2_2:
+    component: mmi1x2
+    settings: {}
+  sp6_s2_3:
+    component: mmi1x2
+    settings: {}
+  sp7_s0:
+    component: mmi1x2
+    settings: {}
+  sp7_s1_0:
+    component: mmi1x2
+    settings: {}
+  sp7_s1_1:
+    component: mmi1x2
+    settings: {}
+  sp7_s2_0:
+    component: mmi1x2
+    settings: {}
+  sp7_s2_1:
+    component: mmi1x2
+    settings: {}
+  sp7_s2_2:
+    component: mmi1x2
+    settings: {}
+  sp7_s2_3:
+    component: mmi1x2
+    settings: {}
+  sw0_0_comb:
+    component: mmi2x2
+    settings: {}
+  sw0_0_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw0_0_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw0_0_split:
+    component: mmi2x2
+    settings: {}
+  sw0_1_comb:
+    component: mmi2x2
+    settings: {}
+  sw0_1_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw0_1_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw0_1_split:
+    component: mmi2x2
+    settings: {}
+  sw0_2_comb:
+    component: mmi2x2
+    settings: {}
+  sw0_2_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw0_2_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw0_2_split:
+    component: mmi2x2
+    settings: {}
+  sw0_3_comb:
+    component: mmi2x2
+    settings: {}
+  sw0_3_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw0_3_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw0_3_split:
+    component: mmi2x2
+    settings: {}
+  sw0_4_comb:
+    component: mmi2x2
+    settings: {}
+  sw0_4_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw0_4_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw0_4_split:
+    component: mmi2x2
+    settings: {}
+  sw0_5_comb:
+    component: mmi2x2
+    settings: {}
+  sw0_5_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw0_5_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw0_5_split:
+    component: mmi2x2
+    settings: {}
+  sw0_6_comb:
+    component: mmi2x2
+    settings: {}
+  sw0_6_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw0_6_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw0_6_split:
+    component: mmi2x2
+    settings: {}
+  sw0_7_comb:
+    component: mmi2x2
+    settings: {}
+  sw0_7_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw0_7_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw0_7_split:
+    component: mmi2x2
+    settings: {}
+  sw1_0_comb:
+    component: mmi2x2
+    settings: {}
+  sw1_0_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw1_0_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw1_0_split:
+    component: mmi2x2
+    settings: {}
+  sw1_1_comb:
+    component: mmi2x2
+    settings: {}
+  sw1_1_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw1_1_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw1_1_split:
+    component: mmi2x2
+    settings: {}
+  sw1_2_comb:
+    component: mmi2x2
+    settings: {}
+  sw1_2_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw1_2_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw1_2_split:
+    component: mmi2x2
+    settings: {}
+  sw1_3_comb:
+    component: mmi2x2
+    settings: {}
+  sw1_3_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw1_3_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw1_3_split:
+    component: mmi2x2
+    settings: {}
+  sw1_4_comb:
+    component: mmi2x2
+    settings: {}
+  sw1_4_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw1_4_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw1_4_split:
+    component: mmi2x2
+    settings: {}
+  sw1_5_comb:
+    component: mmi2x2
+    settings: {}
+  sw1_5_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw1_5_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw1_5_split:
+    component: mmi2x2
+    settings: {}
+  sw1_6_comb:
+    component: mmi2x2
+    settings: {}
+  sw1_6_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw1_6_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw1_6_split:
+    component: mmi2x2
+    settings: {}
+  sw1_7_comb:
+    component: mmi2x2
+    settings: {}
+  sw1_7_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw1_7_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw1_7_split:
+    component: mmi2x2
+    settings: {}
+  sw2_0_comb:
+    component: mmi2x2
+    settings: {}
+  sw2_0_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw2_0_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw2_0_split:
+    component: mmi2x2
+    settings: {}
+  sw2_1_comb:
+    component: mmi2x2
+    settings: {}
+  sw2_1_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw2_1_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw2_1_split:
+    component: mmi2x2
+    settings: {}
+  sw2_2_comb:
+    component: mmi2x2
+    settings: {}
+  sw2_2_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw2_2_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw2_2_split:
+    component: mmi2x2
+    settings: {}
+  sw2_3_comb:
+    component: mmi2x2
+    settings: {}
+  sw2_3_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw2_3_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw2_3_split:
+    component: mmi2x2
+    settings: {}
+  sw2_4_comb:
+    component: mmi2x2
+    settings: {}
+  sw2_4_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw2_4_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw2_4_split:
+    component: mmi2x2
+    settings: {}
+  sw2_5_comb:
+    component: mmi2x2
+    settings: {}
+  sw2_5_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw2_5_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw2_5_split:
+    component: mmi2x2
+    settings: {}
+  sw2_6_comb:
+    component: mmi2x2
+    settings: {}
+  sw2_6_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw2_6_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw2_6_split:
+    component: mmi2x2
+    settings: {}
+  sw2_7_comb:
+    component: mmi2x2
+    settings: {}
+  sw2_7_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw2_7_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw2_7_split:
+    component: mmi2x2
+    settings: {}
+  sw3_0_comb:
+    component: mmi2x2
+    settings: {}
+  sw3_0_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw3_0_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw3_0_split:
+    component: mmi2x2
+    settings: {}
+  sw3_1_comb:
+    component: mmi2x2
+    settings: {}
+  sw3_1_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw3_1_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw3_1_split:
+    component: mmi2x2
+    settings: {}
+  sw3_2_comb:
+    component: mmi2x2
+    settings: {}
+  sw3_2_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw3_2_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw3_2_split:
+    component: mmi2x2
+    settings: {}
+  sw3_3_comb:
+    component: mmi2x2
+    settings: {}
+  sw3_3_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw3_3_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw3_3_split:
+    component: mmi2x2
+    settings: {}
+  sw3_4_comb:
+    component: mmi2x2
+    settings: {}
+  sw3_4_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw3_4_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw3_4_split:
+    component: mmi2x2
+    settings: {}
+  sw3_5_comb:
+    component: mmi2x2
+    settings: {}
+  sw3_5_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw3_5_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw3_5_split:
+    component: mmi2x2
+    settings: {}
+  sw3_6_comb:
+    component: mmi2x2
+    settings: {}
+  sw3_6_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw3_6_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw3_6_split:
+    component: mmi2x2
+    settings: {}
+  sw3_7_comb:
+    component: mmi2x2
+    settings: {}
+  sw3_7_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw3_7_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw3_7_split:
+    component: mmi2x2
+    settings: {}
+  sw4_0_comb:
+    component: mmi2x2
+    settings: {}
+  sw4_0_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw4_0_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw4_0_split:
+    component: mmi2x2
+    settings: {}
+  sw4_1_comb:
+    component: mmi2x2
+    settings: {}
+  sw4_1_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw4_1_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw4_1_split:
+    component: mmi2x2
+    settings: {}
+  sw4_2_comb:
+    component: mmi2x2
+    settings: {}
+  sw4_2_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw4_2_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw4_2_split:
+    component: mmi2x2
+    settings: {}
+  sw4_3_comb:
+    component: mmi2x2
+    settings: {}
+  sw4_3_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw4_3_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw4_3_split:
+    component: mmi2x2
+    settings: {}
+  sw4_4_comb:
+    component: mmi2x2
+    settings: {}
+  sw4_4_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw4_4_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw4_4_split:
+    component: mmi2x2
+    settings: {}
+  sw4_5_comb:
+    component: mmi2x2
+    settings: {}
+  sw4_5_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw4_5_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw4_5_split:
+    component: mmi2x2
+    settings: {}
+  sw4_6_comb:
+    component: mmi2x2
+    settings: {}
+  sw4_6_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw4_6_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw4_6_split:
+    component: mmi2x2
+    settings: {}
+  sw4_7_comb:
+    component: mmi2x2
+    settings: {}
+  sw4_7_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw4_7_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw4_7_split:
+    component: mmi2x2
+    settings: {}
+  sw5_0_comb:
+    component: mmi2x2
+    settings: {}
+  sw5_0_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw5_0_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw5_0_split:
+    component: mmi2x2
+    settings: {}
+  sw5_1_comb:
+    component: mmi2x2
+    settings: {}
+  sw5_1_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw5_1_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw5_1_split:
+    component: mmi2x2
+    settings: {}
+  sw5_2_comb:
+    component: mmi2x2
+    settings: {}
+  sw5_2_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw5_2_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw5_2_split:
+    component: mmi2x2
+    settings: {}
+  sw5_3_comb:
+    component: mmi2x2
+    settings: {}
+  sw5_3_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw5_3_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw5_3_split:
+    component: mmi2x2
+    settings: {}
+  sw5_4_comb:
+    component: mmi2x2
+    settings: {}
+  sw5_4_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw5_4_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw5_4_split:
+    component: mmi2x2
+    settings: {}
+  sw5_5_comb:
+    component: mmi2x2
+    settings: {}
+  sw5_5_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw5_5_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw5_5_split:
+    component: mmi2x2
+    settings: {}
+  sw5_6_comb:
+    component: mmi2x2
+    settings: {}
+  sw5_6_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw5_6_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw5_6_split:
+    component: mmi2x2
+    settings: {}
+  sw5_7_comb:
+    component: mmi2x2
+    settings: {}
+  sw5_7_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw5_7_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw5_7_split:
+    component: mmi2x2
+    settings: {}
+  sw6_0_comb:
+    component: mmi2x2
+    settings: {}
+  sw6_0_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw6_0_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw6_0_split:
+    component: mmi2x2
+    settings: {}
+  sw6_1_comb:
+    component: mmi2x2
+    settings: {}
+  sw6_1_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw6_1_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw6_1_split:
+    component: mmi2x2
+    settings: {}
+  sw6_2_comb:
+    component: mmi2x2
+    settings: {}
+  sw6_2_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw6_2_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw6_2_split:
+    component: mmi2x2
+    settings: {}
+  sw6_3_comb:
+    component: mmi2x2
+    settings: {}
+  sw6_3_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw6_3_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw6_3_split:
+    component: mmi2x2
+    settings: {}
+  sw6_4_comb:
+    component: mmi2x2
+    settings: {}
+  sw6_4_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw6_4_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw6_4_split:
+    component: mmi2x2
+    settings: {}
+  sw6_5_comb:
+    component: mmi2x2
+    settings: {}
+  sw6_5_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw6_5_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw6_5_split:
+    component: mmi2x2
+    settings: {}
+  sw6_6_comb:
+    component: mmi2x2
+    settings: {}
+  sw6_6_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw6_6_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw6_6_split:
+    component: mmi2x2
+    settings: {}
+  sw6_7_comb:
+    component: mmi2x2
+    settings: {}
+  sw6_7_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw6_7_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw6_7_split:
+    component: mmi2x2
+    settings: {}
+  sw7_0_comb:
+    component: mmi2x2
+    settings: {}
+  sw7_0_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw7_0_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw7_0_split:
+    component: mmi2x2
+    settings: {}
+  sw7_1_comb:
+    component: mmi2x2
+    settings: {}
+  sw7_1_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw7_1_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw7_1_split:
+    component: mmi2x2
+    settings: {}
+  sw7_2_comb:
+    component: mmi2x2
+    settings: {}
+  sw7_2_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw7_2_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw7_2_split:
+    component: mmi2x2
+    settings: {}
+  sw7_3_comb:
+    component: mmi2x2
+    settings: {}
+  sw7_3_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw7_3_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw7_3_split:
+    component: mmi2x2
+    settings: {}
+  sw7_4_comb:
+    component: mmi2x2
+    settings: {}
+  sw7_4_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw7_4_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw7_4_split:
+    component: mmi2x2
+    settings: {}
+  sw7_5_comb:
+    component: mmi2x2
+    settings: {}
+  sw7_5_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw7_5_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw7_5_split:
+    component: mmi2x2
+    settings: {}
+  sw7_6_comb:
+    component: mmi2x2
+    settings: {}
+  sw7_6_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw7_6_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw7_6_split:
+    component: mmi2x2
+    settings: {}
+  sw7_7_comb:
+    component: mmi2x2
+    settings: {}
+  sw7_7_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  sw7_7_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  sw7_7_split:
+    component: mmi2x2
+    settings: {}
+  tcm_0_1:
+    component: terminator
+    settings: {}
+  tcm_0_2:
+    component: terminator
+    settings: {}
+  tcm_0_3:
+    component: terminator
+    settings: {}
+  tcm_0_4:
+    component: terminator
+    settings: {}
+  tcm_0_5:
+    component: terminator
+    settings: {}
+  tcm_0_6:
+    component: terminator
+    settings: {}
+  tcm_0_7:
+    component: terminator
+    settings: {}
+  tcm_1_1:
+    component: terminator
+    settings: {}
+  tcm_1_2:
+    component: terminator
+    settings: {}
+  tcm_1_3:
+    component: terminator
+    settings: {}
+  tcm_1_4:
+    component: terminator
+    settings: {}
+  tcm_1_5:
+    component: terminator
+    settings: {}
+  tcm_1_6:
+    component: terminator
+    settings: {}
+  tcm_1_7:
+    component: terminator
+    settings: {}
+  tcm_2_1:
+    component: terminator
+    settings: {}
+  tcm_2_2:
+    component: terminator
+    settings: {}
+  tcm_2_3:
+    component: terminator
+    settings: {}
+  tcm_2_4:
+    component: terminator
+    settings: {}
+  tcm_2_5:
+    component: terminator
+    settings: {}
+  tcm_2_6:
+    component: terminator
+    settings: {}
+  tcm_2_7:
+    component: terminator
+    settings: {}
+  tcm_3_1:
+    component: terminator
+    settings: {}
+  tcm_3_2:
+    component: terminator
+    settings: {}
+  tcm_3_3:
+    component: terminator
+    settings: {}
+  tcm_3_4:
+    component: terminator
+    settings: {}
+  tcm_3_5:
+    component: terminator
+    settings: {}
+  tcm_3_6:
+    component: terminator
+    settings: {}
+  tcm_3_7:
+    component: terminator
+    settings: {}
+  tcm_4_1:
+    component: terminator
+    settings: {}
+  tcm_4_2:
+    component: terminator
+    settings: {}
+  tcm_4_3:
+    component: terminator
+    settings: {}
+  tcm_4_4:
+    component: terminator
+    settings: {}
+  tcm_4_5:
+    component: terminator
+    settings: {}
+  tcm_4_6:
+    component: terminator
+    settings: {}
+  tcm_4_7:
+    component: terminator
+    settings: {}
+  tcm_5_1:
+    component: terminator
+    settings: {}
+  tcm_5_2:
+    component: terminator
+    settings: {}
+  tcm_5_3:
+    component: terminator
+    settings: {}
+  tcm_5_4:
+    component: terminator
+    settings: {}
+  tcm_5_5:
+    component: terminator
+    settings: {}
+  tcm_5_6:
+    component: terminator
+    settings: {}
+  tcm_5_7:
+    component: terminator
+    settings: {}
+  tcm_6_1:
+    component: terminator
+    settings: {}
+  tcm_6_2:
+    component: terminator
+    settings: {}
+  tcm_6_3:
+    component: terminator
+    settings: {}
+  tcm_6_4:
+    component: terminator
+    settings: {}
+  tcm_6_5:
+    component: terminator
+    settings: {}
+  tcm_6_6:
+    component: terminator
+    settings: {}
+  tcm_6_7:
+    component: terminator
+    settings: {}
+  tcm_7_1:
+    component: terminator
+    settings: {}
+  tcm_7_2:
+    component: terminator
+    settings: {}
+  tcm_7_3:
+    component: terminator
+    settings: {}
+  tcm_7_4:
+    component: terminator
+    settings: {}
+  tcm_7_5:
+    component: terminator
+    settings: {}
+  tcm_7_6:
+    component: terminator
+    settings: {}
+  tcm_7_7:
+    component: terminator
+    settings: {}
+  term_e_0:
+    component: terminator
+    settings: {}
+  term_e_1:
+    component: terminator
+    settings: {}
+  term_e_2:
+    component: terminator
+    settings: {}
+  term_e_3:
+    component: terminator
+    settings: {}
+  term_e_4:
+    component: terminator
+    settings: {}
+  term_e_5:
+    component: terminator
+    settings: {}
+  term_e_6:
+    component: terminator
+    settings: {}
+  term_e_7:
+    component: terminator
+    settings: {}
+  term_n_0:
+    component: terminator
+    settings: {}
+  term_n_1:
+    component: terminator
+    settings: {}
+  term_n_2:
+    component: terminator
+    settings: {}
+  term_n_3:
+    component: terminator
+    settings: {}
+  term_n_4:
+    component: terminator
+    settings: {}
+  term_n_5:
+    component: terminator
+    settings: {}
+  term_n_6:
+    component: terminator
+    settings: {}
+  term_n_7:
+    component: terminator
+    settings: {}
+  th_0_1:
+    component: terminator
+    settings: {}
+  th_0_2:
+    component: terminator
+    settings: {}
+  th_0_3:
+    component: terminator
+    settings: {}
+  th_0_4:
+    component: terminator
+    settings: {}
+  th_0_5:
+    component: terminator
+    settings: {}
+  th_0_6:
+    component: terminator
+    settings: {}
+  th_0_7:
+    component: terminator
+    settings: {}
+  th_1_1:
+    component: terminator
+    settings: {}
+  th_1_2:
+    component: terminator
+    settings: {}
+  th_1_3:
+    component: terminator
+    settings: {}
+  th_1_4:
+    component: terminator
+    settings: {}
+  th_1_5:
+    component: terminator
+    settings: {}
+  th_1_6:
+    component: terminator
+    settings: {}
+  th_1_7:
+    component: terminator
+    settings: {}
+  th_2_1:
+    component: terminator
+    settings: {}
+  th_2_2:
+    component: terminator
+    settings: {}
+  th_2_3:
+    component: terminator
+    settings: {}
+  th_2_4:
+    component: terminator
+    settings: {}
+  th_2_5:
+    component: terminator
+    settings: {}
+  th_2_6:
+    component: terminator
+    settings: {}
+  th_2_7:
+    component: terminator
+    settings: {}
+  th_3_1:
+    component: terminator
+    settings: {}
+  th_3_2:
+    component: terminator
+    settings: {}
+  th_3_3:
+    component: terminator
+    settings: {}
+  th_3_4:
+    component: terminator
+    settings: {}
+  th_3_5:
+    component: terminator
+    settings: {}
+  th_3_6:
+    component: terminator
+    settings: {}
+  th_3_7:
+    component: terminator
+    settings: {}
+  th_4_1:
+    component: terminator
+    settings: {}
+  th_4_2:
+    component: terminator
+    settings: {}
+  th_4_3:
+    component: terminator
+    settings: {}
+  th_4_4:
+    component: terminator
+    settings: {}
+  th_4_5:
+    component: terminator
+    settings: {}
+  th_4_6:
+    component: terminator
+    settings: {}
+  th_4_7:
+    component: terminator
+    settings: {}
+  th_5_1:
+    component: terminator
+    settings: {}
+  th_5_2:
+    component: terminator
+    settings: {}
+  th_5_3:
+    component: terminator
+    settings: {}
+  th_5_4:
+    component: terminator
+    settings: {}
+  th_5_5:
+    component: terminator
+    settings: {}
+  th_5_6:
+    component: terminator
+    settings: {}
+  th_5_7:
+    component: terminator
+    settings: {}
+  th_6_1:
+    component: terminator
+    settings: {}
+  th_6_2:
+    component: terminator
+    settings: {}
+  th_6_3:
+    component: terminator
+    settings: {}
+  th_6_4:
+    component: terminator
+    settings: {}
+  th_6_5:
+    component: terminator
+    settings: {}
+  th_6_6:
+    component: terminator
+    settings: {}
+  th_6_7:
+    component: terminator
+    settings: {}
+  th_7_1:
+    component: terminator
+    settings: {}
+  th_7_2:
+    component: terminator
+    settings: {}
+  th_7_3:
+    component: terminator
+    settings: {}
+  th_7_4:
+    component: terminator
+    settings: {}
+  th_7_5:
+    component: terminator
+    settings: {}
+  th_7_6:
+    component: terminator
+    settings: {}
+  th_7_7:
+    component: terminator
+    settings: {}
+  tx3_0_1:
+    component: terminator
+    settings: {}
+  tx3_0_2:
+    component: terminator
+    settings: {}
+  tx3_0_3:
+    component: terminator
+    settings: {}
+  tx3_0_4:
+    component: terminator
+    settings: {}
+  tx3_0_5:
+    component: terminator
+    settings: {}
+  tx3_0_6:
+    component: terminator
+    settings: {}
+  tx3_0_7:
+    component: terminator
+    settings: {}
+  tx3_1_1:
+    component: terminator
+    settings: {}
+  tx3_1_2:
+    component: terminator
+    settings: {}
+  tx3_1_3:
+    component: terminator
+    settings: {}
+  tx3_1_4:
+    component: terminator
+    settings: {}
+  tx3_1_5:
+    component: terminator
+    settings: {}
+  tx3_1_6:
+    component: terminator
+    settings: {}
+  tx3_1_7:
+    component: terminator
+    settings: {}
+  tx3_2_1:
+    component: terminator
+    settings: {}
+  tx3_2_2:
+    component: terminator
+    settings: {}
+  tx3_2_3:
+    component: terminator
+    settings: {}
+  tx3_2_4:
+    component: terminator
+    settings: {}
+  tx3_2_5:
+    component: terminator
+    settings: {}
+  tx3_2_6:
+    component: terminator
+    settings: {}
+  tx3_2_7:
+    component: terminator
+    settings: {}
+  tx3_3_1:
+    component: terminator
+    settings: {}
+  tx3_3_2:
+    component: terminator
+    settings: {}
+  tx3_3_3:
+    component: terminator
+    settings: {}
+  tx3_3_4:
+    component: terminator
+    settings: {}
+  tx3_3_5:
+    component: terminator
+    settings: {}
+  tx3_3_6:
+    component: terminator
+    settings: {}
+  tx3_3_7:
+    component: terminator
+    settings: {}
+  tx3_4_1:
+    component: terminator
+    settings: {}
+  tx3_4_2:
+    component: terminator
+    settings: {}
+  tx3_4_3:
+    component: terminator
+    settings: {}
+  tx3_4_4:
+    component: terminator
+    settings: {}
+  tx3_4_5:
+    component: terminator
+    settings: {}
+  tx3_4_6:
+    component: terminator
+    settings: {}
+  tx3_4_7:
+    component: terminator
+    settings: {}
+  tx3_5_1:
+    component: terminator
+    settings: {}
+  tx3_5_2:
+    component: terminator
+    settings: {}
+  tx3_5_3:
+    component: terminator
+    settings: {}
+  tx3_5_4:
+    component: terminator
+    settings: {}
+  tx3_5_5:
+    component: terminator
+    settings: {}
+  tx3_5_6:
+    component: terminator
+    settings: {}
+  tx3_5_7:
+    component: terminator
+    settings: {}
+  tx3_6_1:
+    component: terminator
+    settings: {}
+  tx3_6_2:
+    component: terminator
+    settings: {}
+  tx3_6_3:
+    component: terminator
+    settings: {}
+  tx3_6_4:
+    component: terminator
+    settings: {}
+  tx3_6_5:
+    component: terminator
+    settings: {}
+  tx3_6_6:
+    component: terminator
+    settings: {}
+  tx3_6_7:
+    component: terminator
+    settings: {}
+  tx3_7_1:
+    component: terminator
+    settings: {}
+  tx3_7_2:
+    component: terminator
+    settings: {}
+  tx3_7_3:
+    component: terminator
+    settings: {}
+  tx3_7_4:
+    component: terminator
+    settings: {}
+  tx3_7_5:
+    component: terminator
+    settings: {}
+  tx3_7_6:
+    component: terminator
+    settings: {}
+  tx3_7_7:
+    component: terminator
+    settings: {}
+  tx4_0_1:
+    component: terminator
+    settings: {}
+  tx4_0_2:
+    component: terminator
+    settings: {}
+  tx4_0_3:
+    component: terminator
+    settings: {}
+  tx4_0_4:
+    component: terminator
+    settings: {}
+  tx4_0_5:
+    component: terminator
+    settings: {}
+  tx4_0_6:
+    component: terminator
+    settings: {}
+  tx4_0_7:
+    component: terminator
+    settings: {}
+  tx4_1_1:
+    component: terminator
+    settings: {}
+  tx4_1_2:
+    component: terminator
+    settings: {}
+  tx4_1_3:
+    component: terminator
+    settings: {}
+  tx4_1_4:
+    component: terminator
+    settings: {}
+  tx4_1_5:
+    component: terminator
+    settings: {}
+  tx4_1_6:
+    component: terminator
+    settings: {}
+  tx4_1_7:
+    component: terminator
+    settings: {}
+  tx4_2_1:
+    component: terminator
+    settings: {}
+  tx4_2_2:
+    component: terminator
+    settings: {}
+  tx4_2_3:
+    component: terminator
+    settings: {}
+  tx4_2_4:
+    component: terminator
+    settings: {}
+  tx4_2_5:
+    component: terminator
+    settings: {}
+  tx4_2_6:
+    component: terminator
+    settings: {}
+  tx4_2_7:
+    component: terminator
+    settings: {}
+  tx4_3_1:
+    component: terminator
+    settings: {}
+  tx4_3_2:
+    component: terminator
+    settings: {}
+  tx4_3_3:
+    component: terminator
+    settings: {}
+  tx4_3_4:
+    component: terminator
+    settings: {}
+  tx4_3_5:
+    component: terminator
+    settings: {}
+  tx4_3_6:
+    component: terminator
+    settings: {}
+  tx4_3_7:
+    component: terminator
+    settings: {}
+  tx4_4_1:
+    component: terminator
+    settings: {}
+  tx4_4_2:
+    component: terminator
+    settings: {}
+  tx4_4_3:
+    component: terminator
+    settings: {}
+  tx4_4_4:
+    component: terminator
+    settings: {}
+  tx4_4_5:
+    component: terminator
+    settings: {}
+  tx4_4_6:
+    component: terminator
+    settings: {}
+  tx4_4_7:
+    component: terminator
+    settings: {}
+  tx4_5_1:
+    component: terminator
+    settings: {}
+  tx4_5_2:
+    component: terminator
+    settings: {}
+  tx4_5_3:
+    component: terminator
+    settings: {}
+  tx4_5_4:
+    component: terminator
+    settings: {}
+  tx4_5_5:
+    component: terminator
+    settings: {}
+  tx4_5_6:
+    component: terminator
+    settings: {}
+  tx4_5_7:
+    component: terminator
+    settings: {}
+  tx4_6_1:
+    component: terminator
+    settings: {}
+  tx4_6_2:
+    component: terminator
+    settings: {}
+  tx4_6_3:
+    component: terminator
+    settings: {}
+  tx4_6_4:
+    component: terminator
+    settings: {}
+  tx4_6_5:
+    component: terminator
+    settings: {}
+  tx4_6_6:
+    component: terminator
+    settings: {}
+  tx4_6_7:
+    component: terminator
+    settings: {}
+  tx4_7_1:
+    component: terminator
+    settings: {}
+  tx4_7_2:
+    component: terminator
+    settings: {}
+  tx4_7_3:
+    component: terminator
+    settings: {}
+  tx4_7_4:
+    component: terminator
+    settings: {}
+  tx4_7_5:
+    component: terminator
+    settings: {}
+  tx4_7_6:
+    component: terminator
+    settings: {}
+  tx4_7_7:
+    component: terminator
+    settings: {}
+  xin_0_1:
+    component: crossing
+    settings: {}
+  xin_0_2:
+    component: crossing
+    settings: {}
+  xin_0_3:
+    component: crossing
+    settings: {}
+  xin_0_4:
+    component: crossing
+    settings: {}
+  xin_0_5:
+    component: crossing
+    settings: {}
+  xin_0_6:
+    component: crossing
+    settings: {}
+  xin_0_7:
+    component: crossing
+    settings: {}
+  xin_1_1:
+    component: crossing
+    settings: {}
+  xin_1_2:
+    component: crossing
+    settings: {}
+  xin_1_3:
+    component: crossing
+    settings: {}
+  xin_1_4:
+    component: crossing
+    settings: {}
+  xin_1_5:
+    component: crossing
+    settings: {}
+  xin_1_6:
+    component: crossing
+    settings: {}
+  xin_1_7:
+    component: crossing
+    settings: {}
+  xin_2_1:
+    component: crossing
+    settings: {}
+  xin_2_2:
+    component: crossing
+    settings: {}
+  xin_2_3:
+    component: crossing
+    settings: {}
+  xin_2_4:
+    component: crossing
+    settings: {}
+  xin_2_5:
+    component: crossing
+    settings: {}
+  xin_2_6:
+    component: crossing
+    settings: {}
+  xin_2_7:
+    component: crossing
+    settings: {}
+  xin_3_1:
+    component: crossing
+    settings: {}
+  xin_3_2:
+    component: crossing
+    settings: {}
+  xin_3_3:
+    component: crossing
+    settings: {}
+  xin_3_4:
+    component: crossing
+    settings: {}
+  xin_3_5:
+    component: crossing
+    settings: {}
+  xin_3_6:
+    component: crossing
+    settings: {}
+  xin_3_7:
+    component: crossing
+    settings: {}
+  xin_4_1:
+    component: crossing
+    settings: {}
+  xin_4_2:
+    component: crossing
+    settings: {}
+  xin_4_3:
+    component: crossing
+    settings: {}
+  xin_4_4:
+    component: crossing
+    settings: {}
+  xin_4_5:
+    component: crossing
+    settings: {}
+  xin_4_6:
+    component: crossing
+    settings: {}
+  xin_4_7:
+    component: crossing
+    settings: {}
+  xin_5_1:
+    component: crossing
+    settings: {}
+  xin_5_2:
+    component: crossing
+    settings: {}
+  xin_5_3:
+    component: crossing
+    settings: {}
+  xin_5_4:
+    component: crossing
+    settings: {}
+  xin_5_5:
+    component: crossing
+    settings: {}
+  xin_5_6:
+    component: crossing
+    settings: {}
+  xin_5_7:
+    component: crossing
+    settings: {}
+  xin_6_1:
+    component: crossing
+    settings: {}
+  xin_6_2:
+    component: crossing
+    settings: {}
+  xin_6_3:
+    component: crossing
+    settings: {}
+  xin_6_4:
+    component: crossing
+    settings: {}
+  xin_6_5:
+    component: crossing
+    settings: {}
+  xin_6_6:
+    component: crossing
+    settings: {}
+  xin_6_7:
+    component: crossing
+    settings: {}
+  xin_7_1:
+    component: crossing
+    settings: {}
+  xin_7_2:
+    component: crossing
+    settings: {}
+  xin_7_3:
+    component: crossing
+    settings: {}
+  xin_7_4:
+    component: crossing
+    settings: {}
+  xin_7_5:
+    component: crossing
+    settings: {}
+  xin_7_6:
+    component: crossing
+    settings: {}
+  xin_7_7:
+    component: crossing
+    settings: {}
+routes:
+  optical:
+    settings: {}
+    links:
+      sw0_0_split,o3: sw0_0_ps,o1
+      sw0_0_split,o4: sw0_0_dummy,o1
+      sw0_0_ps,o2: sw0_0_comb,o1
+      sw0_0_dummy,o2: sw0_0_comb,o2
+      sw0_1_split,o3: sw0_1_ps,o1
+      sw0_1_split,o4: sw0_1_dummy,o1
+      sw0_1_ps,o2: sw0_1_comb,o1
+      sw0_1_dummy,o2: sw0_1_comb,o2
+      sw0_2_split,o3: sw0_2_ps,o1
+      sw0_2_split,o4: sw0_2_dummy,o1
+      sw0_2_ps,o2: sw0_2_comb,o1
+      sw0_2_dummy,o2: sw0_2_comb,o2
+      sw0_3_split,o3: sw0_3_ps,o1
+      sw0_3_split,o4: sw0_3_dummy,o1
+      sw0_3_ps,o2: sw0_3_comb,o1
+      sw0_3_dummy,o2: sw0_3_comb,o2
+      sw0_4_split,o3: sw0_4_ps,o1
+      sw0_4_split,o4: sw0_4_dummy,o1
+      sw0_4_ps,o2: sw0_4_comb,o1
+      sw0_4_dummy,o2: sw0_4_comb,o2
+      sw0_5_split,o3: sw0_5_ps,o1
+      sw0_5_split,o4: sw0_5_dummy,o1
+      sw0_5_ps,o2: sw0_5_comb,o1
+      sw0_5_dummy,o2: sw0_5_comb,o2
+      sw0_6_split,o3: sw0_6_ps,o1
+      sw0_6_split,o4: sw0_6_dummy,o1
+      sw0_6_ps,o2: sw0_6_comb,o1
+      sw0_6_dummy,o2: sw0_6_comb,o2
+      sw0_7_split,o3: sw0_7_ps,o1
+      sw0_7_split,o4: sw0_7_dummy,o1
+      sw0_7_ps,o2: sw0_7_comb,o1
+      sw0_7_dummy,o2: sw0_7_comb,o2
+      sw1_0_split,o3: sw1_0_ps,o1
+      sw1_0_split,o4: sw1_0_dummy,o1
+      sw1_0_ps,o2: sw1_0_comb,o1
+      sw1_0_dummy,o2: sw1_0_comb,o2
+      sw1_1_split,o3: sw1_1_ps,o1
+      sw1_1_split,o4: sw1_1_dummy,o1
+      sw1_1_ps,o2: sw1_1_comb,o1
+      sw1_1_dummy,o2: sw1_1_comb,o2
+      sw1_2_split,o3: sw1_2_ps,o1
+      sw1_2_split,o4: sw1_2_dummy,o1
+      sw1_2_ps,o2: sw1_2_comb,o1
+      sw1_2_dummy,o2: sw1_2_comb,o2
+      sw1_3_split,o3: sw1_3_ps,o1
+      sw1_3_split,o4: sw1_3_dummy,o1
+      sw1_3_ps,o2: sw1_3_comb,o1
+      sw1_3_dummy,o2: sw1_3_comb,o2
+      sw1_4_split,o3: sw1_4_ps,o1
+      sw1_4_split,o4: sw1_4_dummy,o1
+      sw1_4_ps,o2: sw1_4_comb,o1
+      sw1_4_dummy,o2: sw1_4_comb,o2
+      sw1_5_split,o3: sw1_5_ps,o1
+      sw1_5_split,o4: sw1_5_dummy,o1
+      sw1_5_ps,o2: sw1_5_comb,o1
+      sw1_5_dummy,o2: sw1_5_comb,o2
+      sw1_6_split,o3: sw1_6_ps,o1
+      sw1_6_split,o4: sw1_6_dummy,o1
+      sw1_6_ps,o2: sw1_6_comb,o1
+      sw1_6_dummy,o2: sw1_6_comb,o2
+      sw1_7_split,o3: sw1_7_ps,o1
+      sw1_7_split,o4: sw1_7_dummy,o1
+      sw1_7_ps,o2: sw1_7_comb,o1
+      sw1_7_dummy,o2: sw1_7_comb,o2
+      sw2_0_split,o3: sw2_0_ps,o1
+      sw2_0_split,o4: sw2_0_dummy,o1
+      sw2_0_ps,o2: sw2_0_comb,o1
+      sw2_0_dummy,o2: sw2_0_comb,o2
+      sw2_1_split,o3: sw2_1_ps,o1
+      sw2_1_split,o4: sw2_1_dummy,o1
+      sw2_1_ps,o2: sw2_1_comb,o1
+      sw2_1_dummy,o2: sw2_1_comb,o2
+      sw2_2_split,o3: sw2_2_ps,o1
+      sw2_2_split,o4: sw2_2_dummy,o1
+      sw2_2_ps,o2: sw2_2_comb,o1
+      sw2_2_dummy,o2: sw2_2_comb,o2
+      sw2_3_split,o3: sw2_3_ps,o1
+      sw2_3_split,o4: sw2_3_dummy,o1
+      sw2_3_ps,o2: sw2_3_comb,o1
+      sw2_3_dummy,o2: sw2_3_comb,o2
+      sw2_4_split,o3: sw2_4_ps,o1
+      sw2_4_split,o4: sw2_4_dummy,o1
+      sw2_4_ps,o2: sw2_4_comb,o1
+      sw2_4_dummy,o2: sw2_4_comb,o2
+      sw2_5_split,o3: sw2_5_ps,o1
+      sw2_5_split,o4: sw2_5_dummy,o1
+      sw2_5_ps,o2: sw2_5_comb,o1
+      sw2_5_dummy,o2: sw2_5_comb,o2
+      sw2_6_split,o3: sw2_6_ps,o1
+      sw2_6_split,o4: sw2_6_dummy,o1
+      sw2_6_ps,o2: sw2_6_comb,o1
+      sw2_6_dummy,o2: sw2_6_comb,o2
+      sw2_7_split,o3: sw2_7_ps,o1
+      sw2_7_split,o4: sw2_7_dummy,o1
+      sw2_7_ps,o2: sw2_7_comb,o1
+      sw2_7_dummy,o2: sw2_7_comb,o2
+      sw3_0_split,o3: sw3_0_ps,o1
+      sw3_0_split,o4: sw3_0_dummy,o1
+      sw3_0_ps,o2: sw3_0_comb,o1
+      sw3_0_dummy,o2: sw3_0_comb,o2
+      sw3_1_split,o3: sw3_1_ps,o1
+      sw3_1_split,o4: sw3_1_dummy,o1
+      sw3_1_ps,o2: sw3_1_comb,o1
+      sw3_1_dummy,o2: sw3_1_comb,o2
+      sw3_2_split,o3: sw3_2_ps,o1
+      sw3_2_split,o4: sw3_2_dummy,o1
+      sw3_2_ps,o2: sw3_2_comb,o1
+      sw3_2_dummy,o2: sw3_2_comb,o2
+      sw3_3_split,o3: sw3_3_ps,o1
+      sw3_3_split,o4: sw3_3_dummy,o1
+      sw3_3_ps,o2: sw3_3_comb,o1
+      sw3_3_dummy,o2: sw3_3_comb,o2
+      sw3_4_split,o3: sw3_4_ps,o1
+      sw3_4_split,o4: sw3_4_dummy,o1
+      sw3_4_ps,o2: sw3_4_comb,o1
+      sw3_4_dummy,o2: sw3_4_comb,o2
+      sw3_5_split,o3: sw3_5_ps,o1
+      sw3_5_split,o4: sw3_5_dummy,o1
+      sw3_5_ps,o2: sw3_5_comb,o1
+      sw3_5_dummy,o2: sw3_5_comb,o2
+      sw3_6_split,o3: sw3_6_ps,o1
+      sw3_6_split,o4: sw3_6_dummy,o1
+      sw3_6_ps,o2: sw3_6_comb,o1
+      sw3_6_dummy,o2: sw3_6_comb,o2
+      sw3_7_split,o3: sw3_7_ps,o1
+      sw3_7_split,o4: sw3_7_dummy,o1
+      sw3_7_ps,o2: sw3_7_comb,o1
+      sw3_7_dummy,o2: sw3_7_comb,o2
+      sw4_0_split,o3: sw4_0_ps,o1
+      sw4_0_split,o4: sw4_0_dummy,o1
+      sw4_0_ps,o2: sw4_0_comb,o1
+      sw4_0_dummy,o2: sw4_0_comb,o2
+      sw4_1_split,o3: sw4_1_ps,o1
+      sw4_1_split,o4: sw4_1_dummy,o1
+      sw4_1_ps,o2: sw4_1_comb,o1
+      sw4_1_dummy,o2: sw4_1_comb,o2
+      sw4_2_split,o3: sw4_2_ps,o1
+      sw4_2_split,o4: sw4_2_dummy,o1
+      sw4_2_ps,o2: sw4_2_comb,o1
+      sw4_2_dummy,o2: sw4_2_comb,o2
+      sw4_3_split,o3: sw4_3_ps,o1
+      sw4_3_split,o4: sw4_3_dummy,o1
+      sw4_3_ps,o2: sw4_3_comb,o1
+      sw4_3_dummy,o2: sw4_3_comb,o2
+      sw4_4_split,o3: sw4_4_ps,o1
+      sw4_4_split,o4: sw4_4_dummy,o1
+      sw4_4_ps,o2: sw4_4_comb,o1
+      sw4_4_dummy,o2: sw4_4_comb,o2
+      sw4_5_split,o3: sw4_5_ps,o1
+      sw4_5_split,o4: sw4_5_dummy,o1
+      sw4_5_ps,o2: sw4_5_comb,o1
+      sw4_5_dummy,o2: sw4_5_comb,o2
+      sw4_6_split,o3: sw4_6_ps,o1
+      sw4_6_split,o4: sw4_6_dummy,o1
+      sw4_6_ps,o2: sw4_6_comb,o1
+      sw4_6_dummy,o2: sw4_6_comb,o2
+      sw4_7_split,o3: sw4_7_ps,o1
+      sw4_7_split,o4: sw4_7_dummy,o1
+      sw4_7_ps,o2: sw4_7_comb,o1
+      sw4_7_dummy,o2: sw4_7_comb,o2
+      sw5_0_split,o3: sw5_0_ps,o1
+      sw5_0_split,o4: sw5_0_dummy,o1
+      sw5_0_ps,o2: sw5_0_comb,o1
+      sw5_0_dummy,o2: sw5_0_comb,o2
+      sw5_1_split,o3: sw5_1_ps,o1
+      sw5_1_split,o4: sw5_1_dummy,o1
+      sw5_1_ps,o2: sw5_1_comb,o1
+      sw5_1_dummy,o2: sw5_1_comb,o2
+      sw5_2_split,o3: sw5_2_ps,o1
+      sw5_2_split,o4: sw5_2_dummy,o1
+      sw5_2_ps,o2: sw5_2_comb,o1
+      sw5_2_dummy,o2: sw5_2_comb,o2
+      sw5_3_split,o3: sw5_3_ps,o1
+      sw5_3_split,o4: sw5_3_dummy,o1
+      sw5_3_ps,o2: sw5_3_comb,o1
+      sw5_3_dummy,o2: sw5_3_comb,o2
+      sw5_4_split,o3: sw5_4_ps,o1
+      sw5_4_split,o4: sw5_4_dummy,o1
+      sw5_4_ps,o2: sw5_4_comb,o1
+      sw5_4_dummy,o2: sw5_4_comb,o2
+      sw5_5_split,o3: sw5_5_ps,o1
+      sw5_5_split,o4: sw5_5_dummy,o1
+      sw5_5_ps,o2: sw5_5_comb,o1
+      sw5_5_dummy,o2: sw5_5_comb,o2
+      sw5_6_split,o3: sw5_6_ps,o1
+      sw5_6_split,o4: sw5_6_dummy,o1
+      sw5_6_ps,o2: sw5_6_comb,o1
+      sw5_6_dummy,o2: sw5_6_comb,o2
+      sw5_7_split,o3: sw5_7_ps,o1
+      sw5_7_split,o4: sw5_7_dummy,o1
+      sw5_7_ps,o2: sw5_7_comb,o1
+      sw5_7_dummy,o2: sw5_7_comb,o2
+      sw6_0_split,o3: sw6_0_ps,o1
+      sw6_0_split,o4: sw6_0_dummy,o1
+      sw6_0_ps,o2: sw6_0_comb,o1
+      sw6_0_dummy,o2: sw6_0_comb,o2
+      sw6_1_split,o3: sw6_1_ps,o1
+      sw6_1_split,o4: sw6_1_dummy,o1
+      sw6_1_ps,o2: sw6_1_comb,o1
+      sw6_1_dummy,o2: sw6_1_comb,o2
+      sw6_2_split,o3: sw6_2_ps,o1
+      sw6_2_split,o4: sw6_2_dummy,o1
+      sw6_2_ps,o2: sw6_2_comb,o1
+      sw6_2_dummy,o2: sw6_2_comb,o2
+      sw6_3_split,o3: sw6_3_ps,o1
+      sw6_3_split,o4: sw6_3_dummy,o1
+      sw6_3_ps,o2: sw6_3_comb,o1
+      sw6_3_dummy,o2: sw6_3_comb,o2
+      sw6_4_split,o3: sw6_4_ps,o1
+      sw6_4_split,o4: sw6_4_dummy,o1
+      sw6_4_ps,o2: sw6_4_comb,o1
+      sw6_4_dummy,o2: sw6_4_comb,o2
+      sw6_5_split,o3: sw6_5_ps,o1
+      sw6_5_split,o4: sw6_5_dummy,o1
+      sw6_5_ps,o2: sw6_5_comb,o1
+      sw6_5_dummy,o2: sw6_5_comb,o2
+      sw6_6_split,o3: sw6_6_ps,o1
+      sw6_6_split,o4: sw6_6_dummy,o1
+      sw6_6_ps,o2: sw6_6_comb,o1
+      sw6_6_dummy,o2: sw6_6_comb,o2
+      sw6_7_split,o3: sw6_7_ps,o1
+      sw6_7_split,o4: sw6_7_dummy,o1
+      sw6_7_ps,o2: sw6_7_comb,o1
+      sw6_7_dummy,o2: sw6_7_comb,o2
+      sw7_0_split,o3: sw7_0_ps,o1
+      sw7_0_split,o4: sw7_0_dummy,o1
+      sw7_0_ps,o2: sw7_0_comb,o1
+      sw7_0_dummy,o2: sw7_0_comb,o2
+      sw7_1_split,o3: sw7_1_ps,o1
+      sw7_1_split,o4: sw7_1_dummy,o1
+      sw7_1_ps,o2: sw7_1_comb,o1
+      sw7_1_dummy,o2: sw7_1_comb,o2
+      sw7_2_split,o3: sw7_2_ps,o1
+      sw7_2_split,o4: sw7_2_dummy,o1
+      sw7_2_ps,o2: sw7_2_comb,o1
+      sw7_2_dummy,o2: sw7_2_comb,o2
+      sw7_3_split,o3: sw7_3_ps,o1
+      sw7_3_split,o4: sw7_3_dummy,o1
+      sw7_3_ps,o2: sw7_3_comb,o1
+      sw7_3_dummy,o2: sw7_3_comb,o2
+      sw7_4_split,o3: sw7_4_ps,o1
+      sw7_4_split,o4: sw7_4_dummy,o1
+      sw7_4_ps,o2: sw7_4_comb,o1
+      sw7_4_dummy,o2: sw7_4_comb,o2
+      sw7_5_split,o3: sw7_5_ps,o1
+      sw7_5_split,o4: sw7_5_dummy,o1
+      sw7_5_ps,o2: sw7_5_comb,o1
+      sw7_5_dummy,o2: sw7_5_comb,o2
+      sw7_6_split,o3: sw7_6_ps,o1
+      sw7_6_split,o4: sw7_6_dummy,o1
+      sw7_6_ps,o2: sw7_6_comb,o1
+      sw7_6_dummy,o2: sw7_6_comb,o2
+      sw7_7_split,o3: sw7_7_ps,o1
+      sw7_7_split,o4: sw7_7_dummy,o1
+      sw7_7_ps,o2: sw7_7_comb,o1
+      sw7_7_dummy,o2: sw7_7_comb,o2
+      sw0_0_comb,o3: sw0_1_split,o1
+      sw0_1_comb,o3: sw0_2_split,o1
+      sw0_2_comb,o3: sw0_3_split,o1
+      sw0_3_comb,o3: sw0_4_split,o1
+      sw0_4_comb,o3: sw0_5_split,o1
+      sw0_5_comb,o3: sw0_6_split,o1
+      sw0_6_comb,o3: sw0_7_split,o1
+      sw0_7_comb,o3: term_e_0,o1
+      sw1_0_comb,o3: sw1_1_split,o1
+      sw1_1_comb,o3: sw1_2_split,o1
+      sw1_2_comb,o3: sw1_3_split,o1
+      sw1_3_comb,o3: sw1_4_split,o1
+      sw1_4_comb,o3: sw1_5_split,o1
+      sw1_5_comb,o3: sw1_6_split,o1
+      sw1_6_comb,o3: sw1_7_split,o1
+      sw1_7_comb,o3: term_e_1,o1
+      sw2_0_comb,o3: sw2_1_split,o1
+      sw2_1_comb,o3: sw2_2_split,o1
+      sw2_2_comb,o3: sw2_3_split,o1
+      sw2_3_comb,o3: sw2_4_split,o1
+      sw2_4_comb,o3: sw2_5_split,o1
+      sw2_5_comb,o3: sw2_6_split,o1
+      sw2_6_comb,o3: sw2_7_split,o1
+      sw2_7_comb,o3: term_e_2,o1
+      sw3_0_comb,o3: sw3_1_split,o1
+      sw3_1_comb,o3: sw3_2_split,o1
+      sw3_2_comb,o3: sw3_3_split,o1
+      sw3_3_comb,o3: sw3_4_split,o1
+      sw3_4_comb,o3: sw3_5_split,o1
+      sw3_5_comb,o3: sw3_6_split,o1
+      sw3_6_comb,o3: sw3_7_split,o1
+      sw3_7_comb,o3: term_e_3,o1
+      sw4_0_comb,o3: sw4_1_split,o1
+      sw4_1_comb,o3: sw4_2_split,o1
+      sw4_2_comb,o3: sw4_3_split,o1
+      sw4_3_comb,o3: sw4_4_split,o1
+      sw4_4_comb,o3: sw4_5_split,o1
+      sw4_5_comb,o3: sw4_6_split,o1
+      sw4_6_comb,o3: sw4_7_split,o1
+      sw4_7_comb,o3: term_e_4,o1
+      sw5_0_comb,o3: sw5_1_split,o1
+      sw5_1_comb,o3: sw5_2_split,o1
+      sw5_2_comb,o3: sw5_3_split,o1
+      sw5_3_comb,o3: sw5_4_split,o1
+      sw5_4_comb,o3: sw5_5_split,o1
+      sw5_5_comb,o3: sw5_6_split,o1
+      sw5_6_comb,o3: sw5_7_split,o1
+      sw5_7_comb,o3: term_e_5,o1
+      sw6_0_comb,o3: sw6_1_split,o1
+      sw6_1_comb,o3: sw6_2_split,o1
+      sw6_2_comb,o3: sw6_3_split,o1
+      sw6_3_comb,o3: sw6_4_split,o1
+      sw6_4_comb,o3: sw6_5_split,o1
+      sw6_5_comb,o3: sw6_6_split,o1
+      sw6_6_comb,o3: sw6_7_split,o1
+      sw6_7_comb,o3: term_e_6,o1
+      sw7_0_comb,o3: sw7_1_split,o1
+      sw7_1_comb,o3: sw7_2_split,o1
+      sw7_2_comb,o3: sw7_3_split,o1
+      sw7_3_comb,o3: sw7_4_split,o1
+      sw7_4_comb,o3: sw7_5_split,o1
+      sw7_5_comb,o3: sw7_6_split,o1
+      sw7_6_comb,o3: sw7_7_split,o1
+      sw7_7_comb,o3: term_e_7,o1
+      sw0_0_comb,o4: sw1_0_split,o2
+      sw1_0_comb,o4: sw2_0_split,o2
+      sw2_0_comb,o4: sw3_0_split,o2
+      sw3_0_comb,o4: sw4_0_split,o2
+      sw4_0_comb,o4: sw5_0_split,o2
+      sw5_0_comb,o4: sw6_0_split,o2
+      sw6_0_comb,o4: sw7_0_split,o2
+      sw0_1_comb,o4: sw1_1_split,o2
+      sw1_1_comb,o4: sw2_1_split,o2
+      sw2_1_comb,o4: sw3_1_split,o2
+      sw3_1_comb,o4: sw4_1_split,o2
+      sw4_1_comb,o4: sw5_1_split,o2
+      sw5_1_comb,o4: sw6_1_split,o2
+      sw6_1_comb,o4: sw7_1_split,o2
+      sw0_2_comb,o4: sw1_2_split,o2
+      sw1_2_comb,o4: sw2_2_split,o2
+      sw2_2_comb,o4: sw3_2_split,o2
+      sw3_2_comb,o4: sw4_2_split,o2
+      sw4_2_comb,o4: sw5_2_split,o2
+      sw5_2_comb,o4: sw6_2_split,o2
+      sw6_2_comb,o4: sw7_2_split,o2
+      sw0_3_comb,o4: sw1_3_split,o2
+      sw1_3_comb,o4: sw2_3_split,o2
+      sw2_3_comb,o4: sw3_3_split,o2
+      sw3_3_comb,o4: sw4_3_split,o2
+      sw4_3_comb,o4: sw5_3_split,o2
+      sw5_3_comb,o4: sw6_3_split,o2
+      sw6_3_comb,o4: sw7_3_split,o2
+      sw0_4_comb,o4: sw1_4_split,o2
+      sw1_4_comb,o4: sw2_4_split,o2
+      sw2_4_comb,o4: sw3_4_split,o2
+      sw3_4_comb,o4: sw4_4_split,o2
+      sw4_4_comb,o4: sw5_4_split,o2
+      sw5_4_comb,o4: sw6_4_split,o2
+      sw6_4_comb,o4: sw7_4_split,o2
+      sw0_5_comb,o4: sw1_5_split,o2
+      sw1_5_comb,o4: sw2_5_split,o2
+      sw2_5_comb,o4: sw3_5_split,o2
+      sw3_5_comb,o4: sw4_5_split,o2
+      sw4_5_comb,o4: sw5_5_split,o2
+      sw5_5_comb,o4: sw6_5_split,o2
+      sw6_5_comb,o4: sw7_5_split,o2
+      sw0_6_comb,o4: sw1_6_split,o2
+      sw1_6_comb,o4: sw2_6_split,o2
+      sw2_6_comb,o4: sw3_6_split,o2
+      sw3_6_comb,o4: sw4_6_split,o2
+      sw4_6_comb,o4: sw5_6_split,o2
+      sw5_6_comb,o4: sw6_6_split,o2
+      sw6_6_comb,o4: sw7_6_split,o2
+      sw0_7_comb,o4: sw1_7_split,o2
+      sw1_7_comb,o4: sw2_7_split,o2
+      sw2_7_comb,o4: sw3_7_split,o2
+      sw3_7_comb,o4: sw4_7_split,o2
+      sw4_7_comb,o4: sw5_7_split,o2
+      sw5_7_comb,o4: sw6_7_split,o2
+      sw6_7_comb,o4: sw7_7_split,o2
+      sw0_0_split,o2: term_n_0,o1
+      sw0_1_split,o2: term_n_1,o1
+      sw0_2_split,o2: term_n_2,o1
+      sw0_3_split,o2: term_n_3,o1
+      sw0_4_split,o2: term_n_4,o1
+      sw0_5_split,o2: term_n_5,o1
+      sw0_6_split,o2: term_n_6,o1
+      sw0_7_split,o2: term_n_7,o1
+      sp0_s0,o2: sp0_s1_0,o1
+      sp0_s0,o3: sp0_s1_1,o1
+      sp0_s1_0,o2: sp0_s2_0,o1
+      sp0_s1_0,o3: sp0_s2_1,o1
+      sp0_s1_1,o2: sp0_s2_2,o1
+      sp0_s1_1,o3: sp0_s2_3,o1
+      sp0_s2_0,o2: sw0_0_split,o1
+      sp0_s2_0,o3: xin_0_1,o1
+      xin_0_1,o2: ps_0_1,o1
+      xin_0_1,o3: tx3_0_1,o1
+      xin_0_1,o4: tx4_0_1,o1
+      ps_0_1,o2: th_0_1,o1
+      sp0_s2_1,o2: xin_0_2,o1
+      xin_0_2,o2: ps_0_2,o1
+      xin_0_2,o3: tx3_0_2,o1
+      xin_0_2,o4: tx4_0_2,o1
+      ps_0_2,o2: th_0_2,o1
+      sp0_s2_1,o3: xin_0_3,o1
+      xin_0_3,o2: ps_0_3,o1
+      xin_0_3,o3: tx3_0_3,o1
+      xin_0_3,o4: tx4_0_3,o1
+      ps_0_3,o2: th_0_3,o1
+      sp0_s2_2,o2: xin_0_4,o1
+      xin_0_4,o2: ps_0_4,o1
+      xin_0_4,o3: tx3_0_4,o1
+      xin_0_4,o4: tx4_0_4,o1
+      ps_0_4,o2: th_0_4,o1
+      sp0_s2_2,o3: xin_0_5,o1
+      xin_0_5,o2: ps_0_5,o1
+      xin_0_5,o3: tx3_0_5,o1
+      xin_0_5,o4: tx4_0_5,o1
+      ps_0_5,o2: th_0_5,o1
+      sp0_s2_3,o2: xin_0_6,o1
+      xin_0_6,o2: ps_0_6,o1
+      xin_0_6,o3: tx3_0_6,o1
+      xin_0_6,o4: tx4_0_6,o1
+      ps_0_6,o2: th_0_6,o1
+      sp0_s2_3,o3: xin_0_7,o1
+      xin_0_7,o2: ps_0_7,o1
+      xin_0_7,o3: tx3_0_7,o1
+      xin_0_7,o4: tx4_0_7,o1
+      ps_0_7,o2: th_0_7,o1
+      sp1_s0,o2: sp1_s1_0,o1
+      sp1_s0,o3: sp1_s1_1,o1
+      sp1_s1_0,o2: sp1_s2_0,o1
+      sp1_s1_0,o3: sp1_s2_1,o1
+      sp1_s1_1,o2: sp1_s2_2,o1
+      sp1_s1_1,o3: sp1_s2_3,o1
+      sp1_s2_0,o2: sw1_0_split,o1
+      sp1_s2_0,o3: xin_1_1,o1
+      xin_1_1,o2: ps_1_1,o1
+      xin_1_1,o3: tx3_1_1,o1
+      xin_1_1,o4: tx4_1_1,o1
+      ps_1_1,o2: th_1_1,o1
+      sp1_s2_1,o2: xin_1_2,o1
+      xin_1_2,o2: ps_1_2,o1
+      xin_1_2,o3: tx3_1_2,o1
+      xin_1_2,o4: tx4_1_2,o1
+      ps_1_2,o2: th_1_2,o1
+      sp1_s2_1,o3: xin_1_3,o1
+      xin_1_3,o2: ps_1_3,o1
+      xin_1_3,o3: tx3_1_3,o1
+      xin_1_3,o4: tx4_1_3,o1
+      ps_1_3,o2: th_1_3,o1
+      sp1_s2_2,o2: xin_1_4,o1
+      xin_1_4,o2: ps_1_4,o1
+      xin_1_4,o3: tx3_1_4,o1
+      xin_1_4,o4: tx4_1_4,o1
+      ps_1_4,o2: th_1_4,o1
+      sp1_s2_2,o3: xin_1_5,o1
+      xin_1_5,o2: ps_1_5,o1
+      xin_1_5,o3: tx3_1_5,o1
+      xin_1_5,o4: tx4_1_5,o1
+      ps_1_5,o2: th_1_5,o1
+      sp1_s2_3,o2: xin_1_6,o1
+      xin_1_6,o2: ps_1_6,o1
+      xin_1_6,o3: tx3_1_6,o1
+      xin_1_6,o4: tx4_1_6,o1
+      ps_1_6,o2: th_1_6,o1
+      sp1_s2_3,o3: xin_1_7,o1
+      xin_1_7,o2: ps_1_7,o1
+      xin_1_7,o3: tx3_1_7,o1
+      xin_1_7,o4: tx4_1_7,o1
+      ps_1_7,o2: th_1_7,o1
+      sp2_s0,o2: sp2_s1_0,o1
+      sp2_s0,o3: sp2_s1_1,o1
+      sp2_s1_0,o2: sp2_s2_0,o1
+      sp2_s1_0,o3: sp2_s2_1,o1
+      sp2_s1_1,o2: sp2_s2_2,o1
+      sp2_s1_1,o3: sp2_s2_3,o1
+      sp2_s2_0,o2: sw2_0_split,o1
+      sp2_s2_0,o3: xin_2_1,o1
+      xin_2_1,o2: ps_2_1,o1
+      xin_2_1,o3: tx3_2_1,o1
+      xin_2_1,o4: tx4_2_1,o1
+      ps_2_1,o2: th_2_1,o1
+      sp2_s2_1,o2: xin_2_2,o1
+      xin_2_2,o2: ps_2_2,o1
+      xin_2_2,o3: tx3_2_2,o1
+      xin_2_2,o4: tx4_2_2,o1
+      ps_2_2,o2: th_2_2,o1
+      sp2_s2_1,o3: xin_2_3,o1
+      xin_2_3,o2: ps_2_3,o1
+      xin_2_3,o3: tx3_2_3,o1
+      xin_2_3,o4: tx4_2_3,o1
+      ps_2_3,o2: th_2_3,o1
+      sp2_s2_2,o2: xin_2_4,o1
+      xin_2_4,o2: ps_2_4,o1
+      xin_2_4,o3: tx3_2_4,o1
+      xin_2_4,o4: tx4_2_4,o1
+      ps_2_4,o2: th_2_4,o1
+      sp2_s2_2,o3: xin_2_5,o1
+      xin_2_5,o2: ps_2_5,o1
+      xin_2_5,o3: tx3_2_5,o1
+      xin_2_5,o4: tx4_2_5,o1
+      ps_2_5,o2: th_2_5,o1
+      sp2_s2_3,o2: xin_2_6,o1
+      xin_2_6,o2: ps_2_6,o1
+      xin_2_6,o3: tx3_2_6,o1
+      xin_2_6,o4: tx4_2_6,o1
+      ps_2_6,o2: th_2_6,o1
+      sp2_s2_3,o3: xin_2_7,o1
+      xin_2_7,o2: ps_2_7,o1
+      xin_2_7,o3: tx3_2_7,o1
+      xin_2_7,o4: tx4_2_7,o1
+      ps_2_7,o2: th_2_7,o1
+      sp3_s0,o2: sp3_s1_0,o1
+      sp3_s0,o3: sp3_s1_1,o1
+      sp3_s1_0,o2: sp3_s2_0,o1
+      sp3_s1_0,o3: sp3_s2_1,o1
+      sp3_s1_1,o2: sp3_s2_2,o1
+      sp3_s1_1,o3: sp3_s2_3,o1
+      sp3_s2_0,o2: sw3_0_split,o1
+      sp3_s2_0,o3: xin_3_1,o1
+      xin_3_1,o2: ps_3_1,o1
+      xin_3_1,o3: tx3_3_1,o1
+      xin_3_1,o4: tx4_3_1,o1
+      ps_3_1,o2: th_3_1,o1
+      sp3_s2_1,o2: xin_3_2,o1
+      xin_3_2,o2: ps_3_2,o1
+      xin_3_2,o3: tx3_3_2,o1
+      xin_3_2,o4: tx4_3_2,o1
+      ps_3_2,o2: th_3_2,o1
+      sp3_s2_1,o3: xin_3_3,o1
+      xin_3_3,o2: ps_3_3,o1
+      xin_3_3,o3: tx3_3_3,o1
+      xin_3_3,o4: tx4_3_3,o1
+      ps_3_3,o2: th_3_3,o1
+      sp3_s2_2,o2: xin_3_4,o1
+      xin_3_4,o2: ps_3_4,o1
+      xin_3_4,o3: tx3_3_4,o1
+      xin_3_4,o4: tx4_3_4,o1
+      ps_3_4,o2: th_3_4,o1
+      sp3_s2_2,o3: xin_3_5,o1
+      xin_3_5,o2: ps_3_5,o1
+      xin_3_5,o3: tx3_3_5,o1
+      xin_3_5,o4: tx4_3_5,o1
+      ps_3_5,o2: th_3_5,o1
+      sp3_s2_3,o2: xin_3_6,o1
+      xin_3_6,o2: ps_3_6,o1
+      xin_3_6,o3: tx3_3_6,o1
+      xin_3_6,o4: tx4_3_6,o1
+      ps_3_6,o2: th_3_6,o1
+      sp3_s2_3,o3: xin_3_7,o1
+      xin_3_7,o2: ps_3_7,o1
+      xin_3_7,o3: tx3_3_7,o1
+      xin_3_7,o4: tx4_3_7,o1
+      ps_3_7,o2: th_3_7,o1
+      sp4_s0,o2: sp4_s1_0,o1
+      sp4_s0,o3: sp4_s1_1,o1
+      sp4_s1_0,o2: sp4_s2_0,o1
+      sp4_s1_0,o3: sp4_s2_1,o1
+      sp4_s1_1,o2: sp4_s2_2,o1
+      sp4_s1_1,o3: sp4_s2_3,o1
+      sp4_s2_0,o2: sw4_0_split,o1
+      sp4_s2_0,o3: xin_4_1,o1
+      xin_4_1,o2: ps_4_1,o1
+      xin_4_1,o3: tx3_4_1,o1
+      xin_4_1,o4: tx4_4_1,o1
+      ps_4_1,o2: th_4_1,o1
+      sp4_s2_1,o2: xin_4_2,o1
+      xin_4_2,o2: ps_4_2,o1
+      xin_4_2,o3: tx3_4_2,o1
+      xin_4_2,o4: tx4_4_2,o1
+      ps_4_2,o2: th_4_2,o1
+      sp4_s2_1,o3: xin_4_3,o1
+      xin_4_3,o2: ps_4_3,o1
+      xin_4_3,o3: tx3_4_3,o1
+      xin_4_3,o4: tx4_4_3,o1
+      ps_4_3,o2: th_4_3,o1
+      sp4_s2_2,o2: xin_4_4,o1
+      xin_4_4,o2: ps_4_4,o1
+      xin_4_4,o3: tx3_4_4,o1
+      xin_4_4,o4: tx4_4_4,o1
+      ps_4_4,o2: th_4_4,o1
+      sp4_s2_2,o3: xin_4_5,o1
+      xin_4_5,o2: ps_4_5,o1
+      xin_4_5,o3: tx3_4_5,o1
+      xin_4_5,o4: tx4_4_5,o1
+      ps_4_5,o2: th_4_5,o1
+      sp4_s2_3,o2: xin_4_6,o1
+      xin_4_6,o2: ps_4_6,o1
+      xin_4_6,o3: tx3_4_6,o1
+      xin_4_6,o4: tx4_4_6,o1
+      ps_4_6,o2: th_4_6,o1
+      sp4_s2_3,o3: xin_4_7,o1
+      xin_4_7,o2: ps_4_7,o1
+      xin_4_7,o3: tx3_4_7,o1
+      xin_4_7,o4: tx4_4_7,o1
+      ps_4_7,o2: th_4_7,o1
+      sp5_s0,o2: sp5_s1_0,o1
+      sp5_s0,o3: sp5_s1_1,o1
+      sp5_s1_0,o2: sp5_s2_0,o1
+      sp5_s1_0,o3: sp5_s2_1,o1
+      sp5_s1_1,o2: sp5_s2_2,o1
+      sp5_s1_1,o3: sp5_s2_3,o1
+      sp5_s2_0,o2: sw5_0_split,o1
+      sp5_s2_0,o3: xin_5_1,o1
+      xin_5_1,o2: ps_5_1,o1
+      xin_5_1,o3: tx3_5_1,o1
+      xin_5_1,o4: tx4_5_1,o1
+      ps_5_1,o2: th_5_1,o1
+      sp5_s2_1,o2: xin_5_2,o1
+      xin_5_2,o2: ps_5_2,o1
+      xin_5_2,o3: tx3_5_2,o1
+      xin_5_2,o4: tx4_5_2,o1
+      ps_5_2,o2: th_5_2,o1
+      sp5_s2_1,o3: xin_5_3,o1
+      xin_5_3,o2: ps_5_3,o1
+      xin_5_3,o3: tx3_5_3,o1
+      xin_5_3,o4: tx4_5_3,o1
+      ps_5_3,o2: th_5_3,o1
+      sp5_s2_2,o2: xin_5_4,o1
+      xin_5_4,o2: ps_5_4,o1
+      xin_5_4,o3: tx3_5_4,o1
+      xin_5_4,o4: tx4_5_4,o1
+      ps_5_4,o2: th_5_4,o1
+      sp5_s2_2,o3: xin_5_5,o1
+      xin_5_5,o2: ps_5_5,o1
+      xin_5_5,o3: tx3_5_5,o1
+      xin_5_5,o4: tx4_5_5,o1
+      ps_5_5,o2: th_5_5,o1
+      sp5_s2_3,o2: xin_5_6,o1
+      xin_5_6,o2: ps_5_6,o1
+      xin_5_6,o3: tx3_5_6,o1
+      xin_5_6,o4: tx4_5_6,o1
+      ps_5_6,o2: th_5_6,o1
+      sp5_s2_3,o3: xin_5_7,o1
+      xin_5_7,o2: ps_5_7,o1
+      xin_5_7,o3: tx3_5_7,o1
+      xin_5_7,o4: tx4_5_7,o1
+      ps_5_7,o2: th_5_7,o1
+      sp6_s0,o2: sp6_s1_0,o1
+      sp6_s0,o3: sp6_s1_1,o1
+      sp6_s1_0,o2: sp6_s2_0,o1
+      sp6_s1_0,o3: sp6_s2_1,o1
+      sp6_s1_1,o2: sp6_s2_2,o1
+      sp6_s1_1,o3: sp6_s2_3,o1
+      sp6_s2_0,o2: sw6_0_split,o1
+      sp6_s2_0,o3: xin_6_1,o1
+      xin_6_1,o2: ps_6_1,o1
+      xin_6_1,o3: tx3_6_1,o1
+      xin_6_1,o4: tx4_6_1,o1
+      ps_6_1,o2: th_6_1,o1
+      sp6_s2_1,o2: xin_6_2,o1
+      xin_6_2,o2: ps_6_2,o1
+      xin_6_2,o3: tx3_6_2,o1
+      xin_6_2,o4: tx4_6_2,o1
+      ps_6_2,o2: th_6_2,o1
+      sp6_s2_1,o3: xin_6_3,o1
+      xin_6_3,o2: ps_6_3,o1
+      xin_6_3,o3: tx3_6_3,o1
+      xin_6_3,o4: tx4_6_3,o1
+      ps_6_3,o2: th_6_3,o1
+      sp6_s2_2,o2: xin_6_4,o1
+      xin_6_4,o2: ps_6_4,o1
+      xin_6_4,o3: tx3_6_4,o1
+      xin_6_4,o4: tx4_6_4,o1
+      ps_6_4,o2: th_6_4,o1
+      sp6_s2_2,o3: xin_6_5,o1
+      xin_6_5,o2: ps_6_5,o1
+      xin_6_5,o3: tx3_6_5,o1
+      xin_6_5,o4: tx4_6_5,o1
+      ps_6_5,o2: th_6_5,o1
+      sp6_s2_3,o2: xin_6_6,o1
+      xin_6_6,o2: ps_6_6,o1
+      xin_6_6,o3: tx3_6_6,o1
+      xin_6_6,o4: tx4_6_6,o1
+      ps_6_6,o2: th_6_6,o1
+      sp6_s2_3,o3: xin_6_7,o1
+      xin_6_7,o2: ps_6_7,o1
+      xin_6_7,o3: tx3_6_7,o1
+      xin_6_7,o4: tx4_6_7,o1
+      ps_6_7,o2: th_6_7,o1
+      sp7_s0,o2: sp7_s1_0,o1
+      sp7_s0,o3: sp7_s1_1,o1
+      sp7_s1_0,o2: sp7_s2_0,o1
+      sp7_s1_0,o3: sp7_s2_1,o1
+      sp7_s1_1,o2: sp7_s2_2,o1
+      sp7_s1_1,o3: sp7_s2_3,o1
+      sp7_s2_0,o2: sw7_0_split,o1
+      sp7_s2_0,o3: xin_7_1,o1
+      xin_7_1,o2: ps_7_1,o1
+      xin_7_1,o3: tx3_7_1,o1
+      xin_7_1,o4: tx4_7_1,o1
+      ps_7_1,o2: th_7_1,o1
+      sp7_s2_1,o2: xin_7_2,o1
+      xin_7_2,o2: ps_7_2,o1
+      xin_7_2,o3: tx3_7_2,o1
+      xin_7_2,o4: tx4_7_2,o1
+      ps_7_2,o2: th_7_2,o1
+      sp7_s2_1,o3: xin_7_3,o1
+      xin_7_3,o2: ps_7_3,o1
+      xin_7_3,o3: tx3_7_3,o1
+      xin_7_3,o4: tx4_7_3,o1
+      ps_7_3,o2: th_7_3,o1
+      sp7_s2_2,o2: xin_7_4,o1
+      xin_7_4,o2: ps_7_4,o1
+      xin_7_4,o3: tx3_7_4,o1
+      xin_7_4,o4: tx4_7_4,o1
+      ps_7_4,o2: th_7_4,o1
+      sp7_s2_2,o3: xin_7_5,o1
+      xin_7_5,o2: ps_7_5,o1
+      xin_7_5,o3: tx3_7_5,o1
+      xin_7_5,o4: tx4_7_5,o1
+      ps_7_5,o2: th_7_5,o1
+      sp7_s2_3,o2: xin_7_6,o1
+      xin_7_6,o2: ps_7_6,o1
+      xin_7_6,o3: tx3_7_6,o1
+      xin_7_6,o4: tx4_7_6,o1
+      ps_7_6,o2: th_7_6,o1
+      sp7_s2_3,o3: xin_7_7,o1
+      xin_7_7,o2: ps_7_7,o1
+      xin_7_7,o3: tx3_7_7,o1
+      xin_7_7,o4: tx4_7_7,o1
+      ps_7_7,o2: th_7_7,o1
+      cm0_c1_0,o1: cm0_c0_0,o2
+      cm0_c1_1,o1: cm0_c0_0,o3
+      cm0_c2_0,o1: cm0_c1_0,o2
+      cm0_c2_1,o1: cm0_c1_0,o3
+      cm0_c2_2,o1: cm0_c1_1,o2
+      cm0_c2_3,o1: cm0_c1_1,o3
+      sw7_0_comb,o4: cm0_c2_0,o2
+      cm0_c2_0,o3: tcm_0_1,o1
+      cm0_c2_1,o2: tcm_0_2,o1
+      cm0_c2_1,o3: tcm_0_3,o1
+      cm0_c2_2,o2: tcm_0_4,o1
+      cm0_c2_2,o3: tcm_0_5,o1
+      cm0_c2_3,o2: tcm_0_6,o1
+      cm0_c2_3,o3: tcm_0_7,o1
+      cm1_c1_0,o1: cm1_c0_0,o2
+      cm1_c1_1,o1: cm1_c0_0,o3
+      cm1_c2_0,o1: cm1_c1_0,o2
+      cm1_c2_1,o1: cm1_c1_0,o3
+      cm1_c2_2,o1: cm1_c1_1,o2
+      cm1_c2_3,o1: cm1_c1_1,o3
+      sw7_1_comb,o4: cm1_c2_0,o2
+      cm1_c2_0,o3: tcm_1_1,o1
+      cm1_c2_1,o2: tcm_1_2,o1
+      cm1_c2_1,o3: tcm_1_3,o1
+      cm1_c2_2,o2: tcm_1_4,o1
+      cm1_c2_2,o3: tcm_1_5,o1
+      cm1_c2_3,o2: tcm_1_6,o1
+      cm1_c2_3,o3: tcm_1_7,o1
+      cm2_c1_0,o1: cm2_c0_0,o2
+      cm2_c1_1,o1: cm2_c0_0,o3
+      cm2_c2_0,o1: cm2_c1_0,o2
+      cm2_c2_1,o1: cm2_c1_0,o3
+      cm2_c2_2,o1: cm2_c1_1,o2
+      cm2_c2_3,o1: cm2_c1_1,o3
+      sw7_2_comb,o4: cm2_c2_0,o2
+      cm2_c2_0,o3: tcm_2_1,o1
+      cm2_c2_1,o2: tcm_2_2,o1
+      cm2_c2_1,o3: tcm_2_3,o1
+      cm2_c2_2,o2: tcm_2_4,o1
+      cm2_c2_2,o3: tcm_2_5,o1
+      cm2_c2_3,o2: tcm_2_6,o1
+      cm2_c2_3,o3: tcm_2_7,o1
+      cm3_c1_0,o1: cm3_c0_0,o2
+      cm3_c1_1,o1: cm3_c0_0,o3
+      cm3_c2_0,o1: cm3_c1_0,o2
+      cm3_c2_1,o1: cm3_c1_0,o3
+      cm3_c2_2,o1: cm3_c1_1,o2
+      cm3_c2_3,o1: cm3_c1_1,o3
+      sw7_3_comb,o4: cm3_c2_0,o2
+      cm3_c2_0,o3: tcm_3_1,o1
+      cm3_c2_1,o2: tcm_3_2,o1
+      cm3_c2_1,o3: tcm_3_3,o1
+      cm3_c2_2,o2: tcm_3_4,o1
+      cm3_c2_2,o3: tcm_3_5,o1
+      cm3_c2_3,o2: tcm_3_6,o1
+      cm3_c2_3,o3: tcm_3_7,o1
+      cm4_c1_0,o1: cm4_c0_0,o2
+      cm4_c1_1,o1: cm4_c0_0,o3
+      cm4_c2_0,o1: cm4_c1_0,o2
+      cm4_c2_1,o1: cm4_c1_0,o3
+      cm4_c2_2,o1: cm4_c1_1,o2
+      cm4_c2_3,o1: cm4_c1_1,o3
+      sw7_4_comb,o4: cm4_c2_0,o2
+      cm4_c2_0,o3: tcm_4_1,o1
+      cm4_c2_1,o2: tcm_4_2,o1
+      cm4_c2_1,o3: tcm_4_3,o1
+      cm4_c2_2,o2: tcm_4_4,o1
+      cm4_c2_2,o3: tcm_4_5,o1
+      cm4_c2_3,o2: tcm_4_6,o1
+      cm4_c2_3,o3: tcm_4_7,o1
+      cm5_c1_0,o1: cm5_c0_0,o2
+      cm5_c1_1,o1: cm5_c0_0,o3
+      cm5_c2_0,o1: cm5_c1_0,o2
+      cm5_c2_1,o1: cm5_c1_0,o3
+      cm5_c2_2,o1: cm5_c1_1,o2
+      cm5_c2_3,o1: cm5_c1_1,o3
+      sw7_5_comb,o4: cm5_c2_0,o2
+      cm5_c2_0,o3: tcm_5_1,o1
+      cm5_c2_1,o2: tcm_5_2,o1
+      cm5_c2_1,o3: tcm_5_3,o1
+      cm5_c2_2,o2: tcm_5_4,o1
+      cm5_c2_2,o3: tcm_5_5,o1
+      cm5_c2_3,o2: tcm_5_6,o1
+      cm5_c2_3,o3: tcm_5_7,o1
+      cm6_c1_0,o1: cm6_c0_0,o2
+      cm6_c1_1,o1: cm6_c0_0,o3
+      cm6_c2_0,o1: cm6_c1_0,o2
+      cm6_c2_1,o1: cm6_c1_0,o3
+      cm6_c2_2,o1: cm6_c1_1,o2
+      cm6_c2_3,o1: cm6_c1_1,o3
+      sw7_6_comb,o4: cm6_c2_0,o2
+      cm6_c2_0,o3: tcm_6_1,o1
+      cm6_c2_1,o2: tcm_6_2,o1
+      cm6_c2_1,o3: tcm_6_3,o1
+      cm6_c2_2,o2: tcm_6_4,o1
+      cm6_c2_2,o3: tcm_6_5,o1
+      cm6_c2_3,o2: tcm_6_6,o1
+      cm6_c2_3,o3: tcm_6_7,o1
+      cm7_c1_0,o1: cm7_c0_0,o2
+      cm7_c1_1,o1: cm7_c0_0,o3
+      cm7_c2_0,o1: cm7_c1_0,o2
+      cm7_c2_1,o1: cm7_c1_0,o3
+      cm7_c2_2,o1: cm7_c1_1,o2
+      cm7_c2_3,o1: cm7_c1_1,o3
+      sw7_7_comb,o4: cm7_c2_0,o2
+      cm7_c2_0,o3: tcm_7_1,o1
+      cm7_c2_1,o2: tcm_7_2,o1
+      cm7_c2_1,o3: tcm_7_3,o1
+      cm7_c2_2,o2: tcm_7_4,o1
+      cm7_c2_2,o3: tcm_7_5,o1
+      cm7_c2_3,o2: tcm_7_6,o1
+      cm7_c2_3,o3: tcm_7_7,o1
+ports:
+  in0: sp0_s0,o1
+  in1: sp1_s0,o1
+  in2: sp2_s0,o1
+  in3: sp3_s0,o1
+  in4: sp4_s0,o1
+  in5: sp5_s0,o1
+  in6: sp6_s0,o1
+  in7: sp7_s0,o1
+  out0: cm0_c0_0,o1
+  out1: cm1_c0_0,o1
+  out2: cm2_c0_0,o1
+  out3: cm3_c0_0,o1
+  out4: cm4_c0_0,o1
+  out5: cm5_c0_0,o1
+  out6: cm6_c0_0,o1
+  out7: cm7_c0_0,o1
+info:
+  picset_task_id: 14
+  picset_name: Spanke 8x8
+  picbench: PIC-Bench-48
+  topology_kind: authentic spanke_split_gate_combine builder (N=8, nodes=720, io=16);
+    de-aliased from Clements proxies

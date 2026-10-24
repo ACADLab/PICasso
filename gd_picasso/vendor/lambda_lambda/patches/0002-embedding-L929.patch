@@ -1,0 +1,15 @@
+# Patch applied to optical_compiler/embedding.py after vendoring
+# upstream 08d1a215aa48966d34334216acc6bfa38b7fe74f.
+#
+# Upstream line ~929 was corrupted (shell path list pasted over
+# `if src_neighbor == dst_neighbor:`). Restore the comparison.
+
+--- a/optical_compiler/embedding.py
++++ b/optical_compiler/embedding.py
+@@ -926,7 +926,7 @@
+                     for group in groups:
+                         for src_neighbor in group:
+                             for dst_neighbor in group:
+-                                if src_neighbor =<CORRUPTED_PATH_LIST>= dst_neighbor:
++                                if src_neighbor == dst_neighbor:
+                                     continue

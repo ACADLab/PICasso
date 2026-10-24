@@ -1,3 +1,2 @@
-# Placeholder — fill with full git SHA once a working λλ tree is located.
-# Format: one SHA line, then optional "remote <url>" line.
-UNAVAILABLE
+08d1a215aa48966d34334216acc6bfa38b7fe74f
+# https://github.com/vaibhavmehta1/LambdaLambda @ main

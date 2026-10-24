@@ -1,0 +1,84 @@
+# PIC-Set Task-9 LiDAR IR stub (append-only) — 90° hybrid four-path skeleton.
+# Identity round-trip for lidar_ir; SPA goldens / layout-N3 use spa helpers.
+# Formal partition: expressible.
+schema: null
+instances:
+  src:
+    component: mmi1x2
+    settings:
+      macro_type: m_mmi1x2_t9s
+      placement: [UNPLACED, [0, 0], N, [0, 0, 0, 0]]
+  sa:
+    component: mmi1x2
+    settings:
+      macro_type: m_mmi1x2_t9a
+      placement: [UNPLACED, [20, 20], N, [0, 0, 0, 0]]
+  sb:
+    component: mmi1x2
+    settings:
+      macro_type: m_mmi1x2_t9b
+      placement: [UNPLACED, [20, -20], N, [0, 0, 0, 0]]
+  p0:
+    component: straight
+    settings:
+      length: 200.0
+      macro_type: m_straight_t9_0
+      placement: [UNPLACED, [50, 30], N, [0, 0, 0, 0]]
+  p1:
+    component: straight
+    settings:
+      length: 200.0
+      macro_type: m_straight_t9_1
+      placement: [UNPLACED, [50, 10], N, [0, 0, 0, 0]]
+  p2:
+    component: straight
+    settings:
+      length: 200.0
+      macro_type: m_straight_t9_2
+      placement: [UNPLACED, [50, -10], N, [0, 0, 0, 0]]
+  p3:
+    component: straight
+    settings:
+      length: 200.0
+      macro_type: m_straight_t9_3
+      placement: [UNPLACED, [50, -30], N, [0, 0, 0, 0]]
+  sink:
+    component: mmi2x2
+    settings:
+      macro_type: m_mmi2x2_t9
+      placement: [UNPLACED, [90, 0], N, [0, 0, 0, 0]]
+schematic_placements:
+  src: {x: 0.0, y: 0.0, port: null, rotation: 0, dx: 0, dy: 0, mirror: false}
+  sa: {x: 20.0, y: 20.0, port: null, rotation: 0, dx: 0, dy: 0, mirror: false}
+  sb: {x: 20.0, y: -20.0, port: null, rotation: 0, dx: 0, dy: 0, mirror: false}
+  p0: {x: 50.0, y: 30.0, port: null, rotation: 0, dx: 0, dy: 0, mirror: false}
+  p1: {x: 50.0, y: 10.0, port: null, rotation: 0, dx: 0, dy: 0, mirror: false}
+  p2: {x: 50.0, y: -10.0, port: null, rotation: 0, dx: 0, dy: 0, mirror: false}
+  p3: {x: 50.0, y: -30.0, port: null, rotation: 0, dx: 0, dy: 0, mirror: false}
+  sink: {x: 90.0, y: 0.0, port: null, rotation: 0, dx: 0, dy: 0, mirror: false}
+nets:
+  n_0: ['src,o2', 'sa,o1']
+  n_1: ['src,o3', 'sb,o1']
+  n_2: ['sa,o2', 'p0,o1']
+  n_3: ['sa,o3', 'p1,o1']
+  n_4: ['sb,o2', 'p2,o1']
+  n_5: ['sb,o3', 'p3,o1']
+  n_6: ['p0,o2', 'sink,o1']
+  n_7: ['p1,o2', 'sink,o2']
+  n_8: ['p2,o2', 'sink,o3']
+  n_9: ['p3,o2', 'sink,o4']
+ports:
+  in: src,o1
+  out0: sink,o3
+  out1: sink,o4
+schema_version: 1
+settings:
+  version: '1.0'
+  design: picset_task09_stub
+  units_distance_microns: 1
+  die_area: [[0, 0], [120, 80]]
+  num_instances: 8
+  num_nets: 10
+  num_ports: 3
+  wg_radius: 5
+library: {}

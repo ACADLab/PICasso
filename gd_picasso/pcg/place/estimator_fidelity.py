@@ -13,7 +13,7 @@ import numpy as np
 
 from ..store import PCGStore
 from ..types import EdgeLayer
-from . import ESTIMATOR_ONLY_BANNER
+from . import ESTIMATOR_ONLY_BANNER, ROUTED_FIDELITY_BANNER
 from .tensors import (
     PlacementProblem,
     arm_length_estimate,
@@ -119,11 +119,17 @@ def estimator_fidelity(
     prefer_edge_length: bool = True,
     treat_edge_length_as: str = "planted",
     reference_um: Optional[np.ndarray] = None,
+    mae_um_threshold: float = 25.0,
+    drop_estimator_only: Optional[bool] = None,
 ) -> FidelityReport:
     """Compare predicted net lengths to planted/routed references.
 
     Until routed geometry exists, references are planted estimator lengths
     (same formula at a reference placement) — still bannered ESTIMATOR_ONLY.
+
+    When ``treat_edge_length_as='routed'`` (or ``drop_estimator_only=True``)
+    and MAE ≤ ``mae_um_threshold``, the banner switches to
+    ``ROUTED_FIDELITY_BANNER`` (ESTIMATOR_ONLY dropped).
     """
     prob = problem or build_placement_problem(store)
     xy_arr = prob.xy if xy is None else xy
@@ -188,8 +194,17 @@ def estimator_fidelity(
         arm_pred[g.group_id] = float(max(lp) - min(lp))
         arm_ref[g.group_id] = float(max(lr) - min(lr)) if lr else float("nan")
 
+    routed_mode = "routed" in str(mode) or treat_edge_length_as == "routed"
+    if drop_estimator_only is None:
+        drop_estimator_only = (
+            routed_mode and rows and mae <= mae_um_threshold
+        )
+    banner = (
+        ROUTED_FIDELITY_BANNER if drop_estimator_only else ESTIMATOR_ONLY_BANNER
+    )
+
     return FidelityReport(
-        banner=ESTIMATOR_ONLY_BANNER,
+        banner=banner,
         mode=mode,
         nets=rows,
         mae_um=mae,

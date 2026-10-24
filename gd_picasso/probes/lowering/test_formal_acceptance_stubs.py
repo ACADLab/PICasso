@@ -54,7 +54,6 @@ def test_a1_stub_shape_and_partition_guard() -> None:
     from gd_picasso.pcg.types import LoweredMZIAnnotation, SpecAnnotation
     from gd_picasso.probes.lowering.to_a1 import (
         A1_CONTRACT_VERSION,
-        LoweringA1NotReady,
         cells_to_a1_mutations,
     )
 
@@ -80,12 +79,9 @@ def test_a1_stub_shape_and_partition_guard() -> None:
         raised = True
     assert raised
 
-    raised2 = False
-    try:
-        cells_to_a1_mutations(ann, expand_instances=True)
-    except LoweringA1NotReady:
-        raised2 = True
-    assert raised2
+    muts_x, _ = cells_to_a1_mutations(ann, expand_instances=True)
+    assert muts_x, "Cornerstone expansion must emit A1 ops"
+    assert {m["op"] for m in muts_x} <= {"add_node", "connect", "set_param"}
 
 
 def test_psd_gate_reject_waits_on_ll() -> None:

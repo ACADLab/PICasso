@@ -1,0 +1,110 @@
+# PIC-Bench-48 Task-25: 4-Channel WDM Cascaded MZI
+# upgraded LiDAR stub → deterministic GF PCGStore topology proxy. Serialized by build_formal_benchmarks via to_gf_yaml.
+instances:
+  wdm_casc0_comb:
+    component: mmi2x2
+    settings: {}
+  wdm_casc0_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  wdm_casc0_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  wdm_casc0_split:
+    component: mmi2x2
+    settings: {}
+  wdm_casc1_comb:
+    component: mmi2x2
+    settings: {}
+  wdm_casc1_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  wdm_casc1_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  wdm_casc1_split:
+    component: mmi2x2
+    settings: {}
+  wdm_casc2_comb:
+    component: mmi2x2
+    settings: {}
+  wdm_casc2_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  wdm_casc2_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  wdm_casc2_split:
+    component: mmi2x2
+    settings: {}
+  wdm_casc3_comb:
+    component: mmi2x2
+    settings: {}
+  wdm_casc3_dummy:
+    component: straight
+    settings:
+      length: 320.0
+  wdm_casc3_ps:
+    component: straight_heater_metal
+    settings:
+      length: 320.0
+  wdm_casc3_split:
+    component: mmi2x2
+    settings: {}
+  wdm_casc_term_1:
+    component: terminator
+    settings: {}
+  wdm_casc_term_2:
+    component: terminator
+    settings: {}
+  wdm_casc_term_3:
+    component: terminator
+    settings: {}
+  wdm_casc_term_in:
+    component: terminator
+    settings: {}
+routes:
+  optical:
+    settings: {}
+    links:
+      wdm_casc0_split,o3: wdm_casc0_ps,o1
+      wdm_casc0_split,o4: wdm_casc0_dummy,o1
+      wdm_casc0_ps,o2: wdm_casc0_comb,o1
+      wdm_casc0_dummy,o2: wdm_casc0_comb,o2
+      wdm_casc0_split,o2: wdm_casc_term_in,o1
+      wdm_casc1_split,o3: wdm_casc1_ps,o1
+      wdm_casc1_split,o4: wdm_casc1_dummy,o1
+      wdm_casc1_ps,o2: wdm_casc1_comb,o1
+      wdm_casc1_dummy,o2: wdm_casc1_comb,o2
+      wdm_casc0_comb,o3: wdm_casc1_split,o1
+      wdm_casc1_split,o2: wdm_casc_term_1,o1
+      wdm_casc2_split,o3: wdm_casc2_ps,o1
+      wdm_casc2_split,o4: wdm_casc2_dummy,o1
+      wdm_casc2_ps,o2: wdm_casc2_comb,o1
+      wdm_casc2_dummy,o2: wdm_casc2_comb,o2
+      wdm_casc1_comb,o3: wdm_casc2_split,o1
+      wdm_casc2_split,o2: wdm_casc_term_2,o1
+      wdm_casc3_split,o3: wdm_casc3_ps,o1
+      wdm_casc3_split,o4: wdm_casc3_dummy,o1
+      wdm_casc3_ps,o2: wdm_casc3_comb,o1
+      wdm_casc3_dummy,o2: wdm_casc3_comb,o2
+      wdm_casc2_comb,o3: wdm_casc3_split,o1
+      wdm_casc3_split,o2: wdm_casc_term_3,o1
+ports:
+  in0: wdm_casc0_split,o1
+  through: wdm_casc3_comb,o3
+  drop0: wdm_casc0_comb,o4
+  drop1: wdm_casc1_comb,o4
+  drop2: wdm_casc2_comb,o4
+  drop3: wdm_casc3_comb,o4
+info:
+  picset_task_id: 25
+  picset_name: 4-Channel WDM Cascaded MZI
+  picbench: PIC-Bench-48
+  topology_kind: "upgraded LiDAR stub \u2192 deterministic GF PCGStore topology proxy"

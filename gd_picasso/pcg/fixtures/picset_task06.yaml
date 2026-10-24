@@ -1,0 +1,58 @@
+# PIC-Set Task-6 layout fixture (append-only) — 64-QAM proxy dual-arm MZI.
+# Placeable GF YAML for layout-N3 SPA (ESTIMATOR_ONLY until routed).
+# Formal partition: non_expressible (constellation); SPA uses geometric proxy.
+instances:
+  split:
+    component: mmi1x2
+    settings: {}
+  arm_i:
+    component: straight
+    settings: {length: 200}
+  arm_q:
+    component: straight
+    settings: {length: 200}
+  comb:
+    component: mmi1x2
+    settings: {}
+
+placements:
+  split:
+    x: 0
+    y: 0
+    rotation: 0
+    mirror: false
+  arm_i:
+    x: 120
+    y: 40
+    rotation: 0
+    mirror: false
+  arm_q:
+    x: 120
+    y: -40
+    rotation: 0
+    mirror: false
+  comb:
+    x: 280
+    y: 0
+    rotation: 180
+    mirror: false
+
+routes:
+  west:
+    settings:
+      cross_section: strip
+      radius: 10.0
+    links:
+      split,o2: arm_i,o1
+      split,o3: arm_q,o1
+  east:
+    settings:
+      cross_section: strip
+      radius: 10.0
+    links:
+      arm_i,o2: comb,o2
+      arm_q,o2: comb,o3
+
+ports:
+  in: split,o1
+  out: comb,o1

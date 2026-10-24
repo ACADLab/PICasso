@@ -340,7 +340,6 @@ class YAMLPilotValidator:
         if not isinstance(placements, dict):
             return True, None  # Skip spacing check if placements is not a dict
         
-        instances = yaml_data.get('instances', {})
         positions = []
 
         for inst_name, placement in placements.items():
@@ -348,12 +347,7 @@ class YAMLPilotValidator:
                 x = placement.get('x', 0) or 0
                 y = placement.get('y', 0) or 0
                 if isinstance(x, (int, float)) and isinstance(y, (int, float)):
-                    # Record component type so we can skip same-type pairs
-                    comp_type = ""
-                    inst_info = instances.get(inst_name, {})
-                    if isinstance(inst_info, dict):
-                        comp_type = inst_info.get("component", "")
-                    positions.append((inst_name, float(x), float(y), comp_type))
+                    positions.append((inst_name, float(x), float(y)))
 
         num_components = len(positions)
         if num_components > 20:
@@ -365,13 +359,9 @@ class YAMLPilotValidator:
         else:
             required_spacing = self.min_spacing_um  # <=5 components: 100um
 
-        # Check spacing — skip pairs of the same component type (e.g. parallel
-        # phase-shifter arms inside an MZM are intentionally close together).
         violations = []
-        for i, (name1, x1, y1, type1) in enumerate(positions):
-            for name2, x2, y2, type2 in positions[i+1:]:
-                if type1 and type1 == type2:
-                    continue  # same-type pairs are allowed to be adjacent
+        for i, (name1, x1, y1) in enumerate(positions):
+            for name2, x2, y2 in positions[i+1:]:
                 distance = ((x2 - x1)**2 + (y2 - y1)**2)**0.5
                 if 0 < distance < required_spacing:
                     violations.append((name1, name2, distance, required_spacing))

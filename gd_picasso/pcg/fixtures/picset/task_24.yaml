@@ -1,0 +1,48 @@
+# PIC-Bench-48 Task-24: Dual-Ring Tunable Filter
+# upgraded LiDAR stub → deterministic GF PCGStore topology proxy. Serialized by build_formal_benchmarks via to_gf_yaml.
+instances:
+  c1:
+    component: coupler
+    settings: {}
+  c2:
+    component: coupler
+    settings: {}
+  ps1:
+    component: straight_heater_metal
+    settings:
+      length: 50.0
+  ps2:
+    component: straight_heater_metal
+    settings:
+      length: 50.0
+  r1:
+    component: ring_single
+    settings:
+      radius: 10.0
+  r2:
+    component: ring_single
+    settings:
+      radius: 12.0
+  term_c1:
+    component: terminator
+    settings: {}
+routes:
+  optical:
+    settings: {}
+    links:
+      c1,o2: ps1,o1
+      ps1,o2: c2,o1
+      c1,o3: r1,o1
+      r1,o2: ps2,o1
+      ps2,o2: r2,o1
+      r2,o2: c2,o3
+      c1,o4: term_c1,o1
+ports:
+  in: c1,o1
+  through: c2,o2
+  drop: c2,o4
+info:
+  picset_task_id: 24
+  picset_name: Dual-Ring Tunable Filter
+  picbench: PIC-Bench-48
+  topology_kind: "upgraded LiDAR stub \u2192 deterministic GF PCGStore topology proxy"

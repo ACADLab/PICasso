@@ -1,0 +1,28 @@
+# PIC-Set Task-34: Simple MMI 1x2 (append-only freeze).
+instances:
+  split:
+    component: mmi1x2
+    settings: {}
+  a:
+    component: straight
+    settings: {length: 50}
+  b:
+    component: straight
+    settings: {length: 50}
+placements:
+  split: {x: 0, y: 0, rotation: 0, mirror: false}
+  a: {x: 100, y: 20, rotation: 0, mirror: false}
+  b: {x: 100, y: -20, rotation: 0, mirror: false}
+routes:
+  optical:
+    settings: {cross_section: strip, radius: 10.0}
+    links:
+      split,o2: a,o1
+      split,o3: b,o1
+ports:
+  in: split,o1
+  out1: a,o2
+  out2: b,o2
+info:
+  picset_task_id: 34
+  picset_name: 'Simple MMI 1x2'

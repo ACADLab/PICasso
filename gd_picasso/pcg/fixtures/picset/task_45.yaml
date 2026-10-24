@@ -1,0 +1,42 @@
+# PIC-Bench-48 Task-45: Multi-PDK straights to ebeam_Polarizer_TM_1550
+# Cornerstone 500nm mixed with SiEPIC non-500nm ports; add_tapers. Serialized by build_formal_benchmarks via to_gf_yaml.
+instances:
+  cs0:
+    component: straight
+    settings:
+      length: 10.0
+  cs1:
+    component: straight
+    settings:
+      length: 10.0
+  sie:
+    component: ebeam_Polarizer_TM_1550_UQAM
+    settings: {}
+  taper_cs0_o2_sie_o1:
+    component: taper
+    settings:
+      length: 10.0
+      width1: 0.5
+      width2: 1.04
+  taper_sie_o2_cs1_o1:
+    component: taper
+    settings:
+      length: 10.0
+      width1: 0.924
+      width2: 0.5
+routes:
+  optical:
+    settings: {}
+    links:
+      cs0,o2: taper_cs0_o2_sie_o1,o1
+      taper_cs0_o2_sie_o1,o2: sie,o1
+      sie,o2: taper_sie_o2_cs1_o1,o1
+      taper_sie_o2_cs1_o1,o2: cs1,o1
+ports:
+  io0: cs0,o1
+  io1: cs1,o2
+info:
+  picset_task_id: 45
+  picset_name: Multi-PDK straights to ebeam_Polarizer_TM_1550
+  picbench: PIC-Bench-48
+  topology_kind: Cornerstone 500nm mixed with SiEPIC non-500nm ports; add_tapers

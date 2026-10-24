@@ -23,7 +23,9 @@ class RouteMetrics:
     phase_rad: Optional[float] = None
     loss_dB: Optional[float] = None
     n_crossings: int = 0
+    n_bends: int = 0
     bend_angle_rad: float = 0.0
+    bend_radius_um: float = 0.0
 
 
 def apply_route_metrics(
@@ -38,6 +40,10 @@ def apply_route_metrics(
 
     Keys are ``(src_node, src_port, dst_node, dst_port)``. Undirected match
     is accepted (src/dst may be swapped). Returns number of edges updated.
+
+    ``n_bends`` / ``bend_radius_um`` are journaled (PCGEdge has no bend
+    fields without a store schema change); ``n_crossings`` and ``length_um``
+    land on the edge.
     """
     updated = 0
     for e in store.edges:
@@ -56,6 +62,9 @@ def apply_route_metrics(
             e.phase_rad = 2.0 * math.pi * neff * m.length_um / wavelength_um
         if m.loss_dB is not None:
             e.loss_dB = m.loss_dB
+        bend_angle = m.bend_angle_rad
+        if not bend_angle and m.n_bends:
+            bend_angle = m.n_bends * (math.pi / 2.0)
         updated += 1
         store.journal.append(
             "backannotate_edge",
@@ -66,6 +75,9 @@ def apply_route_metrics(
                 "phase_rad": e.phase_rad,
                 "loss_dB": e.loss_dB,
                 "n_crossings": e.n_crossings,
+                "n_bends": m.n_bends,
+                "bend_angle_rad": bend_angle,
+                "bend_radius_um": m.bend_radius_um,
             },
             agent=agent,
         )

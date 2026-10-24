@@ -80,6 +80,10 @@ class SchematicAgent:
         snap = store.snapshot()
         try:
             for m in mutations:
+                if not isinstance(m, dict):
+                    raise PCGMutationError(
+                        "A1", f"Mutation must be an object, got {type(m).__name__}"
+                    )
                 op = m.get("op")
                 if op not in A1_BATCH_OPS:
                     raise PCGMutationError(
@@ -87,17 +91,32 @@ class SchematicAgent:
                         f"Unknown op {op!r} (frozen v{A1_CONTRACT_VERSION} "
                         f"allows {sorted(A1_BATCH_OPS)})",
                     )
+
+                def _req(*keys: str) -> None:
+                    missing = [k for k in keys if k not in m]
+                    if missing:
+                        raise PCGMutationError(
+                            "A1",
+                            f"op {op!r} missing required keys {missing}: {m!r}",
+                        )
+
                 if op == "add_node":
+                    _req("id", "component")
                     self.add_component(
                         store, m["id"], m["component"], m.get("params")
                     )
                 elif op == "connect":
+                    _req("src", "src_port", "dst", "dst_port")
                     self.connect(
                         store, m["src"], m["src_port"], m["dst"], m["dst_port"],
                         bundle=m.get("bundle", "optical"),
                     )
                 elif op == "set_param":
+                    _req("node", "key", "value")
                     self.set_param(store, m["node"], m["key"], m["value"])
+        except PCGMutationError:
+            store.restore(snap)
+            raise
         except Exception:
             store.restore(snap)
             raise
