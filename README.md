@@ -146,6 +146,46 @@ python quick_optimization_analysis.py
 python analyze_all_optimizations.py --max-samples 5
 ```
 
+### Reproduce PIC-Bench-48 L3 layout / DRC results (`dev/picplus`)
+
+Place → I/O legalize → taper hand-off → LiDAR route → KLayout DRC on PIC-Set
+fixtures (tasks 1–46). Needs **two** Python envs: gate (`.venv`, gdsfactory 9.x)
+and isolated LiDAR (`.lidar_env/venv`, gdsfactory **8.26.1**).
+
+```bash
+git checkout dev/picplus
+source .venv/bin/activate
+
+# One-time LiDAR env (gf 8.26.1) — see gd_picasso/pcg/route/LIDAR_ENV.md
+bash gd_picasso/pcg/route/setup_lidar_env.sh
+export PICASSO_LIDAR_PYTHON="$PWD/.lidar_env/venv/bin/python"
+export PYTHONPATH="$PWD/.lidar_env/LiDAR/src:${PYTHONPATH:-}"
+
+# Full DRC sweep → writes drc_sweep_report.json under --out-dir
+python -m gd_picasso.pcg.klayout_drc --sweep \
+  --out-dir gd_picasso/pcg/n1_runs/drc_sweep_reproduce
+
+# Multi-PDK taper subset (tasks 39–41, 46)
+python -c "
+from pathlib import Path
+from gd_picasso.pcg.klayout_drc import sweep_drc_all_fixtures
+sweep_drc_all_fixtures(
+    out_dir=Path('gd_picasso/pcg/n1_runs/drc_sweep_multipdk'),
+    task_ids=[39, 40, 41, 46],
+)
+"
+```
+
+Expect `n_drc_clean == n_total` (46/46 on the full sweep). Pipeline pieces:
+
+- **X-stage ≥ 150 µm** — `x_stage_loss` in `gd_picasso/pcg/place/torch_fom.py`
+- **I/O GC pads @ 127 µm pitch** — `gd_picasso/pcg/io_legalize.py`
+- **Multi-PDK taper midpoint hand-off** — SiEPIC stubs + `legalize_taper_placements` in `gd_picasso/pcg/legalize.py`
+- **DRC** — `gd_picasso/pcg/klayout_drc.py` (`parallel_run_um=120`)
+
+Fixtures: [`gd_picasso/pcg/fixtures/picset/`](gd_picasso/pcg/fixtures/picset/).
+LiDAR env: [`gd_picasso/pcg/route/LIDAR_ENV.md`](gd_picasso/pcg/route/LIDAR_ENV.md).
+
 ## 📁 Project Structure
 
 ```
@@ -184,6 +224,8 @@ PICasso/
 - **[gd_picasso/FRAMEWORK.md](gd_picasso/FRAMEWORK.md)** - Complete architecture and workflow documentation
 - **[gd_picasso/USAGE.md](gd_picasso/USAGE.md)** - Detailed usage guide with examples
 - **[gd_picasso/OPTIMIZATION_ANALYSIS_README.md](gd_picasso/OPTIMIZATION_ANALYSIS_README.md)** - Optimization analysis guide
+- **[gd_picasso/pcg/route/LIDAR_ENV.md](gd_picasso/pcg/route/LIDAR_ENV.md)** - Isolated LiDAR (gf 8.26.1) env for L3 routing
+- **[gd_picasso/pcg/fixtures/picset/README.md](gd_picasso/pcg/fixtures/picset/README.md)** - PIC-Bench-48 / PIC-Set golden fixtures
 
 ## 🔧 Framework Workflow
 
