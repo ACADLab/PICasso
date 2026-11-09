@@ -28,6 +28,10 @@ from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple
 
 from gd_picasso.agents.exact_critic import ExactCritic
+from gd_picasso.agents.n1_arm_b_parity_prompt import (
+    B_PARITY_IGNORE_INSTANCE_COUNT,
+    arm_b_parity_system_prompt,
+)
 from gd_picasso.agents.n1_arm_c_mutation_prompt import (
     arm_c_system_prompt,
     arm_c_user_prompt,
@@ -64,6 +68,8 @@ _REPO_ROOT = Path(__file__).resolve().parents[2]
 # Full PIC-Bench-48 slot list (46 GF + 2 unrealizable).
 PICBENCH48_TASK_IDS: Tuple[int, ...] = tuple(range(1, 49))
 UNREALIZABLE_N1_TASK_IDS: frozenset = frozenset({47, 48})
+B_PARITY_ARM = "B_parity_yaml_exact_critic"
+YAML_ARMS = frozenset({"A_yaml_pilot", "B_yaml_exact_critic", B_PARITY_ARM})
 
 # Explicit refusal / infeasibility for tasks 47–48 (pre-registered).
 _REFUSAL_RE = re.compile(
@@ -744,6 +750,17 @@ async def _run_arm_sample_inner(
                 else "Generate the YAML DSL netlist:"
             )
         )
+    elif arm == B_PARITY_ARM:
+        system = arm_b_parity_system_prompt()
+        user = (
+            f"Problem:\n{marked}\n\n{B_PARITY_IGNORE_INSTANCE_COUNT}\n\n"
+            + (
+                "If Requirements say refuse, reply with an explicit refusal only "
+                "(no YAML). Otherwise generate the YAML DSL netlist:"
+                if unrealizable
+                else "Generate the YAML DSL netlist:"
+            )
+        )
     elif arm == "C_typed_exact_critic":
         system = arm_c_system_prompt()
         user = arm_c_user_prompt(marked)
@@ -776,7 +793,7 @@ async def _run_arm_sample_inner(
         # Unrealizable tasks: grade on refusal ∧ no store (pre-registered).
         if unrealizable:
             store: Optional[PCGStore] = None
-            if arm in ("A_yaml_pilot", "B_yaml_exact_critic"):
+            if arm in YAML_ARMS:
                 try:
                     y = extract_yaml_block(text)
                     if y.strip():
@@ -826,7 +843,7 @@ async def _run_arm_sample_inner(
                 latency_s=time.perf_counter() - t0,
             )
 
-        if arm in ("A_yaml_pilot", "B_yaml_exact_critic"):
+        if arm in YAML_ARMS:
             yaml_text = extract_yaml_block(text)
             try:
                 store = yaml_to_store(yaml_text)
@@ -959,7 +976,7 @@ async def _run_arm_sample_inner(
             break
 
     # Final grade from last successful parse
-    if arm in ("A_yaml_pilot", "B_yaml_exact_critic"):
+    if arm in YAML_ARMS:
         assert final_yaml is not None
         store = yaml_to_store(final_yaml)
         if arm == "A_yaml_pilot":
@@ -1306,6 +1323,12 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         default=None,
         help="Live model id (default: N1_LIVE_MODEL env or claude-haiku-4-5-20251001)",
     )
+    p.add_argument(
+        "--arms",
+        type=str,
+        default=None,
+        help="Comma-separated arm ids (default A,B,C). B_parity is opt-in.",
+    )
     args = p.parse_args(argv)
 
     if args.campaign and args.dry_run:
@@ -1345,9 +1368,15 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         )
         llm = build_live_llm(model)
 
+    if args.arms:
+        arms = tuple(a.strip() for a in args.arms.split(",") if a.strip())
+    else:
+        arms = N1_ABLATION_ARMS
+
     results = asyncio.run(
         run_campaign(
             task_ids=task_ids,
+            arms=arms,
             samples_per_task=samples,
             llm=llm,
             out_dir=args.out_dir,

@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from functools import partial
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Callable, Dict, List, Optional, Tuple
 
 
 # Waveguide target from PIC-Set / Table II (provenance: TARGET_TABLE_II — not fab CS)
@@ -115,8 +115,47 @@ def build_lossy_models(
         "via_stack_heater_mtop": straight,
         "taper": straight,
         "terminator": straight,
+        # n1-confirm-v2 held-out oracle. Ideal, not foundry-measured.
+        "mzi": _ideal_mzi_model,
+        "crossing": _ideal_crossing_model,
     }
     return models
+
+
+def _ideal_crossing_model(**_settings: Any) -> Dict[Tuple[str, str], complex]:
+    """Bar crossing: o1↔o3 and o2↔o4, zero crosstalk."""
+    return {
+        ("o1", "o3"): 1.0 + 0.0j,
+        ("o3", "o1"): 1.0 + 0.0j,
+        ("o2", "o4"): 1.0 + 0.0j,
+        ("o4", "o2"): 1.0 + 0.0j,
+    }
+
+
+def _ideal_mzi_model(**settings: Any) -> Dict[Tuple[str, str], complex]:
+    """Ideal lossless MZI: two 50/50 couplers and differential phase ``phi``.
+
+    ``delta_phase_rad`` or ``phase`` (radians, default 0). At phi=0 the device
+    is in the cross state (o1→o3, o2→o4). At phi=pi it is in the bar state
+    (o1→o4, o2→o3). Ports: west (o1, o2), east (o3, o4).
+    """
+    import math
+
+    phi = float(settings.get("delta_phase_rad", settings.get("phase", 0.0)) or 0.0)
+    half = phi / 2.0
+    phase = complex(math.cos(half), math.sin(half))
+    t_cross = 1.0j * phase * math.cos(half)
+    t_bar = 1.0j * phase * math.sin(half)
+    return {
+        ("o1", "o3"): t_cross,
+        ("o2", "o4"): t_cross,
+        ("o1", "o4"): t_bar,
+        ("o2", "o3"): t_bar,
+        ("o3", "o1"): t_cross,
+        ("o4", "o2"): t_cross,
+        ("o4", "o1"): t_bar,
+        ("o3", "o2"): t_bar,
+    }
 
 
 def ensure_jax_x64() -> None:
