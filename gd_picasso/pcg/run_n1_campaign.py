@@ -232,6 +232,7 @@ def _score_unrealizable(
         latency_s=latency_s,
         refused=refused,
         unrealizable_task=True,
+        raw_response=text or "",
     )
 
 
@@ -658,6 +659,12 @@ class SampleResult:
     refused: bool = False
     unrealizable_task: bool = False
     infra_retries: int = 0
+    # Sidecar only. Omitted from to_csv_row so scoring and checkpoint keys
+    # stay unchanged. In-flight R1 (imported before this field existed) does
+    # not write them.
+    raw_response: str = ""
+    payload_yaml: str = ""
+    payload_json: str = ""
 
     def to_csv_row(self) -> Dict[str, Any]:
         return {
@@ -869,6 +876,8 @@ async def _run_arm_sample_inner(
                         model_id=model_reported,
                         tip_sha=tip_sha,
                         problems=[feedback],
+                        raw_response=final_raw_text,
+                        payload_yaml=yaml_text or "",
                     )
                 user = build_repair_user(
                     problem_text=marked,
@@ -926,6 +935,8 @@ async def _run_arm_sample_inner(
                         model_id=model_reported,
                         tip_sha=tip_sha,
                         problems=[feedback],
+                        raw_response=final_raw_text,
+                        payload_json=text or "",
                     )
                 user = arm_c_user_prompt(
                     marked, feedback=feedback, previous_attempt=text
@@ -955,6 +966,8 @@ async def _run_arm_sample_inner(
                         model_id=model_reported,
                         tip_sha=tip_sha,
                         problems=[feedback],
+                        raw_response=final_raw_text,
+                        payload_json=text or "",
                     )
                 user = arm_c_user_prompt(
                     marked, feedback=feedback, previous_attempt=text
@@ -1010,6 +1023,9 @@ async def _run_arm_sample_inner(
         tip_sha=tip_sha,
         problems=critique_problems,
         latency_s=time.perf_counter() - t0,
+        raw_response=final_raw_text,
+        payload_yaml=final_yaml or "",
+        payload_json=final_arm_c_text or "",
     )
 
 
@@ -1040,6 +1056,18 @@ def append_checkpoint(path: Path, result: SampleResult) -> None:
     row = result.to_csv_row()
     with path.open("a", encoding="utf-8") as f:
         f.write(json.dumps(row) + "\n")
+    # Separate file so the scoring jsonl schema is unchanged.
+    payload = {
+        "task_id": result.task_id,
+        "arm": result.arm,
+        "sample": result.sample,
+        "raw_response": result.raw_response,
+        "final_yaml": result.payload_yaml,
+        "final_json": result.payload_json,
+    }
+    side = path.with_name("n1_payloads.jsonl")
+    with side.open("a", encoding="utf-8") as f:
+        f.write(json.dumps(payload) + "\n")
 
 
 def write_csv(path: Path, rows: Sequence[Dict[str, Any]]) -> None:

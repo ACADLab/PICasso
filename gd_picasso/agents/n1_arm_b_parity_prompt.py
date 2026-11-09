@@ -23,7 +23,7 @@ OUTPUT RULES (mandatory):
    ports:
      <export_name>: <node_id>,<port_name>
 3. Do not emit JSON mutations, insert_module, group_constraint, set_edge_grade,
-   or set_placement.
+   set_placement, set_exported_ports, or export_port.
 4. "ports" is required — every optical I/O that is intentionally external
    (dangling by design) MUST appear here. Omitting a dangling port fails
    ExactCritic the same way missing YAML ports fails.

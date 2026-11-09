@@ -28,6 +28,8 @@ python -m gd_picasso.pcg.run_n1_campaign --campaign --picbench48 \
 
 Hard stop: if B_parity uniform pass on tasks 1–46 is **≥** Arm C, report immediately and do not rerun.
 
+Payload sidecar (does not change prompts, scoring, or call order): each future sample also appends `n1_payloads.jsonl` with `raw_response`, `final_yaml` (arms A/B/B_parity), and `final_json` (arm C). The scoring jsonl and CSV omit those fields. The in-flight R1 process imported the pre-sidecar module and will not write this file.
+
 ## R0.7 Held-out functional oracle
 
 Module: `gd_picasso/pcg/functional_oracle.py`. Not imported by the repair loop.
@@ -57,6 +59,11 @@ Post-hoc only. For every `min_nodes` failure in round 1 and in R1, recompute wit
 ## R7 PhIDO testbench (after R1)
 
 Do not run PhIDO. Fetch its public 102-prompt testbench. Run Arm C (and B_parity if spend allows) on Levels 1–3, 5 samples. Map success to ExactCritic, GDS via `place_route_emit_gds`, DRC clean, and `route_ok`. Place PhIDO published pass@1/pass@5 beside ours and note definitional differences. List prompts whose components are outside our library. Time box 1 day, spend ≤ $15. Total spend hard stop remains **$60**.
+
+## Hard stops (added)
+
+- Functional oracle fails any applicable golden fixture: stop, do not grade campaigns.
+- B_parity uniform pass on tasks 1–46 is ≥ Arm C: report immediately, do not rerun.
 
 ## Execution order after this tag
 
