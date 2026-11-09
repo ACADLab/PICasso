@@ -194,3 +194,28 @@ TASK_CONTRACTS: Dict[int, TaskContract] = {
 def get_task_contract(task_id: int) -> Optional[TaskContract]:
     """Return the contract for a realizable task, or None for 47/48 rejects."""
     return TASK_CONTRACTS.get(task_id)
+
+
+def format_requirements_block(task_id: int) -> str:
+    """Identical Requirements block appended to Arms A/B/C task prompts.
+
+    Rendered from ``TASK_CONTRACTS`` for realizable tasks. Unrealizable
+    slots (47/48) instruct an explicit refusal with no netlist/store.
+    """
+    contract = get_task_contract(task_id)
+    if contract is None:
+        return (
+            "Requirements:\n"
+            "- This task is formally unrealizable (PSD / gain > 1).\n"
+            "- You MUST emit an explicit refusal / infeasibility verdict.\n"
+            "- Do NOT emit a YAML netlist, JSON mutations, or any circuit store.\n"
+            "- A pass is recorded only for refusal with no store."
+        )
+    types = ", ".join(sorted(contract.required_component_types))
+    return (
+        "Requirements:\n"
+        f"- min_nodes: {contract.min_nodes}\n"
+        f"- min_io_ports: {contract.min_io_ports}\n"
+        f"- required_component_types: {{{types}}}\n"
+        f"- min_phase_shifters: {contract.min_phase_shifters}"
+    )

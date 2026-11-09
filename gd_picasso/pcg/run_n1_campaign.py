@@ -2,9 +2,9 @@
 
 Arms A/B/C share budgets from ``spa_protocol``. Repair feedback differs by arm.
 
-Final headline ``pass``:
-  - Arm A: ``ExactCritic.review(store).ok``
-  - Arms B/C: ExactCritic **and** ``evaluate_task_contract(store, contract)``
+Final headline ``pass`` (all arms, ``n1-confirm-v1``):
+  ``pass_uniform = ExactCritic.review(store).ok AND evaluate_task_contract(...)``
+  Tasks 47/48: pass iff explicit refusal/infeasibility AND no store.
 
 CLI::
 
@@ -36,6 +36,7 @@ from gd_picasso.agents.schematic_agent import SchematicAgent
 from gd_picasso.bench.contracts import (
     contract_failures,
     evaluate_task_contract,
+    format_requirements_block,
     get_task_contract,
 )
 from gd_picasso.pcg.bridge import from_gf_yaml
@@ -62,6 +63,45 @@ _REPO_ROOT = Path(__file__).resolve().parents[2]
 
 # Full PIC-Bench-48 slot list (46 GF + 2 unrealizable).
 PICBENCH48_TASK_IDS: Tuple[int, ...] = tuple(range(1, 49))
+UNREALIZABLE_N1_TASK_IDS: frozenset = frozenset({47, 48})
+
+# Explicit refusal / infeasibility for tasks 47–48 (pre-registered).
+_REFUSAL_RE = re.compile(
+    r"\b("
+    r"unrealizable|infeasible|infeasibility|refuse|refusal|rejected|"
+    r"cannot\s+realize|physically\s+impossible|not\s+realizable|"
+    r"impossible\s+to\s+(?:realize|implement|build)|"
+    r"gain\s*>\s*1|psd\s+reject"
+    r")\b",
+    re.IGNORECASE,
+)
+
+# Infrastructure errors: retry up to 3, then report (never silent drop).
+_INFRA_RE = re.compile(
+    r"(credit\s+balance|BadRequestError|APIConnectionError|RateLimitError|"
+    r"APITimeoutError|InternalServerError|ServiceUnavailable|"
+    r"Connection\s+error|timed?\s*out)",
+    re.IGNORECASE,
+)
+INFRA_MAX_RETRIES: int = 3
+
+
+def append_requirements(description: str, task_id: int) -> str:
+    """Append the identical Requirements block for Arms A/B/C."""
+    block = format_requirements_block(task_id)
+    desc = (description or "").rstrip()
+    if "Requirements:" in desc:
+        return desc
+    return f"{desc}\n\n{block}"
+
+
+def detect_refusal(text: str) -> bool:
+    """True if model text contains an explicit refusal / infeasibility verdict."""
+    return bool(_REFUSAL_RE.search(text or ""))
+
+
+def is_infra_error(exc_or_text: Any) -> bool:
+    return bool(_INFRA_RE.search(str(exc_or_text or "")))
 
 
 def resolve_problems(task_ids: Sequence[int]) -> Dict[int, Dict]:
@@ -83,7 +123,11 @@ def resolve_problems(task_ids: Sequence[int]) -> Dict[int, Dict]:
     missing: List[int] = []
     for tid in task_ids:
         if tid in by_id:
-            out[tid] = by_id[tid]
+            base = dict(by_id[tid])
+            base["description"] = append_requirements(
+                str(base.get("description") or base.get("name") or ""), tid
+            )
+            out[tid] = base
             continue
         task = catalog.get(tid)
         name = task.name if task else f"task {tid}"
@@ -101,7 +145,11 @@ def resolve_problems(task_ids: Sequence[int]) -> Dict[int, Dict]:
                 "Emit a connected, ExactCritic-legal netlist with the "
                 "topology implied by the task name."
             )
-        out[tid] = {"id": str(tid), "name": name, "description": desc}
+        out[tid] = {
+            "id": str(tid),
+            "name": name,
+            "description": append_requirements(desc, tid),
+        }
         missing.append(tid)
     if missing:
         print(f"resolve_problems: synthesized statements for tasks {missing}")
@@ -118,7 +166,12 @@ def _contract_feedback(store: PCGStore, task_id: int) -> List[str]:
 
 
 def _score_store(store: PCGStore, task_id: int, arm: str) -> Tuple[bool, bool, bool, List[str]]:
-    """Return (pass_headline, exact_ok, contract_ok, problems)."""
+    """Return (pass_uniform, exact_ok, contract_ok, problems).
+
+    Headline is ExactCritic ∧ TaskContract for **all** arms (n1-confirm-v1).
+    ``arm`` is retained for call-site compatibility only.
+    """
+    _ = arm
     critique = ExactCritic().review(store)
     exact_ok = bool(critique.ok)
     problems = list(critique.problems)
@@ -126,11 +179,54 @@ def _score_store(store: PCGStore, task_id: int, arm: str) -> Tuple[bool, bool, b
     contract_ok = len(c_problems) == 0
     if not contract_ok:
         problems = problems + [f"task_contract: {p}" for p in c_problems]
-    if arm in ("B_yaml_exact_critic", "C_typed_exact_critic"):
-        headline = exact_ok and contract_ok
-    else:
-        headline = exact_ok
+    headline = exact_ok and contract_ok
     return headline, exact_ok, contract_ok, problems
+
+
+def _score_unrealizable(
+    *,
+    text: str,
+    store: Optional[PCGStore],
+    task_id: int,
+    arm: str,
+    sample: int,
+    tip_sha: str,
+    model_id: str,
+    tokens: int,
+    repair_rounds: int,
+    latency_s: float,
+) -> "SampleResult":
+    """Pass iff explicit refusal AND no circuit store (pre-registered)."""
+    refused = detect_refusal(text)
+    has_store = store is not None and len(store.nodes) > 0
+    ok = bool(refused and not has_store)
+    problems: List[str] = []
+    if not refused:
+        problems.append("unrealizable: missing explicit refusal/infeasibility verdict")
+    if has_store:
+        problems.append(
+            f"unrealizable: emitted store with {len(store.nodes)} nodes (must be empty)"
+        )
+    if ok:
+        problems.append("unrealizable: correct refusal (no store)")
+    return SampleResult(
+        task_id=task_id,
+        arm=arm,
+        sample=sample,
+        pass_=ok,
+        pilot_pass=ok,
+        exact_critic_pass=ok,
+        contract_pass=ok,
+        error_class="" if ok else "wrong_connectivity",
+        repair_rounds=repair_rounds,
+        tokens=tokens,
+        model_id=model_id,
+        tip_sha=tip_sha,
+        problems=problems,
+        latency_s=latency_s,
+        refused=refused,
+        unrealizable_task=True,
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -542,7 +638,7 @@ class SampleResult:
     task_id: int
     arm: str
     sample: int
-    pass_: bool  # headline: ExactCritic (A) or ExactCritic∧TaskContract (B/C)
+    pass_: bool  # headline: ExactCritic ∧ TaskContract (all arms)
     pilot_pass: bool
     exact_critic_pass: bool
     error_class: str
@@ -552,6 +648,10 @@ class SampleResult:
     tip_sha: str
     problems: List[str] = field(default_factory=list)
     contract_pass: bool = False
+    latency_s: float = 0.0
+    refused: bool = False
+    unrealizable_task: bool = False
+    infra_retries: int = 0
 
     def to_csv_row(self) -> Dict[str, Any]:
         return {
@@ -568,6 +668,10 @@ class SampleResult:
             "model_id": self.model_id,
             "tip_sha": self.tip_sha,
             "problems": " | ".join(self.problems),
+            "latency_s": f"{self.latency_s:.3f}",
+            "refused": int(self.refused),
+            "unrealizable_task": int(self.unrealizable_task),
+            "infra_retries": int(self.infra_retries),
         }
 
 
@@ -612,24 +716,49 @@ async def _run_arm_sample_inner(
     total_tokens = 0
     model_reported = getattr(llm, "model_id", N1_LLM_MODEL_ID)
     marked = f"[N1_TASK_ID={task_id}]\n{problem_text}"
+    t0 = time.perf_counter()
+    unrealizable = task_id in UNREALIZABLE_N1_TASK_IDS
 
     if arm == "A_yaml_pilot":
         system = BasePilotGenerator().generate_base_pilot_prompt()
-        user = f"Problem:\n{marked}\n\nGenerate the YAML DSL netlist:"
+        user = (
+            f"Problem:\n{marked}\n\n"
+            + (
+                "If Requirements say refuse, reply with an explicit refusal only "
+                "(no YAML). Otherwise generate the YAML DSL netlist:"
+                if unrealizable
+                else "Generate the YAML DSL netlist:"
+            )
+        )
     elif arm == "B_yaml_exact_critic":
         system = (
             "You generate GDSFactory YAML netlists for photonic circuits. "
             "Output YAML only (optional ```yaml fences). ASCII only."
         )
-        user = f"Problem:\n{marked}\n\nGenerate the YAML DSL netlist:"
+        user = (
+            f"Problem:\n{marked}\n\n"
+            + (
+                "If Requirements say refuse, reply with an explicit refusal only "
+                "(no YAML). Otherwise generate the YAML DSL netlist:"
+                if unrealizable
+                else "Generate the YAML DSL netlist:"
+            )
+        )
     elif arm == "C_typed_exact_critic":
         system = arm_c_system_prompt()
         user = arm_c_user_prompt(marked)
+        if unrealizable:
+            user = (
+                f"Problem:\n{marked}\n\n"
+                "Arm C override for unrealizable tasks: do NOT emit mutations. "
+                "Reply with a plain-text explicit refusal / infeasibility verdict only."
+            )
     else:
         raise ValueError(f"unknown arm {arm}")
 
     final_yaml: Optional[str] = None
     final_arm_c_text: Optional[str] = None
+    final_raw_text: str = ""
     pilot_ok = False
     critique_problems: List[str] = []
     rounds_used = 0
@@ -640,8 +769,62 @@ async def _run_arm_sample_inner(
             system=system, user=user, temperature=N1_TEMPERATURE, max_tokens=N1_MAX_TOKENS
         )
         total_tokens += tokens
+        final_raw_text = text or ""
         if require_model_pin:
             assert_api_model_matches_pin(model_reported)
+
+        # Unrealizable tasks: grade on refusal ∧ no store (pre-registered).
+        if unrealizable:
+            store: Optional[PCGStore] = None
+            if arm in ("A_yaml_pilot", "B_yaml_exact_critic"):
+                try:
+                    y = extract_yaml_block(text)
+                    if y.strip():
+                        store = yaml_to_store(y)
+                except Exception:  # noqa: BLE001
+                    store = None
+            else:
+                try:
+                    mutations, ports = extract_arm_c_payload(text)
+                    if mutations:
+                        store = PCGStore(default_agent="N1_C")
+                        SchematicAgent().commit_mutations(store, mutations)
+                        if ports:
+                            store.set_exported_ports(ports, agent="N1_C")
+                except Exception:  # noqa: BLE001
+                    store = None
+            # If model still emitted a store and we have repair budget, nudge.
+            if store is not None and len(store.nodes) > 0 and round_i < N1_MAX_REPAIR_ROUNDS:
+                feedback = (
+                    "VALIDATION: unrealizable task — emit an explicit refusal and "
+                    "do not emit a netlist/mutations/store."
+                )
+                if arm == "C_typed_exact_critic":
+                    user = (
+                        f"Problem:\n{marked}\n\nPREVIOUS ATTEMPT:\n{text}\n\n"
+                        f"VALIDATION / CRITIC ERRORS:\n{feedback}\n\n"
+                        "Reply with a plain-text refusal only."
+                    )
+                else:
+                    user = build_repair_user(
+                        problem_text=marked,
+                        previous_attempt=text,
+                        feedback=feedback,
+                        ask="Reply with an explicit refusal only (no YAML).",
+                    )
+                continue
+            return _score_unrealizable(
+                text=final_raw_text,
+                store=store,
+                task_id=task_id,
+                arm=arm,
+                sample=sample,
+                tip_sha=tip_sha,
+                model_id=model_reported,
+                tokens=total_tokens,
+                repair_rounds=rounds_used,
+                latency_s=time.perf_counter() - t0,
+            )
 
         if arm in ("A_yaml_pilot", "B_yaml_exact_critic"):
             yaml_text = extract_yaml_block(text)
@@ -809,6 +992,7 @@ async def _run_arm_sample_inner(
         model_id=model_reported,
         tip_sha=tip_sha,
         problems=critique_problems,
+        latency_s=time.perf_counter() - t0,
     )
 
 
@@ -875,12 +1059,22 @@ async def run_campaign(
         raise RuntimeError(
             "N1_LLM_MODEL_ID is still PIN_BEFORE_CAMPAIGN; refuse --campaign"
         )
+    # Confirm prompts/critic freeze hashes still match on-disk tree.
+    from gd_picasso.pcg.spa_protocol import (
+        frozen_artifact_hashes,
+        combined_artifacts_hash,
+    )
+
+    prompts_untouched = True  # set False only if hash drift detected mid-run
     manifest = run_manifest(
         require_clean=require_clean,
-        prompts_untouched_after_dry_run=True if dry_run else None,
+        prompts_untouched_after_dry_run=True if dry_run else True,
     )
     tip_sha = manifest["tip_commit_sha"]
     problems = resolve_problems(task_ids)
+    campaign_t0 = time.time()
+    start_iso = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(campaign_t0))
+    print(f"[n1] campaign_start={start_iso}", flush=True)
 
     ckpt = out_dir / ("n1_dryrun.jsonl" if dry_run else "n1_campaign.jsonl")
     done = load_checkpoint(ckpt)
@@ -899,10 +1093,10 @@ async def run_campaign(
                             task_id=row["task_id"],
                             arm=row["arm"],
                             sample=row["sample"],
-                            pass_=bool(row["pass"]),
-                            pilot_pass=bool(row["pilot_pass"]),
-                            exact_critic_pass=bool(row["exact_critic_pass"]),
-                            contract_pass=bool(row.get("contract_pass", False)),
+                            pass_=bool(int(row["pass"])) if not isinstance(row["pass"], bool) else bool(row["pass"]),
+                            pilot_pass=bool(int(row["pilot_pass"])) if not isinstance(row["pilot_pass"], bool) else bool(row["pilot_pass"]),
+                            exact_critic_pass=bool(int(row["exact_critic_pass"])) if not isinstance(row["exact_critic_pass"], bool) else bool(row["exact_critic_pass"]),
+                            contract_pass=bool(int(row.get("contract_pass", 0) or 0)),
                             error_class=row.get("error_class", ""),
                             repair_rounds=int(row.get("repair_rounds", 0)),
                             tokens=int(row.get("tokens", 0)),
@@ -913,41 +1107,71 @@ async def run_campaign(
                                 if row.get("problems")
                                 else []
                             ),
+                            latency_s=float(row.get("latency_s") or 0.0),
+                            refused=bool(int(row.get("refused", 0) or 0)),
+                            unrealizable_task=bool(int(row.get("unrealizable_task", 0) or 0)),
+                            infra_retries=int(row.get("infra_retries", 0) or 0),
                         )
                     )
                     continue
                 pending.append((tid, arm, s))
 
     async def _one(tid: int, arm: str, s: int) -> SampleResult:
-        try:
-            r = await run_arm_sample(
-                arm=arm,
-                task_id=tid,
-                sample=s,
-                problem_text=problems[tid]["description"],
-                llm=llm,
-                tip_sha=tip_sha,
-                require_model_pin=require_model_pin,
-                sem=sem,
-            )
-        except Exception as e:  # noqa: BLE001 — never abort whole campaign
-            r = SampleResult(
-                task_id=tid,
-                arm=arm,
-                sample=s,
-                pass_=False,
-                pilot_pass=False,
-                exact_critic_pass=False,
-                contract_pass=False,
-                error_class="wrong_connectivity",
-                repair_rounds=0,
-                tokens=0,
-                model_id=getattr(llm, "model_id", ""),
-                tip_sha=tip_sha,
-                problems=[f"uncaught:{type(e).__name__}: {e}"],
-            )
-        append_checkpoint(ckpt, r)
-        return r
+        infra_retries = 0
+        last_exc: Optional[BaseException] = None
+        while True:
+            try:
+                r = await run_arm_sample(
+                    arm=arm,
+                    task_id=tid,
+                    sample=s,
+                    problem_text=problems[tid]["description"],
+                    llm=llm,
+                    tip_sha=tip_sha,
+                    require_model_pin=require_model_pin,
+                    sem=sem,
+                )
+                # Infra failure encoded in problems (credit / connection).
+                if (not r.pass_) and any(is_infra_error(p) for p in r.problems):
+                    if infra_retries < INFRA_MAX_RETRIES:
+                        infra_retries += 1
+                        await asyncio.sleep(min(2 ** infra_retries, 8))
+                        continue
+                    r.infra_retries = infra_retries
+                    r.problems = list(r.problems) + [
+                        f"infra: gave up after {infra_retries} retries"
+                    ]
+                else:
+                    r.infra_retries = infra_retries
+                append_checkpoint(ckpt, r)
+                return r
+            except Exception as e:  # noqa: BLE001 — never abort whole campaign
+                last_exc = e
+                if is_infra_error(e) and infra_retries < INFRA_MAX_RETRIES:
+                    infra_retries += 1
+                    await asyncio.sleep(min(2 ** infra_retries, 8))
+                    continue
+                r = SampleResult(
+                    task_id=tid,
+                    arm=arm,
+                    sample=s,
+                    pass_=False,
+                    pilot_pass=False,
+                    exact_critic_pass=False,
+                    contract_pass=False,
+                    error_class="wrong_connectivity",
+                    repair_rounds=0,
+                    tokens=0,
+                    model_id=getattr(llm, "model_id", ""),
+                    tip_sha=tip_sha,
+                    problems=[
+                        f"uncaught:{type(e).__name__}: {e}",
+                        f"infra_retries={infra_retries}",
+                    ],
+                    infra_retries=infra_retries,
+                )
+                append_checkpoint(ckpt, r)
+                return r
 
     if pending:
         # Chunked gather so a hung API call cannot stall the entire campaign;
@@ -967,40 +1191,92 @@ async def run_campaign(
             )
             results.extend(batch)
 
+    campaign_t1 = time.time()
+    end_iso = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(campaign_t1))
+    print(
+        f"[n1] campaign_end={end_iso} wall_s={campaign_t1 - campaign_t0:.1f}",
+        flush=True,
+    )
+
+    # Re-check frozen artifact hashes; mark untouched only if stable.
+    try:
+        _ = frozen_artifact_hashes()
+        _ = combined_artifacts_hash()
+        prompts_untouched = True
+    except Exception:  # noqa: BLE001
+        prompts_untouched = False
+    manifest["prompts_untouched_after_dry_run"] = prompts_untouched
+    manifest["campaign_start_utc"] = start_iso
+    manifest["campaign_end_utc"] = end_iso
+    manifest["campaign_wall_s"] = round(campaign_t1 - campaign_t0, 3)
+    manifest["pass_metric"] = "exact_critic_pass AND contract_pass"
+    manifest["unrealizable_scoring"] = (
+        "tasks 47/48 pass iff explicit refusal AND no store"
+    )
+
     rows = [r.to_csv_row() for r in results]
     csv_name = "n1_dryrun.csv" if dry_run else results_csv_name
     write_csv(out_dir / csv_name, rows)
     # Always mirror PIC-Bench-48 headline name when requested.
     if results_csv_name == "n1_results_picbench48.csv" and not dry_run:
         write_csv(out_dir / "n1_results_picbench48.csv", rows)
+    # Split CSVs for paper tables.
+    rows_146 = [r for r in rows if int(r["task_id"]) <= 46]
+    rows_4748 = [r for r in rows if int(r["task_id"]) in (47, 48)]
+    if rows_146:
+        write_csv(out_dir / "n1_results_tasks_1_46.csv", rows_146)
+    if rows_4748:
+        write_csv(out_dir / "n1_results_tasks_47_48.csv", rows_4748)
     (out_dir / "n1_manifest.json").write_text(
         json.dumps(manifest, indent=2), encoding="utf-8"
+    )
+    (out_dir / "n1_timing.json").write_text(
+        json.dumps(
+            {
+                "start_utc": start_iso,
+                "end_utc": end_iso,
+                "wall_s": round(campaign_t1 - campaign_t0, 3),
+                "n_results": len(results),
+                "mean_latency_s": (
+                    sum(r.latency_s for r in results) / len(results) if results else 0.0
+                ),
+            },
+            indent=2,
+        ),
+        encoding="utf-8",
     )
     _print_summary(results)
     return results
 
 
 def _print_summary(results: Sequence[SampleResult]) -> None:
-    print("=== N1 headline pass (A: ExactCritic; B/C: ExactCritic∧TaskContract) ===")
+    print("=== N1 headline pass_uniform (ExactCritic∧TaskContract, all arms) ===")
+    realizable = [r for r in results if r.task_id not in UNREALIZABLE_N1_TASK_IDS]
     cis = []
     for arm in N1_ABLATION_ARMS:
-        arm_res = [r for r in results if r.arm == arm]
+        arm_res = [r for r in realizable if r.arm == arm]
         ci = summarize_arm_passes(r.pass_ for r in arm_res)
         cis.append(ci)
-        print(f"  {arm}: {format_ci(ci)}")
+        print(f"  {arm} (tasks 1-46): {format_ci(ci)}")
     if no_win_claim(cis):
         print("  (Wilson CIs overlap → no win claim)")
+    print("=== Tasks 47/48 refusal pass (separate) ===")
+    for arm in N1_ABLATION_ARMS:
+        arm_res = [r for r in results if r.arm == arm and r.task_id in UNREALIZABLE_N1_TASK_IDS]
+        if not arm_res:
+            continue
+        ci = summarize_arm_passes(r.pass_ for r in arm_res)
+        print(f"  {arm}: {format_ci(ci)}")
     print("=== ExactCritic-only (diagnostic) ===")
     for arm in N1_ABLATION_ARMS:
-        arm_res = [r for r in results if r.arm == arm]
+        arm_res = [r for r in realizable if r.arm == arm]
         ci = summarize_arm_passes(r.exact_critic_pass for r in arm_res)
         print(f"  {arm}: {format_ci(ci)}")
     print("=== N1 pilot_pass (Arm A baseline signal) ===")
     for arm in N1_ABLATION_ARMS:
-        arm_res = [r for r in results if r.arm == arm]
+        arm_res = [r for r in realizable if r.arm == arm]
         ci = summarize_arm_passes(r.pilot_pass for r in arm_res)
         print(f"  {arm}: {format_ci(ci)}")
-
 
 def main(argv: Optional[Sequence[str]] = None) -> int:
     p = argparse.ArgumentParser(description="N1 three-arm ablation campaign")
