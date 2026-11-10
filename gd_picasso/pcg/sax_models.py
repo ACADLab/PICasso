@@ -123,7 +123,12 @@ def build_lossy_models(
 
 
 def _ideal_crossing_model(**_settings: Any) -> Dict[Tuple[str, str], complex]:
-    """Bar crossing: o1↔o3 and o2↔o4, zero crosstalk."""
+    """Straight-through crossing matching gdsfactory + gplugins ``crossing_ideal``.
+
+    Verified on gdsfactory ``crossing`` ports (o1 west, o2 north, o3 east,
+    o4 south) and on ``gplugins.sax.models.crossing_ideal``: nonzero S is
+    o1↔o3 and o2↔o4. Not retuned to golden wiring.
+    """
     return {
         ("o1", "o3"): 1.0 + 0.0j,
         ("o3", "o1"): 1.0 + 0.0j,

@@ -1332,6 +1332,12 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         action="store_true",
         help="Use all 48 PIC-Bench tasks; write n1_results_picbench48.csv",
     )
+    p.add_argument(
+        "--tasks",
+        type=str,
+        default=None,
+        help="Comma-separated task ids. Overrides --picbench48 and the 12-task subset.",
+    )
     p.add_argument("--mock", action="store_true", help="Use MockLLM (no API)")
     p.add_argument("--concurrency", type=int, default=4)
     p.add_argument(
@@ -1364,7 +1370,10 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     if not args.campaign and not args.dry_run:
         args.dry_run = True  # safe default
 
-    if args.dry_run:
+    if args.tasks:
+        task_ids = [int(x) for x in args.tasks.split(",") if x.strip()]
+        results_csv = "n1_results_tasks.csv"
+    elif args.dry_run:
         task_ids = list(N1_DRY_RUN_TASK_IDS)
         results_csv = "n1_dryrun.csv"
     elif args.picbench48:
